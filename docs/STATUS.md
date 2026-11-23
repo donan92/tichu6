@@ -89,4 +89,6 @@ Release verification:
 - Original SVG suit/court graphics and four generated transparent special-card illustrations; ~185 KiB WebP sprite served locally. Raw PNGs, exact prompts and reproducible Sharp build are in `src/assets/cards/README.md`.
 - Added card-selection/localized-label and pip-count tests. No rule, server, protocol or private-state changes.
 - Browser checked 375×667 first/last-card selection and repeated deselection, with all 18 cards visible at scrollY=0; 390×844 and 430×932 also fit, without horizontal overflow. Actual iPhone Safari remains unverified.
-- Passed: zero-warning ESLint, strict frontend typecheck, 66 tests, Prettier and production build. Desktop 1280px card art also verified. Production verification pending; do not infer deployment from the local build.
+- Passed: zero-warning ESLint, strict frontend typecheck, 66 tests, Prettier and production build. Desktop 1280px card art also verified. Production verification is recorded below.
+
+- Released `e4f90cc` on main: all four production assets (JS, CSS, SVG, WebP) match local SHA-256 hashes; backend remains health v5. Production v0.7.0, English 18-card hand and phoenix artwork verified at 375×667 with no console errors. GitHub Verify (including Worker integration) passed: https://github.com/donan92/tichu6/actions/runs/45137647847. npm audit: 0 vulnerabilities. No pending implementation work; actual iPhone Safari testing remains a device-specific limitation.
