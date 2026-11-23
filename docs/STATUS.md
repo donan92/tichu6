@@ -81,4 +81,4 @@ Release verification:
 - Returning users automatically reach the lounge, which had no practice entry. Added a visible five-bot practice panel in the lounge and clarified the home button in both languages.
 - Reuses the existing local practice engine and five bots; no backend/protocol changes. Practice remains available while the lounge connection is unavailable.
 - Added a UI regression covering lounge button → five bots → grand decisions → exchange. All 64 tests, lint/typecheck, formatting and build passed. Browser verified automatic lounge entry, visible practice button, five bots and progression to exchange; 390px layout has no horizontal overflow. Actual iPhone Safari remains unverified.
-- Frontend release pending; backend stays v5.
+- Released v0.6.1 (`e40d09e`): production JS/CSS hashes match the tested local build; backend health remains v5. GitHub Verify passed: https://github.com/donan92/tichu6/actions/runs/45132422769.
