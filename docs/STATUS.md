@@ -6,8 +6,8 @@
 - Worker https://tichu6-server.kelp-swaths-7q.workers.dev
 - 31 automated tests passed; six real WebSocket clients, capacity, host departure, same-hand reconnect, and real offline alarm verified.
 
-## Current task — in progress
-Implement public lounge (30 total connected users including spectators), five rooms, automatic random titles, nicknames up to five characters, and public-state spectators. Strengthen server security and contributor documentation.
+## Current release — v0.4.0 complete
+Released public lounge (30 total connected users including spectators), five rooms, automatic random titles, nicknames up to five characters, and public-state spectators, with server-side authorization and request limits.
 
 Decisions approved by user:
 - Thirty includes people playing and watching, not just idle lobby users.
@@ -22,10 +22,12 @@ Current checkpoint:
 - Worker deploy dry-run passed with both Durable Object classes and rate limiter.
 - v0.3 rooms are not automatically imported into v0.4. Storage remains intact; old endpoints return 410. README documents refresh/new-room migration.
 
-Release checklist:
+Release verification:
 1. Worker deployed successfully: `ee8fb0bf-746c-4817-a477-48116e6d1f2b` (v4).
 2. Pages production build command changed and verified in dashboard: `npm run build`, output `dist` (includes `_headers`).
-3. Verify deployed versions. Do not infer deployment from merge alone.
+3. Main implementation commit: `19faeb9`. Pages deployment: `c1b73f40-1137-4598-ad12-c12e728ca897`, active.
+4. Production smoke test passed: frontend v0.4.0, CSP and nosniff response headers, backend health v4, actual WebSocket welcome and hall entry.
+5. Working tree implementation is merged; no pending implementation work in this release.
 
 ## Dependency maintenance checkpoint
 - User requested automatic latest stable Python/JavaScript library maintenance.
