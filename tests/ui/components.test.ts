@@ -114,7 +114,7 @@ describe('Vue interaction regressions', () => {
         i18next.t(`card.${special}`),
       );
       expect(wrapper.text().replace(/\s/g, '')).toBe(
-        special === 'mahjong' ? '11' : '',
+        special === 'mahjong' ? '1' : '',
       );
     }
   });
@@ -146,6 +146,27 @@ describe('Vue interaction regressions', () => {
       expect(wrapper.find(`.court-art.court-${rank}`).exists()).toBe(true);
     }
   });
+  it('maps all twelve courts to unique artwork without changing suit identity', () => {
+    const positions = new Set<string>();
+    for (let suit = 0; suit < 4; suit++) {
+      for (const rank of [11, 12, 13]) {
+        const wrapper = mount(PlayingCard, {
+          props: { card: { id: `${suit}-${rank}`, rank, suit } },
+          global: { plugins: plugins() },
+        });
+        wrappers.push(wrapper);
+        const style = wrapper.get('.court-art').attributes('style') ?? '';
+        positions.add(style);
+        expect(wrapper.classes()).toContain(`suit-${suit}`);
+        expect(wrapper.find('.card-bottom').exists()).toBe(false);
+        const rows = [0, 1, 3, 2];
+        const coordinates = style.match(/[\d.]+/g)?.map(Number) ?? [];
+        expect(coordinates[0]).toBe((rank - 11) * 50);
+        expect(coordinates[1]).toBeCloseTo((rows[suit] * 350 * 100) / 1086, 3);
+      }
+    }
+    expect(positions.size).toBe(12);
+  });
   it('renders one suit symbol and readable ranks for every numeric card', () => {
     for (let rank = 2; rank <= 14; rank++) {
       if (rank >= 11 && rank <= 13) continue;
@@ -159,6 +180,7 @@ describe('Vue interaction regressions', () => {
         rank === 14 ? 'A' : String(rank),
       );
       expect(wrapper.find('.card-emblem').exists()).toBe(true);
+      expect(wrapper.find('.card-bottom').exists()).toBe(false);
     }
   });
   it('starts five-bot practice from the lounge even while disconnected', async () => {

@@ -1,5 +1,16 @@
 # Card artwork
 
+## Current approved design
+
+`courts-approved.webp` supplies 12 upright, suit-specific J/Q/K illustrations;
+`specials-approved.webp` supplies the four clean special illustrations.
+Ranks and suit indices are rendered separately in a single shared ink color, with
+no lower reversed rank. See [source details and exact prompts](APPROVED-PROMPTS.md).
+`npm run assets:cards` rebuilds both current sprites as well as retained historical
+assets. Historical files below are not imported by the current card renderer.
+
+## Historical artwork
+
 Original playing-card-inspired artwork; no scans or assets from a commercial Tichu deck.
 
 - `source/*.png`: transparent original illustrations generated with built-in OpenAI image generation on 2026-11-23. No external account or runtime image service required.

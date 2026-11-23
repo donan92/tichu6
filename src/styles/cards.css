@@ -1,67 +1,68 @@
-/* Standard suits; numeric suit IDs stay stable in saved games. */
+/* Rank and suit share one ink color, independent of illustration colors. */
 .card.suit-0,
-.card.suit-1 {
+.card.suit-1,
+.card.special {
   color: #172535;
 }
 .card.suit-2,
 .card.suit-3 {
   color: #c92e4b;
 }
-.card {
-  background: linear-gradient(145deg, #fffdf5, #eee8d9);
-  border-color: #d5cbb4;
-  box-shadow:
-    0 2px 4px #0004,
-    inset 0 0 0 3px #ffffff60;
-  overflow: visible;
+.card,
+.card.special {
+  background: #faf9f5;
+  border: 1px solid #e4e4df;
+  box-shadow: none;
+  overflow: hidden;
   isolation: isolate;
+}
+.card.special::after {
+  content: none;
 }
 .card-corner {
   z-index: 2;
-  gap: 3px;
-  font-family: Georgia, serif;
+  gap: 2px;
+  font-family: Arial, sans-serif;
+  font-weight: 600;
+  align-items: flex-start;
 }
 .card .suit-icon {
-  width: 14px;
-  height: 14px;
+  width: 13px;
+  height: 13px;
   display: block;
 }
 .card-emblem {
   display: block;
   position: absolute;
-  width: 40%;
-  height: 40%;
-  left: 30%;
-  top: 30%;
+  width: 38%;
+  height: 38%;
+  left: 31%;
+  top: 35%;
 }
 .court-art {
   position: absolute;
-  inset: 8% 16%;
-  width: 68%;
-  height: 84%;
-  background-size: contain;
+  inset: 15% auto 0 -12.5%;
+  width: 125%;
+  height: 85%;
+  background-image: url('../assets/cards/courts-approved.webp');
+  background-size: 300% 400%;
   background-repeat: no-repeat;
-  background-position: center;
-}
-.card.special {
-  background: linear-gradient(145deg, #fff7db, #e9dfbd);
-  border-color: #bba570;
-}
-.card.special::after {
-  border-color: #a4874345;
-  z-index: -1;
+  pointer-events: none;
 }
 .special-art {
   position: absolute;
-  width: 92%;
+  width: 116%;
   aspect-ratio: 1;
-  left: 4%;
+  left: -8%;
   top: 50%;
-  transform: translateY(-45%);
-  background-image: url('../assets/cards/specials.webp');
+  transform: translateY(-50%);
+  background-image: url('../assets/cards/specials-approved.webp');
   background-size: 200% 200%;
   background-repeat: no-repeat;
   pointer-events: none;
+}
+.special-mahjong .special-art {
+  transform: translateY(-40%);
 }
 .special-dragon .special-art {
   background-position: 0 0;
@@ -75,21 +76,27 @@
 .special-mahjong .special-art {
   background-position: 100% 100%;
 }
-.hero-cards .card .suit-icon {
-  width: 24px;
-  height: 24px;
+button.card:hover {
+  background: #faf9f5;
 }
-.played-cards .card-emblem {
-  display: block;
+button.card.selected {
+  transform: none;
+  background: #faf9f5;
+  box-shadow: 0 0 0 3px var(--lime);
 }
-.played-cards .court-art + .card-emblem {
-  display: block;
+.card:focus-visible {
+  outline: 3px solid #90b2d2;
+  outline-offset: 4px;
+}
+.card .pick {
+  top: 2px;
+  right: 2px;
+  z-index: 3;
 }
 .played-cards .card .suit-icon {
-  width: 10px;
-  height: 10px;
+  width: 9px;
+  height: 9px;
 }
-
 /* Every card owns its full touch target; no overlap or horizontal hand scroller. */
 @media (max-width: 850px) {
   .hand {
@@ -112,10 +119,8 @@
     transform: none;
   }
   .hand button.card.selected {
-    box-shadow:
-      inset 0 0 0 3px #f2b44f,
-      0 0 0 2px var(--lime);
-    background: #fffce8;
+    box-shadow: 0 0 0 3px var(--lime);
+    background: #faf9f5;
   }
   .hand .pick {
     top: 2px;
@@ -143,16 +148,16 @@
     display: block;
     width: 38%;
     height: 38%;
-    left: 42%;
-    top: 42%;
+    left: 31%;
+    top: 35%;
   }
   .hand .court-art + .card-emblem {
     display: none;
   }
   .hand .court-art {
-    inset: 18% 15% 10% 30%;
-    width: 55%;
-    height: 72%;
+    inset: 15% auto 0 -12.5%;
+    width: 125%;
+    height: 85%;
   }
   .hand .empty-hand {
     grid-column: 1 / -1;
@@ -327,14 +332,4 @@
   .action-buttons select {
     font-size: 16px;
   }
-}
-
-.court-11 {
-  background-image: url('../assets/cards/jack.webp');
-}
-.court-12 {
-  background-image: url('../assets/cards/queen.webp');
-}
-.court-13 {
-  background-image: url('../assets/cards/king.webp');
 }

@@ -20,6 +20,13 @@ const suitHref = computed(() => `${suitsUrl}#${suits[props.card.suit]}`);
 const isCourt = computed(
   () => !props.card.special && props.card.rank >= 11 && props.card.rank <= 13,
 );
+// The generated atlas has 350px row spacing and 362px cells.
+// Keep persisted suit IDs unchanged (diamonds precede hearts).
+const courtRow = computed(() => [0, 1, 3, 2][props.card.suit] ?? 0);
+const courtPosition = computed(
+  () =>
+    `${(props.card.rank - 11) * 50}% ${(courtRow.value * 350 * 100) / 1086}%`,
+);
 const rank = computed(() => LABEL[props.card.rank] ?? props.card.rank);
 const display = computed(() =>
   props.card.special
@@ -63,15 +70,13 @@ const label = computed(() => {
         v-if="isCourt"
         class="court-art"
         :class="`court-${card.rank}`"
+        :style="{ backgroundPosition: courtPosition }"
         aria-hidden="true"
       />
       <svg v-else class="card-emblem" aria-hidden="true">
         <use :href="suitHref" />
       </svg>
     </template>
-    <span v-if="display" class="card-bottom" aria-hidden="true">{{
-      display
-    }}</span>
     <span v-if="interactive && pick >= 0" class="pick" aria-hidden="true">{{
       pick + 1
     }}</span>

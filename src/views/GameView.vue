@@ -65,7 +65,9 @@ const tableNote = computed(() =>
           {{
             game.finish.includes(index)
               ? t('play.finish', { place: game.finish.indexOf(index) + 1 })
-              : index + 1
+              : team(index)
+                ? 'B'
+                : 'A'
           }}
         </div>
         <div>
@@ -153,6 +155,7 @@ const tableNote = computed(() =>
       </div>
       <div class="controls"><GameControls :game="game" /></div>
     </section>
+    <GameRules />
     <details class="activity">
       <summary>
         {{ t('play.history') }}
@@ -164,6 +167,5 @@ const tableNote = computed(() =>
         </li>
       </ol>
     </details>
-    <GameRules />
   </main>
 </template>

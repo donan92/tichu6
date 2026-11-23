@@ -8,8 +8,8 @@ const sections = [
 ];
 </script>
 <template>
-  <section class="combination-guide" aria-labelledby="combinations-title">
-    <h2 id="combinations-title">{{ t('combinations.title') }}</h2>
+  <details class="combination-guide">
+    <summary>{{ t('combinations.title') }}</summary>
     <ul>
       <li
         v-for="kind in [
@@ -27,7 +27,7 @@ const sections = [
       </li>
     </ul>
     <p>{{ t('combinations.compare') }}</p>
-  </section>
+  </details>
   <details class="rules">
     <summary>{{ t('rules.title') }}</summary>
     <div class="rule-grid">
@@ -46,7 +46,7 @@ const sections = [
   padding-top: 16px;
   border-top: 1px solid var(--line);
 }
-.combination-guide h2 {
+.combination-guide summary {
   font-size: 18px;
 }
 .combination-guide ul {

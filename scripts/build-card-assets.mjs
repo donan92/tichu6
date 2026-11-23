@@ -32,3 +32,13 @@ for (const name of ['jack', 'queen', 'king']) {
     .toFile(fileURLToPath(new URL(`${name}.webp`, directory)));
 }
 console.log('Built jack, queen and king court illustrations.');
+// Approved sprite grids: retain equal cells; only resize/encode for delivery.
+for (const [name, width, height] of [
+  ['courts-approved', 1086, 1448],
+  ['specials-approved', 768, 768],
+]) {
+  await sharp(fileURLToPath(new URL(`source/${name}.png`, directory)))
+    .resize(width, height)
+    .webp({ quality: 90, alphaQuality: 100 })
+    .toFile(fileURLToPath(new URL(`${name}.webp`, directory)));
+}
