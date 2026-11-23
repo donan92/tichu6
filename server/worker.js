@@ -24,7 +24,7 @@ export default {
         },
       });
     let response;
-    if (url.pathname === '/health') response = json({ ok: true, version: 5 });
+    if (url.pathname === '/health') response = json({ ok: true, version: 6 });
     else if (url.pathname === '/lounge') {
       if (!origin || !ORIGINS.has(origin))
         return new Response('Forbidden', { status: 403 });

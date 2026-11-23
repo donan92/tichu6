@@ -33,12 +33,12 @@ test('108 distinct cards, eight of each ordinary rank, four unique specials, 200
   assert.equal(all.filter((c) => c.special).length, 4);
   assert.equal(points(all), 200);
 });
-test('18 cards dealt each; only eight are exposed until all grand decisions finish', () => {
+test('18 cards dealt each; only ten are exposed until all grand decisions finish', () => {
   let s = startRound(newGame());
   assert.ok(s.hands.every((h) => h.length === 18));
   for (let i = 0; i < 6; i++) {
     const v = view(s, i);
-    assert.equal(v.hand.length, 8);
+    assert.equal(v.hand.length, 10);
     for (const key of ['hands', 'first', 'exchanges', 'captured'])
       assert.equal(key in v, false);
   }

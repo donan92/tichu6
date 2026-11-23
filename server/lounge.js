@@ -1,6 +1,7 @@
 import { AppError, event, errorEvent } from '../src/messages.js';
 import {
   newGame,
+  shuffle,
   startRound,
   act,
   botAction,
@@ -73,6 +74,7 @@ export class Lounge {
     return room.members.map(
       (m) =>
         !!m &&
+        !m.bot &&
         this.users().some((ws) => {
           const a = this.attachment(ws);
           return a.hash === m.hash && a.room === room.id && !a.watch;
@@ -163,7 +165,8 @@ export class Lounge {
           title: r.title,
           spectator: seat < 0,
           leader: online.findIndex(Boolean),
-          offline: online.map((x) => !x),
+          offline: online.map((x, i) => !x && !r.members[i]?.bot),
+          bots: r.members.map((m) => !!m?.bot),
           paused: false,
         },
         online,
@@ -369,12 +372,32 @@ export class Lounge {
               const online = this.online(r);
               if (seat !== online.findIndex(Boolean))
                 throw new AppError('error.coordinator');
-              if (
-                !r.members.every(Boolean) ||
-                (r.state.phase === 'lobby' && !online.every(Boolean))
-              )
-                throw new AppError('error.sixPlayers');
-              r.state = startRound(structuredClone(r.state));
+              // Validate and deal before changing membership: rejected starts are atomic.
+              const next = startRound(structuredClone(r.state));
+              if (r.state.phase === 'lobby') {
+                const humans = shuffle(
+                  r.members
+                    .map(
+                      (member, i) =>
+                        member && {
+                          member,
+                          name: r.state.names[i],
+                        },
+                    )
+                    .filter(Boolean),
+                );
+                const slots = [shuffle([0, 2, 4]), shuffle([1, 3, 5])];
+                const firstTeam = shuffle([0, 1])[0];
+                const seats = Array(6).fill(null);
+                humans.forEach((entry, i) => {
+                  seats[slots[(i + firstTeam) % 2].pop()] = entry;
+                });
+                for (let i = 0; i < 6; i++)
+                  seats[i] ||= { member: { bot: true }, name: `Bot${i + 1}` };
+                r.members = seats.map((entry) => entry.member);
+                next.names = seats.map((entry) => entry.name);
+              }
+              r.state = next;
             } else r.state = act(r.state, seat, action);
             r.lastActive = Date.now();
           } else throw new AppError('error.unsupported');
@@ -393,7 +416,7 @@ export class Lounge {
   cleanup() {
     for (const [id, r] of Object.entries(this.data.rooms))
       if (
-        !r.members.some(Boolean) ||
+        !r.members.some((m) => m && !m.bot) ||
         (Date.now() - r.lastActive >= TTL && !this.online(r).some(Boolean))
       ) {
         delete this.data.rooms[id];
@@ -454,7 +477,10 @@ export class Lounge {
         if (needs)
           at = Math.min(
             at,
-            Math.max(now + 2000, (m.offlineSince ?? now) + GRACE),
+            Math.max(
+              now + 2000,
+              m.bot ? now + 2000 : (m.offlineSince ?? now) + GRACE,
+            ),
           );
       });
     }
@@ -478,7 +504,8 @@ export class Lounge {
           eligible = (i) =>
             r.members[i] &&
             !online[i] &&
-            now - (r.members[i].offlineSince ?? now) >= GRACE;
+            (r.members[i].bot ||
+              now - (r.members[i].offlineSince ?? now) >= GRACE);
         if (s.phase === 'lobby') {
           r.members = r.members.map((m, i) => {
             if (!eligible(i)) return m;

@@ -34,6 +34,7 @@ export interface PublicBase {
   leader?: number;
   paused?: boolean;
   offline?: boolean[];
+  bots?: boolean[];
 }
 export interface LobbyView extends PublicBase {
   phase: 'lobby';

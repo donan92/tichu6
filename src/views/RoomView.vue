@@ -50,11 +50,7 @@ const { t, title, message } = useText();
       <button
         v-if="!session.game.spectator && session.seat === session.game.leader"
         class="primary wide"
-        :disabled="
-          !session.online.every(Boolean) ||
-          !session.connected ||
-          session.pending
-        "
+        :disabled="!session.connected || session.pending"
         @click="session.submit({ type: 'start' })"
       >
         {{ t('room.start') }}

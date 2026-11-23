@@ -204,7 +204,7 @@ function play() {
         {{ t(dragon ? 'play.giveTrick' : 'play.collect') }}
       </button>
     </div>
-    <div v-else class="action-buttons">
+    <div v-else class="action-buttons play-actions">
       <label v-if="hasMahjong"
         >{{ t('play.wish')
         }}<select id="wish" v-model="wish">

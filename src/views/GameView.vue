@@ -73,7 +73,9 @@ const tableNote = computed(() =>
             >{{ name || t('common.empty') }}
             <span v-if="!game.spectator && index === seat" class="you">{{
               t('common.you')
-            }}</span><template v-if="game.offline?.[index]">
+            }}</span><template v-if="game.bots?.[index]">
+              · {{ t('common.bot') }}</template
+            ><template v-else-if="game.offline?.[index]">
               · {{ t('play.offline') }}</template
             ></b
           ><small
@@ -122,7 +124,7 @@ const tableNote = computed(() =>
             <span
               >{{ t('play.cardCount', { count: game.hand.length })
               }}<template v-if="game.phase === 'grand'">
-                / {{ t('play.firstEight') }}</template
+                / {{ t('play.initialHand') }}</template
               ></span
             ></b
           >

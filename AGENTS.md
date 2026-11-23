@@ -2,7 +2,8 @@
 
 ## Product and decisions
 
-- Korean six-player Tichu, alternating teams A/B, 108 cards. Exactly four same-rank cards make a rank bomb.
+- Korean six-player Tichu (티츄), alternating teams A/B, 108 cards. Exactly four same-rank cards make a rank bomb.
+- Deal 10 initial cards for Large Tichu (라지 티츄, ±200), then 8 more; Small Tichu (스몰 티츄, ±100) before first play. Fill empty seats with server bots on start, balance human/bot counts between teams (difference at most one) and randomize seats once per match, preserve teams across rounds and identity-based reconnects. Bots do not consume connected-identity capacity.
 - Vue 3 + TypeScript + Vite frontend on Cloudflare Pages; authoritative Workers + SQLite Durable Objects backend. No PeerJS or browser-host authority.
 - Public lounge: at most 30 connected identities including players and spectators; at most five rooms. Random required room titles; nicknames one to eight ASCII letters (A-Z/a-z) or digits (0-9), case preserved; reject whitespace and other characters.
 - Spectators see public state only. Never transmit private hands, exchange choices, identity hashes, or reconnection credentials to them.

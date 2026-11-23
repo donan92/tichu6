@@ -141,7 +141,7 @@ test('spectators receive no cards, cannot act or spoof a seat, and count globall
   assert.deepEqual(snapshot.hand, []);
   for (const key of ['hands', 'first', 'exchanges', 'members'])
     assert.equal(key in snapshot, false);
-  assert.equal(last(users[0], 'state').value.hand.length, 8);
+  assert.equal(last(users[0], 'state').value.hand.length, 10);
   assert.equal(last(users[6], 'directory').count, 7);
   await msg(f.hub, users[6], {
     type: 'action',
@@ -258,4 +258,131 @@ test('invalid actions and stale revisions never change game state', async () => 
     action: { type: 'grand', call: false },
   });
   assert.deepEqual(r.state, before);
+});
+
+test('one human starts with five persistent bots, advances, reconnects and pauses when alone offline', async () => {
+  const f = await setup(),
+    owner = await user(f, 101, 'Solo');
+  await msg(f.hub, owner, { type: 'create', name: 'Solo' });
+  const r = Object.values(f.hub.data.rooms)[0];
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  let snapshot = last(owner, 'state').value;
+  const seat = snapshot.seat;
+  assert.equal(snapshot.names[seat], 'Solo');
+  assert.equal(snapshot.bots.filter(Boolean).length, 5);
+  assert.equal(snapshot.hand.length, 10);
+  assert.equal(f.hub.users().length, 1);
+  assert.equal(r.members.filter((m) => m.bot).length, 5);
+  for (let i = 0; i < 5; i++) await f.hub.alarm();
+  assert.equal(r.state.ready.filter(Boolean).length, 5);
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: r.state.revision,
+    action: { type: 'grand', call: false },
+  });
+  assert.equal(last(owner, 'state').value.hand.length, 18);
+  for (let i = 0; i < 5; i++) await f.hub.alarm();
+  assert.equal(r.state.exchanges.filter(Boolean).length, 5);
+  const saved = structuredClone(r);
+  const restoredHub = new Lounge(f.ctx);
+  await f.ready();
+  assert.deepEqual(restoredHub.data.rooms[r.id].members, saved.members);
+  owner.readyState = 3;
+  await f.hub.disconnected(owner);
+  const revision = r.state.revision;
+  await f.hub.alarm();
+  assert.equal(r.state.revision, revision);
+  const back = await user(f, 101, 'Solo');
+  await msg(f.hub, back, {
+    type: 'join',
+    roomId: r.id,
+    watch: false,
+    name: 'Solo',
+  });
+  snapshot = last(back, 'state').value;
+  assert.equal(snapshot.seat, seat);
+  assert.equal(snapshot.bots.filter(Boolean).length, 5);
+});
+
+test('randomized membership preserves identity/name pairs and teams through following rounds', async () => {
+  const f = await setup(),
+    users = await Promise.all(
+      [1, 2, 3].map((i) => user(f, 200 + i, `User${i}`)),
+    );
+  await msg(f.hub, users[0], { type: 'create', name: 'User1' });
+  const r = Object.values(f.hub.data.rooms)[0];
+  for (let i = 1; i < 3; i++)
+    await msg(f.hub, users[i], {
+      type: 'join',
+      roomId: r.id,
+      watch: false,
+      name: `User${i + 1}`,
+    });
+  await msg(f.hub, users[1], {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  assert.equal(last(users[1], 'error').code, 'error.coordinator');
+  assert.equal(r.state.phase, 'lobby');
+  await msg(f.hub, users[0], {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  const members = structuredClone(r.members),
+    names = [...r.state.names];
+  for (let i = 0; i < 3; i++) {
+    const s = last(users[i], 'state').value;
+    assert.equal(s.names[s.seat], `User${i + 1}`);
+    assert.equal(r.members[s.seat].hash, users[i].a.hash);
+    assert.equal(s.hand.length, 10);
+  }
+  r.state.phase = 'roundEnd';
+  const leader = users.find(
+    (u) =>
+      r.members.findIndex((m) => m.hash === u.a.hash) ===
+      f.hub.online(r).findIndex(Boolean),
+  );
+  await msg(f.hub, leader, {
+    type: 'action',
+    revision: r.state.revision,
+    action: { type: 'next' },
+  });
+  assert.deepEqual(r.members, members);
+  assert.deepEqual(r.state.names, names);
+  assert.equal(r.state.round, 2);
+});
+
+test('one through six humans are balanced between teams, including odd counts', async () => {
+  for (let count = 1; count <= 6; count++) {
+    const f = await setup();
+    const users = await Promise.all(
+      Array.from({ length: count }, (_, i) => user(f, 300 + i)),
+    );
+    await msg(f.hub, users[0], { type: 'create', name: 'Human0' });
+    const r = Object.values(f.hub.data.rooms)[0];
+    for (let i = 1; i < count; i++)
+      await msg(f.hub, users[i], {
+        type: 'join',
+        roomId: r.id,
+        watch: false,
+        name: `Human${i}`,
+      });
+    await msg(f.hub, users[0], {
+      type: 'action',
+      revision: 0,
+      action: { type: 'start' },
+    });
+    const humans = [0, 1].map(
+      (team) => r.members.filter((m, i) => i % 2 === team && !m.bot).length,
+    );
+    assert.equal(humans[0] + humans[1], count);
+    assert.ok(Math.abs(humans[0] - humans[1]) <= 1);
+    assert.equal(r.members.filter((m) => m.bot).length, 6 - count);
+  }
 });

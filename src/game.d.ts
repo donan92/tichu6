@@ -10,7 +10,7 @@ export const LABEL: Record<number, string>;
 export function team(seat: number): number;
 export function partners(seat: number): number[];
 export function deck(): Card[];
-export function shuffle(cards: Card[]): Card[];
+export function shuffle<T>(items: T[]): T[];
 export function sortCards(cards: Card[]): Card[];
 export function points(cards: Card[]): number;
 export function classify(

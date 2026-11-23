@@ -105,3 +105,11 @@ Release verification:
 - Numeric cards and aces now show one centered suit symbol with corner ranks, removing repeated pip layouts and the duplicate corner symbol. Court portraits and special artwork stay intact. Mobile and desktop share the centered layout.
 - Updated regression coverage for one symbol and readable ranks across 2–10/A. Passed 68 tests, ESLint/typecheck, formatting and build. Desktop browser visually verified centered single symbols.
 - Released `0314225`: production index and JS/CSS SHA-256 match the tested build; backend health v5 unchanged. CI: https://github.com/donan92/tichu6/actions/runs/45200420321 (all check/test/build/audit/Worker integration stages passed).
+
+## v0.8.0 — approved navy UI, balanced bots and revised calls
+
+- User selected the second (navy) desktop concept, requested a mobile version, then explicitly approved the mobile 6×3 layout. Existing card art retained; navy/slate surfaces and amber actions apply to home, lounge, room and game. No external design runtime or service added. Official Anthropic frontend-design and Product Design ideation/image-to-code guidance used.
+- Korean name is 티츄. Large/라지 티츄 ±200 follows ten initially visible cards; eight more follow all decisions. Small/스몰 티츄 ±100 remains before first play. Old persisted rounds retain their stored initial-card IDs; new rounds use ten.
+- Server fills missing seats with durable bots at match start. Human counts differ by at most one across A/B; shuffle within that constraint uses the existing cryptographic unbiased shuffle. Identities/names move together, teams persist across rounds. Bots never count as connected identities or coordinators. No humans online pauses progression; TTL and reconnect behavior preserved.
+- Added localized combination guide below game and on home. Protocol has additive public `bots` flags; no secrets or private bot hands exposed. Backend health increments to v6, no storage migration/reset.
+- Local Worker integration passed capacity/privacy/reconnect/origin plus solo start → five bots → ten-to-eighteen-card transition. Deployment and final visual verification pending.

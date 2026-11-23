@@ -61,7 +61,7 @@ function data() {
     updated: Date.now(),
   };
 }
-test('durable state survives instance reconstruction; snapshots contain only own eight cards', async () => {
+test('durable state survives instance reconstruction; snapshots contain only own ten cards', async () => {
   const d = data(),
     ws = socket(2),
     { ctx, storage } = fixture(d, [ws]);
@@ -74,7 +74,7 @@ test('durable state survives instance reconstruction; snapshots contain only own
   room.broadcast();
   assert.deepEqual(room.data.state.scores, [123, 456]);
   assert.deepEqual(room.data.state.hands, d.state.hands);
-  assert.equal(ws.messages.at(-1).value.hand.length, 8);
+  assert.equal(ws.messages.at(-1).value.hand.length, 10);
   assert.equal('hands' in ws.messages.at(-1).value, false);
   assert.equal('members' in ws.messages.at(-1).value, false);
   assert.ok(storage.value);

@@ -112,7 +112,7 @@ try {
     () => owner.state?.phase === 'grand',
   );
   await until(() => spectator.state?.phase === 'grand');
-  assert.equal(owner.state.hand.length, 8);
+  assert.equal(owner.state.hand.length, 10);
   assert.deepEqual(spectator.state.hand, []);
   assert.equal(spectator.state.seat, -1);
   for (const key of ['hands', 'exchanges', 'first', 'members'])
@@ -130,15 +130,48 @@ try {
   assert.ok(denied.some((m) => m.type === 'error'));
   assert.equal(owner.state.revision, 1);
   const original = owner.state.hand;
+  const originalSeat = owner.state.seat;
   owner.ws.close();
   await until(() => spectator.directory.count === 29);
   const restored = await user(owner.token, { roomId: id });
   await until(() => restored.state?.phase === 'grand');
-  assert.equal(restored.state.seat, 0);
+  assert.equal(restored.state.seat, originalSeat);
   assert.deepEqual(restored.state.hand, original);
   assert.equal(restored.directory.count, 30);
   console.log(
     'PASS real Worker: 30/31 identities, 5/6 room race, six seats, spectators counted, no hidden cards, spectator action spoof rejected, reconnect at full capacity',
+  );
+  const solo = admitted.find((c) => !players.includes(c) && c !== spectator);
+  await request(
+    solo,
+    { type: 'create', name: 'Solo' },
+    () => solo.state?.phase === 'lobby' && solo.state.seat >= 0,
+  );
+  await request(
+    solo,
+    {
+      type: 'action',
+      revision: solo.state.revision,
+      action: { type: 'start' },
+    },
+    () => solo.state?.phase === 'grand',
+  );
+  assert.equal(solo.state.bots.filter(Boolean).length, 5);
+  assert.equal(solo.state.hand.length, 10);
+  await until(() => solo.state.ready.filter(Boolean).length === 5, 20000);
+  await request(
+    solo,
+    {
+      type: 'action',
+      revision: solo.state.revision,
+      action: { type: 'grand', call: false },
+    },
+    () => solo.state?.phase === 'exchange',
+  );
+  assert.equal(solo.state.hand.length, 18);
+  assert.equal(solo.directory.count, 30);
+  console.log(
+    'PASS real Worker: one human plus five bots, alarm-driven decisions, 10 then 18 cards, no extra identity slots',
   );
   const foreign = await fetch(base + '/lounge', {
     headers: { Origin: 'https://evil.example' },

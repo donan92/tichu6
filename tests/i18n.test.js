@@ -49,7 +49,7 @@ test('the same stored game event and room title render in both languages without
     ko = createTranslator('ko');
   assert.match(translateEvent(en, state.log[0]), /Round 1/);
   assert.match(translateEvent(ko, state.log[0]), /1라운드/);
-  assert.match(translateEvent(en, state.log[1]), /Player1.*Grand Tichu/);
+  assert.match(translateEvent(en, state.log[1]), /Player1.*Large Tichu/);
   assert.deepEqual(state, before);
   const title = { adjective: 'moon', noun: 'garden', number: '007' };
   assert.equal(translateRoom(en, title), 'Moonlit Garden 007');
@@ -77,7 +77,7 @@ test('interpolated user names are preserved as data and UI escapes translated ou
       code: 'log.grand',
       params: { name: '<img src=x onerror=1>' },
     });
-  assert.equal(value, '<img src=x onerror=1> · Grand Tichu!');
+  assert.equal(value, '<img src=x onerror=1> · Large Tichu!');
   // Vue rendering and interpolation safety are exercised in tests/ui/components.test.ts.
 });
 test('active UI and protocol use codes instead of Korean sentence literals', async () => {

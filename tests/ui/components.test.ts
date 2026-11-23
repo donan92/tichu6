@@ -126,15 +126,17 @@ describe('Vue interaction regressions', () => {
     expect(button.text()).toBe(i18next.t('home.practice'));
     await button.trigger('click');
     expect(session.mode).toBe('demo');
-    expect(session.round?.names).toEqual([
-      'BotTest',
-      'SkyBot',
-      'StarBot',
-      'RiverBot',
-      'SunBot',
-      'SeaBot',
-    ]);
-    expect(session.round?.hand).toHaveLength(8);
+    expect(session.round?.names).toEqual(
+      expect.arrayContaining([
+        'BotTest',
+        'SkyBot',
+        'StarBot',
+        'RiverBot',
+        'SunBot',
+        'SeaBot',
+      ]),
+    );
+    expect(session.round?.hand).toHaveLength(10);
     session.submit({ type: 'grand', call: false });
     await vi.advanceTimersByTimeAsync(4200);
     expect(session.round?.phase).toBe('exchange');
@@ -306,7 +308,7 @@ describe('Vue interaction regressions', () => {
     const session = useSessionStore();
     session.startPractice();
     expect(session.round?.phase).toBe('grand');
-    expect(session.round?.hand).toHaveLength(8);
+    expect(session.round?.hand).toHaveLength(10);
     session.submit({ type: 'grand', call: false });
     await vi.advanceTimersByTimeAsync(4200);
     expect(session.round?.phase).toBe('exchange');

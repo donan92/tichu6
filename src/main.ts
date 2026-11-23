@@ -5,5 +5,6 @@ import App from './App.vue';
 import { i18next, initializeLanguage } from './localization';
 import './style.css';
 import './styles/cards.css';
+import './styles/table-room.css';
 await initializeLanguage();
 createApp(App).use(createPinia()).use(I18NextVue, { i18next }).mount('#app');

@@ -250,9 +250,9 @@ export function startRound(s, cards = shuffle(deck())) {
   s.hands = Array.from({ length: 6 }, (_, i) =>
     sortCards(cards.slice(i * 18, i * 18 + 18)),
   );
-  // Preserve the actual first eight dealt cards separately from sorted hands.
+  // Preserve the actual first ten dealt cards separately from sorted hands.
   s.first = Array.from({ length: 6 }, (_, i) =>
-    cards.slice(i * 18, i * 18 + 8).map((c) => c.id),
+    cards.slice(i * 18, i * 18 + 10).map((c) => c.id),
   );
   s.ready = Array(6).fill(false);
   s.calls = Array(6).fill(0);

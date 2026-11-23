@@ -18,20 +18,11 @@ const samples: Card[] = [
   <main class="landing">
     <section class="hero">
       <div>
-        <span class="eyebrow">{{ t('home.eyebrow') }}</span>
         <h1>{{ t('home.headline') }}</h1>
         <p class="hero-copy">{{ t('home.description') }}</p>
-        <div class="hero-tags">
-          <span v-for="key in ['teams', 'public', 'install']" :key="key">{{
-            t(`home.${key}`)
-          }}</span>
-        </div>
       </div>
       <div class="hero-cards" aria-hidden="true">
-        <PlayingCard v-for="card in samples" :key="card.id" :card="card" /><span
-          class="orbit"
-          >A · B · A · B · A · B</span
-        >
+        <PlayingCard v-for="card in samples" :key="card.id" :card="card" />
       </div>
     </section>
     <section class="entry">

@@ -1,6 +1,6 @@
 import { computed, onScopeDispose, ref, shallowRef } from 'vue';
 import { defineStore } from 'pinia';
-import { act, botAction, newGame, startRound, view } from '../game.js';
+import { act, botAction, newGame, startRound, view, shuffle } from '../game.js';
 import { AppError, errorEvent } from '../messages.js';
 import { Room, savedRoom } from '../server-room';
 import type {
@@ -132,7 +132,11 @@ export const useSessionStore = defineStore('session', () => {
   }
   function publish() {
     if (!practice) return;
-    game.value = { ...view(practice, 0), paused: false };
+    game.value = {
+      ...view(practice, 0),
+      paused: false,
+      bots: [false, true, true, true, true, true],
+    };
     reconcileSelection();
     scheduleBot();
   }
@@ -178,11 +182,7 @@ export const useSessionStore = defineStore('session', () => {
       practice = startRound(
         newGame([
           nickname.value || 'You',
-          'SkyBot',
-          'StarBot',
-          'RiverBot',
-          'SunBot',
-          'SeaBot',
+          ...shuffle(['SkyBot', 'StarBot', 'RiverBot', 'SunBot', 'SeaBot']),
         ]),
       );
       publish();

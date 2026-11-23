@@ -1,0 +1,299 @@
+/* Approved navy mobile card room: quiet surfaces, amber actions, clear hands. */
+:root {
+  --team-b: #90b2d2;
+}
+header {
+  height: 72px;
+}
+.brand {
+  letter-spacing: -1px;
+}
+.brand > span {
+  color: var(--ink);
+}
+.brand small {
+  color: var(--muted);
+}
+button {
+  box-shadow: none;
+}
+button.accent {
+  background: #334b63;
+  border-color: #647b91;
+  color: var(--ink);
+}
+input:not([type='checkbox']),
+textarea,
+select {
+  background-color: #14273c;
+  color: var(--ink);
+}
+.hero {
+  min-height: 300px;
+  padding: 32px 0;
+}
+.hero h1 {
+  font-size: clamp(30px, 4vw, 46px);
+  letter-spacing: -1px;
+}
+.hero-cards {
+  height: 230px;
+}
+.hero-cards::before {
+  display: none;
+}
+.hero-cards .card {
+  width: 100px;
+  height: 150px;
+  box-shadow: 0 3px 6px #0003;
+}
+.hero-cards .card:nth-child(1) {
+  transform: translateX(-110px);
+}
+.hero-cards .card:nth-child(2) {
+  transform: none;
+}
+.hero-cards .card:nth-child(3) {
+  transform: translateX(110px);
+}
+.entry,
+.panel {
+  border-radius: 10px;
+  box-shadow: none;
+}
+.room-list {
+  display: block;
+}
+.room-tile {
+  margin-bottom: 12px;
+}
+.game {
+  max-width: 1440px;
+}
+.game .table {
+  height: 300px;
+  margin: 16px 20px 28px;
+}
+.game .table-mark {
+  display: none;
+}
+.player {
+  background: #192f46;
+  border-color: #587086;
+}
+.player.active {
+  border-color: var(--lime);
+  box-shadow: 0 0 0 1px var(--lime);
+}
+.avatar {
+  border-radius: 5px;
+}
+.avatar.team-a {
+  color: #182d45;
+  background: var(--lime);
+}
+.avatar.team-b {
+  color: #182d45;
+  background: var(--team-b);
+}
+.hand-panel {
+  background: transparent;
+  border: 0;
+  padding: 12px 0;
+}
+.hand {
+  min-height: 140px;
+}
+.hand-heading b {
+  color: var(--ink);
+}
+.hand-heading b span {
+  color: var(--lime);
+}
+.hand button.card.selected {
+  box-shadow: 0 0 0 3px var(--lime);
+}
+.controls {
+  border-top-color: var(--line);
+}
+.rules,
+.combination-guide {
+  color: var(--muted);
+}
+.combination-guide h2 {
+  color: var(--ink);
+}
+@media (max-width: 850px) {
+  .game .table {
+    height: 270px;
+  }
+  .hand {
+    min-height: 0;
+  }
+}
+@media (max-width: 600px) {
+  header,
+  body:has(.game) header {
+    height: 56px;
+    padding: 0 12px;
+  }
+  .brand {
+    font-size: 30px;
+  }
+  .game {
+    padding: 0 10px;
+  }
+  .game-bar {
+    margin: 8px 0;
+    padding: 8px;
+    border: 1px solid #52677b;
+    border-radius: 8px;
+  }
+  .game-bar .eyebrow {
+    display: none;
+  }
+  .game-bar h2 {
+    font-size: 13px;
+    margin: 0;
+  }
+  .game-bar h2 span {
+    display: none;
+  }
+  .game-bar .score {
+    gap: 12px;
+    font-size: 11px;
+    letter-spacing: 0;
+  }
+  .game-bar .score b {
+    font-size: 22px;
+  }
+  .game .table {
+    height: auto;
+    min-height: 190px;
+    margin: 12px 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    gap: 10px 6px;
+    grid-template-rows: auto minmax(80px, auto) auto;
+  }
+  .game .table-center {
+    width: 100%;
+    background: #2a435c;
+    border-radius: 8px;
+    padding: 6px;
+  }
+  .game .player {
+    padding: 6px 4px;
+    border-radius: 7px;
+  }
+  .game .player b {
+    font-size: 11px;
+  }
+  .game .player small {
+    font-size: 9px;
+  }
+  .game .player .avatar {
+    width: 22px;
+    height: 24px;
+  }
+  .game .table-note {
+    font-size: 12px;
+  }
+  .game .played-cards .card {
+    width: 36px;
+    height: 52px;
+    flex-basis: 36px;
+    margin-left: -19px;
+  }
+  .game .played-cards .card:first-child {
+    margin-left: 0;
+  }
+  .hand-panel {
+    padding: 0;
+  }
+  .hand-heading {
+    min-height: 40px;
+  }
+  .hand-heading b {
+    font-size: 15px;
+  }
+  .hand {
+    gap: 5px;
+    padding: 6px 0 10px;
+  }
+  .hand .card {
+    height: 78px;
+    border-radius: 7px;
+  }
+  .hand .card-corner {
+    font-size: 18px;
+  }
+  .hand .card-bottom {
+    font-size: 12px;
+  }
+  .controls {
+    padding-top: 8px;
+  }
+  .action-buttons {
+    display: flex;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  .action-buttons button {
+    flex: 1 1 auto;
+    min-height: 46px;
+  }
+  .action-message p {
+    margin-bottom: 2px;
+  }
+  .hero {
+    display: block;
+    min-height: 0;
+    padding: 24px 0 12px;
+  }
+  .hero h1 {
+    font-size: 30px;
+    margin: 0 0 12px;
+  }
+  .hero-copy {
+    font-size: 15px;
+  }
+  .hero-cards {
+    display: none;
+  }
+  .entry {
+    padding: 18px;
+  }
+  .entry h2 {
+    margin-top: 0;
+  }
+}
+@media (max-width: 600px) and (max-height: 740px) {
+  .game .table {
+    min-height: 164px;
+    grid-template-rows: auto minmax(60px, auto) auto;
+    gap: 5px;
+    margin: 6px 0;
+  }
+  .hand .card {
+    height: 64px;
+  }
+  .game .player {
+    padding: 4px;
+  }
+}
+
+@media (max-width: 600px) {
+  .play-actions > button:not(.quiet) {
+    flex: 1 1 40%;
+  }
+  .play-actions > button.quiet {
+    order: 2;
+    flex: 1 1 100%;
+    min-height: 36px;
+  }
+  .play-actions > label {
+    flex: 1 1 100%;
+  }
+}
