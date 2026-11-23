@@ -103,4 +103,5 @@ Release verification:
 ## v0.7.2 — single centered suit
 
 - Numeric cards and aces now show one centered suit symbol with corner ranks, removing repeated pip layouts and the duplicate corner symbol. Court portraits and special artwork stay intact. Mobile and desktop share the centered layout.
-- Updated regression coverage for one symbol and readable ranks across 2–10/A. Passed 68 tests, ESLint/typecheck, formatting and build. Desktop browser visually verified centered single symbols. Deployment pending.
+- Updated regression coverage for one symbol and readable ranks across 2–10/A. Passed 68 tests, ESLint/typecheck, formatting and build. Desktop browser visually verified centered single symbols.
+- Released `0314225`: production index and JS/CSS SHA-256 match the tested build; backend health v5 unchanged. CI: https://github.com/donan92/tichu6/actions/runs/45200420321 (all check/test/build/audit/Worker integration stages passed).
