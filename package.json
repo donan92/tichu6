@@ -1,14 +1,19 @@
 {
   "name": "tichu6",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "node server.mjs",
     "test": "node --test",
-    "check": "node --check src/game.js && node --check src/app.js && node --check src/server-room.js && node --check server/worker.js",
-    "test:server": "node scripts/check-server.mjs",
-    "dev:server": "npx wrangler@4 dev --port 8787",
-    "deploy:server": "npx wrangler@4 deploy"
+    "check": "node --check src/game.js && node --check src/app.js && node --check src/server-room.js && node --check server/worker.js && node --check server/lounge.js",
+    "test:server": "node scripts/check-lounge.mjs",
+    "dev:server": "wrangler dev --port 8787",
+    "deploy:server": "wrangler deploy",
+    "build": "node scripts/build.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.166.0",
+    "ws": "^8.23.0"
   }
 }

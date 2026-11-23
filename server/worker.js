@@ -1,3 +1,4 @@
+export {Lounge} from './lounge.js';
 import {newGame,startRound,act,view,botAction} from '../src/game.js';
 const ORIGINS=new Set(['https://tichu6.pages.dev','https://donan92.github.io','http://localhost:5173','http://127.0.0.1:5173']);
 const TTL=86400000,GRACE=45000;
@@ -8,16 +9,12 @@ export default {
   if(origin&&!ORIGINS.has(origin))return new Response('Forbidden',{status:403});
   if(request.method==='OPTIONS')return new Response(null,{headers:{'Access-Control-Allow-Origin':origin||'https://tichu6.pages.dev','Access-Control-Allow-Methods':'POST, GET, OPTIONS','Access-Control-Allow-Headers':'Content-Type'}});
   let response;
-  if(url.pathname==='/health')response=json({ok:true,version:3});
-  else if(url.pathname==='/rooms'&&request.method==='POST') {
-   const bytes=crypto.getRandomValues(new Uint8Array(10));
-   const code=Array.from(bytes,b=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[b%32]).join('');
-   response=await env.ROOMS.get(env.ROOMS.idFromName(code)).fetch(new Request('https://room/create',{method:'POST',body:JSON.stringify({code})}));
-  } else {
-   const match=url.pathname.match(/^\/rooms\/([A-HJ-NP-Z2-9]{10})$/);
-   if(!match)return new Response('Not found',{status:404});
-   response=await env.ROOMS.get(env.ROOMS.idFromName(match[1])).fetch(request);
-  }
+  if(url.pathname==='/health')response=json({ok:true,version:4});
+  else if(url.pathname==='/lounge') {
+   if(!origin||!ORIGINS.has(origin))return new Response('Forbidden',{status:403});
+   if(env.CONNECTION_LIMIT){const {success}=await env.CONNECTION_LIMIT.limit({key:request.headers.get('CF-Connecting-IP')||'local'});if(!success)return new Response('Too many connection attempts',{status:429,headers:{'Retry-After':'60'}});}
+   response=await env.LOUNGE.get(env.LOUNGE.idFromName('public-v1')).fetch(request);
+  }else return json({error:'새 버전으로 새로고침한 후 대기실에서 입장하세요.'},410);
   if(response.status===101)return response;
   const headers=new Headers(response.headers);headers.set('Access-Control-Allow-Origin',origin||'https://tichu6.pages.dev');headers.set('Vary','Origin');headers.set('Cache-Control','no-store');
   return new Response(response.body,{status:response.status,headers});

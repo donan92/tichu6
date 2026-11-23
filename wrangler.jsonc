@@ -1,8 +1,42 @@
 {
- "name":"tichu6-server",
- "main":"server/worker.js",
- "compatibility_date":"2026-11-01",
- "account_id":"10db021d5bccb2f48d5738d9da2612ea",
- "durable_objects":{"bindings":[{"name":"ROOMS","class_name":"GameRoom"}]},
- "migrations":[{"tag":"v1","new_sqlite_classes":["GameRoom"]}]
+  "name": "tichu6-server",
+  "main": "server/worker.js",
+  "compatibility_date": "2026-11-01",
+  "account_id": "10db021d5bccb2f48d5738d9da2612ea",
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "ROOMS",
+        "class_name": "GameRoom"
+      },
+      {
+        "name": "LOUNGE",
+        "class_name": "Lounge"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "GameRoom"
+      ]
+    },
+    {
+      "tag": "v2",
+      "new_sqlite_classes": [
+        "Lounge"
+      ]
+    }
+  ],
+  "ratelimits": [
+    {
+      "name": "CONNECTION_LIMIT",
+      "namespace_id": "640401",
+      "simple": {
+        "limit": 120,
+        "period": 60
+      }
+    }
+  ]
 }

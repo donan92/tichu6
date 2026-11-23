@@ -15,18 +15,20 @@ Decisions approved by user:
 - Preserve Cloudflare free-tier deployment.
 
 Current checkpoint:
-- Lounge server, frontend, privacy checks, and capacity tests are implemented locally but not yet released.
-- Local verification: 39 tests, syntax checks, build, and diff whitespace checks passed. Local WebSocket integration previously passed; rerun after subsequent protocol changes before release.
-- Agent/contributor guidance and dependency automation are being committed separately from the unfinished lounge release.
+- Lounge implementation reviewed: stale client callbacks, module cache version, and spectator seat labels corrected.
+- Final checks passed: 41 tests, syntax checks, build, diff whitespace, and production dependency audit (0 vulnerabilities).
+- Fresh local Worker integration passed: 30/31 users, 5/6 room creation, six seats, spectator privacy/action denial, same-hand reconnect at full capacity, origin rejection.
+- Browser smoke test passed: hall entry, watching without cards, returning to hall, random room creation, reload into the same seat.
+- Worker deploy dry-run passed with both Durable Object classes and rate limiter.
+- v0.3 rooms are not automatically imported into v0.4. Storage remains intact; old endpoints return 410. README documents refresh/new-room migration.
 
-Next:
-1. Review local lounge changes and rerun isolated Worker integration checks after rate-limit changes.
-2. Run browser smoke tests and update README for the new protocol.
-3. Ensure Pages build copies `_headers` (use the new `npm run build` command).
-4. Deploy Worker then Pages, verify both, and update this status. Legacy v0.3 rooms require a compatibility review before release.
+Release checklist:
+1. Worker deployed successfully: `ee8fb0bf-746c-4817-a477-48116e6d1f2b` (v4).
+2. Pages production build command changed and verified in dashboard: `npm run build`, output `dist` (includes `_headers`).
+3. Verify deployed versions. Do not infer deployment from merge alone.
 
 ## Dependency maintenance checkpoint
 - User requested automatic latest stable Python/JavaScript library maintenance.
 - Added daily npm and GitHub Actions Dependabot configuration (major updates included). Python automation must be added with the first Python dependency manifest.
 - This documentation change includes `.github/dependabot.yml`; scheduled updates become active when it reaches the default branch. Automatic merge is not configured.
-- Python has no dependencies yet. JavaScript dependency manifests and the lockfile for the lounge implementation remain part of the separate unfinished release.
+- Python has no dependencies yet. JavaScript manifests and lockfile are included in the lounge release.

@@ -2,13 +2,14 @@
 
 게임: https://tichu6.pages.dev/
 
-HTML/CSS/JavaScript 화면은 Cloudflare Pages, 게임 서버는 Workers + SQLite Durable Objects를 사용합니다. 방 하나가 Durable Object 하나에 대응하고, 서버가 셔플·규칙 판정·게임 상태 저장을 담당합니다. PeerJS/WebRTC는 사용하지 않습니다.
+HTML/CSS/JavaScript 화면은 Cloudflare Pages, 게임 서버는 Workers + SQLite Durable Objects를 사용합니다. 공개 대기실과 최대 5개 방을 하나의 Durable Object가 관리하고, 서버가 셔플·규칙 판정·게임 상태 저장을 담당합니다. PeerJS/WebRTC는 사용하지 않습니다.
 
 ## 참가와 복구
 
-- 방 코드 하나로 최대 6명이 입장합니다. 시작 이후에는 기존 참가자만 복귀할 수 있습니다.
+- 초대 코드 없이 공개 대기실에서 방을 선택합니다. 전체 접속자는 플레이어·관전자를 합쳐 최대 30명, 방은 최대 5개, 플레이어는 방마다 6명입니다.
+- 방 제목은 자동 생성하고 닉네임은 1~5자로 지정합니다. 관전자는 공개 카드·점수·차례·남은 장수만 볼 수 있습니다.
 - 참가 키는 브라우저 localStorage에 저장하고 서버에는 SHA-256 해시만 보관합니다. 초대 링크에 참가 키를 넣지 않습니다.
-- 새로고침은 자동 복구하고, 나가기 후에는 ‘이전 방으로 복귀’를 사용할 수 있습니다. 최신 참가 방 하나를 기억합니다.
+- 새로고침은 자동 복구합니다. 진행 중인 방에서 대기실로 나와도 방 목록의 복귀 버튼으로 돌아갈 수 있습니다.
 - 같은 브라우저의 다른 탭으로 복귀하면 기존 연결을 교체합니다. 여러 명 테스트는 별도 브라우저 프로필을 사용하세요.
 - 브라우저 데이터 삭제·다른 기기에서는 복구할 수 없습니다. 회원 계정이나 기기 간 복구 코드는 아직 없습니다.
 - 방장이 나가도 게임은 유지됩니다. 현재 연결된 가장 앞 좌석이 시작/다음 라운드 담당자가 됩니다.
@@ -18,6 +19,7 @@ HTML/CSS/JavaScript 화면은 Cloudflare Pages, 게임 서버는 Workers + SQLit
 ## 실행과 검증
 
 ```sh
+npm ci
 npm run dev
 npm run dev:server
 npm test
@@ -25,11 +27,11 @@ npm run check
 npm run test:server
 ```
 
-Node.js 22 이상을 사용합니다. `npm run dev`는 5173 포트에서 화면을 제공합니다. 기본 화면은 운영 서버에 연결합니다. 로컬 서버와 함께 개발하려면 `src/server-room.js`의 API를 `http://localhost:8787`로 바꾸세요(운영 배포 전 원복). 서버 통합 검증은 기본적으로 로컬 8787을 사용하며 `TEST_API` 환경변수로 대상을 지정합니다.
+Node.js 22 이상을 사용합니다. `npm run dev`는 5173 포트에서 화면을 제공합니다. localhost 화면은 자동으로 로컬 8787 서버에 연결합니다. 서버 통합 검증은 기본적으로 로컬 8787을 사용하며 `TEST_API`로 다른 로컬 포트를 지정할 수 있습니다. 용량 검증은 운영 주소를 거부합니다. 매 실행마다 비어 있는 로컬 저장소를 사용하세요.
 
 ## 배포
 
-- Pages: `main` 푸시 시 자동 배포. 빌드 명령 `mkdir -p dist && cp index.html dist/ && cp -R src dist/`, 출력 `dist`.
+- Pages: `main` 푸시 시 자동 배포. 빌드 명령 `npm run build` (`_headers` 포함), 출력 `dist`.
 - 서버: `npx wrangler@4 login` 이후 `npm run deploy:server`. Worker 변경은 Pages 배포와 별도로 이 명령을 실행해야 합니다.
 - `wrangler.jsonc`의 SQLite migration `v1`은 최초 생성용이며 이미 저장된 방은 재배포 후에도 유지됩니다. 상태 스키마 변경 시 별도 마이그레이션이 필요합니다.
 - 서버 주소: https://tichu6-server.kelp-swaths-7q.workers.dev
@@ -60,11 +62,22 @@ Node.js 22 이상을 사용합니다. `npm run dev`는 5173 포트에서 화면�
 
 ## 구조
 
-- `server/worker.js`: 방 생성, WebSocket, 좌석 인증, 상태 저장, 봇/만료 알람
+- `server/worker.js`: Origin/연결 빈도 검사, 라우팅, 기존 GameRoom 보존
+- `server/lounge.js`: 대기실·방 정원, 좌석 인증, 관전, 저장, 봇/만료 알람
 - `src/server-room.js`: 연결, 자동 재접속, 참가 키 보관
 - `src/game.js`: 서버/연습 공용 규칙 엔진
 - `src/app.js`: 한국어 게임 화면
 - `tests/server.test.js`: 복구, 봇, 만료, 권한 검증
-- `scripts/check-server.mjs`: 실제 6개 WebSocket 동시 연결 통합 검증
+- `scripts/check-lounge.mjs`: 실제 31개 연결, 방 정원, 관전 권한, 재접속 통합 검증
+- `tests/lounge.test.js`: 동시 입장, 개인정보 차단, 요청 제한 검증
+- `scripts/check-server.mjs`: 구버전 전용 검증 스크립트 (현재 서버에는 사용하지 않음)
 
 참고: [Durable Objects](https://developers.cloudflare.com/durable-objects/), [무료 사용량](https://developers.cloudflare.com/durable-objects/platform/pricing/).
+
+## v0.4 전환 및 보안
+
+`v2` migration은 Lounge 클래스를 추가하며 기존 GameRoom 저장소를 삭제하지 않습니다. 구버전 방은 새 대기실로 자동 이전되지 않으며 구버전 HTTP 경로는 410을 반환합니다. 배포 후 새로고침하고 새 방을 만들어야 합니다.
+
+서버가 정원·좌석·차례·행동을 검증합니다. 연결 시도는 IP별 분당 120회, 연결별 메시지는 10초당 30회로 제한합니다. 메시지 길이는 4096 코드 단위, 미인증 연결은 10초로 제한합니다. IP 제한은 Cloudflare 위치별 근사 제한이며 계정 인증을 대신하지 않습니다. 익명 참가 키 하나가 한 사용자이므로 서로 다른 키를 만든 동일인을 구별하지는 못합니다.
+
+개발 재개는 `AGENTS.md`, 기여 절차는 `CONTRIBUTING.md`, 미완료 작업과 배포 상태는 `docs/STATUS.md`를 확인하세요.
