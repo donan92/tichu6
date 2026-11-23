@@ -238,5 +238,6 @@
   "combinations.straight": "Straight · five or more consecutive ranks",
   "combinations.pairs": "Pair sequence · two or more consecutive pairs",
   "combinations.bomb": "Bomb · exactly four of one rank, or a same-suit straight of five or more",
-  "combinations.compare": "Beat a play with the same type and size at a higher rank. Bombs beat ordinary plays; straight-flush bombs beat four-of-a-kind bombs."
+  "combinations.compare": "Beat a play with the same type and size at a higher rank. Bombs beat ordinary plays; straight-flush bombs beat four-of-a-kind bombs.",
+  "error.idleLogout": "You were logged out after 30 minutes of inactivity. A bot will continue your game."
 }

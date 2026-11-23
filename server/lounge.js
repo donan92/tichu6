@@ -9,7 +9,8 @@ import {
   points,
 } from '../src/game.js';
 const GRACE = 45000,
-  TTL = 86400000;
+  TTL = 86400000,
+  IDLE = 30 * 60 * 1000;
 export function nickname(input) {
   if (typeof input !== 'string' || !/^[A-Za-z0-9]{1,8}$/.test(input))
     throw new AppError('error.invalidNickname');
@@ -56,6 +57,14 @@ export class Lounge {
     this.data = { rooms: {} };
     ctx.blockConcurrencyWhile(async () => {
       this.data = (await ctx.storage.get('lounge')) || { rooms: {} };
+      this.data.activity ||= {};
+      // Old hibernated sockets get a full idle window when first upgraded.
+      for (const ws of this.users()) {
+        const { hash } = this.attachment(ws);
+        this.data.activity[hash] ??= Date.now();
+      }
+      await this.persist();
+      await this.schedule();
     });
     ctx.setWebSocketAutoResponse(
       new WebSocketRequestResponsePair('ping', 'pong'),
@@ -166,7 +175,7 @@ export class Lounge {
           spectator: seat < 0,
           leader: online.findIndex(Boolean),
           offline: online.map((x, i) => !x && !r.members[i]?.bot),
-          bots: r.members.map((m) => !!m?.bot),
+          bots: r.members.map((m) => !!(m?.bot || m?.idle)),
           paused: false,
         },
         online,
@@ -211,6 +220,7 @@ export class Lounge {
     if (own >= 0) {
       watch = false;
       r.state.names[own] = name;
+      r.members[own].idle = false;
     }
     if (!watch && own < 0) {
       const active = this.activeMembership(a.hash);
@@ -228,6 +238,22 @@ export class Lounge {
     a.name = name;
     ws.serializeAttachment(a);
     r.lastActive = Date.now();
+  }
+  expireIdle(now) {
+    for (const ws of this.users()) {
+      const a = this.attachment(ws);
+      if (now - (this.data.activity[a.hash] ?? now) < IDLE) continue;
+      this.leaveWaiting(a.hash, null);
+      for (const r of Object.values(this.data.rooms))
+        for (const m of r.members)
+          if (m?.hash === a.hash) {
+            m.idle = true;
+            m.offlineSince = now - GRACE;
+          }
+      // Revoke socket authorization before closing; queued actions cannot revive it.
+      ws.serializeAttachment({ created: now, idle: true });
+      ws.close(4009, 'Idle timeout');
+    }
   }
   async webSocketMessage(ws, raw) {
     try {
@@ -265,6 +291,20 @@ export class Lounge {
           b.toString(16).padStart(2, '0'),
         ).join('');
         await this.exclusive(async () => {
+          this.expireIdle(now);
+          const lastActivity = this.data.activity[hash];
+          if (
+            lastActivity != null &&
+            now - lastActivity >= IDLE &&
+            msg.manual !== true
+          ) {
+            ws.serializeAttachment({ created: now, idle: true });
+            await this.persist();
+            ws.close(4009, 'Idle timeout');
+            this.broadcast();
+            await this.schedule();
+            return;
+          }
           const existing = this.users().find(
             (s) => this.attachment(s).hash === hash,
           );
@@ -275,6 +315,8 @@ export class Lounge {
             existing.serializeAttachment({ created: now });
             existing.close(4001, 'Replaced');
           }
+          this.data.activity[hash] =
+            msg.manual === true ? now : (lastActivity ?? now);
           a = { ...a, hash, name, room: null, watch: false };
           ws.serializeAttachment(a);
           const resume =
@@ -285,6 +327,7 @@ export class Lounge {
               this.enter(ws, resume, msg.watch === true, name);
           }
           this.refreshPresence();
+          this.cleanup();
           await this.persist();
           this.send(ws, { type: 'welcome' });
           this.broadcast();
@@ -292,7 +335,16 @@ export class Lounge {
       } else {
         if (!a.hash) throw new AppError('error.enterFirst');
         await this.exclusive(async () => {
+          this.expireIdle(now);
           a = this.attachment(ws);
+          if (a.idle) {
+            this.refreshPresence();
+            this.cleanup();
+            await this.persist();
+            this.broadcast();
+            await this.schedule();
+            return;
+          }
           if (!a.hash) throw new AppError('error.replaced');
           if (msg.type === 'create') {
             const name = nickname(msg.name);
@@ -401,6 +453,7 @@ export class Lounge {
             } else r.state = act(r.state, seat, action);
             r.lastActive = Date.now();
           } else throw new AppError('error.unsupported');
+          this.data.activity[a.hash] = now;
           this.refreshPresence();
           this.cleanup();
           await this.persist();
@@ -410,10 +463,17 @@ export class Lounge {
       await this.schedule();
     } catch (error) {
       this.send(ws, { type: 'error', ...errorEvent(error) });
-      if (!this.attachment(ws).hash) ws.close(4003, 'Admission rejected');
+      if (!this.attachment(ws).hash && !this.attachment(ws).idle)
+        ws.close(4003, 'Admission rejected');
     }
   }
   cleanup() {
+    for (const [hash, at] of Object.entries(this.data.activity))
+      if (
+        Date.now() - at >= TTL &&
+        !this.users().some((ws) => this.attachment(ws).hash === hash)
+      )
+        delete this.data.activity[hash];
     for (const [id, r] of Object.entries(this.data.rooms))
       if (
         !r.members.some((m) => m && !m.bot) ||
@@ -434,6 +494,7 @@ export class Lounge {
     await this.exclusive(async () => {
       ws.serializeAttachment({ created: Date.now() });
       this.refreshPresence();
+      this.cleanup();
       await this.persist();
       this.broadcast();
     });
@@ -458,9 +519,16 @@ export class Lounge {
   async schedule() {
     const now = Date.now();
     let at = Infinity;
+    for (const time of Object.values(this.data.activity))
+      at = Math.min(at, time + TTL);
     for (const ws of this.sockets())
       if (!this.attachment(ws).hash)
         at = Math.min(at, (this.attachment(ws).created || now) + 10000);
+      else
+        at = Math.min(
+          at,
+          (this.data.activity[this.attachment(ws).hash] ?? now) + IDLE,
+        );
     for (const r of Object.values(this.data.rooms)) {
       at = Math.min(at, r.lastActive + TTL);
       const online = this.online(r),
@@ -469,7 +537,7 @@ export class Lounge {
         if (!m || online[i]) return;
         const needs =
           s.phase === 'lobby' ||
-          (online.some(Boolean) &&
+          ((online.some(Boolean) || r.members.some((member) => member?.idle)) &&
             ((s.phase === 'grand' && !s.ready[i]) ||
               (s.phase === 'exchange' && !s.exchanges[i]) ||
               (s.phase === 'play' && s.turn === i) ||
@@ -479,7 +547,7 @@ export class Lounge {
             at,
             Math.max(
               now + 2000,
-              m.bot ? now + 2000 : (m.offlineSince ?? now) + GRACE,
+              m.bot || m.idle ? now + 2000 : (m.offlineSince ?? now) + GRACE,
             ),
           );
       });
@@ -497,6 +565,7 @@ export class Lounge {
           now - (this.attachment(ws).created || 0) >= 10000
         )
           ws.close(4003, 'Handshake timeout');
+      this.expireIdle(now);
       this.refreshPresence();
       for (const r of Object.values(this.data.rooms)) {
         const s = r.state,
@@ -505,6 +574,7 @@ export class Lounge {
             r.members[i] &&
             !online[i] &&
             (r.members[i].bot ||
+              r.members[i].idle ||
               now - (r.members[i].offlineSince ?? now) >= GRACE);
         if (s.phase === 'lobby') {
           r.members = r.members.map((m, i) => {
@@ -512,7 +582,7 @@ export class Lounge {
             s.names[i] = '';
             return null;
           });
-        } else if (online.some(Boolean)) {
+        } else if (online.some(Boolean) || r.members.some((m) => m?.idle)) {
           const seat =
             s.phase === 'grand'
               ? s.ready.findIndex((x, i) => !x && eligible(i))

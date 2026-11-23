@@ -386,3 +386,137 @@ test('one through six humans are balanced between teams, including odd counts', 
     assert.equal(r.members.filter((m) => m.bot).length, 6 - count);
   }
 });
+const IDLE = 30 * 60 * 1000;
+test('idle deadline logs out hall users and spectators and frees capacity', async (t) => {
+  let now = Date.now();
+  t.mock.method(Date, 'now', () => now);
+  const f = await setup();
+  const owner = await user(f, 1);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const roomId = owner.a.room;
+  const watcher = await user(f, 2);
+  await msg(f.hub, watcher, {
+    type: 'join',
+    roomId,
+    watch: true,
+    name: 'Watcher',
+  });
+  const hall = await user(f, 3);
+  now += IDLE - 1;
+  await f.hub.alarm();
+  assert.equal(watcher.readyState, 1);
+  assert.equal(hall.readyState, 1);
+  now++;
+  await f.hub.alarm();
+  for (const ws of [owner, watcher, hall]) {
+    assert.equal(ws.code, 4009);
+    assert.equal(ws.a.hash, undefined);
+  }
+  assert.equal(f.hub.users().length, 0);
+  assert.equal(Object.keys(f.hub.data.rooms).length, 0);
+  assert.ok(last(await user(f, 4), 'welcome'));
+});
+test('only accepted user requests refresh inactivity; broadcasts and invalid actions do not', async (t) => {
+  let now = Date.now();
+  t.mock.method(Date, 'now', () => now);
+  const f = await setup(),
+    ws = await user(f, 1);
+  const hash = ws.a.hash;
+  now += IDLE - 1000;
+  await msg(f.hub, ws, { type: 'create', name: 'Owner' });
+  const at = f.hub.data.activity[hash];
+  now += 500;
+  await msg(f.hub, ws, {
+    type: 'action',
+    revision: -1,
+    action: { type: 'start' },
+  });
+  f.hub.broadcast();
+  await f.hub.alarm();
+  assert.equal(f.hub.data.activity[hash], at);
+  now = at + IDLE;
+  const revision = f.hub.data.rooms[ws.a.room].state.revision;
+  await msg(f.hub, ws, { type: 'action', revision, action: { type: 'start' } });
+  assert.equal(ws.code, 4009);
+  assert.equal(f.hub.users().length, 0);
+});
+test('idle takeover survives hibernation, advances without grace and allows explicit same-seat return', async (t) => {
+  let now = Date.now();
+  t.mock.method(Date, 'now', () => now);
+  const f = await setup(),
+    ws = await user(f, 1);
+  await msg(f.hub, ws, { type: 'create', name: 'Owner' });
+  const roomId = ws.a.room;
+  await msg(f.hub, ws, {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  let r = f.hub.data.rooms[roomId];
+  const seat = r.members.findIndex((m) => m?.hash === ws.a.hash);
+  const hand = structuredClone(r.state.hands[seat]);
+  // Already completed bot decisions, leaving the human as the only blocker.
+  r.state.ready = r.members.map((m) => !!m.bot);
+  await f.hub.persist();
+  f.hub = new Lounge(f.ctx);
+  await f.ready();
+  now += IDLE;
+  await f.hub.alarm();
+  r = f.hub.data.rooms[roomId];
+  assert.equal(ws.code, 4009);
+  assert.equal(r.members[seat].idle, true);
+  assert.equal(r.state.phase, 'exchange');
+  assert.equal(f.hub.users().length, 0);
+  const retry = await user(f, 1);
+  assert.equal(retry.code, 4009);
+  const manual = socket();
+  f.sockets.push(manual);
+  await msg(f.hub, manual, {
+    type: 'hello',
+    token: '1'.padStart(64, '0'),
+    name: 'Owner',
+    roomId,
+    manual: true,
+  });
+  assert.ok(last(manual, 'welcome'));
+  assert.equal(last(manual, 'state').value.seat, seat);
+  assert.deepEqual(last(manual, 'state').value.hand, hand);
+  assert.equal(r.members[seat].idle, false);
+});
+test('automatic reconnect keeps the existing idle deadline', async (t) => {
+  let now = Date.now();
+  t.mock.method(Date, 'now', () => now);
+  const f = await setup(),
+    ws = await user(f, 1);
+  const hash = ws.a.hash,
+    at = f.hub.data.activity[hash];
+  now += IDLE - 1;
+  ws.close(1006);
+  await f.hub.webSocketClose(ws, 1006);
+  const retry = await user(f, 1);
+  assert.equal(f.hub.data.activity[hash], at);
+  now++;
+  await f.hub.alarm();
+  assert.equal(retry.code, 4009);
+});
+test('upgrade persists old socket idle baselines across repeated hibernation', async (t) => {
+  let now = Date.now();
+  t.mock.method(Date, 'now', () => now);
+  const f = await setup(),
+    ws = await user(f, 1);
+  const hash = ws.a.hash;
+  delete f.hub.data.activity;
+  await f.hub.persist();
+  f.hub = new Lounge(f.ctx);
+  await f.ready();
+  const at = f.hub.data.activity[hash];
+  now += IDLE - 1;
+  f.hub = new Lounge(f.ctx);
+  await f.ready();
+  assert.equal(f.hub.data.activity[hash], at);
+  await f.hub.alarm();
+  assert.equal(ws.readyState, 1);
+  now++;
+  await f.hub.alarm();
+  assert.equal(ws.code, 4009);
+});

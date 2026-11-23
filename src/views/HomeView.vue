@@ -29,7 +29,7 @@ const samples: Card[] = [
       <div class="entry-title">
         <h2>{{ t('home.seat') }}</h2>
       </div>
-      <form class="entry-form" @submit.prevent="session.enterHall">
+      <form class="entry-form" @submit.prevent="session.enterHall()">
         <NicknameInput v-model="session.nickname" label="home.nickname" />
         <div class="entry-actions">
           <button class="primary" type="submit" :disabled="session.busy">

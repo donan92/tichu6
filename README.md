@@ -125,3 +125,25 @@ These are heuristics using the bot's own cards, received exchange cards and publ
 state, not a measured win-rate guarantee or access to other players' hidden hands.
 
 게임 플레이는 반시계 방향으로 진행합니다. 내 다음 좌석은 테이블 오른쪽에 표시되며, 관전자에게도 같은 방향으로 표시됩니다.
+
+### Thirty-minute idle logout
+
+The server logs out players, spectators and lounge visitors after 30 minutes
+without an accepted room or game request. Explicit entry, room creation/join/leave,
+and valid game actions count as activity. Heartbeat ping/pong, broadcasts, invalid
+requests and automatic reconnects do not reset the deadline. Clicking or selecting
+cards locally without submitting an action does not count as a server action.
+
+Idle sockets lose authorization and close with code 4009, freeing a connected-user
+slot. Waiting seats are removed. During a match the seat immediately becomes
+bot-controlled, without the ordinary 45-second disconnect grace period. If all
+humans become idle, bots finish the current round; they do not start new rounds
+without a user. Normal network-disconnect behavior and the 24-hour room TTL remain.
+
+The client returns to the entry screen and stops automatic reconnection, including
+after reload. Explicit entry reuses private local credentials to recover the same
+seat and remaining hand. Idle timestamps and takeover flags persist privately in
+the Durable Object; snapshots expose only the existing bot indicator. Old stored
+rooms migrate without losing hands, with a fresh idle window for existing sockets.
+Run `npm run test:idle` for the isolated real-Worker timeout/reconnect regression;
+its clock-aging fixture is never imported by the production Worker.

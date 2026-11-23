@@ -9,6 +9,7 @@ interface SavedSession {
   name: string;
   roomId: string | null;
   watch: boolean;
+  idle?: boolean;
 }
 export function savedRoom(): SavedSession | null {
   try {
@@ -29,6 +30,7 @@ export function savedRoom(): SavedSession | null {
           ? value.roomId
           : null,
       watch: 'watch' in value && value.watch === true,
+      ...('idle' in value && value.idle === true ? { idle: true } : {}),
     };
   } catch {
     return null;
@@ -51,6 +53,7 @@ export class Room {
   private timer?: ReturnType<typeof setTimeout>;
   private handshake?: ReturnType<typeof setTimeout>;
   private lastSeen = 0;
+  private manual = true;
   private resolve?: () => void;
   private reject?: (error: AppError) => void;
   constructor(private readonly callbacks: Callbacks) {}
@@ -61,7 +64,8 @@ export class Room {
       this.callbacks.onNotice(messageEvent('connection.storage'));
     }
   }
-  open(name: string): Promise<void> {
+  open(name: string, manual = true): Promise<void> {
+    this.manual = manual;
     const saved = savedRoom();
     this.session = {
       token:
@@ -98,7 +102,10 @@ export class Room {
     this.handshake = setTimeout(() => socket.close(), 15000);
     socket.onopen = () => {
       if (this.closed || socket !== this.socket) return;
-      socket.send(JSON.stringify({ type: 'hello', ...this.session }));
+      socket.send(
+        JSON.stringify({ type: 'hello', ...this.session, manual: this.manual }),
+      );
+      this.manual = false;
     };
     socket.onmessage = (event) => {
       if (this.closed || socket !== this.socket) return;
@@ -152,6 +159,14 @@ export class Room {
       if (this.closed) return;
       this.ready = false;
       this.callbacks.onStatus(false);
+      if (event.code === 4009) {
+        if (this.session) {
+          this.session.idle = true;
+          this.remember();
+        }
+        this.fail(messageEvent('error.idleLogout'));
+        return;
+      }
       if ([4001, 4003, 4008].includes(event.code)) {
         this.fail(
           messageEvent(

@@ -19,7 +19,8 @@
     "typecheck": "vue-tsc --noEmit",
     "test:unit": "node --test tests/*.test.js",
     "test:ui": "vitest run",
-    "assets:cards": "node scripts/build-card-assets.mjs"
+    "assets:cards": "node scripts/build-card-assets.mjs",
+    "test:idle": "node scripts/check-idle.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

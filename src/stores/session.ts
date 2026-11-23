@@ -86,7 +86,7 @@ export const useSessionStore = defineStore('session', () => {
         break;
     }
   }
-  async function enterHall() {
+  async function enterHall(manual = true) {
     if (busy.value) return;
     try {
       const name = validName();
@@ -101,6 +101,13 @@ export const useSessionStore = defineStore('session', () => {
         onError: (message) => {
           if (room === active) {
             connectionError.value = message;
+            if (message.code === 'error.idleLogout') {
+              mode.value = 'home';
+              game.value = null;
+              selected.value = [];
+              directory.value = { rooms: [], count: 0 };
+              leaving.value = false;
+            }
             pending.value = false;
             notify(message);
           }
@@ -119,7 +126,7 @@ export const useSessionStore = defineStore('session', () => {
       room = active;
       connected.value = false;
       try {
-        await active.open(name);
+        await active.open(name, manual);
       } catch (error) {
         if (room === active) notify(error);
       } finally {

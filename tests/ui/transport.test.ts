@@ -1,4 +1,6 @@
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
+import { createPinia, disposePinia, setActivePinia } from 'pinia';
+import { useSessionStore } from '../../src/stores/session';
 import { Room, savedRoom } from '../../src/server-room';
 import { newGame, startRound, view } from '../../src/game.js';
 class Socket {
@@ -145,4 +147,72 @@ it('rejects malformed persisted credentials and normalizes optional fields', () 
     roomId: null,
     watch: false,
   });
+});
+it('idle logout stops automatic reconnect while retaining credentials for manual return', async () => {
+  const { room, callbacks } = client();
+  const opened = room.open('Alice');
+  const socket = Socket.instances[0];
+  socket.open();
+  socket.receive({ type: 'welcome' });
+  await opened;
+  const token = savedRoom()?.token;
+  socket.close(4009);
+  expect(callbacks.onError).toHaveBeenCalledWith({
+    code: 'error.idleLogout',
+    params: {},
+  });
+  expect(savedRoom()?.idle).toBe(true);
+  await vi.advanceTimersByTimeAsync(60000);
+  expect(Socket.instances).toHaveLength(1);
+  const next = client();
+  const pending = next.room.open('Alice');
+  const resumed = Socket.instances[1];
+  resumed.open();
+  expect(JSON.parse(resumed.sent[0])).toMatchObject({ token, manual: true });
+  resumed.receive({ type: 'welcome' });
+  await pending;
+  expect(savedRoom()?.idle).not.toBe(true);
+});
+it('automatic startup and transport retries do not claim manual activity', async () => {
+  const { room } = client();
+  const opened = room.open('Alice', false);
+  const first = Socket.instances[0];
+  first.open();
+  expect(JSON.parse(first.sent[0]).manual).toBe(false);
+  first.receive({ type: 'welcome' });
+  await opened;
+  first.close(1006);
+  await vi.advanceTimersByTimeAsync(2000);
+  const second = Socket.instances[1];
+  second.open();
+  expect(JSON.parse(second.sent[0]).manual).toBe(false);
+});
+
+it('idle logout returns the session to home and clears private game display', async () => {
+  const pinia = createPinia();
+  setActivePinia(pinia);
+  try {
+    const session = useSessionStore();
+    session.nickname = 'Alice';
+    const opened = session.enterHall();
+    const socket = Socket.instances[0];
+    socket.open();
+    socket.receive({ type: 'welcome' });
+    await opened;
+    socket.receive({
+      type: 'state',
+      value: { ...view(startRound(newGame()), 0), roomId: 'room' },
+      online: Array(6).fill(true),
+    });
+    session.selected = [session.game?.hand[0].id ?? 'card'];
+    expect(session.mode).toBe('room');
+    socket.close(4009);
+    expect(session.mode).toBe('home');
+    expect(session.game).toBeNull();
+    expect(session.selected).toEqual([]);
+    expect(session.connected).toBe(false);
+    expect(session.connectionError?.code).toBe('error.idleLogout');
+  } finally {
+    disposePinia(pinia);
+  }
 });
