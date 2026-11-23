@@ -5,7 +5,7 @@ import I18NextVue from 'i18next-vue';
 import { nextTick } from 'vue';
 import { i18next } from '../../src/localization';
 import { useSessionStore } from '../../src/stores/session';
-import { newGame, startRound, view } from '../../src/game.js';
+import { act, newGame, startRound, view } from '../../src/game.js';
 import AppHeader from '../../src/components/AppHeader.vue';
 import PlayingCard from '../../src/components/PlayingCard.vue';
 import GameControls from '../../src/components/GameControls.vue';
@@ -34,6 +34,54 @@ function round(): RoundView {
   return view(startRound(newGame()), 0);
 }
 describe('Vue interaction regressions', () => {
+  it('advances counterclockwise for every player viewpoint and spectators', async () => {
+    const session = useSessionStore();
+    let state = startRound(newGame());
+    state.phase = 'play';
+    state.turn = 0;
+    state.hands = state.hands.map((_, index) => [
+      { id: `low-${index}`, rank: 2 + index, suit: 0 },
+      { id: `high-${index}`, rank: 10, suit: 1 },
+    ]);
+    const wrapper = mount(GameView, {
+      props: { game: view(state, 0) },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    // CSS positions run clockwise: bottom, lower left, upper left, top,
+    // upper right, lower right. Increasing engine seats must run opposite.
+    for (const viewpoint of [0, 1, 2, 3, 4, 5, -1]) {
+      session.game = {
+        ...view(state, Math.max(0, viewpoint)),
+        seat: viewpoint,
+      };
+      const base = Math.max(0, viewpoint);
+      for (let turn = 0; turn < 6; turn++) {
+        await wrapper.setProps({
+          game: { ...view(state, base), turn, spectator: viewpoint < 0 },
+        });
+        const expectedPosition = (base - turn + 6) % 6;
+        expect(wrapper.get('.player.active').classes()).toContain(
+          `pos-${expectedPosition}`,
+        );
+        expect(wrapper.get('.pos-0 b').text()).toContain(state.names[base]);
+      }
+    }
+    session.game = view(state, 0);
+    state = act(state, 0, {
+      type: 'play',
+      ids: ['low-0'],
+      wish: null,
+      target: 2,
+      phoenixRank: null,
+    });
+    await wrapper.setProps({ game: view(state, 0) });
+    expect(wrapper.get('.player.active').classes()).toContain('pos-5');
+    state = act(state, 1, { type: 'pass' });
+    await wrapper.setProps({ game: view(state, 0) });
+    expect(wrapper.get('.player.active').classes()).toContain('pos-4');
+  });
+
   it('renders special artwork with localized card labels and ordered selection', async () => {
     const wrapper = mount(PlayingCard, {
       props: {

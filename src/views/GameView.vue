@@ -57,7 +57,7 @@ const tableNote = computed(() =>
         :key="index"
         class="player"
         :class="[
-          `pos-${(index - seat + 6) % 6}`,
+          `pos-${(seat - index + 6) % 6}`,
           { active: game.phase === 'play' && game.turn === index },
         ]"
       >
