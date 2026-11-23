@@ -42,4 +42,4 @@ Release verification:
 - New errors/history use `{code, params}`; room names use adjective/noun codes. Old string history/titles remain readable in their original language. Existing room/session credentials are preserved.
 - Nicknames: ASCII A-Z/a-z/0-9 only, 1–8 characters, no trimming or case changes. Old invalid nicknames must be replaced on reconnect.
 - Passed: 47 tests, syntax checks, build; real isolated Worker capacity/privacy/reconnect integration. Browser verified bilingual entry, eight-character nickname, room creation, language persistence after reload, in-game controls/history and card accessibility labels.
-- Worker deployed: `daf08d99-11fd-452e-92e9-476fc2daa182` (health v5). Pages deployment verification follows main push. Full npm audit: 0 vulnerabilities.
+- Worker deployed: `daf08d99-11fd-452e-92e9-476fc2daa182` (health v5). Pages deployed commit `9c96b50`: `48f337f5-d70b-4a48-a205-5399be1eab8f`. Production bundle hash matches the tested local build; CSP, health v5, valid eight-character nickname admission and invalid Korean nickname rejection passed. Full npm audit: 0 vulnerabilities.
