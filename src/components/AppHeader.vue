@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import { version } from '../../package.json';
 import { useTranslation } from 'i18next-vue';
 import { languages } from '../i18n.js';
 import { changeLanguage } from '../localization';
@@ -28,7 +29,8 @@ const status = computed(() =>
       class="brand"
       href="#"
       @click.prevent="session.mode !== 'home' && (session.leaving = true)"
-      >6<span>T</span><small>{{ t('app.tagline') }}</small></a
+      >6<span>T</span><span class="brand-version">v{{ version }}</span
+      ><small>{{ t('app.tagline') }}</small></a
     >
     <div class="header-right">
       <label class="language-picker"
@@ -62,3 +64,16 @@ const status = computed(() =>
     </div>
   </header>
 </template>
+
+<style scoped>
+.brand .brand-version {
+  margin-left: 8px;
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1;
+  white-space: nowrap;
+  align-self: center;
+}
+</style>

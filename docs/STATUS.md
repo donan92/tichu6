@@ -158,3 +158,9 @@ Release verification:
 - Passed 99 tests (70 engine/server + 29 UI), zero-warning lint, strict frontend typecheck, formatting and build. Expanded real local Worker integration passed private receipt correctness, spectator redaction, forfeit-to-hall, bot takeover and rejected seat reclaim, plus existing capacity/privacy/reconnect/origin checks.
 - Browser verified real practice exchange receipt, first-play removal, colored team label and `6 싱글`, repeated modal open/cancel/Escape, focus return and confirmed exit. Checked 375×812 (no horizontal document overflow) and desktop 1280×900; no console errors. Actual iPhone Safari remains untested. Screenshot `/tmp/tichu6-ux-forfeit.jpg` shows the practice warning.
 - Released `ed6b8c3` on main. Worker version `8aac4040-15a0-4cf3-9f36-7e8e566a990a`; Pages production deployment `77078863-c5b2-48c3-8c02-21b682ee1b9c`. Production HTML and all five asset SHA-256 hashes match an isolated build of the merged commit. Backend health v6 and authenticated lounge WebSocket welcome passed; durable room state retained. GitHub Verify including exchange/forfeit and IDLE Worker integration passed: https://github.com/donan92/tichu6/actions/runs/45215634265. Pages deployment succeeded. No pending release work.
+
+## Header version label
+
+- Added a small muted version beside the 6T logo on every screen, sourced directly from package.json so future releases update automatically.
+- Passed check, all 99 tests, format check and build. Checked 375px Korean practice header: version visible, no overlap with language picker or game exit. No server/protocol changes.
+- Frontend deployment verification pending.
