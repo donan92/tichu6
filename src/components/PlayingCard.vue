@@ -56,6 +56,82 @@ const courtStyle = computed(() => {
     backgroundPosition: `${((column * 362 + x - 3) / (1086 - width)) * 100}% ${((row * 350 + y - 3) / (1448 - height)) * 100}%`,
   };
 });
+// Standard two-column pip layouts; lower-half symbols face the opposite way.
+const pipLayouts: Record<number, [number, number][]> = {
+  2: [
+    [50, 44],
+    [50, 120],
+  ],
+  3: [
+    [50, 44],
+    [50, 82],
+    [50, 120],
+  ],
+  4: [
+    [32, 44],
+    [68, 44],
+    [32, 120],
+    [68, 120],
+  ],
+  5: [
+    [32, 44],
+    [68, 44],
+    [50, 82],
+    [32, 120],
+    [68, 120],
+  ],
+  6: [
+    [32, 44],
+    [68, 44],
+    [32, 82],
+    [68, 82],
+    [32, 120],
+    [68, 120],
+  ],
+  7: [
+    [32, 44],
+    [68, 44],
+    [50, 63],
+    [32, 82],
+    [68, 82],
+    [32, 120],
+    [68, 120],
+  ],
+  8: [
+    [32, 44],
+    [68, 44],
+    [50, 63],
+    [32, 82],
+    [68, 82],
+    [50, 101],
+    [32, 120],
+    [68, 120],
+  ],
+  9: [
+    [32, 44],
+    [68, 44],
+    [50, 56.5],
+    [32, 69],
+    [68, 69],
+    [32, 95],
+    [68, 95],
+    [32, 120],
+    [68, 120],
+  ],
+  10: [
+    [32, 44],
+    [68, 44],
+    [50, 56.5],
+    [32, 69],
+    [68, 69],
+    [32, 95],
+    [68, 95],
+    [50, 107.5],
+    [32, 120],
+    [68, 120],
+  ],
+};
+const pips = computed(() => pipLayouts[props.card.rank] ?? []);
 const rank = computed(() => LABEL[props.card.rank] ?? props.card.rank);
 const display = computed(() =>
   props.card.special
@@ -106,6 +182,23 @@ const label = computed(() => {
         :style="courtStyle"
         aria-hidden="true"
       />
+      <svg
+        v-else-if="pips.length"
+        class="card-pips"
+        viewBox="0 0 100 140"
+        aria-hidden="true"
+      >
+        <use
+          v-for="([x, y], index) in pips"
+          :key="index"
+          :href="suitHref"
+          :x="x - 9.5"
+          :y="y - 9.5"
+          width="19"
+          height="19"
+          :transform="y > 82 ? `rotate(180 ${x} ${y})` : undefined"
+        />
+      </svg>
       <svg v-else class="card-emblem" aria-hidden="true">
         <use :href="suitHref" />
       </svg>

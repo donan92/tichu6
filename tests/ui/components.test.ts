@@ -280,7 +280,7 @@ describe('Vue interaction regressions', () => {
     }
     expect(positions.size).toBe(12);
   });
-  it('renders one suit symbol and readable ranks for every numeric card', () => {
+  it('renders the rank-matched pip count with mirrored columns and readable indices', () => {
     for (let rank = 2; rank <= 14; rank++) {
       if (rank >= 11 && rank <= 13) continue;
       const wrapper = mount(PlayingCard, {
@@ -292,7 +292,22 @@ describe('Vue interaction regressions', () => {
       expect(wrapper.get('.card-corner').text()).toBe(
         rank === 14 ? 'A' : String(rank),
       );
-      expect(wrapper.find('.card-emblem').exists()).toBe(true);
+      expect(wrapper.findAll('svg use')).toHaveLength(rank === 14 ? 1 : rank);
+      if (rank !== 14) {
+        const pips = wrapper.findAll('.card-pips use');
+        const points = pips.map((pip) => [
+          Number(pip.attributes('x')) + 9.5,
+          Number(pip.attributes('y')) + 9.5,
+        ]);
+        expect(new Set(points.map(String)).size).toBe(rank);
+        for (const [x, y] of points) {
+          expect(points).toContainEqual([100 - x, y]);
+          expect(x - 9.5).toBeGreaterThan(0);
+          expect(x + 9.5).toBeLessThan(100);
+          expect(y - 9.5).toBeGreaterThan(30);
+          expect(y + 9.5).toBeLessThan(140);
+        }
+      }
       expect(wrapper.find('.card-bottom').exists()).toBe(false);
     }
   });
