@@ -4,8 +4,10 @@ Original playing-card-inspired artwork; no scans or assets from a commercial Tic
 
 - `source/*.png`: transparent original illustrations generated with built-in OpenAI image generation on 2026-11-23. No external account or runtime image service required.
 - `specials.webp`: 768×768 transparent 2×2 sprite (dragon, phoenix / dog, mahjong). Only this compressed asset ships to browsers; source PNGs remain editable source material.
-- `suits.svg`: original vector symbols for jade, sword, pagoda, star and court ornament. Loaded as an external SVG with Vite `?no-inline` so fragment references work.
+- `suits.svg`: standard spade, club, diamond and heart vector symbols (stable suit IDs 0–3). Loaded as an external SVG with Vite `?no-inline` so fragment references work.
 - Rendering: `src/components/PlayingCard.vue` and `src/styles/cards.css`. Identity/rank/accessible labels remain text, localized independently from artwork.
+
+Court cards use separate generated jack/queen/king WebP illustrations; [exact prompts](COURT-PROMPTS.md). Special cards display no name or letter, while mahjong shows 1. Accessible localized names remain available.
 
 ## Rebuild
 

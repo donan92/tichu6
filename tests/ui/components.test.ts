@@ -54,6 +54,50 @@ describe('Vue interaction regressions', () => {
     await nextTick();
     expect(wrapper.attributes('aria-label')).toBe(i18next.t('card.dragon'));
   });
+  it('keeps special names accessible without printing them, and marks mahjong as one', async () => {
+    await i18next.changeLanguage('ko');
+    for (const special of ['dragon', 'phoenix', 'dog', 'mahjong'] as const) {
+      const wrapper = mount(PlayingCard, {
+        props: { card: { id: special, rank: 1, suit: -1, special } },
+        global: { plugins: plugins() },
+      });
+      wrappers.push(wrapper);
+      expect(wrapper.attributes('aria-label')).toBe(
+        i18next.t(`card.${special}`),
+      );
+      expect(wrapper.text().replace(/\s/g, '')).toBe(
+        special === 'mahjong' ? '11' : '',
+      );
+    }
+  });
+  it('uses standard suits and distinct illustrated court ranks', () => {
+    for (const [suit, name] of [
+      'spade',
+      'club',
+      'diamond',
+      'heart',
+    ].entries()) {
+      const wrapper = mount(PlayingCard, {
+        props: { card: { id: `suit-${suit}`, rank: 14, suit } },
+        global: { plugins: plugins() },
+      });
+      wrappers.push(wrapper);
+      expect(wrapper.get('.card-corner use').attributes('href')).toContain(
+        `#${name}`,
+      );
+      expect(wrapper.attributes('aria-label')).toContain(
+        i18next.t(`card.suit.${suit}`),
+      );
+    }
+    for (const rank of [11, 12, 13]) {
+      const wrapper = mount(PlayingCard, {
+        props: { card: { id: `court-${rank}`, rank, suit: 0 } },
+        global: { plugins: plugins() },
+      });
+      wrappers.push(wrapper);
+      expect(wrapper.find(`.court-art.court-${rank}`).exists()).toBe(true);
+    }
+  });
   it('renders the exact number of pips for ordinary numeric cards', () => {
     for (let rank = 2; rank <= 10; rank++) {
       const wrapper = mount(PlayingCard, {

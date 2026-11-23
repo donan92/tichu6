@@ -1,4 +1,12 @@
-/* Original four-suit deck artwork. Card identity and labels remain in Vue. */
+/* Standard suits; numeric suit IDs stay stable in saved games. */
+.card.suit-0,
+.card.suit-1 {
+  color: #172535;
+}
+.card.suit-2,
+.card.suit-3 {
+  color: #c92e4b;
+}
 .card {
   background: linear-gradient(145deg, #fffdf5, #eee8d9);
   border-color: #d5cbb4;
@@ -50,9 +58,12 @@
 }
 .court-art {
   position: absolute;
-  inset: 17% 20%;
-  width: 60%;
-  height: 66%;
+  inset: 8% 16%;
+  width: 68%;
+  height: 84%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 .card.special {
   background: linear-gradient(145deg, #fff7db, #e9dfbd);
@@ -344,4 +355,14 @@
   .action-buttons select {
     font-size: 16px;
   }
+}
+
+.court-11 {
+  background-image: url('../assets/cards/jack.webp');
+}
+.court-12 {
+  background-image: url('../assets/cards/queen.webp');
+}
+.court-13 {
+  background-image: url('../assets/cards/king.webp');
 }

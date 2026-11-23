@@ -15,7 +15,7 @@ const props = withDefaults(
 );
 const emit = defineEmits<{ select: [id: string] }>();
 const { t } = useTranslation();
-const suits = ['jade', 'sword', 'pagoda', 'star'];
+const suits = ['spade', 'club', 'diamond', 'heart'];
 const suitHref = computed(() => `${suitsUrl}#${suits[props.card.suit]}`);
 const pipRows: Record<number, number[][]> = {
   2: [[1], [], [], [], [1]],
@@ -31,7 +31,11 @@ const pipRows: Record<number, number[][]> = {
 const pips = computed(() => pipRows[props.card.rank] ?? []);
 const rank = computed(() => LABEL[props.card.rank] ?? props.card.rank);
 const display = computed(() =>
-  props.card.special ? t(`card.short.${props.card.special}`) : rank.value,
+  props.card.special
+    ? props.card.special === 'mahjong'
+      ? '1'
+      : ''
+    : rank.value,
 );
 const label = computed(() => {
   const card = props.card.special
@@ -58,7 +62,7 @@ const label = computed(() => {
     :aria-pressed="interactive ? pick >= 0 : undefined"
     @click="interactive && emit('select', card.id)"
   >
-    <span class="card-corner" aria-hidden="true">
+    <span v-if="display" class="card-corner" aria-hidden="true">
       {{ display }}
       <svg v-if="!card.special" class="suit-icon"><use :href="suitHref" /></svg>
     </span>
@@ -73,9 +77,12 @@ const label = computed(() => {
           </span>
         </span>
       </span>
-      <svg v-else-if="card.rank !== 14" class="court-art" aria-hidden="true">
-        <use :href="`${suitsUrl}#court`" />
-      </svg>
+      <span
+        v-else-if="card.rank !== 14"
+        class="court-art"
+        :class="`court-${card.rank}`"
+        aria-hidden="true"
+      />
       <svg
         class="card-emblem"
         :class="{ 'ace-emblem': card.rank === 14 }"
@@ -84,7 +91,9 @@ const label = computed(() => {
         <use :href="suitHref" />
       </svg>
     </template>
-    <span class="card-bottom" aria-hidden="true">{{ display }}</span>
+    <span v-if="display" class="card-bottom" aria-hidden="true">{{
+      display
+    }}</span>
     <span v-if="interactive && pick >= 0" class="pick" aria-hidden="true">{{
       pick + 1
     }}</span>

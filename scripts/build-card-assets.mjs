@@ -25,3 +25,10 @@ await sharp({
   .webp({ quality: 85, alphaQuality: 100 })
   .toFile(fileURLToPath(new URL('specials.webp', directory)));
 console.log('Built 2×2 special-card sprite: dragon, phoenix / dog, mahjong.');
+for (const name of ['jack', 'queen', 'king']) {
+  await sharp(fileURLToPath(new URL(`source/${name}.png`, directory)))
+    .resize(256, 384, { fit: 'contain', background: '#00000000' })
+    .webp({ quality: 85, alphaQuality: 100 })
+    .toFile(fileURLToPath(new URL(`${name}.webp`, directory)));
+}
+console.log('Built jack, queen and king court illustrations.');
