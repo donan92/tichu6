@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { act, botAction, newGame, startRound, view, shuffle } from '../game.js';
 import { AppError, errorEvent } from '../messages.js';
 import { Room, savedRoom } from '../server-room';
+import { savePractice, loadPractice, clearPractice } from '../practice-storage';
 import type {
   GameAction,
   GameView,
@@ -145,6 +146,11 @@ export const useSessionStore = defineStore('session', () => {
   }
   function publish() {
     if (!practice) return;
+    try {
+      savePractice(practice, nickname.value);
+    } catch {
+      notify({ code: 'practice.saveFailed' });
+    }
     game.value = {
       ...view(practice, 0),
       paused: false,
@@ -179,6 +185,28 @@ export const useSessionStore = defineStore('session', () => {
   function stopPractice() {
     clearTimeout(botTimer);
     practice = null;
+  }
+  function restorePractice() {
+    try {
+      const saved = loadPractice();
+      if (!saved) return false;
+      stopPractice();
+      nickname.value = saved.nickname;
+      practice = saved.state;
+      mode.value = 'demo';
+      selected.value = [];
+      online.value = Array(6).fill(true);
+      publish();
+      return true;
+    } catch {
+      try {
+        clearPractice();
+      } catch {
+        /* Storage may be unavailable. */
+      }
+      notify({ code: 'practice.restoreFailed' });
+      return false;
+    }
   }
   function startPractice() {
     try {
@@ -257,6 +285,15 @@ export const useSessionStore = defineStore('session', () => {
           throw new AppError('error.waitConnection');
         room.request({ type: forfeiting.value ? 'forfeit' : 'leave' });
       } else {
+        // Delete before exiting; a failed deletion must not silently resurrect it.
+        if (mode.value === 'demo') {
+          try {
+            clearPractice();
+          } catch {
+            notify({ code: 'practice.saveFailed' });
+            return;
+          }
+        }
         room?.close();
         room = null;
         connected.value = false;
@@ -297,6 +334,7 @@ export const useSessionStore = defineStore('session', () => {
     seat,
     enterHall,
     startPractice,
+    restorePractice,
     submit,
     createRoom,
     joinRoom,

@@ -18,6 +18,7 @@ watchEffect(() => {
   document.documentElement.lang = i18next.resolvedLanguage ?? 'en';
 });
 onMounted(() => {
+  if (session.restorePractice()) return;
   const saved = savedRoom();
   if (saved && !saved.idle && session.nickname) void session.enterHall(false);
 });

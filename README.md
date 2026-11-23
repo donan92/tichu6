@@ -167,3 +167,11 @@ The table identifies the last player with a team-colored A/B label. Table labels
 selection previews and new history entries include ranks or ranges, e.g. `10 pair`,
 `10 full house` (triple rank), `6 four of a kind`, `5–J straight`, and
 `3–10 straight flush`. Older history records retain their generic labels.
+
+### 연습 게임 이어하기
+
+‘혼자서도 바로 플레이’의 연습 게임은 같은 브라우저의 로컬 저장소에 자동 저장됩니다.
+새로고침하거나 사이트에 다시 접속하면 패, 점수, 선언, 교환과 진행 차례를 복원하고
+봇이 이어서 진행합니다. 게임 포기를 확정하면 저장도 삭제됩니다.
+서버 방의 접속 정보와 별도로 저장하며 서버로 전송하지 않습니다. 브라우저 데이터를
+삭제하거나 저장소를 차단하면 복원할 수 없습니다. 기존 버전에서 이미 사라진 게임은 복구되지 않습니다.

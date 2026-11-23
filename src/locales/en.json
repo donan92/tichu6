@@ -259,5 +259,7 @@
   "combo.straight": "{{low}}–{{high}} straight",
   "combo.straightFlush": "{{low}}–{{high}} straight flush",
   "combo.pairs": "{{low}}–{{high}} consecutive pairs",
-  "combo.phoenix": "Phoenix {{rank}} single"
+  "combo.phoenix": "Phoenix {{rank}} single",
+  "practice.saveFailed": "Could not save or remove practice progress. Check browser storage settings.",
+  "practice.restoreFailed": "Could not restore saved practice. Please start a new practice game."
 }

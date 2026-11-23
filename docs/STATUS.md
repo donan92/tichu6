@@ -164,3 +164,10 @@ Release verification:
 - Added a small muted version beside the 6T logo on every screen, sourced directly from package.json so future releases update automatically.
 - Passed check, all 99 tests, format check and build. Checked 375px Korean practice header: version visible, no overlap with language picker or game exit. No server/protocol changes.
 - Released `fe0b1c0`; Pages `67a6f633-6896-4d3d-a55c-d28e98742d3d` active. Production header visibly shows the package version; initial domain propagation delay resolved. GitHub Verify and Pages succeeded (Verify run 45216062572). No backend changes or deployment required.
+
+## v0.8.2 — persistent bot practice (release pending)
+
+- Save the complete practice engine state after initial deal and every accepted human/bot action; restore before automatic server-session reconnect. Same-browser localStorage key `tichu6-practice-v1` contains local practice only, no server credentials. Reload preserves scores, hands, calls, exchanges, turn and bot names; timers restart from restored state.
+- Confirmed practice forfeit clears the save before exit; cancellation/disposal/reload preserves it. Versioned/bounded saves with structural/card checks; corrupt/incompatible or unavailable storage produces localized warnings, not a startup crash. No server/protocol/schema changes.
+- Real local browser verified identical ten-card and eighteen-card hands after reload, continuation into exchange, confirmed forfeit followed by reload into home, and no console errors. Actual Samsung Internet/iPhone Safari not tested.
+- Passed 106 tests (70 engine/server + 36 UI/storage), zero-warning ESLint, strict frontend typecheck, formatting and production build. Tests cover whole-round state roundtrips, bot resumption, server-session precedence, cancellation/forfeit, invalid versions and storage failures. Frontend deployment pending.
