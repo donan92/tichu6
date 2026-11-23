@@ -296,16 +296,16 @@ describe('Vue interaction regressions', () => {
       if (rank !== 14) {
         const pips = wrapper.findAll('.card-pips use');
         const points = pips.map((pip) => [
-          Number(pip.attributes('x')) + 9.5,
-          Number(pip.attributes('y')) + 9.5,
+          Number(pip.attributes('x')) + 11,
+          Number(pip.attributes('y')) + 11,
         ]);
         expect(new Set(points.map(String)).size).toBe(rank);
         for (const [x, y] of points) {
           expect(points).toContainEqual([100 - x, y]);
-          expect(x - 9.5).toBeGreaterThan(0);
-          expect(x + 9.5).toBeLessThan(100);
-          expect(y - 9.5).toBeGreaterThan(30);
-          expect(y + 9.5).toBeLessThan(140);
+          expect(x - 11).toBeGreaterThan(0);
+          expect(x + 11).toBeLessThan(100);
+          expect(y - 11).toBeGreaterThan(30);
+          expect(y + 11).toBeLessThan(140);
         }
       }
       expect(wrapper.find('.card-bottom').exists()).toBe(false);
