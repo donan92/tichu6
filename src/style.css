@@ -2,3 +2,5 @@
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 
 .signal-note{padding:14px;border:1px solid #d5e8a350;background:#d5e8a310;border-radius:8px;font-size:14px;line-height:1.7;color:var(--lime)}.leave-dialog{position:fixed;inset:0;background:#0009;z-index:90;display:grid;place-items:center;padding:20px}.leave-dialog>div{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:28px;max-width:420px}.leave-dialog p{color:var(--muted);line-height:1.6}.leave-dialog button{margin:8px 8px 0 0}
+
+.room-code{font-family:ui-monospace,monospace!important;font-size:clamp(21px,4vw,32px)!important;letter-spacing:3px;text-align:center;margin:6px 0 20px;text-transform:uppercase;font-weight:700}.share-link{margin-top:24px}.share-link input{font-size:12px}.signaling .entry-actions{display:flex}.signaling .entry-actions button{flex:1}

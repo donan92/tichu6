@@ -1,6 +1,6 @@
 # 6T — 브라우저에서 즐기는 6인 티추
 
-HTML, CSS, JavaScript로 만든 정적 웹 게임입니다. 프레임워크, 설치할 런타임 의존성, 게임 백엔드, 시그널링 서버가 없습니다. GitHub Pages에서 그대로 배포할 수 있습니다.
+HTML, CSS, JavaScript로 만든 정적 웹 게임입니다. 프레임워크나 직접 운영할 게임 백엔드가 없습니다. 연결 정보는 가입·API 키 없이 PeerJS 공용 시그널링 서버에서 자동 교환합니다. PeerJS 1.5.5 클라이언트와 MIT 라이선스는 정적 파일에 포함되어 있습니다. GitHub Pages에서 그대로 배포할 수 있습니다.
 
 ## 실행
 
@@ -23,13 +23,15 @@ npm run dev
 
 ## 친구들과 연결
 
-1. 모두 같은 Pages 주소를 열고 닉네임을 입력합니다.
-2. 한 명이 **테이블 만들기**를 누릅니다. 방장이 1번 좌석입니다.
-3. 방장은 2~6번 좌석마다 별도 **초대 코드**를 만들어 해당 친구에게 메신저 등으로 보냅니다.
-4. 친구는 **초대 코드로 참가**에서 초대를 붙여넣고 **응답 코드**를 생성해 방장에게 돌려줍니다.
-5. 방장은 응답을 붙여넣고 적용합니다. 6명이 모두 연결되면 시작할 수 있습니다.
+1. 방장이 닉네임을 입력하고 **테이블 만들기**를 누릅니다.
+2. 자동 생성된 **방 코드 하나**(예: `ABCDE-FGHJK`) 또는 **초대 링크**를 친구들에게 공유합니다.
+3. 친구는 **방 코드로 참가**에서 같은 코드를 입력합니다. 초대 링크를 열면 코드가 미리 입력됩니다.
+4. 응답 코드 교환 없이 빈자리에 자동 배정됩니다. 방장 포함 **최대 6명**만 입장합니다.
+5. 6명이 연결되면 방장이 시작합니다. 7번째 참가자에게는 **이미 6명이 입장한 방**이라는 안내가 표시되고, 손패나 게임 상태를 보내지 않습니다.
 
-같은 기기의 여러 탭에서도 연결을 시험할 수 있습니다. 코드에 네트워크 연결 정보가 포함되므로 해당 친구에게만 보내세요. 새 초대를 만들면 해당 좌석의 이전 초대는 무효가 됩니다. 연습 모드에는 단순한 규칙 기반 봇 5명이 참여합니다.
+대기실에서 누군가 나가면 같은 코드로 빈자리에 입장할 수 있습니다. 게임을 시작한 뒤에는 새 입장을 막아 연결이 끊긴 플레이어의 자리를 다른 사람이 차지하지 못하게 합니다. 시작 후 새로고침 복구나 방장 이전은 지원하지 않습니다.
+
+방 코드는 방장의 탭이 살아 있는 동안 유지됩니다. 코드와 링크는 함께 플레이할 친구에게만 공유하세요. 계정 인증이나 비밀번호는 없습니다. 동일한 기기의 여러 탭에서도 시험할 수 있습니다. 연습 모드는 공용 서버 연결 없이 규칙 기반 봇 5명과 진행됩니다.
 
 ## 적용한 규칙
 
@@ -56,10 +58,11 @@ npm run dev
 - 참가자에게 자신의 손패, 공개된 카드, 상대의 남은 장수만 전달합니다. 상대 손패와 미공개 첫 배분, 교환할 카드는 보내지 않습니다.
 - 호스트는 채널로 좌석을 식별합니다. 요청에 실은 플레이어 ID를 신뢰하지 않습니다. 제출 카드는 소유권과 중복, 차례, 조합을 검사하고 상태 revision으로 오래된 요청을 거부합니다.
 - 친구끼리 신뢰하는 게임입니다. 방장은 개발자 도구로 전체 패를 볼 수 있고 셔플·상태를 조작할 수 있습니다. 암호학적 분산 셔플이나 방장 치팅 방지는 구현하지 않았습니다.
-- 기본으로 Cloudflare(`stun:stun.cloudflare.com:3478`)와 Google(`stun:stun.l.google.com:19302`) 공용 STUN을 사용합니다. 게임 내용을 저장하거나 중계하지 않고 공인 연결 주소를 찾는 외부 서비스입니다. 필요 없으면 입장 전이나 대기실에서 해제할 수 있습니다. 최대 8초 동안 주소를 수집하며, 일부 STUN 응답이 없어도 확보된 주소로 코드를 생성합니다. 공인 주소를 얻지 못하면 같은 네트워크에서만 연결될 수 있다는 안내를 표시합니다.
+- PeerJS 공용 서버(`0.peerjs.com`, HTTPS/WSS)는 방 코드와 WebRTC 연결 정보를 교환합니다. 직접 호스팅·가입·API 키 발급은 필요 없습니다. 공용 서버가 불가하면 새 방 생성과 입장이 실패할 수 있고, 화면에 재시도 안내를 표시합니다. 이미 연결된 게임 데이터는 시그널링 서버를 거치지 않습니다.
+- 공용 STUN은 Cloudflare(`stun:stun.cloudflare.com:3478`)와 Google(`stun:stun.l.google.com:19302`)을 사용합니다. PeerJS의 trickle ICE로 주소가 준비되는 대로 교환하므로 참가자가 주소 수집이나 응답 코드 복사를 할 필요가 없습니다.
 - **TURN 중계가 없습니다.** 대칭 NAT, 회사망, VPN 등에서는 직접 연결이 실패할 수 있습니다. 모든 인터넷 환경에서 접속을 보장하려면 TURN 서비스가 추가로 필요합니다.
 - 활성 연결이 끊기면 진행을 일시 정지합니다. 같은 연결의 일시적 장애가 회복되면 재개되지만, 새로고침·탭 종료 후 재입장, 영구 저장, 방장 자동 이전은 지원하지 않습니다. 게임 동안 탭과 기기를 켜 두세요.
-- 가입, 채팅, 결제, DB, 추적 스크립트, 외부 글꼴, 외부 JavaScript 의존성이 없습니다.
+- 가입, 채팅, 결제, DB, 추적 스크립트, 외부 글꼴, CDN에서 런타임에 내려받는 JavaScript는 없습니다. 포함된 PeerJS 클라이언트의 출처와 라이선스는 `src/vendor/`에 있습니다.
 
 ## 검증과 구조
 
@@ -69,11 +72,12 @@ npm run check
 ```
 
 - `src/game.js`: 독립 규칙 엔진과 연습 봇
-- `src/peer.js`: 수동 offer/answer 및 WebRTC 연결
+- `src/peer.js`: 공용 PeerJS 연결, 방 코드, 참가·거절 프로토콜
+- `src/seats.js`: 방장 권한의 최대 6인 좌석 관리
 - `src/app.js`: 한국어 UI, 방장/참가자 메시지 흐름
 - `src/style.css`: 반응형 게임 화면
 - `tests/`: 규칙, 공개 상태, 라운드 진행 검증
 
 실제 원격 네트워크 6대에서의 연결 가능성은 배포 후 확인해야 합니다. 자동 규칙 테스트가 인터넷 NAT 통과를 보장하지는 않습니다.
 
-참고: [Fata Morgana 티추 규칙](https://fatamorgana.ch/fatamorgana/tichu/english-rules), [MDN WebRTC 연결](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Connectivity), [GitHub Pages 배포 소스 설정](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).
+참고: [PeerJS 공용 서버](https://peerjs.com/server/cloud), [Fata Morgana 티추 규칙](https://fatamorgana.ch/fatamorgana/tichu/english-rules), [MDN WebRTC 연결](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Connectivity), [GitHub Pages 배포 소스 설정](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site).

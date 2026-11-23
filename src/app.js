@@ -1,13 +1,13 @@
 import {newGame,startRound,act,view,team,partners,LABEL,kindName,classify,beats,botAction} from './game.js';
-import {Room} from './peer.js?v=0.1.1';
+import {Room} from './peer.js?v=0.2.0';
 const root=document.querySelector('#app');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const suit=['◆','♠','●','✦'], special={mahjong:'새',dog:'개',phoenix:'봉',dragon:'용'};
 let mode='home',room=null,state=null,v=null,selected=[],online=Array(6).fill(false),busy=false,pending=false;
-let drafts={name:'',stun:true,inviteSeat:'1',offer:'',answer:'',output:'',wish:'',target:'',phoenixRank:''};
+let drafts={name:'',roomCode:new URLSearchParams(location.hash.slice(1)).get('room')||'',output:'',wish:'',target:'',phoenixRank:''};
 let signalNote='',signalError='',leaving=false;
 let statuses=Array(6).fill('대기 중'),noticeTimer,botTimer;
-const me=()=>mode==='join'?(room?.seat||0):0;
+const me=()=>mode==='join'?(room?.seat??-1):0;
 const allOnline=()=>mode==='demo'||online.every(Boolean);
 function notify(message) {const el=document.querySelector('#notice');el.textContent=message;el.classList.add('show');clearTimeout(noticeTimer);noticeTimer=setTimeout(()=>el.classList.remove('show'),6000);}
 function button(text,action,disabled=false,cls='') {return `<button class="${cls}" data-action="${action}" ${disabled?'disabled':''}>${text}</button>`;}
@@ -18,14 +18,15 @@ function card(c,interactive=false,index=-1) {
   return interactive?`<button class="card suit-${c.suit} ${c.special?'special':''} ${pick>=0?'selected':''}" data-card="${c.id}" aria-label="${esc(label)}${index>=0?` (${index+1}번째 카드)`:''}" aria-pressed="${pick>=0}">${inside}</button>`:`<div class="card suit-${c.suit} ${c.special?'special':''}" aria-label="${esc(label)}">${inside}</div>`;
 }
 function header() {return `<header><a class="brand" href="#" data-action="home">6<span>T</span><small>티추, 여섯이서.</small></a><div class="header-right"><span class="connection-label">${mode==='home'?'108 CARDS · 6 PLAYERS':mode==='demo'?'연습 테이블':mode==='host'?'P2P · 방장':'P2P · 참가자'}</span>${mode!=='home'?button('나가기','home',false,'quiet'):''}</div></header>`;}
-function rules() {return `<details class="rules"><summary>이 테이블의 규칙과 연결 안내</summary><div class="rule-grid"><section><h3>함께 정한 6T</h3><p>일반 카드 두 벌 + 용·봉·개·새 각 1장. 총 108장을 18장씩 나누고 A–B–A–B–A–B 순서로 진행합니다.</p><p>같은 숫자 <b>정확히 4장</b>, 또는 같은 문양의 연속 5장 이상이 폭탄입니다. 같은 크기·숫자의 폭탄은 서로 이기지 못합니다. 봉은 폭탄에 쓸 수 없습니다.</p></section><section><h3>이번 버전의 기본 규칙</h3><p>첫 8장을 보고 그랜드 티추(±200)를 결정합니다. 팀원 두 명에게 한 장씩 교환하고, 첫 카드를 내기 전 티추(±100)를 선언할 수 있습니다.</p><p>트리플 승리 300점, 목표 1,000점. 더블 덱의 일반 카드 점수 합은 200점입니다. 개는 팀원 중 한 명을 선택하고, 용은 상대 한 명에게 트릭을 줍니다.</p></section><section><h3>브라우저끼리 연결</h3><p>초대·응답 코드를 메신저 등으로 교환하세요. 방장의 탭을 열어 두어야 합니다. 연결이 끊기면 게임이 멈추며 새로고침 복구와 방장 이전은 지원하지 않습니다.</p><p>공용 STUN은 연결 주소를 찾는 데만 사용합니다. TURN 중계가 없어 일부 공유기·회사망에서는 연결할 수 없습니다. 방장은 전체 패를 관리하므로 서로 신뢰하는 친구들과 플레이하세요.</p></section></div></details>`;}
+function rules() {return `<details class="rules"><summary>이 테이블의 규칙과 연결 안내</summary><div class="rule-grid"><section><h3>함께 정한 6T</h3><p>일반 카드 두 벌 + 용·봉·개·새 각 1장. 총 108장을 18장씩 나누고 A–B–A–B–A–B 순서로 진행합니다.</p><p>같은 숫자 <b>정확히 4장</b>, 또는 같은 문양의 연속 5장 이상이 폭탄입니다. 같은 크기·숫자의 폭탄은 서로 이기지 못합니다. 봉은 폭탄에 쓸 수 없습니다.</p></section><section><h3>이번 버전의 기본 규칙</h3><p>첫 8장을 보고 그랜드 티추(±200)를 결정합니다. 팀원 두 명에게 한 장씩 교환하고, 첫 카드를 내기 전 티추(±100)를 선언할 수 있습니다.</p><p>트리플 승리 300점, 목표 1,000점. 더블 덱의 일반 카드 점수 합은 200점입니다. 개는 팀원 중 한 명을 선택하고, 용은 상대 한 명에게 트릭을 줍니다.</p></section><section><h3>브라우저끼리 연결</h3><p>방 코드 하나를 모두에게 공유하세요. 참가자는 빈자리에 자동 배정되며 방장 포함 6명까지만 입장할 수 있습니다. 방장의 탭을 열어 두어야 합니다. 연결이 끊기면 게임이 멈추며 새로고침 복구와 방장 이전은 지원하지 않습니다.</p><p>PeerJS 공용 서버가 연결 정보를 교환하고, 게임 데이터는 브라우저끼리 통신합니다. TURN 중계가 없어 일부 공유기·회사망에서는 연결할 수 없습니다. 방장은 전체 패를 관리하므로 서로 신뢰하는 친구들과 플레이하세요.</p></section></div></details>`;}
 function home() {
   const samples=[{id:'hero-a',rank:14,suit:0},{id:'hero-p',rank:15,suit:-1,special:'phoenix'},{id:'hero-d',rank:16,suit:-1,special:'dragon'}];
-  return `<main class="landing"><section class="hero"><div><span class="eyebrow">THREE ON YOUR SIDE.</span><h1>여섯이 모이면,<br>새로운 <em>티추.</em></h1><p class="hero-copy">두 벌의 카드. 세 명의 팀원.<br>친구들과 브라우저에서 바로 만나는 6인 티추.</p><div class="hero-tags"><span>3 vs 3 팀 플레이</span><span>서버 없는 P2P</span><span>설치 없이 시작</span></div></div><div class="hero-cards" aria-hidden="true">${samples.map(c=>card(c)).join('')}<span class="orbit">A · B · A · B · A · B</span></div></section><section class="entry"><div class="entry-title"><span class="eyebrow">TAKE A SEAT</span><h2>테이블에 앉으세요</h2></div><div class="entry-form"><label>닉네임<input id="name" maxlength="20" placeholder="어떻게 불러드릴까요?" value="${esc(drafts.name)}" autocomplete="nickname"></label><div class="entry-actions">${button('테이블 만들기','host',false,'primary')}${button('초대 코드로 참가','join')}${button('혼자 연습하기','demo',false,'quiet')}</div><label class="checkbox"><input type="checkbox" id="stun" ${drafts.stun?'checked':''}> 공용 STUN으로 인터넷 연결 시도 <span>끄면 같은 네트워크용</span></label></div></section>${rules()}<footer>6T · v0.1.1 · 친구들과 즐기는 작은 카드 테이블 <span>STATIC WEB / WEBRTC</span></footer></main>`;
+  return `<main class="landing"><section class="hero"><div><span class="eyebrow">THREE ON YOUR SIDE.</span><h1>여섯이 모이면,<br>새로운 <em>티추.</em></h1><p class="hero-copy">두 벌의 카드. 세 명의 팀원.<br>친구들과 브라우저에서 바로 만나는 6인 티추.</p><div class="hero-tags"><span>3 vs 3 팀 플레이</span><span>방 코드 하나로 입장</span><span>설치 없이 시작</span></div></div><div class="hero-cards" aria-hidden="true">${samples.map(c=>card(c)).join('')}<span class="orbit">A · B · A · B · A · B</span></div></section><section class="entry"><div class="entry-title"><span class="eyebrow">TAKE A SEAT</span><h2>테이블에 앉으세요</h2></div><div class="entry-form"><label>닉네임<input id="name" maxlength="20" placeholder="어떻게 불러드릴까요?" value="${esc(drafts.name)}" autocomplete="nickname"></label><div class="entry-actions">${button('테이블 만들기','host',false,'primary')}${button('방 코드로 참가','join')}${button('혼자 연습하기','demo',false,'quiet')}</div><p class="muted">가입 없이, 같은 방 코드로 최대 6명이 함께합니다.</p></div></section>${rules()}<footer>6T · v0.2.0 · 친구들과 즐기는 작은 카드 테이블 <span>STATIC WEB / WEBRTC</span></footer></main>`;
 }
 function lobby() {
-  const isHost=mode==='host';
-  return `<main class="lobby"><div class="page-heading"><div><span class="eyebrow">${isHost?'YOUR TABLE':'JOIN A TABLE'}</span><h1>${isHost?'친구들을 초대하세요.':'빈자리가 기다리고 있어요.'}</h1><p>초대 코드를 받고 응답 코드를 돌려주면 연결됩니다.</p></div><span class="counter">${online.filter(Boolean).length}<small> / 6</small></span></div><div class="lobby-grid"><section class="panel"><h2>테이블 좌석</h2><div class="roster">${Array.from({length:6},(_,i)=>`<div class="roster-row"><span class="avatar team-${team(i)}">${i+1}</span><div><b>${esc(v?.names[i]||state?.names[i]||`플레이어 ${i+1}`)}</b><small>TEAM ${team(i)?'B':'A'}${i===0?' · 방장':''}${i===me()?' · 나':''}</small></div><span class="seat-status ${online[i]?'connected':''}">${online[i]?'연결됨':esc(statuses[i])}</span></div>`).join('')}</div>${isHost?button('6명 모두 모였어요 · 시작','start',!allOnline(),'primary wide'):''}<p class="muted">A와 B 팀이 한 자리씩 번갈아 앉습니다.</p></section><section class="panel signaling"><label class="checkbox"><input type="checkbox" id="stun" ${drafts.stun?'checked':''} ${busy?'disabled':''}> 공용 STUN 사용 (인터넷 연결)</label>${signalError?`<p class="warning" role="alert">${esc(signalError)}</p>`:''}${signalNote?`<p class="signal-note" role="status">${esc(signalNote)}</p>`:''}${isHost?`<span class="step">01 · 초대하기</span><h2>한 명씩 연결해요</h2><label>초대할 좌석<select id="inviteSeat" ${busy?'disabled':''}>${[1,2,3,4,5].map(i=>`<option value="${i}" ${drafts.inviteSeat==i?'selected':''}>${i+1}번 · TEAM ${team(i)?'B':'A'} ${online[i]?'(연결됨)':''}</option>`).join('')}</select></label>${button(busy?'연결 주소 확인 중… (최대 8초)':'초대 코드 만들기','offer',busy||online[Number(drafts.inviteSeat)],'primary wide')}<p class="muted">각 좌석마다 다른 코드를 만들고 해당 친구에게 보내세요.</p>`:`<span class="step">01 · 초대받기</span><h2>방장이 보낸 초대 코드</h2><label>초대 코드<textarea id="offer" placeholder="긴 연결 코드를 여기에 붙여넣으세요" spellcheck="false">${esc(drafts.offer)}</textarea></label>${button(busy?'연결 주소 확인 중… (최대 8초)':'응답 코드 만들기','makeAnswer',busy||online[0],'primary wide')}`}${drafts.output?`<div class="code-output"><label>${isHost?'친구에게 보낼 초대 코드':'방장에게 돌려줄 응답 코드'}<textarea id="output" readonly spellcheck="false">${esc(drafts.output)}</textarea></label>${button('코드 복사','copy',false,'wide')}</div>`:''}${isHost?`<hr><span class="step">02 · 연결 완료하기</span><label>친구에게 받은 응답 코드<textarea id="answer" placeholder="응답 코드를 붙여넣으세요" spellcheck="false">${esc(drafts.answer)}</textarea></label>${button('응답 적용 · 연결','accept',busy,'wide')}`:`<p class="muted">방장이 응답 코드를 적용한 뒤 6명이 연결되면 게임을 시작합니다.</p>`}</section></div>${rules()}</main>`;
+  const isHost=mode==='host',joined=mode==='join'&&room?.seat>=1&&online[0];
+  const shareLink=drafts.output?`${location.origin}${location.pathname}#room=${drafts.output}`:'';
+  return `<main class="lobby"><div class="page-heading"><div><span class="eyebrow">${isHost?'YOUR TABLE':'JOIN A TABLE'}</span><h1>${isHost?'코드 하나로, 함께 모여요.':joined?'테이블에 도착했어요.':'친구의 테이블에 앉으세요.'}</h1><p>방장 포함 최대 6명 · 빈자리에 자동으로 배정됩니다.</p></div><span class="counter">${online.filter(Boolean).length}<small> / 6</small></span></div><div class="lobby-grid"><section class="panel"><h2>테이블 좌석</h2><div class="roster">${Array.from({length:6},(_,i)=>`<div class="roster-row"><span class="avatar team-${team(i)}">${i+1}</span><div><b>${esc(v?.names[i]||state?.names[i]||`플레이어 ${i+1}`)}</b><small>TEAM ${team(i)?'B':'A'}${i===0?' · 방장':''}${i===me()?' · 나':''}</small></div><span class="seat-status ${online[i]?'connected':''}">${online[i]?'연결됨':esc(statuses[i])}</span></div>`).join('')}</div>${isHost?button('6명 모두 모였어요 · 시작','start',!allOnline(),'primary wide'):''}<p class="muted">A와 B 팀이 한 자리씩 번갈아 앉습니다.</p></section><section class="panel signaling">${signalError?`<p class="warning" role="alert">${esc(signalError)}</p>`:''}${signalNote?`<p class="signal-note" role="status">${esc(signalNote)}</p>`:''}${isHost?`<span class="step">INVITE YOUR FRIENDS</span><h2>모두에게 같은 코드를 보내세요</h2>${drafts.output?`<label>공유할 방 코드<input class="room-code" id="output" readonly value="${esc(drafts.output)}"></label><div class="entry-actions">${button('방 코드 복사','copy',false,'primary')}${button('초대 링크 복사','copyLink')}</div><p class="muted">이 코드 하나로 친구 5명이 입장할 수 있습니다. 응답 코드를 받을 필요가 없습니다.</p><label class="share-link">초대 링크<input id="shareLink" readonly value="${esc(shareLink)}"></label>`:`<p class="muted">${busy?'공용 서버에 테이블을 등록하고 있어요…':'방 코드를 만들어 친구들을 초대하세요.'}</p>${button(busy?'방 만드는 중…':'방 만들기 다시 시도','createRoom',busy,'primary wide')}`}<hr><p class="muted">6명이 모이면 추가 입장이 거절됩니다. 대기실에서 누군가 나가면 같은 코드로 빈자리에 입장할 수 있습니다.</p>`:`<span class="step">TAKE YOUR SEAT</span><h2>${joined?`${me()+1}번 자리에 앉았습니다`:'방 코드만 입력하세요'}</h2>${!joined?`<label>닉네임<input id="name" maxlength="20" value="${esc(drafts.name)}" placeholder="어떻게 불러드릴까요?" ${busy?'disabled':''}></label>`:''}<label>방 코드<input class="room-code" id="roomCode" value="${esc(drafts.roomCode)}" placeholder="ABCDE-FGHJK" maxlength="24" autocapitalize="characters" autocomplete="off" spellcheck="false" ${busy||joined?'disabled':''}></label>${button(joined?'입장 완료':busy?'테이블에 연결 중…':'테이블 참가','enterRoom',busy||joined,'primary wide')}<p class="muted">${joined?'다른 친구들이 모이면 방장이 게임을 시작합니다.':'친구에게 받은 같은 코드를 사용하세요. 이미 6명이거나 게임이 시작된 방에는 입장할 수 없습니다.'}</p>`}<p class="muted">연결에는 PeerJS 공용 서버를 사용합니다. 방장의 페이지는 계속 열어 두세요.</p></section></div>${rules()}</main>`;
 }
 const options=(values,current)=>values.map(([value,label])=>`<option value="${value}" ${String(current)===String(value)?'selected':''}>${esc(label)}</option>`).join('');
 function controls() {
@@ -73,12 +74,28 @@ function receive(seat,msg) {
   }
 }
 function setupRoom() {
-  room=new Room({stun:drafts.stun,onMessage:receive,onError:message=>{signalError=message;notify(message);render();},onNotice:message=>{signalNote=message;},onStatus:(seat,status)=>{
-    statuses[seat]=({new:'준비 중',connecting:'연결 중',connected:'연결 중',open:'연결됨',disconnected:'연결 끊김',failed:'연결 실패',closed:'연결 종료'}[status]||status);
-    if(mode==='host') publish();
-    else {online[0]=room.connected(0);if(status==='open') room.send(0,{type:'hello',name:drafts.name||'친구'});if(v && !online[0]) v.paused=true;render();}
-    if(status==='failed') notify('직접 연결하지 못했습니다. 새 코드로 다시 시도하거나 다른 네트워크를 사용하세요. TURN 중계는 제공하지 않습니다.');
-  }});
+  room?.close();
+  const active=new Room({onMessage:(seat,message)=>{if(room===active)receive(seat,message);},
+    onError:message=>{if(room!==active)return;signalError=message;notify(message);render();},
+    onNotice:message=>{if(room!==active)return;signalNote=message;render();},
+    onStatus:(seat,status)=>{
+      if(room!==active)return;
+      statuses[seat]=({connecting:'연결 중',connected:'연결됨',open:'연결됨',disconnected:'연결 끊김',failed:'연결 실패',closed:'연결 종료'}[status]||status);
+      if(mode==='host') {if(status==='closed'&&state.phase==='lobby')state.names[seat]=`플레이어 ${seat+1}`;publish();}
+      else {online[0]=room.connected(0);if(status==='open')room.send(0,{type:'hello',name:drafts.name||'친구'});if(v&&!online[0])v.paused=true;render();}
+    }});
+  room=active;
+  return active;
+}
+async function connectRoom(host) {
+  if(busy)return;
+  busy=true;signalError='';signalNote='';
+  const active=setupRoom();render();
+  try {
+    if(host){const code=await active.host();if(room===active){drafts.output=code;publish();}}
+    else {await active.join(drafts.roomCode);if(room===active){drafts.roomCode=active.code;signalNote='입장했습니다. 방장이 게임을 시작할 때까지 기다려 주세요.';}}
+  } catch(error) {if(room===active){signalError=error.message;notify(error.message);}}
+  finally {if(room===active){busy=false;render();}}
 }
 function scheduleBot() {
   clearTimeout(botTimer);if(mode!=='demo'||!state) return;
@@ -94,7 +111,7 @@ function submit(action) {
   else {if(!allOnline()) throw new Error('모든 참가자가 연결되어야 진행할 수 있습니다.');state=act(state,0,action);selected=[];publish();}
 }
 root.addEventListener('input',e=>{if(e.target.id in drafts) drafts[e.target.id]=e.target.type==='checkbox'?e.target.checked:e.target.value;});
-root.addEventListener('change',e=>{if(e.target.id in drafts){drafts[e.target.id]=e.target.type==='checkbox'?e.target.checked:e.target.value;if(['phoenixRank','inviteSeat'].includes(e.target.id)) render();}});
+root.addEventListener('change',e=>{if(e.target.id in drafts){drafts[e.target.id]=e.target.type==='checkbox'?e.target.checked:e.target.value;if(e.target.id==='phoenixRank') render();}});
 root.addEventListener('click',async e=>{
   const c=e.target.closest('[data-card]');
   if(c) {const id=c.dataset.card;selected=selected.includes(id)?selected.filter(x=>x!==id):[...selected,id];render();return;}
@@ -102,28 +119,22 @@ root.addEventListener('click',async e=>{
   try {
     if(action==='cancelLeave') {leaving=false;render();return;}
     if(action==='home'&&mode!=='home') {leaving=true;render();return;}
-    if(action==='home'||action==='confirmLeave') {leaving=false;signalNote='';signalError='';busy=false;clearTimeout(botTimer);room?.close();room=null;mode='home';state=null;v=null;selected=[];pending=false;online=Array(6).fill(false);drafts.output='';drafts.offer='';drafts.answer='';render();return;}
+    if(action==='home'||action==='confirmLeave') {leaving=false;signalNote='';signalError='';busy=false;clearTimeout(botTimer);room?.close();room=null;mode='home';state=null;v=null;selected=[];pending=false;online=Array(6).fill(false);drafts.output='';drafts.roomCode='';render();return;}
     if(['host','join','demo'].includes(action)) {
       mode=action;selected=[];online=Array(6).fill(false);statuses=Array(6).fill('대기 중');
-      if(action==='join') {setupRoom();render();return;}
+      if(action==='join') {render();return;}
       state=newGame([drafts.name||'나',...(action==='demo'?['하늘봇','도담봇','여울봇','노을봇','바다봇']:['플레이어 2','플레이어 3','플레이어 4','플레이어 5','플레이어 6'])]);
-      if(action==='demo') {online.fill(true);startRound(state);}else setupRoom();publish();return;
+      if(action==='demo') {online.fill(true);startRound(state);publish();}else {publish();await connectRoom(true);}return;
     }
-    if(action==='copy') {try{await navigator.clipboard.writeText(drafts.output);notify('연결 코드를 복사했습니다.');}catch{document.querySelector('#output')?.select();notify('코드를 선택했습니다. 복사 단축키를 눌러 주세요.');}return;}
-    if(['offer','makeAnswer','accept'].includes(action)) {
-      if(busy) return;
-      const activeRoom=room;
-      busy=true;signalError='';signalNote='';
-      if(action!=='accept') drafts.output='';
-      room.stun=drafts.stun;render();
-      try {
-        if(action==='offer') {const code=await activeRoom.offer(Number(drafts.inviteSeat));if(room===activeRoom) drafts.output=code;}
-        if(action==='makeAnswer') {const code=await activeRoom.join(drafts.offer);if(room===activeRoom) drafts.output=code;}
-        if(action==='accept') {await room.answer(drafts.answer);drafts.answer='';notify('응답을 적용했습니다. 연결을 기다려 주세요.');}
-      } catch(error) {if(room===activeRoom) {signalError=error.message;notify(error.message);}}
-      finally {if(room===activeRoom) {busy=false;render();}}return;
+    if(action==='copy'||action==='copyLink') {
+      const id=action==='copy'?'output':'shareLink',text=document.getElementById(id)?.value;
+      if(!text)return;
+      try{await navigator.clipboard.writeText(text);notify(action==='copy'?'방 코드를 복사했습니다.':'초대 링크를 복사했습니다.');}
+      catch{document.getElementById(id)?.select();notify('선택한 내용을 복사해 주세요.');}return;
     }
-    if(action==='start'||action==='next') {if(!allOnline()) throw new Error('6명이 모두 연결되어야 합니다.');startRound(state);selected=[];publish();return;}
+    if(action==='createRoom') {await connectRoom(true);return;}
+    if(action==='enterRoom') {await connectRoom(false);return;}
+    if(action==='start'||action==='next') {if(!allOnline()) throw new Error('6명이 모두 연결되어야 합니다.');room?.lock();startRound(state);selected=[];publish();return;}
     if(action==='clear') {selected=[];render();return;}
     if(action==='grandYes'||action==='grandNo') submit({type:'grand',call:action==='grandYes'});
     if(action==='exchange') submit({type:'exchange',ids:selected});
@@ -134,4 +145,5 @@ root.addEventListener('click',async e=>{
   } catch(err) {notify(err.message);}
 });
 window.addEventListener('beforeunload',e=>{if(mode!=='home'&&mode!=='demo'){e.preventDefault();e.returnValue='';}});
+if(drafts.roomCode)mode='join';
 render();
