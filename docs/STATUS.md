@@ -202,7 +202,7 @@ Release verification:
 - Increased suit saturation and hue separation: spades #195dcc blue, clubs #00864b green, diamonds #c65a00 orange, hearts #d51f3a crimson. Ranks/pips/court indices inherit the inks; portrait assets unchanged.
 - All four suits checked at 375px with numeric, ace and court cards. Preview `/tmp/tichu6-saturated-suits.png`. Not deployed.
 
-## Mid-tone suit inks — revised local preview
+## Mid-tone suit inks — released
 
-- User rejected the bright preview. Set midpoint inks between the original and bright palettes: spades #17448b, clubs #0c6942, diamonds #ba5114, hearts #ba2835. Supersedes the preceding local preview; not deployed.
+- User rejected the bright preview. Set midpoint inks between the original and bright palettes: spades #17448b, clubs #0c6942, diamonds #ba5114, hearts #ba2835. Supersedes the preceding local preview. Released `e476d46` on main; Cloudflare Pages `7a505fcb-949f-465b-8202-608330eb8f22`. Production HTML/all five asset hashes match the tested build, all four computed suit colors match approved values, backend health v6 and lounge welcome passed. CI including Worker/idle integration passed: https://github.com/donan92/tichu6/actions/runs/45238459501. No Worker changes/deployment. Screenshot `/tmp/tichu6-mid-tone-production.png`.
 - Visually checked all four suits at 375px. Preview `/tmp/tichu6-mid-tone-suits.png`. Check, tests, format and build passed.
