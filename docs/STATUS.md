@@ -124,9 +124,10 @@ Release verification:
 - No measured win-rate claim. No UI changes or device-specific verification needed. Backend/shared JavaScript is linted/tested, not TypeScript-checked.
 - Released `a1f0af3` on main: Worker version `ddbfbce3-ecc7-488b-934a-fd583173ea1f`; Pages production deployment `d65b97f4-a2a6-4562-b6ec-574d4ca5925e`. Production HTML and all seven asset SHA-256 hashes match an isolated build of the merged commit. Backend health v6 and an authenticated lounge WebSocket welcome passed. GitHub Verify and Pages deployment succeeded: https://github.com/donan92/tichu6/actions/runs/45207843877. All 84 local tests passed before release. No pending bot-strategy release work.
 
-## Counterclockwise table progression — local, not deployed
+## Counterclockwise table progression — released
 
 - Reversed the relative seat-to-screen mapping: the next engine seat now appears on the right, so play advances counterclockwise for all six player viewpoints and spectators. Seat IDs, teams, exchange recipients and authoritative turn order remain compatible with existing rounds.
 - Added a component regression covering every viewpoint, all six active seats, and actual engine play/pass transitions. Existing desktop/mobile CSS positions are reused without changing controls.
 - Passed `npm run check`, `npm test` (63 unit + 22 UI), `npm run format:check`, and `npm run build`. No protocol/transport changes. Browser viewport and real iPhone Safari visual checks have not been performed for this change.
-- Preserved the pre-existing bot-strategy work. Not deployed; review and frontend release verification remain pending.
+- Released `d858f18` on main; Cloudflare Pages production deployment `82bc72ae-3ca2-4e6b-b9ce-29f471260ba6` is active. Production HTML and all seven asset SHA-256 hashes match the tested build. GitHub Verify (including local Worker integration) passed: https://github.com/donan92/tichu6/actions/runs/45208666747.
+- Frontend-only change; existing Worker deployment `ddbfbce3-ecc7-488b-934a-fd583173ea1f` remains active and production health v6 passed. No pending release work.
