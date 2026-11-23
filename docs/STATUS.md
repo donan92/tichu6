@@ -1,20 +1,24 @@
 # Project status / resume point
 
 ## Last released baseline
+
 - v0.3.0, commit `6f60568`: authoritative Worker, SQLite Durable Objects, automatic reconnect, 45-second offline bots, 24-hour inactive-room retention.
 - Frontend https://tichu6.pages.dev/
 - Worker https://tichu6-server.kelp-swaths-7q.workers.dev
 - 31 automated tests passed; six real WebSocket clients, capacity, host departure, same-hand reconnect, and real offline alarm verified.
 
 ## Current release — v0.4.0 complete
+
 Released public lounge (30 total connected users including spectators), five rooms, automatic random titles, nicknames up to five characters, and public-state spectators, with server-side authorization and request limits.
 
 Decisions approved by user:
+
 - Thirty includes people playing and watching, not just idle lobby users.
 - Room titles are generated automatically, no manual editing in this version.
 - Preserve Cloudflare free-tier deployment.
 
 Current checkpoint:
+
 - Lounge implementation reviewed: stale client callbacks, module cache version, and spectator seat labels corrected.
 - Final checks passed: 41 tests, syntax checks, build, diff whitespace, and production dependency audit (0 vulnerabilities).
 - Fresh local Worker integration passed: 30/31 users, 5/6 room creation, six seats, spectator privacy/action denial, same-hand reconnect at full capacity, origin rejection.
@@ -23,6 +27,7 @@ Current checkpoint:
 - v0.3 rooms are not automatically imported into v0.4. Storage remains intact; old endpoints return 410. README documents refresh/new-room migration.
 
 Release verification:
+
 1. Worker deployed successfully: `ee8fb0bf-746c-4817-a477-48116e6d1f2b` (v4).
 2. Pages production build command changed and verified in dashboard: `npm run build`, output `dist` (includes `_headers`).
 3. Main implementation commit: `19faeb9`. Pages deployment: `c1b73f40-1137-4598-ad12-c12e728ca897`, active.
@@ -30,12 +35,14 @@ Release verification:
 5. Working tree implementation is merged; no pending implementation work in this release.
 
 ## Dependency maintenance checkpoint
+
 - User requested automatic latest stable Python/JavaScript library maintenance.
 - Added daily npm and GitHub Actions Dependabot configuration (major updates included). Python automation must be added with the first Python dependency manifest.
 - This documentation change includes `.github/dependabot.yml`; scheduled updates become active when it reaches the default branch. Automatic merge is not configured.
 - Python has no dependencies yet. JavaScript manifests and lockfile are included in the lounge release.
 
 ## v0.5.0 — bilingual UI and nickname policy
+
 - User correction: use maintained libraries and semantic keys; never map entire sentences or write a custom translation engine.
 - i18next 27.2.4 + browser language detector 8.3.1; esbuild 0.28.2 produces self-contained static assets.
 - Packs: `src/locales/en.json`, `src/locales/ko.json`; language registry: `src/locales/index.js`. English fallback, saved selection, browser-language detection.
@@ -45,7 +52,23 @@ Release verification:
 - Worker deployed: `daf08d99-11fd-452e-92e9-476fc2daa182` (health v5). Pages deployed commit `9c96b50`: `48f337f5-d70b-4a48-a205-5399be1eab8f`. Production bundle hash matches the tested local build; CSP, health v5, valid eight-character nickname admission and invalid Korean nickname rejection passed. Full npm audit: 0 vulnerabilities.
 
 ## v0.5.1 language-picker patch
+
 - User reported a picker remaining open after language changes. Desktop native selection did not reproduce the persistent popup; rendering replaced the native select on every update, a likely cause on other browsers.
 - Header/select now remain attached; only header text and screen content update. Focus restoration skips already-focused elements and prevents scrolling.
 - Passed: 47 tests, syntax, build, whitespace checks. Browser native click selection, keyboard selection, Escape cancellation, and 390px viewport all closed the picker after selection. Actual iPhone Safari remains unverified.
 - Frontend-only patch; backend unchanged. Pages verification follows main push.
+
+## v0.6.0 — Vue / Vite / TypeScript refactor (release pending)
+
+- User requested Vue, Vite, TypeScript, mandatory ESLint, clean code, and ES2026. Pinia manages shared session/game state. i18next-vue provides library-based reactive localization.
+- JavaScript output is ES2026; TypeScript 6.0.3 no-emit checking uses ESNext because ES2026 is not a supported compiler target yet. CSS targets are separate to avoid Lightning CSS rejecting an ECMAScript target.
+- Server and shared rules engine remain JavaScript with unchanged behavior; declarations expose typed frontend contracts. No Durable Object storage/protocol migration. Orval omitted because there is no OpenAPI gameplay HTTP API.
+- Replaced HTML string renderer and custom build/preview scripts with Vue components and Vite. Stable native form nodes, keyed cards, modal Escape/focus behavior, recipient defaults, and reconnection are covered.
+- ESLint includes Vue/TypeScript and existing JavaScript. Prettier makes previously minified source readable. Added read-only GitHub verification workflow.
+- API key review: no credential configuration added; public API URL/account ID are identifiers. Keep deployment OAuth outside repository. Raw player tokens remain local and handshake-only. Environment files are now ignored.
+- Local checks so far: 47 existing tests + 16 UI/transport tests, lint, strict typecheck, ES2026 production build, and npm audit (0 vulnerabilities). Browser checked language picker dismissal, watching without hands/actions, room creation, reload into same seat, modal cancellation/focus restoration.
+- Final local verification passed: 63 tests, zero-warning ESLint, strict vue-tsc, Prettier check, ES2026 build, whitespace checks, and npm audit (0 vulnerabilities). Isolated Worker integration passed all capacity/privacy/reconnect/origin cases.
+- Browser verified 390×844 layout (no horizontal document overflow), keyboard language selection/dismissal, practice grand declaration → ordered two-card exchange → play, and no console errors. This is not an actual iPhone Safari test.
+- Existing engine/server normalized JavaScript is identical before/after formatting; backend deployment is not needed. Production backend remains health v5.
+- Source and generated assets have no matches in a focused credential-pattern scan; no private environment/credential configuration is tracked. This is not an exhaustive historical secret audit.
+- Remaining: main push, CI and Pages verification. Do not report release complete until deployed bundle is verified.

@@ -1,0 +1,36 @@
+import type {
+  Card,
+  Combination,
+  GameAction,
+  LobbyState,
+  RoundState,
+  RoundView,
+} from './types';
+export const LABEL: Record<number, string>;
+export function team(seat: number): number;
+export function partners(seat: number): number[];
+export function deck(): Card[];
+export function shuffle(cards: Card[]): Card[];
+export function sortCards(cards: Card[]): Card[];
+export function points(cards: Card[]): number;
+export function classify(
+  cards: Card[],
+  top?: Combination | null,
+  phoenixRank?: number | null,
+): Combination | null;
+export function beats(
+  play: Combination | null,
+  top: Combination | null,
+): boolean;
+export function newGame(names?: string[]): LobbyState;
+export function startRound(
+  state: LobbyState | RoundState,
+  cards?: Card[],
+): RoundState;
+export function act(
+  state: RoundState,
+  seat: number,
+  action: GameAction,
+): RoundState;
+export function view(state: RoundState, seat: number): RoundView;
+export function botAction(state: RoundState, seat: number): GameAction;

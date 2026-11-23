@@ -2,7 +2,7 @@
 
 게임: https://tichu6.pages.dev/
 
-HTML/CSS/JavaScript 화면은 Cloudflare Pages, 게임 서버는 Workers + SQLite Durable Objects를 사용합니다. 공개 대기실과 최대 5개 방을 하나의 Durable Object가 관리하고, 서버가 셔플·규칙 판정·게임 상태 저장을 담당합니다. PeerJS/WebRTC는 사용하지 않습니다.
+Vue 3·TypeScript·Pinia 화면과 Vite 정적 빌드는 Cloudflare Pages, 게임 서버는 Workers + SQLite Durable Objects를 사용합니다. 공개 대기실과 최대 5개 방을 하나의 Durable Object가 관리하고, 서버가 셔플·규칙 판정·게임 상태 저장을 담당합니다. PeerJS/WebRTC는 사용하지 않습니다.
 
 ## 참가와 복구
 
@@ -27,11 +27,11 @@ npm run check
 npm run test:server
 ```
 
-Node.js 22 이상을 사용합니다. `npm run dev`는 5173 포트에서 화면을 제공합니다. localhost 화면은 자동으로 로컬 8787 서버에 연결합니다. 서버 통합 검증은 기본적으로 로컬 8787을 사용하며 `TEST_API`로 다른 로컬 포트를 지정할 수 있습니다. 용량 검증은 운영 주소를 거부합니다. 매 실행마다 비어 있는 로컬 저장소를 사용하세요.
+Node.js 22.13 이상을 사용합니다. `npm run dev`는 5173 포트에서 화면을 제공합니다. localhost 화면은 자동으로 로컬 8787 서버에 연결합니다. 서버 통합 검증은 기본적으로 로컬 8787을 사용하며 `TEST_API`로 다른 로컬 포트를 지정할 수 있습니다. 용량 검증은 운영 주소를 거부합니다. 매 실행마다 비어 있는 로컬 저장소를 사용하세요.
 
 ## 배포
 
-- Pages: `main` 푸시 시 자동 배포. 빌드 명령 `npm run build` (`_headers` 포함), 출력 `dist`.
+- Pages: `main` 푸시 시 자동 배포. 빌드 명령 `npm run build` (`public/_headers` 포함), 출력 `dist`.
 - 서버: `npx wrangler@4 login` 이후 `npm run deploy:server`. Worker 변경은 Pages 배포와 별도로 이 명령을 실행해야 합니다.
 - `wrangler.jsonc`의 SQLite migration `v1`은 최초 생성용이며 이미 저장된 방은 재배포 후에도 유지됩니다. 상태 스키마 변경 시 별도 마이그레이션이 필요합니다.
 - 서버 주소: https://tichu6-server.kelp-swaths-7q.workers.dev
@@ -64,9 +64,12 @@ Node.js 22 이상을 사용합니다. `npm run dev`는 5173 포트에서 화면�
 
 - `server/worker.js`: Origin/연결 빈도 검사, 라우팅, 기존 GameRoom 보존
 - `server/lounge.js`: 대기실·방 정원, 좌석 인증, 관전, 저장, 봇/만료 알람
-- `src/server-room.js`: 연결, 자동 재접속, 참가 키 보관
+- `src/server-room.ts`: 연결, 자동 재접속, 참가 키 보관
 - `src/game.js`: 서버/연습 공용 규칙 엔진
-- `src/app.js`: 한국어 게임 화면
+- `src/App.vue`, `src/views/`, `src/components/`: 한국어·영어 Vue 화면
+- `src/stores/session.ts`: Pinia 연결·게임·연습 상태
+- `src/types.ts`: 클라이언트 메시지·게임 타입
+- `tests/ui/`: Vitest + Vue Test Utils 화면·재접속 회귀 테스트
 - `tests/server.test.js`: 복구, 봇, 만료, 권한 검증
 - `scripts/check-lounge.mjs`: 실제 31개 연결, 방 정원, 관전 권한, 재접속 통합 검증
 - `tests/lounge.test.js`: 동시 입장, 개인정보 차단, 요청 제한 검증
@@ -86,4 +89,12 @@ Node.js 22 이상을 사용합니다. `npm run dev`는 5173 포트에서 화면�
 
 한국어·영어를 지원하며 상단 언어 선택은 브라우저에 저장됩니다. 처음에는 브라우저 언어를 감지하고 지원되지 않는 언어는 영어로 표시합니다. i18next와 i18next-browser-languagedetector를 사용하며 문구는 `src/locales/ko.json`, `src/locales/en.json`에서 의미 있는 코드 키로 관리합니다. 오류와 새 게임 기록은 `{code, params}` 형식으로 보관하여 언어 전환 시 다시 표시합니다. 기존 버전에서 저장한 문자열 기록과 방 제목은 원문을 보존합니다.
 
-언어 추가는 JSON 언어팩과 `src/locales/index.js` 등록으로 가능합니다. 브라우저 배포물은 esbuild가 라이브러리를 포함한 정적 파일로 생성합니다. 로컬 화면은 `npm run dev`로 실행합니다.
+언어 추가는 JSON 언어팩과 `src/locales/index.js` 등록으로 가능합니다. 브라우저 배포물은 Vite가 라이브러리를 포함한 정적 파일로 생성합니다. 로컬 화면은 `npm run dev`로 실행합니다.
+
+## 개발 기준
+
+프런트엔드는 Vue SFC·strict TypeScript·Pinia로 구성합니다. 기존 규칙 엔진과 Workers 서버는 JavaScript를 유지하며 ESLint와 테스트를 적용합니다. 공용 엔진의 `.d.ts`는 프런트엔드 타입 경계입니다.
+
+`npm run check`는 ESLint(경고 0개)와 vue-tsc를 실행합니다. `npm test`는 기존 서버/규칙 테스트와 Vue UI/연결 테스트를 실행하고, `npm run format:check`로 Prettier 형식을 검증합니다. GitHub Actions에서도 같은 검증과 로컬 Worker 통합 테스트를 실행합니다.
+
+Vite 개발·배포 JavaScript 대상은 **ES2026**입니다. 현재 안정 버전 TypeScript 6.0.3에는 ES2026 이름의 target/lib가 없어 타입 검사만 ESNext를 사용합니다. CSS 호환 대상은 별도 설정합니다. 기존 세션 키와 서버 프로토콜을 유지하므로 프런트엔드 교체 후 같은 브라우저에서 재접속할 수 있습니다.

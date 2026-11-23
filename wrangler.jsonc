@@ -7,27 +7,23 @@
     "bindings": [
       {
         "name": "ROOMS",
-        "class_name": "GameRoom"
+        "class_name": "GameRoom",
       },
       {
         "name": "LOUNGE",
-        "class_name": "Lounge"
-      }
-    ]
+        "class_name": "Lounge",
+      },
+    ],
   },
   "migrations": [
     {
       "tag": "v1",
-      "new_sqlite_classes": [
-        "GameRoom"
-      ]
+      "new_sqlite_classes": ["GameRoom"],
     },
     {
       "tag": "v2",
-      "new_sqlite_classes": [
-        "Lounge"
-      ]
-    }
+      "new_sqlite_classes": ["Lounge"],
+    },
   ],
   "ratelimits": [
     {
@@ -35,8 +31,8 @@
       "namespace_id": "640401",
       "simple": {
         "limit": 120,
-        "period": 60
-      }
-    }
-  ]
+        "period": 60,
+      },
+    },
+  ],
 }
