@@ -7,6 +7,7 @@ import { i18next } from '../../src/localization';
 import { useSessionStore } from '../../src/stores/session';
 import { newGame, startRound, view } from '../../src/game.js';
 import AppHeader from '../../src/components/AppHeader.vue';
+import PlayingCard from '../../src/components/PlayingCard.vue';
 import GameControls from '../../src/components/GameControls.vue';
 import GameView from '../../src/views/GameView.vue';
 import HallView from '../../src/views/HallView.vue';
@@ -33,6 +34,36 @@ function round(): RoundView {
   return view(startRound(newGame()), 0);
 }
 describe('Vue interaction regressions', () => {
+  it('renders special artwork with localized card labels and ordered selection', async () => {
+    const wrapper = mount(PlayingCard, {
+      props: {
+        card: { id: 'dragon', rank: 16, suit: -1, special: 'dragon' },
+        interactive: true,
+        pick: 1,
+      },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    expect(wrapper.find('.special-dragon .special-art').exists()).toBe(true);
+    expect(wrapper.attributes('aria-label')).toBe(i18next.t('card.dragon'));
+    expect(wrapper.attributes('aria-pressed')).toBe('true');
+    expect(wrapper.get('.pick').text()).toBe('2');
+    await wrapper.trigger('click');
+    expect(wrapper.emitted('select')).toEqual([['dragon']]);
+    await i18next.changeLanguage('ko');
+    await nextTick();
+    expect(wrapper.attributes('aria-label')).toBe(i18next.t('card.dragon'));
+  });
+  it('renders the exact number of pips for ordinary numeric cards', () => {
+    for (let rank = 2; rank <= 10; rank++) {
+      const wrapper = mount(PlayingCard, {
+        props: { card: { id: `card-${rank}`, rank, suit: 0 } },
+        global: { plugins: plugins() },
+      });
+      wrappers.push(wrapper);
+      expect(wrapper.findAll('.card-pips svg')).toHaveLength(rank);
+    }
+  });
   it('starts five-bot practice from the lounge even while disconnected', async () => {
     vi.useFakeTimers();
     const session = useSessionStore();

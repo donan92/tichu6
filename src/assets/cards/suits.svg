@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <symbol id="jade" viewBox="0 0 32 32"><path fill="currentColor" d="M16 1 29 16 16 31 3 16Z"/><path fill="none" stroke="#fff" stroke-opacity=".35" d="m16 7 8 9-8 9-8-9Z"/></symbol>
+  <symbol id="sword" viewBox="0 0 32 32"><path fill="currentColor" d="m16 1 5 8-3 11h7v4h-7v5l-2 2-2-2v-5H7v-4h7L11 9Z"/><path stroke="#fff" stroke-opacity=".5" d="M16 5v13"/></symbol>
+  <symbol id="pagoda" viewBox="0 0 32 32"><path fill="currentColor" d="m16 1 11 8H5Zm-6 10h12v4l8 5H2l8-5Zm0 11h12v5h6v4H4v-4h6Z"/></symbol>
+  <symbol id="star" viewBox="0 0 32 32"><path fill="currentColor" d="m16 1 4.2 9.8L31 12l-8.1 7.1L25.5 30 16 24.5 6.5 30l2.6-10.9L1 12l10.8-1.2Z"/></symbol>
+  <symbol id="court" viewBox="0 0 48 72"><path fill="none" stroke="currentColor" stroke-width="1.5" d="M24 2 45 36 24 70 3 36Z M24 8 40 36 24 64 8 36Z"/><path fill="currentColor" d="m12 23 7 5 5-10 5 10 7-5-3 15H15Zm3 18h18v4H15Z"/><circle cx="24" cy="52" r="3" fill="currentColor"/></symbol>
+</svg>

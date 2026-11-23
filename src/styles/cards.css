@@ -1,0 +1,347 @@
+/* Original four-suit deck artwork. Card identity and labels remain in Vue. */
+.card {
+  background: linear-gradient(145deg, #fffdf5, #eee8d9);
+  border-color: #d5cbb4;
+  box-shadow:
+    0 2px 4px #0004,
+    inset 0 0 0 3px #ffffff60;
+  overflow: visible;
+  isolation: isolate;
+}
+.card-corner {
+  z-index: 2;
+  gap: 3px;
+  font-family: Georgia, serif;
+}
+.card .suit-icon {
+  width: 14px;
+  height: 14px;
+  display: block;
+}
+.card-pips {
+  position: absolute;
+  inset: 21px 14px;
+  display: grid;
+  grid-template-rows: repeat(5, 1fr);
+}
+.pip-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  align-items: center;
+  justify-items: center;
+}
+.pip-row:nth-child(n + 4) {
+  transform: rotate(180deg);
+}
+.card-pips .suit-icon {
+  width: 10px;
+  height: 10px;
+}
+.card-emblem {
+  display: none;
+  position: absolute;
+  width: 40%;
+  height: 40%;
+  left: 30%;
+  top: 30%;
+}
+.ace-emblem {
+  display: block;
+}
+.court-art {
+  position: absolute;
+  inset: 17% 20%;
+  width: 60%;
+  height: 66%;
+}
+.card.special {
+  background: linear-gradient(145deg, #fff7db, #e9dfbd);
+  border-color: #bba570;
+}
+.card.special::after {
+  border-color: #a4874345;
+  z-index: -1;
+}
+.special-art {
+  position: absolute;
+  width: 92%;
+  aspect-ratio: 1;
+  left: 4%;
+  top: 50%;
+  transform: translateY(-45%);
+  background-image: url('../assets/cards/specials.webp');
+  background-size: 200% 200%;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+.special-dragon .special-art {
+  background-position: 0 0;
+}
+.special-phoenix .special-art {
+  background-position: 100% 0;
+}
+.special-dog .special-art {
+  background-position: 0 100%;
+}
+.special-mahjong .special-art {
+  background-position: 100% 100%;
+}
+.hero-cards .card .suit-icon {
+  width: 24px;
+  height: 24px;
+}
+.played-cards .card-pips {
+  display: none;
+}
+.played-cards .card-emblem {
+  display: block;
+}
+.played-cards .court-art + .card-emblem {
+  display: none;
+}
+.played-cards .card .suit-icon {
+  width: 10px;
+  height: 10px;
+}
+
+/* Every card owns its full touch target; no overlap or horizontal hand scroller. */
+@media (max-width: 850px) {
+  .hand {
+    display: grid;
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+    gap: 6px;
+    min-height: 0;
+    overflow: visible;
+    padding: 10px 0;
+  }
+  .hand .card {
+    width: 100%;
+    height: 72px;
+    min-height: 44px;
+    margin: 0;
+    touch-action: manipulation;
+  }
+  .hand button.card:hover,
+  .hand button.card.selected {
+    transform: none;
+  }
+  .hand button.card.selected {
+    box-shadow:
+      inset 0 0 0 3px #759532,
+      0 0 0 2px var(--lime);
+    background: #fffce8;
+  }
+  .hand .pick {
+    top: 2px;
+    right: 2px;
+    width: 17px;
+    height: 17px;
+    font-size: 10px;
+    box-shadow: 0 1px 2px #0004;
+  }
+  .hand .card-corner {
+    top: 4px;
+    left: 4px;
+    font-size: 17px;
+  }
+  .hand .card-corner .suit-icon {
+    width: 11px;
+    height: 11px;
+  }
+  .hand .card-bottom {
+    font-size: 12px;
+    right: 4px;
+    bottom: 4px;
+  }
+  .hand .card-pips {
+    display: none;
+  }
+  .hand .card-emblem {
+    display: block;
+    width: 38%;
+    height: 38%;
+    left: 42%;
+    top: 42%;
+  }
+  .hand .court-art + .card-emblem {
+    display: none;
+  }
+  .hand .court-art {
+    inset: 18% 15% 10% 30%;
+    width: 55%;
+    height: 72%;
+  }
+  .hand .empty-hand {
+    grid-column: 1 / -1;
+  }
+}
+@media (max-width: 600px) {
+  body:has(.game) header {
+    height: 52px;
+  }
+  .game {
+    padding: 0 12px;
+  }
+  .game-bar {
+    padding: 8px 0;
+    align-items: center;
+  }
+  .game-bar h2 {
+    margin-top: 3px;
+    font-size: 16px;
+  }
+  .game-bar h2 span {
+    display: inline;
+    margin: 0 0 0 6px;
+    font-size: 10px;
+  }
+  .game-bar .eyebrow {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+  .game-bar .score b {
+    font-size: 22px;
+  }
+  .game .table {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-rows: auto minmax(64px, auto) auto;
+    gap: 5px;
+    height: auto;
+    min-height: 174px;
+    margin: 4px 0 10px;
+    padding: 6px;
+    border-radius: 16px;
+  }
+  .game .player {
+    position: static;
+    transform: none;
+    min-width: 0;
+    max-width: none;
+    padding: 4px;
+    gap: 4px;
+    border-radius: 7px;
+  }
+  .game .player > div:last-child {
+    min-width: 0;
+  }
+  .game .player b {
+    font-size: 10px;
+    max-width: none;
+  }
+  .game .player small {
+    font-size: 9px;
+  }
+  .game .player .avatar {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    font-size: 10px;
+  }
+  .game .pos-2 {
+    grid-area: 1 / 1;
+  }
+  .game .pos-3 {
+    grid-area: 1 / 2;
+  }
+  .game .pos-4 {
+    grid-area: 1 / 3;
+  }
+  .game .pos-1 {
+    grid-area: 3 / 1;
+  }
+  .game .pos-0 {
+    grid-area: 3 / 2;
+  }
+  .game .pos-5 {
+    grid-area: 3 / 3;
+  }
+  .game .table-center {
+    position: static;
+    grid-area: 2 / 1 / 3 / -1;
+    gap: 3px;
+    min-width: 0;
+  }
+  .game .table-mark {
+    font-size: 26px;
+  }
+  .game .table-note {
+    margin: 0;
+    font-size: 10px;
+  }
+  .game .wish-badge {
+    position: static;
+    font-size: 10px;
+  }
+  .game .played-cards .card {
+    width: 28px;
+    height: 42px;
+    flex-basis: 28px;
+    margin-left: -12px;
+    border-radius: 4px;
+  }
+  .game .played-cards .card:first-child {
+    margin-left: 0;
+  }
+  .game .played-cards .card-corner {
+    font-size: 10px;
+    top: 2px;
+    left: 2px;
+  }
+  .game .played-cards .card-corner .suit-icon {
+    width: 8px;
+    height: 8px;
+  }
+  .game .played-cards .card-bottom {
+    display: none;
+  }
+  .hand-panel {
+    padding: 8px;
+  }
+  .hand-heading b {
+    font-size: 14px;
+  }
+  .hand-heading b span {
+    font-size: 11px;
+    margin-left: 4px;
+  }
+  .hand-heading button {
+    min-height: 36px;
+    font-size: 12px;
+    padding: 6px;
+  }
+  .hand {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 5px;
+    padding: 6px 0 9px;
+  }
+  .hand .card {
+    height: 64px;
+  }
+  .hand .card-corner {
+    font-size: 15px;
+  }
+  .controls {
+    padding-top: 8px;
+    gap: 8px;
+    min-height: 0;
+  }
+  .action-message h3 {
+    font-size: 14px;
+    margin: 0 0 3px;
+  }
+  .action-message p {
+    font-size: 12px;
+    line-height: 1.4;
+  }
+  .action-buttons {
+    gap: 6px;
+  }
+  .action-buttons button {
+    min-height: 44px;
+    padding: 8px 12px;
+  }
+  .action-buttons select {
+    font-size: 16px;
+  }
+}
