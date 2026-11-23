@@ -7,6 +7,7 @@ import {
   botAction,
   view,
   points,
+  exchangeReview,
 } from '../src/game.js';
 const GRACE = 45000,
   TTL = 86400000,
@@ -165,6 +166,7 @@ export class Lounge {
       if (seat >= 0) {
         snapshot.seat = seat;
         snapshot.hand = view(r.state, seat).hand;
+        snapshot.exchangeReview = exchangeReview(r.state, seat);
       }
       this.send(ws, {
         type: 'state',
@@ -370,6 +372,21 @@ export class Lounge {
             )
               throw new AppError('error.invalidRoom');
             this.enter(ws, msg.roomId, msg.watch, nickname(msg.name));
+          } else if (msg.type === 'forfeit') {
+            const r = this.data.rooms[a.room];
+            const seat = r?.members.findIndex((m) => m?.hash === a.hash);
+            if (
+              !r ||
+              a.watch ||
+              seat < 0 ||
+              ['lobby', 'matchEnd'].includes(r.state.phase)
+            )
+              throw new AppError('error.cannotForfeit');
+            // Surrender removes the identity's seat claim; future joins are spectators only.
+            r.members[seat] = { bot: true };
+            a.room = null;
+            a.watch = false;
+            ws.serializeAttachment(a);
           } else if (msg.type === 'leave') {
             this.leaveWaiting(a.hash, null);
             a.room = null;

@@ -4,6 +4,8 @@ import { useText } from '../composables/useText';
 import { useSessionStore } from '../stores/session';
 import { LABEL, team } from '../game.js';
 import type { RoundView } from '../types';
+import { combinationMessage } from '../combinations';
+import ExchangeReview from '../components/ExchangeReview.vue';
 import PlayingCard from '../components/PlayingCard.vue';
 import GameControls from '../components/GameControls.vue';
 import GameRules from '../components/GameRules.vue';
@@ -94,9 +96,26 @@ const tableNote = computed(() =>
       </div>
       <div class="table-center">
         <template v-if="game.top"
-          ><span class="eyebrow"
-            >{{ game.names[game.last ?? 0] }} ·
-            {{ t(`kind.${game.top.kind}`) }}</span
+          ><span
+            class="eyebrow played-by"
+            :class="team(game.last ?? 0) ? 'played-team-b' : 'played-team-a'"
+            >{{
+              t('play.playedBy', {
+                name: game.names[game.last ?? 0],
+                team: team(game.last ?? 0) ? 'B' : 'A',
+              })
+            }}
+            ·
+            {{
+              message(
+                combinationMessage(
+                  game.top,
+                  game.top.cards.length === 1
+                    ? game.top.cards[0]?.special
+                    : undefined,
+                ),
+              )
+            }}</span
           >
           <div class="played-cards">
             <PlayingCard
@@ -155,6 +174,11 @@ const tableNote = computed(() =>
       </div>
       <div class="controls"><GameControls :game="game" /></div>
     </section>
+    <ExchangeReview
+      v-if="!game.spectator && game.exchangeReview?.length"
+      :entries="game.exchangeReview"
+      :names="game.names"
+    />
     <GameRules />
     <details class="activity">
       <summary>

@@ -3,10 +3,13 @@ import { computed, ref, watch } from 'vue';
 import { useTranslation } from 'i18next-vue';
 import { beats, classify, LABEL, partners, team } from '../game.js';
 import { useSessionStore } from '../stores/session';
+import { combinationMessage } from '../combinations';
+import { useText } from '../composables/useText';
 import type { RoundView } from '../types';
 const props = defineProps<{ game: RoundView }>();
 const session = useSessionStore();
 const { t } = useTranslation();
+const { message } = useText();
 const wish = ref(''),
   target = ref(''),
   phoenixRank = ref('');
@@ -104,7 +107,16 @@ const help = computed(() => {
   return chosen.value.length
     ? t('play.selection', {
         count: chosen.value.length,
-        kind: t(combo.value ? `kind.${combo.value.kind}` : 'play.invalidCombo'),
+        kind: combo.value
+          ? message(
+              combinationMessage(
+                combo.value,
+                chosen.value.length === 1
+                  ? chosen.value[0]?.special
+                  : undefined,
+              ),
+            )
+          : t('play.invalidCombo'),
       })
     : t('play.selectHint');
 });

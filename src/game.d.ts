@@ -1,5 +1,6 @@
 import type {
   Card,
+  ExchangeReview,
   Combination,
   GameAction,
   LobbyState,
@@ -34,3 +35,8 @@ export function act(
 ): RoundState;
 export function view(state: RoundState, seat: number): RoundView;
 export function botAction(state: RoundState, seat: number): GameAction;
+
+export function exchangeReview(
+  state: LobbyState | RoundState,
+  seat: number,
+): ExchangeReview[];

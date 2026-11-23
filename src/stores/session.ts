@@ -33,6 +33,12 @@ export const useSessionStore = defineStore('session', () => {
   const round = computed(() =>
     game.value?.phase !== 'lobby' ? game.value : null,
   );
+  const forfeiting = computed(
+    () =>
+      !!game.value &&
+      !game.value.spectator &&
+      !['lobby', 'matchEnd'].includes(game.value.phase),
+  );
   let room: Room | null = null;
   // Keep engine state outside Vue's proxies: act() clones it with structuredClone.
   let practice: RoundState | null = null;
@@ -249,7 +255,7 @@ export const useSessionStore = defineStore('session', () => {
       if (mode.value === 'room') {
         if (!room || !connected.value)
           throw new AppError('error.waitConnection');
-        room.request({ type: 'leave' });
+        room.request({ type: forfeiting.value ? 'forfeit' : 'leave' });
       } else {
         room?.close();
         room = null;
@@ -285,6 +291,7 @@ export const useSessionStore = defineStore('session', () => {
     busy,
     pending,
     leaving,
+    forfeiting,
     notice,
     connectionError,
     seat,

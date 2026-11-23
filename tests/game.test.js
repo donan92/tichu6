@@ -357,3 +357,36 @@ test('1000 point target requires unequal scores', () => {
   tie = act(tie, 4, { type: 'play', ids: [pick(8)[0].id] });
   assert.equal(tie.phase, 'roundEnd');
 });
+test('exchange receipt reveals only own transfers and disappears after own play or first collection', () => {
+  let s = startRound(newGame(), deck());
+  for (let i = 0; i < 6; i++) s = act(s, i, { type: 'grand', call: false });
+  const choices = s.hands.map((h) => h.slice(0, 2).map((c) => c.id));
+  s = act(s, 0, { type: 'exchange', ids: choices[0] });
+  assert.deepEqual(
+    view(s, 0).exchangeReview.map((r) => r.sent.id),
+    choices[0],
+  );
+  assert.ok(view(s, 0).exchangeReview.every((r) => !r.received));
+  assert.deepEqual(view(s, 2).exchangeReview, []);
+  for (let i = 1; i < 6; i++)
+    s = act(s, i, { type: 'exchange', ids: choices[i] });
+  assert.deepEqual(
+    view(s, 0).exchangeReview.map((r) => [r.partner, r.received.id]),
+    [
+      [2, choices[2][1]],
+      [4, choices[4][0]],
+    ],
+  );
+  const restored = structuredClone(s);
+  assert.deepEqual(view(restored, 0).exchangeReview, view(s, 0).exchangeReview);
+  restored.turn = 0;
+  const c = restored.hands[0].find((c) => !c.special);
+  const played = act(restored, 0, { type: 'play', ids: [c.id] });
+  assert.deepEqual(view(played, 0).exchangeReview, []);
+  assert.equal(view(played, 2).exchangeReview.length, 2);
+  played.phase = 'trick';
+  played.last = 0;
+  const collected = act(played, 0, { type: 'collect' });
+  assert.deepEqual(view(collected, 2).exchangeReview, []);
+  assert.equal('exchangeReviewClosed' in view(collected, 2), false);
+});

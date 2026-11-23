@@ -520,3 +520,58 @@ test('upgrade persists old socket idle baselines across repeated hibernation', a
   await f.hub.alarm();
   assert.equal(ws.code, 4009);
 });
+test('forfeit is authenticated, hands the seat to a bot immediately and prevents reclaim', async () => {
+  const f = await setup(),
+    owner = await user(f, 1),
+    other = await user(f, 2),
+    watcher = await user(f, 3);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const id = owner.a.room;
+  await msg(f.hub, other, {
+    type: 'join',
+    roomId: id,
+    name: 'Other',
+    watch: false,
+  });
+  await msg(f.hub, watcher, {
+    type: 'join',
+    roomId: id,
+    name: 'Watcher',
+    watch: true,
+  });
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  const r = f.hub.data.rooms[id];
+  const seat = r.members.findIndex((m) => m?.hash === owner.a.hash);
+  const before = structuredClone(r);
+  await msg(f.hub, watcher, { type: 'forfeit', seat });
+  assert.equal(last(watcher, 'error').code, 'error.cannotForfeit');
+  assert.deepEqual(r, before);
+  r.state.ready = Array(6).fill(true);
+  r.state.ready[seat] = false;
+  await msg(f.hub, owner, { type: 'forfeit', seat: (seat + 1) % 6 });
+  assert.equal(r.members[seat].bot, true);
+  assert.equal(r.members[seat].hash, undefined);
+  assert.ok(last(owner, 'hall'));
+  await f.hub.alarm();
+  assert.equal(r.state.phase, 'exchange');
+  await msg(f.hub, owner, {
+    type: 'join',
+    roomId: id,
+    name: 'Owner',
+    watch: false,
+  });
+  assert.equal(last(owner, 'error').code, 'error.watchOnly');
+  await msg(f.hub, owner, {
+    type: 'join',
+    roomId: id,
+    name: 'Owner',
+    watch: true,
+  });
+  assert.equal(last(owner, 'state').value.spectator, true);
+  assert.equal('exchangeReview' in last(owner, 'state').value, false);
+  assert.equal('exchangeReview' in last(watcher, 'state').value, false);
+});

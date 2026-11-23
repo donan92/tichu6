@@ -21,14 +21,26 @@ onBeforeUnmount(() => {
     @cancel.prevent="session.leaving = false"
   >
     <div>
-      <h2 id="leave-title">{{ t('leave.title') }}</h2>
-      <p>{{ t('leave.description') }}</p>
+      <h2 id="leave-title">
+        {{ t(session.forfeiting ? 'leave.forfeitTitle' : 'leave.title') }}
+      </h2>
+      <p>
+        {{
+          t(
+            session.forfeiting
+              ? session.mode === 'demo'
+                ? 'leave.practiceForfeit'
+                : 'leave.forfeitDescription'
+              : 'leave.description',
+          )
+        }}
+      </p>
       <button autofocus @click="session.leaving = false">
         {{ t('leave.cancel') }}</button><button
         class="accent"
         @click="session.confirmLeave"
       >
-        {{ t('play.leave') }}
+        {{ t(session.forfeiting ? 'leave.forfeit' : 'play.leave') }}
       </button>
     </div>
   </dialog>

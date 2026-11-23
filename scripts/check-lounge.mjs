@@ -173,6 +173,45 @@ try {
   console.log(
     'PASS real Worker: one human plus five bots, alarm-driven decisions, 10 then 18 cards, no extra identity slots',
   );
+  const sent = solo.state.hand.slice(0, 2).map((card) => card.id);
+  await request(
+    solo,
+    {
+      type: 'action',
+      revision: solo.state.revision,
+      action: { type: 'exchange', ids: sent },
+    },
+    () => solo.state.exchangeReady[solo.state.seat],
+  );
+  await until(() => solo.state.phase === 'play', 20000);
+  assert.deepEqual(
+    solo.state.exchangeReview.map((entry) => entry.sent.id),
+    sent,
+  );
+  assert.ok(solo.state.exchangeReview.every((entry) => entry.received));
+  await request(
+    spectator,
+    { type: 'join', roomId: solo.state.roomId, watch: true, name: 'Watcher' },
+    () => spectator.state?.roomId === solo.state.roomId,
+  );
+  assert.equal('exchangeReview' in spectator.state, false);
+  await request(restored, { type: 'forfeit' }, (messages) =>
+    messages.some((m) => m.type === 'hall'),
+  );
+  await until(() =>
+    players
+      .filter((c) => c !== owner)
+      .some((c) => c.state?.bots?.[originalSeat]),
+  );
+  const deniedReclaim = await request(
+    restored,
+    { type: 'join', roomId: id, watch: false, name: 'Check' },
+    (messages) => messages.some((m) => m.type === 'error'),
+  );
+  assert.ok(deniedReclaim.some((m) => m.code === 'error.watchOnly'));
+  console.log(
+    'PASS real Worker: private exchange receipt, spectator redaction, authenticated forfeit to hall, bot takeover and no seat reclaim',
+  );
   const foreign = await fetch(base + '/lounge', {
     headers: { Origin: 'https://evil.example' },
   });

@@ -6,6 +6,7 @@ import { nextTick } from 'vue';
 import { i18next } from '../../src/localization';
 import { useSessionStore } from '../../src/stores/session';
 import { act, newGame, startRound, view } from '../../src/game.js';
+import LeaveDialog from '../../src/components/LeaveDialog.vue';
 import AppHeader from '../../src/components/AppHeader.vue';
 import PlayingCard from '../../src/components/PlayingCard.vue';
 import GameControls from '../../src/components/GameControls.vue';
@@ -34,6 +35,93 @@ function round(): RoundView {
   return view(startRound(newGame()), 0);
 }
 describe('Vue interaction regressions', () => {
+  it('shows private exchange partners and team-colored ranked plays, then removes the receipt', async () => {
+    const session = useSessionStore();
+    const game = round();
+    game.phase = 'play';
+    game.last = 3;
+    game.top = {
+      kind: 'pair',
+      power: 10,
+      size: 2,
+      bomb: 0,
+      cards: [
+        { id: 'x', rank: 10, suit: 0 },
+        { id: 'y', rank: 10, suit: 1 },
+      ],
+    };
+    game.exchangeReview = [
+      {
+        partner: 2,
+        sent: { id: 'a', rank: 4, suit: 0 },
+        received: { id: 'b', rank: 14, suit: 3 },
+      },
+    ];
+    session.game = game;
+    const wrapper = mount(GameView, {
+      props: { game },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    expect(wrapper.get('.played-by').classes()).toContain('played-team-b');
+    expect(wrapper.get('.played-by').text()).toContain('Team B');
+    expect(wrapper.get('.played-by').text()).toContain('10 pair');
+    expect(wrapper.get('.exchange-review').text()).toContain(game.names[2]);
+    expect(wrapper.get('.exchange-review').text()).toContain('Sent');
+    expect(wrapper.get('.exchange-review').text()).toContain('Received');
+    await wrapper.setProps({ game: { ...game, exchangeReview: [] } });
+    expect(wrapper.find('.exchange-review').exists()).toBe(false);
+    await wrapper.setProps({ game: { ...game, spectator: true } });
+    expect(wrapper.find('.exchange-review').exists()).toBe(false);
+  });
+  it('warns before forfeiting and supports cancel, Escape, repeated opening and focus return', async () => {
+    Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+      configurable: true,
+      value: function () {
+        this.open = true;
+      },
+    });
+    Object.defineProperty(HTMLDialogElement.prototype, 'close', {
+      configurable: true,
+      value: function () {
+        this.open = false;
+      },
+    });
+    const session = useSessionStore();
+    session.startPractice();
+    const header = mount(AppHeader, {
+      attachTo: document.body,
+      global: { plugins: plugins() },
+    });
+    wrappers.push(header);
+    const button = header.get('button');
+    (button.element as HTMLButtonElement).focus();
+    await button.trigger('click');
+    expect(session.leaving).toBe(true);
+    const open = () =>
+      mount(LeaveDialog, {
+        attachTo: document.body,
+        global: { plugins: plugins() },
+      });
+    let dialog = open();
+    expect(dialog.text()).toContain('Give up this game?');
+    await dialog.get('button').trigger('click');
+    expect(session.leaving).toBe(false);
+    dialog.unmount();
+    expect(document.activeElement).toBe(button.element);
+    await button.trigger('click');
+    dialog = open();
+    await dialog.get('dialog').trigger('cancel');
+    expect(session.leaving).toBe(false);
+    dialog.unmount();
+    await button.trigger('click');
+    dialog = open();
+    await dialog.findAll('button')[1].trigger('click');
+    expect(session.mode).toBe('home');
+    expect(session.game).toBeNull();
+    dialog.unmount();
+  });
+
   it('advances counterclockwise for every player viewpoint and spectators', async () => {
     const session = useSessionStore();
     let state = startRound(newGame());

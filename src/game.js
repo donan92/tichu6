@@ -258,6 +258,7 @@ export function startRound(s, cards = shuffle(deck())) {
   s.calls = Array(6).fill(0);
   s.played = Array(6).fill(false);
   s.exchanges = Array(6).fill(null);
+  s.exchangeReviewClosed = false;
   s.captured = Array.from({ length: 6 }, () => []);
   s.finish = [];
   s.top = null;
@@ -311,6 +312,7 @@ function ending(s) {
   );
 }
 function collect(s, recipient) {
+  s.exchangeReviewClosed = true;
   s.captured[recipient].push(...s.pile);
   s.pile = [];
   log(s, event('log.collect', { name: s.names[recipient] }));
@@ -456,6 +458,12 @@ export function act(state, seat, action) {
         event('log.play', {
           name: s.names[seat],
           kind: p.kind,
+          power: p.power,
+          size: p.size,
+          bomb: p.bomb,
+          ...(cards.length === 1 && cards[0].special
+            ? { special: cards[0].special }
+            : {}),
           count: cards.length,
         }),
       );
@@ -496,8 +504,39 @@ export function act(state, seat, action) {
   s.revision++;
   return s;
 }
+export function exchangeReview(s, seat) {
+  if (
+    seat < 0 ||
+    seat > 5 ||
+    s.played?.[seat] ||
+    s.exchangeReviewClosed ||
+    !['exchange', 'play', 'trick'].includes(s.phase) ||
+    s.captured?.some((cards) => cards.length)
+  )
+    return [];
+  const cards = deck();
+  const complete = s.exchanges?.every(Boolean);
+  return partners(seat)
+    .map((partner, index) => {
+      const sent = cards.find((c) => c.id === s.exchanges?.[seat]?.[index]);
+      const received = complete
+        ? cards.find(
+            (c) =>
+              c.id ===
+              s.exchanges?.[partner]?.[partners(partner).indexOf(seat)],
+          )
+        : undefined;
+      return {
+        partner,
+        ...(sent ? { sent } : {}),
+        ...(received ? { received } : {}),
+      };
+    })
+    .filter((entry) => entry.sent || entry.received);
+}
 export function view(s, seat) {
-  const { hands, first, exchanges, captured, ...pub } = s;
+  const { hands, first, exchanges, captured, exchangeReviewClosed, ...pub } = s;
+  void exchangeReviewClosed;
   const hand =
     s.phase === 'grand'
       ? hands[seat].filter((c) => first[seat].includes(c.id))
@@ -509,6 +548,7 @@ export function view(s, seat) {
     counts: hands.map((h) => h.length),
     exchangeReady: (exchanges || []).map(Boolean),
     capturedPoints: (captured || []).map(points),
+    exchangeReview: exchangeReview(s, seat),
   };
 }
 export function kindName(kind) {

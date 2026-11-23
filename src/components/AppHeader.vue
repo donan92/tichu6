@@ -51,9 +51,11 @@ const status = computed(() =>
       >
         {{
           t(
-            session.mode === 'hall'
-              ? 'connection.disconnect'
-              : 'connection.lounge',
+            session.forfeiting
+              ? 'leave.forfeit'
+              : session.mode === 'hall'
+                ? 'connection.disconnect'
+                : 'connection.lounge',
           )
         }}
       </button>

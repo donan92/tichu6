@@ -147,3 +147,23 @@ the Durable Object; snapshots expose only the existing bot indicator. Old stored
 rooms migrate without losing hands, with a fresh idle window for existing sockets.
 Run `npm run test:idle` for the isolated real-Worker timeout/reconnect regression;
 its clock-aging fixture is never imported by the production Worker.
+
+### Exchange receipt, giving up and combination labels
+
+Players see a private receipt pairing each teammate with the card sent and the
+card received. Sent cards appear after submitting the exchange; incoming cards
+appear only once all six exchanges finish. The receipt disappears after that
+player's first accepted play or the first collected trick, whichever comes first,
+and stays hidden after reconnect. Spectator snapshots never contain receipts.
+
+During an active game, **Give up game** opens a warning with cancel/Escape support.
+Confirming returns to the lounge and permanently transfers that seat to a server
+bot; scores, teams and declarations remain unchanged. The departing identity can
+watch but cannot reclaim the surrendered seat. Other human players keep playing;
+rooms with no human members are removed. Practice surrender ends the local game.
+Normal connection loss and IDLE reconnect rules remain separate from surrender.
+
+The table identifies the last player with a team-colored A/B label. Table labels,
+selection previews and new history entries include ranks or ranges, e.g. `10 pair`,
+`10 full house` (triple rank), `6 four of a kind`, `5–J straight`, and
+`3–10 straight flush`. Older history records retain their generic labels.

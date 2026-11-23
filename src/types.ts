@@ -19,7 +19,13 @@ export interface Combination {
   bomb: number;
   phoenixRank?: number;
 }
+export interface ExchangeReview {
+  partner: number;
+  sent?: Card;
+  received?: Card;
+}
 export interface PublicBase {
+  exchangeReview?: ExchangeReview[];
   phase: Phase;
   names: string[];
   round: number;
@@ -74,6 +80,7 @@ export interface RoundState extends Omit<
   exchanges: (string[] | null)[];
   captured: Card[][];
   pile: Card[];
+  exchangeReviewClosed?: boolean;
 }
 export type GameAction =
   | { type: 'start' | 'next' | 'tichu' | 'pass' }
@@ -107,5 +114,5 @@ export type ServerMessage =
 export type ClientRequest =
   | { type: 'create'; name: string }
   | { type: 'join'; roomId: string; watch: boolean; name: string }
-  | { type: 'leave' }
+  | { type: 'leave' | 'forfeit' }
   | { type: 'action'; revision: number; action: GameAction };

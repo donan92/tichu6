@@ -393,3 +393,43 @@ select {
     display: none;
   }
 }
+
+.played-by {
+  display: inline-block;
+  padding: 4px 8px;
+  border: 1px solid currentColor;
+  border-radius: 6px;
+}
+.played-team-a {
+  color: #f2ca71;
+}
+.played-team-b {
+  color: #90b2d2;
+}
+.exchange-review {
+  padding: 12px 16px;
+  border: 1px solid #526078;
+  border-radius: 10px;
+  background: #1e293b;
+  margin-top: 12px;
+}
+.exchange-review-partners {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 8px 0;
+}
+.exchange-review-partner {
+  display: grid;
+  gap: 4px;
+  overflow-wrap: anywhere;
+}
+.exchange-review small {
+  color: #b8c5d6;
+}
+@media (max-width: 380px) {
+  .exchange-review {
+    padding: 10px;
+    font-size: 12px;
+  }
+}
