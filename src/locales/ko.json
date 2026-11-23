@@ -31,7 +31,7 @@
   "home.nickname": "닉네임 (영문·숫자 1~8자)",
   "home.placeholder": "닉네임을 입력하세요",
   "home.enter": "대기실 입장",
-  "home.practice": "혼자 연습하기",
+  "home.practice": "봇 5명과 연습하기",
   "home.capacity": "전체 30명 · 방 5개 · 방마다 플레이어 6명, 관전도 가능합니다.",
   "lounge.title": "함께할 테이블을 골라요",
   "lounge.label": "공개 대기실",
@@ -230,5 +230,7 @@
   "log.finish": "{{name}} · {{place}}등으로 완료!",
   "log.dog": "{{name}} · 개 → {{target}}",
   "log.play_one": "{{name}} · {{kind}} ({{count}}장)",
-  "log.play_other": "{{name}} · {{kind}} ({{count}}장)"
+  "log.play_other": "{{name}} · {{kind}} ({{count}}장)",
+  "practice.title": "혼자서도 바로 플레이",
+  "practice.description": "나와 봇 5명이 함께하는 연습 게임입니다. 다른 플레이어를 기다릴 필요가 없어요."
 }

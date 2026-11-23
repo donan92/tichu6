@@ -33,6 +33,34 @@ function round(): RoundView {
   return view(startRound(newGame()), 0);
 }
 describe('Vue interaction regressions', () => {
+  it('starts five-bot practice from the lounge even while disconnected', async () => {
+    vi.useFakeTimers();
+    const session = useSessionStore();
+    session.mode = 'hall';
+    session.nickname = 'BotTest';
+    session.connected = false;
+    const wrapper = mount(HallView, { global: { plugins: plugins() } });
+    wrappers.push(wrapper);
+    const button = wrapper.get('.practice-entry button');
+    expect(button.attributes('disabled')).toBeUndefined();
+    expect(button.text()).toBe(i18next.t('home.practice'));
+    await button.trigger('click');
+    expect(session.mode).toBe('demo');
+    expect(session.round?.names).toEqual([
+      'BotTest',
+      'SkyBot',
+      'StarBot',
+      'RiverBot',
+      'SunBot',
+      'SeaBot',
+    ]);
+    expect(session.round?.hand).toHaveLength(8);
+    session.submit({ type: 'grand', call: false });
+    await vi.advanceTimersByTimeAsync(4200);
+    expect(session.round?.phase).toBe('exchange');
+    expect(session.round?.hand).toHaveLength(18);
+    expect(session.notice).toBeNull();
+  });
   it('keeps the language select attached and focused through language and connection updates', async () => {
     const wrapper = mount(AppHeader, {
       global: { plugins: plugins() },

@@ -31,7 +31,7 @@
   "home.nickname": "Nickname (1–8 letters or digits)",
   "home.placeholder": "Enter your nickname",
   "home.enter": "Enter lounge",
-  "home.practice": "Practice solo",
+  "home.practice": "Practice with 5 bots",
   "home.capacity": "30 people · 5 rooms · 6 players per room, plus spectators.",
   "lounge.title": "Choose your table",
   "lounge.label": "Public lounge",
@@ -230,5 +230,7 @@
   "log.finish": "{{name}} · Finished in place {{place}}!",
   "log.dog": "{{name}} · Dog → {{target}}",
   "log.play_one": "{{name}} · {{kind}} ({{count}} card)",
-  "log.play_other": "{{name}} · {{kind}} ({{count}} cards)"
+  "log.play_other": "{{name}} · {{kind}} ({{count}} cards)",
+  "practice.title": "Play on your own",
+  "practice.description": "Play a practice game with five bots. No need to wait for other players."
 }

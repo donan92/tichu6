@@ -35,6 +35,15 @@ const session = useSessionStore();
         t('lounge.roomCount', { count: session.directory.rooms.length })
       }}</span>
     </section>
+    <section class="panel practice-entry" aria-labelledby="practice-title">
+      <div>
+        <h2 id="practice-title">{{ t('practice.title') }}</h2>
+        <p class="muted">{{ t('practice.description') }}</p>
+      </div>
+      <button type="button" @click="session.startPractice">
+        {{ t('home.practice') }}
+      </button>
+    </section>
     <div class="room-list">
       <article
         v-for="room in session.directory.rooms"
