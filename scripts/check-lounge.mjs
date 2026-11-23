@@ -37,13 +37,8 @@ async function user(token = randomBytes(32).toString('hex'), extra = {}) {
 async function request(c, m, verify) {
   const count = c.messages.length;
   c.ws.send(JSON.stringify(m));
-  await until(() =>
-    verify
-      ? verify()
-      : c.messages
-          .slice(count)
-          .some((x) => ['state', 'hall', 'error'].includes(x.type)),
-  );
+  // Broadcasts from other requests are not acknowledgements for this request.
+  await until(() => verify(c.messages.slice(count)));
   return c.messages.slice(count);
 }
 try {
@@ -65,7 +60,15 @@ try {
   await Promise.all(
     admitted
       .slice(0, 6)
-      .map((c) => request(c, { type: 'create', name: 'Test' })),
+      .map((c) =>
+        request(c, { type: 'create', name: 'Test' }, (messages) =>
+          messages.some(
+            (message) =>
+              message.type === 'error' ||
+              (message.type === 'state' && message.value.seat >= 0),
+          ),
+        ),
+      ),
   );
   await until(() => admitted[0].directory.rooms.length === 5);
   assert.equal(
@@ -78,19 +81,27 @@ try {
     id = owner.state.roomId;
   const players = [owner, ...admitted.filter((c) => c !== owner).slice(0, 5)];
   for (const c of players.slice(1))
-    await request(c, {
+    await request(
+      c,
+      {
+        type: 'join',
+        roomId: id,
+        watch: false,
+        name: 'Player',
+      },
+      () => c.state?.roomId === id && c.state.seat >= 0 && !c.state.spectator,
+    );
+  const spectator = admitted.find((c) => !players.includes(c));
+  await request(
+    spectator,
+    {
       type: 'join',
       roomId: id,
-      watch: false,
-      name: 'Player',
-    });
-  const spectator = admitted.find((c) => !players.includes(c));
-  await request(spectator, {
-    type: 'join',
-    roomId: id,
-    watch: true,
-    name: 'Watcher',
-  });
+      watch: true,
+      name: 'Watcher',
+    },
+    () => spectator.state?.roomId === id && spectator.state.spectator,
+  );
   await request(
     owner,
     {
@@ -106,12 +117,16 @@ try {
   assert.equal(spectator.state.seat, -1);
   for (const key of ['hands', 'exchanges', 'first', 'members'])
     assert.equal(key in spectator.state, false);
-  const denied = await request(spectator, {
-    type: 'action',
-    seat: 0,
-    revision: spectator.state.revision,
-    action: { type: 'grand', call: true },
-  });
+  const denied = await request(
+    spectator,
+    {
+      type: 'action',
+      seat: 0,
+      revision: spectator.state.revision,
+      action: { type: 'grand', call: true },
+    },
+    (messages) => messages.some((message) => message.type === 'error'),
+  );
   assert.ok(denied.some((m) => m.type === 'error'));
   assert.equal(owner.state.revision, 1);
   const original = owner.state.hand;

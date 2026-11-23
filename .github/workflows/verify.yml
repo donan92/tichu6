@@ -31,4 +31,8 @@ jobs:
             if curl --fail --silent http://localhost:8787/health >/dev/null; then break; fi
             sleep 1
           done
-          npm run test:server
+          if ! curl --fail --silent http://localhost:8787/health >/dev/null; then
+            cat "$RUNNER_TEMP/worker.log"
+            exit 1
+          fi
+          npm run test:server || { cat "$RUNNER_TEMP/worker.log"; exit 1; }
