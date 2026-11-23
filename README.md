@@ -104,3 +104,24 @@ Node.js 22.13 이상을 사용합니다. `npm run dev`는 5173 포트에서 화�
 Vite 개발·배포 JavaScript 대상은 **ES2026**입니다. 현재 안정 버전 TypeScript 6.0.3에는 ES2026 이름의 target/lib가 없어 타입 검사만 ESNext를 사용합니다. CSS 호환 대상은 별도 설정합니다. 기존 세션 키와 서버 프로토콜을 유지하므로 프런트엔드 교체 후 같은 브라우저에서 재접속할 수 있습니다.
 
 빈 좌석은 게임 시작 시 봇으로 채웁니다. 새 게임의 팀은 사람·봇 수가 양쪽에서 최대 한 명 차이 나도록 균등하게 무작위로 정하고 라운드 사이에는 유지합니다. 봇은 접속자 30명 제한에 포함하지 않으며, 실제 플레이어가 모두 접속을 끊으면 진행을 멈춥니다.
+
+### Bot strategy
+
+Practice and server bots share the same strategy in `src/game.js`. They exchange
+low singleton ranks, preserving rank and straight-flush bombs. A partner who has
+already declared Large or Small Tichu receives the best available non-bomb card:
+phoenix, ace, dragon, king, then queen. If both partners have declared, exchange
+recipient order breaks the tie. Declarations after a submitted exchange cannot
+change that exchange. If fewer than two non-bomb cards exist, the mandatory
+two-card exchange takes precedence so the round can proceed.
+
+With mahjong, bots wish for an ordinary card received from a partner (A if none
+is available). They prefer shedding low loose singles, retain made combinations
+and aces, conserve scoring cards, and use stronger singles on valuable tricks.
+They generally pass over teammates and reserve bombs for taking valuable tricks
+or stopping opponents with at most two cards. Mandatory wishes and immediate
+finishes take precedence; a hand consisting only of a bomb can finish on lead.
+These are heuristics using the bot's own cards, received exchange cards and public
+state, not a measured win-rate guarantee or access to other players' hidden hands.
+
+게임 플레이는 반시계 방향으로 진행합니다. 내 다음 좌석은 테이블 오른쪽에 표시되며, 관전자에게도 같은 방향으로 표시됩니다.
