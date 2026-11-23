@@ -40,3 +40,8 @@
 - Use semantic codes (for example `lounge.createRoom`), never Korean/English sentences as keys. All user-facing text belongs in `src/locales/ko.json` and `src/locales/en.json`. Keep key and placeholder parity.
 - Add languages through `src/locales/index.js`. English is the fallback; preserve the selected language across reloads.
 - Errors and game logs carry `{code, params}`; localize at rendering, not when storing game state. Escape translated text at the HTML boundary; language packs must not contain HTML.
+
+## Interaction quality
+- Verify the full interaction, not just the resulting value: opening, selecting, dismissal, keyboard focus, and repeated use. Include narrow-screen checks for changed controls.
+- Preserve native form control nodes during live updates, especially open selects. Do not steal focus or scroll during rerenders.
+- Report device-specific verification limits honestly; desktop or narrow viewport checks are not real iPhone Safari testing.

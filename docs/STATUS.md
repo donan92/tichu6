@@ -43,3 +43,9 @@ Release verification:
 - Nicknames: ASCII A-Z/a-z/0-9 only, 1–8 characters, no trimming or case changes. Old invalid nicknames must be replaced on reconnect.
 - Passed: 47 tests, syntax checks, build; real isolated Worker capacity/privacy/reconnect integration. Browser verified bilingual entry, eight-character nickname, room creation, language persistence after reload, in-game controls/history and card accessibility labels.
 - Worker deployed: `daf08d99-11fd-452e-92e9-476fc2daa182` (health v5). Pages deployed commit `9c96b50`: `48f337f5-d70b-4a48-a205-5399be1eab8f`. Production bundle hash matches the tested local build; CSP, health v5, valid eight-character nickname admission and invalid Korean nickname rejection passed. Full npm audit: 0 vulnerabilities.
+
+## v0.5.1 language-picker patch
+- User reported a picker remaining open after language changes. Desktop native selection did not reproduce the persistent popup; rendering replaced the native select on every update, a likely cause on other browsers.
+- Header/select now remain attached; only header text and screen content update. Focus restoration skips already-focused elements and prevents scrolling.
+- Passed: 47 tests, syntax, build, whitespace checks. Browser native click selection, keyboard selection, Escape cancellation, and 390px viewport all closed the picker after selection. Actual iPhone Safari remains unverified.
+- Frontend-only patch; backend unchanged. Pages verification follows main push.
