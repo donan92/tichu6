@@ -9,12 +9,12 @@ export default {
   if(origin&&!ORIGINS.has(origin))return new Response('Forbidden',{status:403});
   if(request.method==='OPTIONS')return new Response(null,{headers:{'Access-Control-Allow-Origin':origin||'https://tichu6.pages.dev','Access-Control-Allow-Methods':'POST, GET, OPTIONS','Access-Control-Allow-Headers':'Content-Type'}});
   let response;
-  if(url.pathname==='/health')response=json({ok:true,version:4});
+  if(url.pathname==='/health')response=json({ok:true,version:5});
   else if(url.pathname==='/lounge') {
    if(!origin||!ORIGINS.has(origin))return new Response('Forbidden',{status:403});
    if(env.CONNECTION_LIMIT){const {success}=await env.CONNECTION_LIMIT.limit({key:request.headers.get('CF-Connecting-IP')||'local'});if(!success)return new Response('Too many connection attempts',{status:429,headers:{'Retry-After':'60'}});}
    response=await env.LOUNGE.get(env.LOUNGE.idFromName('public-v1')).fetch(request);
-  }else return json({error:'새 버전으로 새로고침한 후 대기실에서 입장하세요.'},410);
+  }else return json({code:'error.upgrade'},410);
   if(response.status===101)return response;
   const headers=new Headers(response.headers);headers.set('Access-Control-Allow-Origin',origin||'https://tichu6.pages.dev');headers.set('Vary','Origin');headers.set('Cache-Control','no-store');
   return new Response(response.body,{status:response.status,headers});

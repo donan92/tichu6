@@ -1,11 +1,9 @@
+import {AppError,event,errorEvent} from '../src/messages.js';
 import {newGame,startRound,act,botAction,view,points} from '../src/game.js';
 const GRACE=45000,TTL=86400000;
-const segmenter=new Intl.Segmenter('ko',{granularity:'grapheme'});
 export function nickname(input){
- if(typeof input!=='string'||input.length>80)throw new Error('닉네임은 1~5자로 입력하세요.');
- const name=input.normalize('NFC').trim();
- if(!name||[...segmenter.segment(name)].length>5||/[\p{Cc}\p{Cf}<>]/u.test(name))throw new Error('닉네임은 1~5자이며 제어문자나 꺾쇠는 사용할 수 없습니다.');
- return name;
+ if(typeof input!=='string'||!/^[A-Za-z0-9]{1,8}$/.test(input))throw new AppError('error.invalidNickname');
+ return input;
 }
 export function publicView(s){
  return {phase:s.phase,round:s.round,scores:s.scores,revision:s.revision,names:s.names,log:s.log,
@@ -13,7 +11,7 @@ export function publicView(s){
  turn:s.turn??null,last:s.last??null,passed:s.passed||[],wish:s.wish||null,delta:s.delta||null,
  exchangeReady:(s.exchanges||[]).map(Boolean),capturedPoints:(s.captured||[]).map(points),seat:-1,hand:[]};
 }
-function title(){const a=['달빛','푸른','노을','별빛','고요한','즐거운'];const b=['정원','다락방','카드숲','테이블','찻집','마루'];const n=crypto.getRandomValues(new Uint32Array(3));return `${a[n[0]%a.length]} ${b[n[1]%b.length]} ${String(n[2]%1000).padStart(3,'0')}`;}
+function title(){const a=['moon','blue','sunset','star','quiet','happy'],b=['garden','attic','forest','table','tea','lounge'],n=crypto.getRandomValues(new Uint32Array(3));return {adjective:a[n[0]%a.length],noun:b[n[1]%b.length],number:String(n[2]%1000).padStart(3,'0')};}
 export class Lounge {
  constructor(ctx){this.ctx=ctx;this.data={rooms:{}};ctx.blockConcurrencyWhile(async()=>{this.data=await ctx.storage.get('lounge')||{rooms:{}};});ctx.setWebSocketAutoResponse(new WebSocketRequestResponsePair('ping','pong'));}
  sockets(){return this.ctx.getWebSockets().filter(s=>s.readyState===1);}
@@ -36,7 +34,7 @@ export class Lounge {
    this.send(ws,{type:'directory',rooms:this.directory(a.hash),count:users.length});
    if(!r){this.send(ws,{type:'hall'});continue;}
    const seat=a.watch?-1:r.members.findIndex(m=>m?.hash===a.hash);const online=this.online(r);
-   const snapshot=publicView(r.state);if(seat>=0){snapshot.seat=seat;snapshot.hand=view(r.state,seat).hand;}
+   const snapshot=publicView(r.state);snapshot.names=r.members.map((m,i)=>m?r.state.names[i]:'');if(seat>=0){snapshot.seat=seat;snapshot.hand=view(r.state,seat).hand;}
    this.send(ws,{type:'state',value:{...snapshot,roomId:r.id,title:r.title,spectator:seat<0,leader:online.findIndex(Boolean),offline:online.map(x=>!x),paused:false},online});
   }
  }
@@ -44,32 +42,32 @@ export class Lounge {
   const now=Date.now();for(const r of Object.values(this.data.rooms)){const online=this.online(r);r.members.forEach((m,i)=>{if(m){if(online[i])m.offlineSince=null;else m.offlineSince??=now;}});if(online.some(Boolean))r.lastActive=now;}
  }
  activeMembership(hash){return Object.values(this.data.rooms).find(r=>r.members.some(m=>m?.hash===hash)&&!['lobby','matchEnd'].includes(r.state.phase));}
- leaveWaiting(hash,except){for(const r of Object.values(this.data.rooms))if(r.id!==except&&['lobby','matchEnd'].includes(r.state.phase)){r.members=r.members.map((m,i)=>{if(m?.hash!==hash)return m;r.state.names[i]=`빈자리`;return null;});}}
+ leaveWaiting(hash,except){for(const r of Object.values(this.data.rooms))if(r.id!==except&&['lobby','matchEnd'].includes(r.state.phase)){r.members=r.members.map((m,i)=>{if(m?.hash!==hash)return m;r.state.names[i]='';return null;});}}
  enter(ws,id,watch,name){
-  const a=this.attachment(ws),r=this.data.rooms[id];if(!r)throw new Error('방이 종료되었습니다.');
+  const a=this.attachment(ws),r=this.data.rooms[id];if(!r)throw new AppError('error.roomClosed');
   const own=r.members.findIndex(m=>m?.hash===a.hash);
   if(own>=0){watch=false;r.state.names[own]=name;}
   if(!watch&&own<0){
-   const active=this.activeMembership(a.hash);if(active&&active.id!==id)throw new Error('진행 중인 내 게임에 먼저 복귀해 주세요. 다른 방은 관전할 수 있습니다.');
-   if(r.state.phase!=='lobby')throw new Error('진행 중인 방은 관전만 가능합니다.');
-   const seat=r.members.indexOf(null);if(seat<0)throw new Error('플레이어 6명이 모두 찼습니다. 관전으로 입장해 주세요.');
+   const active=this.activeMembership(a.hash);if(active&&active.id!==id)throw new AppError('error.activeGameWatch');
+   if(r.state.phase!=='lobby')throw new AppError('error.watchOnly');
+   const seat=r.members.indexOf(null);if(seat<0)throw new AppError('error.seatsFull');
    r.members[seat]={hash:a.hash,offlineSince:null};r.state.names[seat]=name;
   }
   this.leaveWaiting(a.hash,id);a.room=id;a.watch=watch;a.name=name;ws.serializeAttachment(a);r.lastActive=Date.now();
  }
  async webSocketMessage(ws,raw){
   try{
-   if(typeof raw!=='string'||raw.length>4096){this.send(ws,{type:'error',message:'요청 크기를 초과했습니다.'});ws.close(1009,'Payload too large');return;}
+   if(typeof raw!=='string'||raw.length>4096){this.send(ws,{type:'error',...event('error.payload')});ws.close(1009,'Payload too large');return;}
    let a=this.attachment(ws);const now=Date.now();if(now-(a.window||0)>=10000){a.window=now;a.requests=0;}a.requests=(a.requests||0)+1;ws.serializeAttachment(a);
-   if(a.requests>30){this.send(ws,{type:'error',message:'요청이 너무 빠릅니다. 잠시 후 다시 접속하세요.'});ws.close(4008,'Rate limited');return;}
-   const msg=JSON.parse(raw);if(!msg||Array.isArray(msg)||typeof msg.type!=='string')throw new Error('잘못된 요청입니다.');
+   if(a.requests>30){this.send(ws,{type:'error',...event('error.rateLimit')});ws.close(4008,'Rate limited');return;}
+   const msg=JSON.parse(raw);if(!msg||Array.isArray(msg)||typeof msg.type!=='string')throw new AppError('error.invalidRequest');
    if(msg.type==='hello'){
-    if(a.hash)throw new Error('이미 접속했습니다.');
-    const name=nickname(msg.name);if(typeof msg.token!=='string'||!/^[a-f0-9]{64}$/.test(msg.token))throw new Error('유효한 참가 키가 필요합니다.');
+    if(a.hash)throw new AppError('error.alreadyConnected');
+    const name=nickname(msg.name);if(typeof msg.token!=='string'||!/^[a-f0-9]{64}$/.test(msg.token))throw new AppError('error.invalidToken');
     const digest=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(msg.token));const hash=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,'0')).join('');
     await this.exclusive(async()=>{
      const existing=this.users().find(s=>this.attachment(s).hash===hash);
-     if(!existing&&this.users().length>=30)throw new Error('전체 접속자 30명이 모두 찼습니다. 잠시 후 다시 입장해 주세요.');
+     if(!existing&&this.users().length>=30)throw new AppError('error.loungeFull');
      const old=existing?this.attachment(existing):null;
      if(existing){existing.serializeAttachment({created:now});existing.close(4001,'Replaced');}
      a={...a,hash,name,room:null,watch:false};ws.serializeAttachment(a);
@@ -80,40 +78,39 @@ export class Lounge {
      this.refreshPresence();await this.persist();this.send(ws,{type:'welcome'});this.broadcast();
     });
    }else{
-    if(!a.hash)throw new Error('먼저 대기실에 입장하세요.');
+    if(!a.hash)throw new AppError('error.enterFirst');
     await this.exclusive(async()=>{
-     a=this.attachment(ws);if(!a.hash)throw new Error('연결이 교체되었습니다.');
+     a=this.attachment(ws);if(!a.hash)throw new AppError('error.replaced');
      if(msg.type==='create'){
-      const name=nickname(msg.name);if(this.activeMembership(a.hash))throw new Error('진행 중인 내 게임에 먼저 복귀해 주세요.');
-      if(Object.keys(this.data.rooms).length>=5)throw new Error('방은 최대 5개까지 만들 수 있습니다.');
+      const name=nickname(msg.name);if(this.activeMembership(a.hash))throw new AppError('error.activeGame');
+      if(Object.keys(this.data.rooms).length>=5)throw new AppError('error.roomsFull');
       // A participant may own only one waiting seat; creation never adds a sixth room.
-      const id=crypto.randomUUID();this.data.rooms[id]={id,title:title(),state:newGame(Array(6).fill('빈자리')),members:Array(6).fill(null),lastActive:Date.now()};this.enter(ws,id,false,name);
+      const id=crypto.randomUUID();this.data.rooms[id]={id,title:title(),state:newGame(Array(6).fill('')),members:Array(6).fill(null),lastActive:Date.now()};this.enter(ws,id,false,name);
      }else if(msg.type==='join'){
-      if(typeof msg.roomId!=='string'||! /^[a-f0-9-]{36}$/.test(msg.roomId)||typeof msg.watch!=='boolean')throw new Error('방과 입장 방식을 확인하세요.');this.enter(ws,msg.roomId,msg.watch,nickname(msg.name));
+      if(typeof msg.roomId!=='string'||! /^[a-f0-9-]{36}$/.test(msg.roomId)||typeof msg.watch!=='boolean')throw new AppError('error.invalidRoom');this.enter(ws,msg.roomId,msg.watch,nickname(msg.name));
      }else if(msg.type==='leave'){
       this.leaveWaiting(a.hash,null);a.room=null;a.watch=false;ws.serializeAttachment(a);
      }else if(msg.type==='action'){
       const r=this.data.rooms[a.room],seat=r?.members.findIndex(m=>m?.hash===a.hash);
-      if(!r||a.watch||seat<0)throw new Error('관전자는 게임에 행동할 수 없습니다.');
-      if(!Number.isSafeInteger(msg.revision)||msg.revision!==r.state.revision)throw new Error('상태가 바뀌었습니다. 다시 선택해 주세요.');
-      const action=msg.action;if(!action||Array.isArray(action)||!['start','next','grand','exchange','tichu','pass','collect','play'].includes(action.type))throw new Error('허용되지 않은 행동입니다.');
-      if(action.type==='grand'&&typeof action.call!=='boolean')throw new Error('선언 여부는 참/거짓이어야 합니다.');
-      if(['play','exchange'].includes(action.type)&&(!Array.isArray(action.ids)||action.ids.length>18||action.ids.some(id=>typeof id!=='string'||id.length>30)))throw new Error('카드 목록을 확인하세요.');
-      for(const field of ['target','wish','phoenixRank'])if(action[field]!=null&&(!Number.isInteger(action[field])||action[field]<0||action[field]>14))throw new Error('선택 값을 확인하세요.');
+      if(!r||a.watch||seat<0)throw new AppError('error.spectator');
+      if(!Number.isSafeInteger(msg.revision)||msg.revision!==r.state.revision)throw new AppError('error.staleState');
+      const action=msg.action;if(!action||Array.isArray(action)||!['start','next','grand','exchange','tichu','pass','collect','play'].includes(action.type))throw new AppError('error.invalidAction');
+      if(action.type==='grand'&&typeof action.call!=='boolean')throw new AppError('error.invalidCall');
+      if(['play','exchange'].includes(action.type)&&(!Array.isArray(action.ids)||action.ids.length>18||action.ids.some(id=>typeof id!=='string'||id.length>30)))throw new AppError('error.invalidCards');
+      for(const field of ['target','wish','phoenixRank'])if(action[field]!=null&&(!Number.isInteger(action[field])||action[field]<0||action[field]>14))throw new AppError('error.invalidChoice');
       if(['start','next'].includes(action.type)){
-       const online=this.online(r);if(seat!==online.findIndex(Boolean))throw new Error('진행 담당자만 시작할 수 있습니다.');
-       if(!r.members.every(Boolean)||r.state.phase==='lobby'&&!online.every(Boolean))throw new Error('6명이 모두 입장해야 합니다.');
+       const online=this.online(r);if(seat!==online.findIndex(Boolean))throw new AppError('error.coordinator');
+       if(!r.members.every(Boolean)||r.state.phase==='lobby'&&!online.every(Boolean))throw new AppError('error.sixPlayers');
        r.state=startRound(structuredClone(r.state));
       }else r.state=act(r.state,seat,action);
       r.lastActive=Date.now();
-     }else throw new Error('지원하지 않는 요청입니다.');
+     }else throw new AppError('error.unsupported');
      this.refreshPresence();this.cleanup();await this.persist();this.broadcast();
     });
    }
    await this.schedule();
   }catch(error){
-   const expected=error instanceof SyntaxError?'잘못된 메시지 형식입니다.':error instanceof TypeError||error instanceof RangeError?'잘못된 요청입니다.':error.message;
-   this.send(ws,{type:'error',message:expected});if(!this.attachment(ws).hash)ws.close(4003,'Admission rejected');
+   this.send(ws,{type:'error',...errorEvent(error)});if(!this.attachment(ws).hash)ws.close(4003,'Admission rejected');
   }
  }
  cleanup(){
@@ -141,7 +138,7 @@ export class Lounge {
    this.refreshPresence();
    for(const r of Object.values(this.data.rooms)){
     const s=r.state,online=this.online(r),eligible=i=>r.members[i]&&!online[i]&&now-(r.members[i].offlineSince??now)>=GRACE;
-    if(s.phase==='lobby'){r.members=r.members.map((m,i)=>{if(!eligible(i))return m;s.names[i]='빈자리';return null;});}
+    if(s.phase==='lobby'){r.members=r.members.map((m,i)=>{if(!eligible(i))return m;s.names[i]='';return null;});}
     else if(online.some(Boolean)){
      const seat=s.phase==='grand'?s.ready.findIndex((x,i)=>!x&&eligible(i)):s.phase==='exchange'?s.exchanges.findIndex((x,i)=>!x&&eligible(i)):s.phase==='play'?s.turn:s.phase==='trick'?s.last:-1;
      if(seat>=0&&eligible(seat))r.state=act(s,seat,botAction(s,seat));

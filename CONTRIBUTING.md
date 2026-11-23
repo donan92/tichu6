@@ -37,3 +37,9 @@ Include the visible version, browser, the action that failed, expected/actual be
 - Dependabot checks npm and GitHub Actions daily and opens update PRs. Commit manifest and lockfile updates together; require tests, syntax checks, build, and applicable Worker integration checks before merging. Failed upgrades must be repaired, not silently ignored or pinned indefinitely.
 - Python currently has no dependency manifest in this project. When adding Python dependencies, add a managed manifest/lockfile, Python CI checks, and a matching pip or uv Dependabot entry in the same change. Do not add an empty Python environment merely for the updater.
 - Automated update PRs are not automatic production releases. Do not claim updates are active until the configuration is on the default branch.
+
+## Languages
+
+Use i18next semantic keys, e.g. `lounge.createRoom` or `error.invalidNickname`. Add matching text and named interpolation variables to `src/locales/en.json` and `src/locales/ko.json`. Do not use sentences as keys or concatenate translated sentence fragments. For a new language, add its JSON file and native label to `src/locales/index.js`; the selector and supported-language list derive from that registry.
+
+`npm test` verifies locale key/variable parity, plurals, regional fallback, language-neutral game records, and error privacy. Keep translations as plain text. The UI HTML-escapes translated output; toast messages use `textContent`. Dependencies are bundled locally with esbuild, without a runtime CDN.

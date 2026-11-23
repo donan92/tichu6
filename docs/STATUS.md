@@ -34,3 +34,12 @@ Release verification:
 - Added daily npm and GitHub Actions Dependabot configuration (major updates included). Python automation must be added with the first Python dependency manifest.
 - This documentation change includes `.github/dependabot.yml`; scheduled updates become active when it reaches the default branch. Automatic merge is not configured.
 - Python has no dependencies yet. JavaScript manifests and lockfile are included in the lounge release.
+
+## v0.5.0 — bilingual UI and nickname policy
+- User correction: use maintained libraries and semantic keys; never map entire sentences or write a custom translation engine.
+- i18next 27.2.4 + browser language detector 8.3.1; esbuild 0.28.2 produces self-contained static assets.
+- Packs: `src/locales/en.json`, `src/locales/ko.json`; language registry: `src/locales/index.js`. English fallback, saved selection, browser-language detection.
+- New errors/history use `{code, params}`; room names use adjective/noun codes. Old string history/titles remain readable in their original language. Existing room/session credentials are preserved.
+- Nicknames: ASCII A-Z/a-z/0-9 only, 1–8 characters, no trimming or case changes. Old invalid nicknames must be replaced on reconnect.
+- Passed: 47 tests, syntax checks, build; real isolated Worker capacity/privacy/reconnect integration. Browser verified bilingual entry, eight-character nickname, room creation, language persistence after reload, in-game controls/history and card accessibility labels.
+- Worker deployed: `daf08d99-11fd-452e-92e9-476fc2daa182` (health v5). Pages deployment verification follows main push. Full npm audit: 0 vulnerabilities.

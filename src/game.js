@@ -1,5 +1,6 @@
+import {AppError,event} from './messages.js';
 // The rules engine has no DOM or networking dependencies.
-export const LABEL = {1:'새',11:'J',12:'Q',13:'K',14:'A'};
+export const LABEL = {1:'1',11:'J',12:'Q',13:'K',14:'A'};
 export const team = seat => seat % 2;
 export const partners = seat => [(seat+2)%6,(seat+4)%6];
 export function deck() {
@@ -84,20 +85,20 @@ export function legalPlays(hand, top=null, wish=null) {
   for(let lo=2;lo<=13;lo++) for(let hi=lo+1;hi<=14;hi++) shape(Array.from({length:hi-lo+1},(_,i)=>[lo+i,2]));
   return result;
 }
-export function newGame(names=['나','플레이어 2','플레이어 3','플레이어 4','플레이어 5','플레이어 6']) {
+export function newGame(names=['Player1','Player2','Player3','Player4','Player5','Player6']) {
   return {names:names.map(n=>String(n).slice(0,20)),phase:'lobby',round:0,scores:[0,0],revision:0,log:[],hands:Array.from({length:6},()=>[])};
 }
-const fail = message => {throw new Error(message);};
+const fail = (code,params) => {throw new AppError(code,params);};
 const log = (s,message) => {s.log.push(message);s.log=s.log.slice(-40);};
 const nextActive = (s,seat) => {for(let i=1;i<=6;i++) {const n=(seat+i)%6;if(s.hands[n].length) return n;} return seat;};
 export function startRound(s, cards=shuffle(deck())) {
-  if(!['lobby','roundEnd'].includes(s.phase)) fail('지금은 새 라운드를 시작할 수 없습니다.');
+  if(!['lobby','roundEnd'].includes(s.phase)) fail('error.roundStart');
   s.round++;s.phase='grand';s.hands=Array.from({length:6},(_,i)=>sortCards(cards.slice(i*18,i*18+18)));
   // Preserve the actual first eight dealt cards separately from sorted hands.
   s.first=Array.from({length:6},(_,i)=>cards.slice(i*18,i*18+8).map(c=>c.id));
   s.ready=Array(6).fill(false);s.calls=Array(6).fill(0);s.played=Array(6).fill(false);s.exchanges=Array(6).fill(null);
   s.captured=Array.from({length:6},()=>[]);s.finish=[];s.top=null;s.pile=[];s.passed=[];s.wish=null;s.turn=null;s.last=null;s.delta=null;
-  log(s,`${s.round}라운드 · 처음 8장을 보고 그랜드 티추를 결정하세요.`);s.revision++;return s;
+  log(s,event('log.roundStart',{round:s.round}));s.revision++;return s;
 }
 function finishRound(s) {
   const delta=[0,0];
@@ -111,72 +112,72 @@ function finishRound(s) {
   s.calls.forEach((call,i)=>{if(call) delta[team(i)]+=i===s.finish[0]?call:-call;});
   s.delta=delta;s.scores=s.scores.map((n,i)=>n+delta[i]);
   s.phase=Math.max(...s.scores)>=1000 && s.scores[0]!==s.scores[1]?'matchEnd':'roundEnd';
-  log(s,`${triple?'트리플 승리 · ':''}라운드 종료 · A ${delta[0]} / B ${delta[1]}`);
+  log(s,event(triple?'log.tripleEnd':'log.roundEnd',{a:delta[0],b:delta[1]}));
 }
 function ending(s) {return s.finish.length>=5 || (s.finish.length>=3 && s.finish.slice(0,3).every(i=>team(i)===team(s.finish[0])));}
 function collect(s,recipient) {
   s.captured[recipient].push(...s.pile);s.pile=[];
-  log(s,`${s.names[recipient]} 님이 트릭을 받았습니다.`);
+  log(s,event('log.collect',{name:s.names[recipient]}));
   if(ending(s)) {finishRound(s);return;}
   s.turn=s.hands[s.last].length?s.last:nextActive(s,s.last);s.top=null;s.passed=[];s.phase='play';
 }
 // All mutations are validated on a clone: invalid actions are atomic.
 export function act(state, seat, action) {
-  if(!Number.isInteger(seat)||seat<0||seat>5 || !action || typeof action.type!=='string') fail('잘못된 요청입니다.');
+  if(!Number.isInteger(seat)||seat<0||seat>5 || !action || typeof action.type!=='string') fail('error.invalidRequest');
   const s=structuredClone(state), h=s.hands[seat];
   if(action.type==='grand') {
-    if(s.phase!=='grand'||s.ready[seat]||typeof action.call!=='boolean') fail('그랜드 티추 결정 시간이 아닙니다.');
+    if(s.phase!=='grand'||s.ready[seat]||typeof action.call!=='boolean') fail('error.grandPhase');
     s.ready[seat]=true;s.calls[seat]=action.call?200:0;
-    if(action.call) log(s,`${s.names[seat]} · 그랜드 티추!`);
-    if(s.ready.every(Boolean)) {s.phase='exchange';log(s,'팀원 두 명에게 한 장씩 교환하세요.');}
+    if(action.call) log(s,event('log.grand',{name:s.names[seat]}));
+    if(s.ready.every(Boolean)) {s.phase='exchange';log(s,event('log.exchange'));}
   } else if(action.type==='exchange') {
-    if(s.phase!=='exchange'||s.exchanges[seat]) fail('지금은 교환할 수 없습니다.');
-    if(!Array.isArray(action.ids)||action.ids.length!==2||new Set(action.ids).size!==2||!action.ids.every(id=>h.some(c=>c.id===id))) fail('서로 다른 카드 두 장을 선택하세요.');
+    if(s.phase!=='exchange'||s.exchanges[seat]) fail('error.exchangePhase');
+    if(!Array.isArray(action.ids)||action.ids.length!==2||new Set(action.ids).size!==2||!action.ids.every(id=>h.some(c=>c.id===id))) fail('error.twoCards');
     s.exchanges[seat]=action.ids;
     if(s.exchanges.every(Boolean)) {
       const transfers=[];s.exchanges.forEach((ids,i)=>ids.forEach((id,j)=>transfers.push({from:i,to:partners(i)[j],card:s.hands[i].find(c=>c.id===id)})));
       transfers.forEach(({from,card})=>s.hands[from]=s.hands[from].filter(c=>c.id!==card.id));
       transfers.forEach(({to,card})=>s.hands[to].push(card));s.hands=s.hands.map(sortCards);
-      s.phase='play';s.turn=s.hands.findIndex(hand=>hand.some(c=>c.special==='mahjong'));log(s,`${s.names[s.turn]} 님부터 시작합니다.`);
+      s.phase='play';s.turn=s.hands.findIndex(hand=>hand.some(c=>c.special==='mahjong'));log(s,event('log.lead',{name:s.names[s.turn]}));
     }
   } else if(action.type==='tichu') {
-    if(!['exchange','play','trick'].includes(s.phase)||s.calls[seat]||s.played[seat]) fail('첫 카드를 내기 전에만 티추를 선언할 수 있습니다.');
-    s.calls[seat]=100;log(s,`${s.names[seat]} · 티추!`);
+    if(!['exchange','play','trick'].includes(s.phase)||s.calls[seat]||s.played[seat]) fail('error.tichuPhase');
+    s.calls[seat]=100;log(s,event('log.tichu',{name:s.names[seat]}));
   } else if(action.type==='play') {
-    if(!['play','trick'].includes(s.phase)||!h.length) fail('지금은 카드를 낼 수 없습니다.');
-    if(!Array.isArray(action.ids)||!action.ids.length||new Set(action.ids).size!==action.ids.length) fail('낼 카드를 선택하세요.');
-    const cards=action.ids.map(id=>h.find(c=>c.id===id));if(cards.some(c=>!c)) fail('내 손패의 카드만 낼 수 있습니다.');
-    const p=classify(cards,s.top,action.phoenixRank||null);if(!p||!beats(p,s.top)) fail('유효하지 않거나 현재 조합보다 낮은 카드입니다.');
+    if(!['play','trick'].includes(s.phase)||!h.length) fail('error.playPhase');
+    if(!Array.isArray(action.ids)||!action.ids.length||new Set(action.ids).size!==action.ids.length) fail('error.selectCards');
+    const cards=action.ids.map(id=>h.find(c=>c.id===id));if(cards.some(c=>!c)) fail('error.ownership');
+    const p=classify(cards,s.top,action.phoenixRank||null);if(!p||!beats(p,s.top)) fail('error.combination');
     const inTurn=s.phase==='play' && s.turn===seat;
-    if(!inTurn && (!p.bomb||!s.top)) fail('차례가 아닐 때는 폭탄만 낼 수 있습니다.');
-    if(inTurn && s.wish && !cards.some(c=>!c.special&&c.rank===s.wish) && legalPlays(h,s.top,s.wish).length) fail(`${LABEL[s.wish]||s.wish} 소원을 먼저 이행해야 합니다.`);
-    if(cards.some(c=>c.special==='mahjong') && action.wish!=null && (!Number.isInteger(action.wish)||action.wish<2||action.wish>14)) fail('소원은 2부터 A까지입니다.');
-    if(p.kind==='dog' && !partners(seat).includes(action.target)) fail('개를 넘겨줄 팀원을 고르세요.');
+    if(!inTurn && (!p.bomb||!s.top)) fail('error.outOfTurn');
+    if(inTurn && s.wish && !cards.some(c=>!c.special&&c.rank===s.wish) && legalPlays(h,s.top,s.wish).length) fail('error.fulfillWish',{rank:LABEL[s.wish]||s.wish});
+    if(cards.some(c=>c.special==='mahjong') && action.wish!=null && (!Number.isInteger(action.wish)||action.wish<2||action.wish>14)) fail('error.wishRange');
+    if(p.kind==='dog' && !partners(seat).includes(action.target)) fail('error.dogTarget');
     s.hands[seat]=h.filter(c=>!action.ids.includes(c.id));s.played[seat]=true;
-    if(!s.hands[seat].length) {s.finish.push(seat);log(s,`${s.names[seat]} · ${s.finish.length}등으로 완료!`);}
+    if(!s.hands[seat].length) {s.finish.push(seat);log(s,event('log.finish',{name:s.names[seat],place:s.finish.length}));}
     if(cards.some(c=>c.special==='mahjong')) s.wish=action.wish??null;
     if(cards.some(c=>!c.special&&c.rank===s.wish)) s.wish=null;
     if(p.kind==='dog') {
       s.captured[seat].push(...cards);s.turn=s.hands[action.target].length?action.target:nextActive(s,action.target);
-      log(s,`${s.names[seat]} · 개 → ${s.names[s.turn]}`);if(ending(s)) finishRound(s);
+      log(s,event('log.dog',{name:s.names[seat],target:s.names[s.turn]}));if(ending(s)) finishRound(s);
     } else {
       s.top={...p,cards};s.pile.push(...cards);s.last=seat;s.passed=[];s.turn=nextActive(s,seat);s.phase='play';
-      log(s,`${s.names[seat]} · ${kindName(p.kind)} (${cards.length}장)`);
+      log(s,event('log.play',{name:s.names[seat],kind:p.kind,count:cards.length}));
       if(ending(s)) {if(s.finish.slice(0,3).length===3 && s.finish.slice(0,3).every(i=>team(i)===team(s.finish[0]))) finishRound(s);else s.phase='trick';}
     }
   } else if(action.type==='pass') {
-    if(s.phase!=='play'||s.turn!==seat||!s.top) fail('선에서는 패스할 수 없습니다.');
-    if(s.wish&&legalPlays(h,s.top,s.wish).length) fail('소원을 이행할 수 있어 패스할 수 없습니다.');
+    if(s.phase!=='play'||s.turn!==seat||!s.top) fail('error.leadPass');
+    if(s.wish&&legalPlays(h,s.top,s.wish).length) fail('error.wishPass');
     if(!s.passed.includes(seat)) s.passed.push(seat);
     const other=s.hands.map((hand,i)=>hand.length&&i!==s.last?i:-1).filter(i=>i>=0);
     if(other.every(i=>s.passed.includes(i))) {s.phase='trick';s.turn=s.last;}
     else s.turn=nextActive(s,seat);
   } else if(action.type==='collect') {
-    if(s.phase!=='trick'||seat!==s.last) fail('마지막으로 카드를 낸 사람이 트릭을 확정합니다.');
+    if(s.phase!=='trick'||seat!==s.last) fail('error.collector');
     const dragon=s.top.cards.length===1&&s.top.cards[0].special==='dragon';
-    if(dragon && (!Number.isInteger(action.target)||action.target<0||action.target>5||team(action.target)===team(seat))) fail('용 트릭을 받을 상대 팀을 선택하세요.');
+    if(dragon && (!Number.isInteger(action.target)||action.target<0||action.target>5||team(action.target)===team(seat))) fail('error.dragonTarget');
     collect(s,dragon?action.target:seat);
-  } else fail('알 수 없는 요청입니다.');
+  } else fail('error.unknownRequest');
   s.revision++;return s;
 }
 export function view(s,seat) {
@@ -184,7 +185,7 @@ export function view(s,seat) {
   const hand=s.phase==='grand'?hands[seat].filter(c=>first[seat].includes(c.id)):hands[seat];
   return {...pub,seat,hand,counts:hands.map(h=>h.length),exchangeReady:(exchanges||[]).map(Boolean),capturedPoints:(captured||[]).map(points)};
 }
-export function kindName(kind) {return {single:'싱글',pair:'페어',triple:'트리플',fullhouse:'풀하우스',straight:'스트레이트',pairs:'연속 페어',bomb:'폭탄',dog:'개'}[kind]||kind;}
+export function kindName(kind) {return 'kind.'+kind;}
 export function botAction(s,seat) {
   if(s.phase==='grand') return {type:'grand',call:false};
   if(s.phase==='exchange') return {type:'exchange',ids:s.hands[seat].slice(0,2).map(c=>c.id)};
