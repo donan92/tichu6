@@ -82,7 +82,7 @@ describe('Vue interaction regressions', () => {
         global: { plugins: plugins() },
       });
       wrappers.push(wrapper);
-      expect(wrapper.get('.card-corner use').attributes('href')).toContain(
+      expect(wrapper.get('.card-emblem use').attributes('href')).toContain(
         `#${name}`,
       );
       expect(wrapper.attributes('aria-label')).toContain(
@@ -98,14 +98,19 @@ describe('Vue interaction regressions', () => {
       expect(wrapper.find(`.court-art.court-${rank}`).exists()).toBe(true);
     }
   });
-  it('renders the exact number of pips for ordinary numeric cards', () => {
-    for (let rank = 2; rank <= 10; rank++) {
+  it('renders one suit symbol and readable ranks for every numeric card', () => {
+    for (let rank = 2; rank <= 14; rank++) {
+      if (rank >= 11 && rank <= 13) continue;
       const wrapper = mount(PlayingCard, {
         props: { card: { id: `card-${rank}`, rank, suit: 0 } },
         global: { plugins: plugins() },
       });
       wrappers.push(wrapper);
-      expect(wrapper.findAll('.card-pips svg')).toHaveLength(rank);
+      expect(wrapper.findAll('svg')).toHaveLength(1);
+      expect(wrapper.get('.card-corner').text()).toBe(
+        rank === 14 ? 'A' : String(rank),
+      );
+      expect(wrapper.find('.card-emblem').exists()).toBe(true);
     }
   });
   it('starts five-bot practice from the lounge even while disconnected', async () => {

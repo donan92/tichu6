@@ -17,18 +17,9 @@ const emit = defineEmits<{ select: [id: string] }>();
 const { t } = useTranslation();
 const suits = ['spade', 'club', 'diamond', 'heart'];
 const suitHref = computed(() => `${suitsUrl}#${suits[props.card.suit]}`);
-const pipRows: Record<number, number[][]> = {
-  2: [[1], [], [], [], [1]],
-  3: [[1], [], [1], [], [1]],
-  4: [[0, 2], [], [], [], [0, 2]],
-  5: [[0, 2], [], [1], [], [0, 2]],
-  6: [[0, 2], [], [0, 2], [], [0, 2]],
-  7: [[0, 2], [1], [0, 2], [], [0, 2]],
-  8: [[0, 2], [1], [0, 2], [1], [0, 2]],
-  9: [[0, 2], [0, 2], [1], [0, 2], [0, 2]],
-  10: [[0, 2], [0, 1, 2], [], [0, 1, 2], [0, 2]],
-};
-const pips = computed(() => pipRows[props.card.rank] ?? []);
+const isCourt = computed(
+  () => !props.card.special && props.card.rank >= 11 && props.card.rank <= 13,
+);
 const rank = computed(() => LABEL[props.card.rank] ?? props.card.rank);
 const display = computed(() =>
   props.card.special
@@ -64,30 +55,17 @@ const label = computed(() => {
   >
     <span v-if="display" class="card-corner" aria-hidden="true">
       {{ display }}
-      <svg v-if="!card.special" class="suit-icon"><use :href="suitHref" /></svg>
+      <svg v-if="isCourt" class="suit-icon"><use :href="suitHref" /></svg>
     </span>
     <span v-if="card.special" class="special-art" aria-hidden="true" />
     <template v-else>
-      <span v-if="pips.length" class="card-pips" aria-hidden="true">
-        <span v-for="(columns, row) in pips" :key="row" class="pip-row">
-          <span v-for="column in [0, 1, 2]" :key="column">
-            <svg v-if="columns.includes(column)" class="suit-icon">
-              <use :href="suitHref" />
-            </svg>
-          </span>
-        </span>
-      </span>
       <span
-        v-else-if="card.rank !== 14"
+        v-if="isCourt"
         class="court-art"
         :class="`court-${card.rank}`"
         aria-hidden="true"
       />
-      <svg
-        class="card-emblem"
-        :class="{ 'ace-emblem': card.rank === 14 }"
-        aria-hidden="true"
-      >
+      <svg v-else class="card-emblem" aria-hidden="true">
         <use :href="suitHref" />
       </svg>
     </template>

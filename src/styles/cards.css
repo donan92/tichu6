@@ -26,35 +26,13 @@
   height: 14px;
   display: block;
 }
-.card-pips {
-  position: absolute;
-  inset: 21px 14px;
-  display: grid;
-  grid-template-rows: repeat(5, 1fr);
-}
-.pip-row {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  align-items: center;
-  justify-items: center;
-}
-.pip-row:nth-child(n + 4) {
-  transform: rotate(180deg);
-}
-.card-pips .suit-icon {
-  width: 10px;
-  height: 10px;
-}
 .card-emblem {
-  display: none;
+  display: block;
   position: absolute;
   width: 40%;
   height: 40%;
   left: 30%;
   top: 30%;
-}
-.ace-emblem {
-  display: block;
 }
 .court-art {
   position: absolute;
@@ -101,14 +79,11 @@
   width: 24px;
   height: 24px;
 }
-.played-cards .card-pips {
-  display: none;
-}
 .played-cards .card-emblem {
   display: block;
 }
 .played-cards .court-art + .card-emblem {
-  display: none;
+  display: block;
 }
 .played-cards .card .suit-icon {
   width: 10px;
@@ -163,9 +138,6 @@
     font-size: 12px;
     right: 4px;
     bottom: 4px;
-  }
-  .hand .card-pips {
-    display: none;
   }
   .hand .card-emblem {
     display: block;

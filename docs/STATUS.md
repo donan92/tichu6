@@ -99,3 +99,8 @@ Release verification:
 - J/Q/K now use three distinct generated double-ended human portraits. Special cards have no printed names/letters; mahjong carries 1. Screen-reader labels stay localized.
 - Maintains the mobile 18-card grid. Passed ESLint/typecheck, 68 tests, formatting and build. Browser verified 375px and 1280px layouts, distinct J/Q/K art, shared red/black suit colors and court selection. Actual iPhone Safari remains unverified.
 - Released `7c297ab`: production shows v0.7.1 and all seven JS/CSS/SVG/WebP assets match the tested local hashes. Backend health v5 unchanged. GitHub Verify including Worker integration passed: https://github.com/donan92/tichu6/actions/runs/45139079022. No pending implementation work.
+
+## v0.7.2 — single centered suit
+
+- Numeric cards and aces now show one centered suit symbol with corner ranks, removing repeated pip layouts and the duplicate corner symbol. Court portraits and special artwork stay intact. Mobile and desktop share the centered layout.
+- Updated regression coverage for one symbol and readable ranks across 2–10/A. Passed 68 tests, ESLint/typecheck, formatting and build. Desktop browser visually verified centered single symbols. Deployment pending.
