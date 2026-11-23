@@ -1,15 +1,15 @@
 /* Suit inks are independent of portrait colors. */
 .card.suit-0 {
-  color: #142b49;
+  color: #17448b;
 }
 .card.suit-1 {
-  color: #174c38;
+  color: #0c6942;
 }
 .card.suit-2 {
-  color: #ad4827;
+  color: #ba5114;
 }
 .card.suit-3 {
-  color: #9e302f;
+  color: #ba2835;
 }
 .card.special {
   color: #172535;

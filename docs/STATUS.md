@@ -196,3 +196,13 @@ Release verification:
 - Removed table-room overrides that forced 64px/78px card heights and disabled aspect ratio on short screens. Hand cards retain 7:10 at every viewport height. Scaled rank indices with card width and enlarged numeric pips from 19 to 22 SVG units with wider symmetric columns.
 - Checked the real 18-card practice exchange screen at 375×667, 390×844 and desktop 1280px: measured ratio ~0.700, no horizontal overflow on mobile, pointer selection/Space deselection and focus retained. Preview `/tmp/tichu6-proportions-mobile.png`. Actual iPhone Safari remains unverified.
 - Passed check, 106 tests, format check and build; numeric count/symmetry/bounds regression updated. Released `c837c46` on main. Pages deployment 45235815229 succeeded. Production HTML/all five asset hashes match the tested build; backend health v6 and lounge welcome passed. Production 375×667 18-card hand measures 7:10 with no horizontal overflow. Preview `/tmp/tichu6-proportions-production.png`. CI: https://github.com/donan92/tichu6/actions/runs/45235816433.
+
+## More distinct suit inks — local preview
+
+- Increased suit saturation and hue separation: spades #195dcc blue, clubs #00864b green, diamonds #c65a00 orange, hearts #d51f3a crimson. Ranks/pips/court indices inherit the inks; portrait assets unchanged.
+- All four suits checked at 375px with numeric, ace and court cards. Preview `/tmp/tichu6-saturated-suits.png`. Not deployed.
+
+## Mid-tone suit inks — revised local preview
+
+- User rejected the bright preview. Set midpoint inks between the original and bright palettes: spades #17448b, clubs #0c6942, diamonds #ba5114, hearts #ba2835. Supersedes the preceding local preview; not deployed.
+- Visually checked all four suits at 375px. Preview `/tmp/tichu6-mid-tone-suits.png`. Check, tests, format and build passed.
