@@ -58,7 +58,7 @@ Release verification:
 - Passed: 47 tests, syntax, build, whitespace checks. Browser native click selection, keyboard selection, Escape cancellation, and 390px viewport all closed the picker after selection. Actual iPhone Safari remains unverified.
 - Frontend-only patch; backend unchanged. Pages verification follows main push.
 
-## v0.6.0 — Vue / Vite / TypeScript refactor (release pending)
+## v0.6.0 — Vue / Vite / TypeScript refactor (released)
 
 - User requested Vue, Vite, TypeScript, mandatory ESLint, clean code, and ES2026. Pinia manages shared session/game state. i18next-vue provides library-based reactive localization.
 - JavaScript output is ES2026; TypeScript 6.0.3 no-emit checking uses ESNext because ES2026 is not a supported compiler target yet. CSS targets are separate to avoid Lightning CSS rejecting an ECMAScript target.
@@ -72,4 +72,6 @@ Release verification:
 - Existing engine/server normalized JavaScript is identical before/after formatting; backend deployment is not needed. Production backend remains health v5.
 - Source and generated assets have no matches in a focused credential-pattern scan; no private environment/credential configuration is tracked. This is not an exhaustive historical secret audit.
 - Implementation pushed as `b54e6db`. Pages `7b149d62-6f19-4212-8aa7-cd4fed1f90e7` is active; JS/CSS SHA-256 match the tested local build. Production CSP/nosniff, backend v5, visible v0.6.0 and real lounge entry passed.
-- Initial CI passed all lint/type/format/unit/UI/build/audit stages but exposed an existing integration-harness race: another user’s hall broadcast was mistaken for the response to a create request. The harness now waits for request-specific state/error predicates; revalidation pending.
+- Initial CI passed all lint/type/format/unit/UI/build/audit stages but exposed an existing integration-harness race: another user’s hall broadcast was mistaken for the response to a create request. The harness now waits for request-specific state/error predicates. Fix `ec08462` passed local integration and all GitHub CI stages: https://github.com/donan92/tichu6/actions/runs/45131213643.
+
+- Release complete: frontend v0.6.0 live, existing backend v5 preserved, no required follow-up implementation. A future stable TypeScript compiler can replace the documented ESNext checker fallback with ES2026.
