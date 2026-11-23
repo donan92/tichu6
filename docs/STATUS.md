@@ -163,4 +163,4 @@ Release verification:
 
 - Added a small muted version beside the 6T logo on every screen, sourced directly from package.json so future releases update automatically.
 - Passed check, all 99 tests, format check and build. Checked 375px Korean practice header: version visible, no overlap with language picker or game exit. No server/protocol changes.
-- Frontend deployment verification pending.
+- Released `fe0b1c0`; Pages `67a6f633-6896-4d3d-a55c-d28e98742d3d` active. Production header visibly shows the package version; initial domain propagation delay resolved. GitHub Verify and Pages succeeded (Verify run 45216062572). No backend changes or deployment required.
