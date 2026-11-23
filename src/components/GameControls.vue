@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import ChoicePicker from './ChoicePicker.vue';
 import { useTranslation } from 'i18next-vue';
 import { beats, classify, LABEL, partners, team } from '../game.js';
 import { useSessionStore } from '../stores/session';
@@ -197,18 +198,18 @@ function play() {
       </button>
     </div>
     <div v-else-if="collecting" class="action-buttons">
-      <label v-if="dragon"
-        >{{ t('play.recipient')
-        }}<select id="target" v-model="target">
-          <option
-            v-for="recipient in recipients"
-            :key="recipient.seat"
-            :value="String(recipient.seat)"
-          >
-            {{ recipient.name }}
-          </option>
-        </select></label
-      ><button
+      <ChoicePicker
+        v-if="dragon"
+        v-model="target"
+        :label="t('play.recipient')"
+        :disabled="locked"
+        :options="
+          recipients.map((recipient) => ({
+            value: String(recipient.seat),
+            label: recipient.name,
+          }))
+        "
+      /><button
         class="primary"
         :disabled="locked"
         @click="session.submit({ type: 'collect', target: Number(target) })"
@@ -226,18 +227,18 @@ function play() {
           </option>
         </select></label
       >
-      <label v-if="hasDog"
-        >{{ t('play.dogTarget')
-        }}<select id="target" v-model="target">
-          <option
-            v-for="recipient in recipients"
-            :key="recipient.seat"
-            :value="String(recipient.seat)"
-          >
-            {{ recipient.name }}
-          </option>
-        </select></label
-      >
+      <ChoicePicker
+        v-if="hasDog"
+        v-model="target"
+        :label="t('play.dogTarget')"
+        :disabled="locked"
+        :options="
+          recipients.map((recipient) => ({
+            value: String(recipient.seat),
+            label: recipient.name,
+          }))
+        "
+      />
       <label v-if="hasPhoenix"
         >{{ t('play.phoenixRank')
         }}<select id="phoenixRank" v-model="phoenixRank">

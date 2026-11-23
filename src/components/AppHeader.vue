@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue';
+import ChoicePicker from './ChoicePicker.vue';
 import { version } from '../../package.json';
 import { useTranslation } from 'i18next-vue';
 import { languages } from '../i18n.js';
@@ -33,18 +34,17 @@ const status = computed(() =>
       ><small>{{ t('app.tagline') }}</small></a
     >
     <div class="header-right">
-      <label class="language-picker"
-        ><span>{{ t('app.language') }}</span
-        ><select
-          id="language"
-          v-model="language"
-          :aria-label="t('app.language')"
-        >
-          <option v-for="(pack, id) in languages" :key="id" :value="id">
-            {{ pack.label }}
-          </option>
-        </select></label
-      >
+      <ChoicePicker
+        v-model="language"
+        class="language-picker"
+        :label="t('app.language')"
+        :options="
+          Object.entries(languages).map(([value, pack]) => ({
+            value,
+            label: pack.label,
+          }))
+        "
+      />
       <span class="connection-label">{{ t(status) }}</span>
       <button
         v-if="session.mode !== 'home'"

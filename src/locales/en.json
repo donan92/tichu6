@@ -261,5 +261,6 @@
   "combo.pairs": "{{low}}–{{high}} consecutive pairs",
   "combo.phoenix": "Phoenix {{rank}} single",
   "practice.saveFailed": "Could not save or remove practice progress. Check browser storage settings.",
-  "practice.restoreFailed": "Could not restore saved practice. Please start a new practice game."
+  "practice.restoreFailed": "Could not restore saved practice. Please start a new practice game.",
+  "picker.cancel": "Cancel"
 }

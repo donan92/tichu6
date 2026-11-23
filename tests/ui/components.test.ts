@@ -21,6 +21,18 @@ const plugins = () => [
   [I18NextVue, { i18next }] as [typeof I18NextVue, { i18next: typeof i18next }],
 ];
 beforeEach(async () => {
+  Object.defineProperty(HTMLDialogElement.prototype, 'showModal', {
+    configurable: true,
+    value: function () {
+      this.open = true;
+    },
+  });
+  Object.defineProperty(HTMLDialogElement.prototype, 'close', {
+    configurable: true,
+    value: function () {
+      this.open = false;
+    },
+  });
   localStorage.clear();
   pinia = createPinia();
   setActivePinia(pinia);
@@ -94,7 +106,7 @@ describe('Vue interaction regressions', () => {
       global: { plugins: plugins() },
     });
     wrappers.push(header);
-    const button = header.get('button');
+    const button = header.get('button.quiet');
     (button.element as HTMLButtonElement).focus();
     await button.trigger('click');
     expect(session.leaving).toBe(true);
@@ -301,31 +313,47 @@ describe('Vue interaction regressions', () => {
     expect(session.round?.hand).toHaveLength(18);
     expect(session.notice).toBeNull();
   });
-  it('keeps the language select attached and focused through language and connection updates', async () => {
+  it('changes language through a modal, dismisses it and restores trigger focus repeatedly', async () => {
     const wrapper = mount(AppHeader, {
       global: { plugins: plugins() },
       attachTo: document.body,
     });
     wrappers.push(wrapper);
-    const select = wrapper.get('select'),
-      element = select.element as HTMLSelectElement;
+    const trigger = wrapper.get('.choice-trigger');
+    const element = trigger.element as HTMLButtonElement;
     element.focus();
-    await select.setValue('ko');
+    await trigger.trigger('click');
+    const dialog = document.querySelector(
+      'dialog.choice-dialog',
+    ) as HTMLDialogElement;
+    expect(dialog.open).toBe(true);
+    expect(dialog.querySelector('.choice-cancel')?.textContent).toBe('Cancel');
+    const choices = dialog.querySelectorAll<HTMLButtonElement>(
+      '.choice-options button',
+    );
+    const korean = [...choices].find((button) =>
+      button.textContent?.includes('한국어'),
+    )!;
+    korean.click();
     await flushPromises();
-    expect(wrapper.get('select').element).toBe(element);
+    expect(dialog.open).toBe(false);
     expect(document.activeElement).toBe(element);
-    expect(element.value).toBe('ko');
     expect(localStorage.getItem('tichu6-language')).toBe('ko');
     const session = useSessionStore();
     session.mode = 'hall';
     session.connected = true;
     await nextTick();
-    expect(wrapper.get('select').element).toBe(element);
+    expect(wrapper.get('.choice-trigger').element).toBe(element);
+    await trigger.trigger('click');
+    dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
+    await nextTick();
+    expect(dialog.open).toBe(false);
     expect(document.activeElement).toBe(element);
-    await select.setValue('en');
-    await flushPromises();
-    expect(element.value).toBe('en');
-    expect(wrapper.text()).toContain('Language');
+    await trigger.trigger('click');
+    dialog.querySelector<HTMLButtonElement>('.choice-cancel')!.click();
+    await nextTick();
+    expect(dialog.open).toBe(false);
+    expect(localStorage.getItem('tichu6-language')).toBe('ko');
   });
   it('preserves nickname typing focus when other state updates', async () => {
     const wrapper = mount(NicknameInput, {
@@ -401,7 +429,7 @@ describe('Vue interaction regressions', () => {
       'true',
     );
   });
-  it('sends the first valid dog recipient without requiring a dropdown change', async () => {
+  it('keeps a valid dog default and lets a modal choose the other partner before play', async () => {
     const session = useSessionStore();
     const game = round();
     game.phase = 'play';
@@ -415,13 +443,32 @@ describe('Vue interaction regressions', () => {
       global: { plugins: plugins() },
     });
     wrappers.push(wrapper);
-    expect((wrapper.get('#target').element as HTMLSelectElement).value).toBe(
-      '2',
-    );
+    expect(wrapper.get('.choice-trigger').text()).toContain(game.names[2]);
     await wrapper.get('button.primary').trigger('click');
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'play', target: 2 }),
     );
+    submit.mockClear();
+    await wrapper.get('.choice-trigger').trigger('click');
+    const dialog = document.querySelector(
+      'dialog.choice-dialog',
+    ) as HTMLDialogElement;
+    const choices = dialog.querySelectorAll<HTMLButtonElement>(
+      '.choice-options button',
+    );
+    expect(choices).toHaveLength(2);
+    choices[1]!.click();
+    await nextTick();
+    expect(dialog.open).toBe(false);
+    expect(submit).not.toHaveBeenCalled();
+    await wrapper.get('button.primary').trigger('click');
+    expect(submit).toHaveBeenCalledWith(
+      expect.objectContaining({ type: 'play', target: 4 }),
+    );
+    await wrapper.get('.choice-trigger').trigger('click');
+    await wrapper.setProps({ game: { ...game, paused: true } });
+    expect(dialog.open).toBe(false);
+    expect(wrapper.get('.choice-trigger').attributes('disabled')).toBeDefined();
   });
   it('selects an opponent for dragon collection and updates after seat changes', async () => {
     const session = useSessionStore();
@@ -442,11 +489,22 @@ describe('Vue interaction regressions', () => {
       global: { plugins: plugins() },
     });
     wrappers.push(wrapper);
+    await wrapper.get('.choice-trigger').trigger('click');
+    const dialog = document.querySelector(
+      'dialog.choice-dialog',
+    ) as HTMLDialogElement;
+    const options = dialog.querySelectorAll<HTMLButtonElement>(
+      '.choice-options button',
+    );
     expect(
-      wrapper.findAll('option').map((option) => option.attributes('value')),
-    ).toEqual(['1', '3', '5']);
-    await wrapper.get('button').trigger('click');
-    expect(submit).toHaveBeenCalledWith({ type: 'collect', target: 1 });
+      [...options].map((button) => button.textContent?.replace('✓', '').trim()),
+    ).toEqual([game.names[1], game.names[3], game.names[5]]);
+    options[1]!.click();
+    await nextTick();
+    expect(dialog.open).toBe(false);
+    expect(submit).not.toHaveBeenCalled();
+    await wrapper.get('button.primary').trigger('click');
+    expect(submit).toHaveBeenCalledWith({ type: 'collect', target: 3 });
   });
   it('offers no action buttons or private cards to spectators', () => {
     const game = round();

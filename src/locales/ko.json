@@ -261,5 +261,6 @@
   "combo.pairs": "{{low}}–{{high}} 연속 페어",
   "combo.phoenix": "봉황 {{rank}} 싱글",
   "practice.saveFailed": "연습 게임을 저장하거나 삭제하지 못했습니다. 브라우저 저장 공간 설정을 확인해 주세요.",
-  "practice.restoreFailed": "저장된 연습 게임을 불러오지 못했습니다. 새 연습 게임을 시작해 주세요."
+  "practice.restoreFailed": "저장된 연습 게임을 불러오지 못했습니다. 새 연습 게임을 시작해 주세요.",
+  "picker.cancel": "취소"
 }
