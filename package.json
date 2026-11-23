@@ -1,0 +1,4 @@
+{
+  "name": "tichu6", "version": "0.1.0", "private": true, "type": "module",
+  "scripts": {"dev": "node server.mjs", "test": "node --test", "check": "node --check src/game.js && node --check src/peer.js && node --check src/app.js"}
+}
