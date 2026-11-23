@@ -260,9 +260,22 @@ describe('Vue interaction regressions', () => {
         expect(wrapper.classes()).toContain(`suit-${suit}`);
         expect(wrapper.find('.card-bottom').exists()).toBe(false);
         const rows = [0, 1, 3, 2];
-        const coordinates = style.match(/[\d.]+/g)?.map(Number) ?? [];
-        expect(coordinates[0]).toBe((rank - 11) * 50);
-        expect(coordinates[1]).toBeCloseTo((rows[suit] * 350 * 100) / 1086, 3);
+        const artwork = wrapper.get('.court-art').element as HTMLElement;
+        const [sx, sy] = artwork.style.backgroundSize
+          .split(' ')
+          .map(parseFloat);
+        const [px, py] = artwork.style.backgroundPosition
+          .split(' ')
+          .map(parseFloat);
+        const width = 108600 / sx,
+          height = 144800 / sy;
+        const x = (px / 100) * (1086 - width),
+          y = (py / 100) * (1448 - height);
+        // Each trimmed portrait must stay inside its own atlas cell.
+        expect(x).toBeGreaterThanOrEqual((rank - 11) * 362);
+        expect(x + width).toBeLessThanOrEqual((rank - 10) * 362);
+        expect(y).toBeGreaterThanOrEqual(rows[suit] * 350);
+        expect(y + height).toBeLessThanOrEqual((rows[suit] + 1) * 350);
       }
     }
     expect(positions.size).toBe(12);

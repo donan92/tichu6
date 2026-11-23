@@ -1,12 +1,18 @@
-/* Rank and suit share one ink color, independent of illustration colors. */
-.card.suit-0,
-.card.suit-1,
+/* Suit inks are independent of portrait colors. */
+.card.suit-0 {
+  color: #142b49;
+}
+.card.suit-1 {
+  color: #174c38;
+}
+.card.suit-2 {
+  color: #ad4827;
+}
+.card.suit-3 {
+  color: #9e302f;
+}
 .card.special {
   color: #172535;
-}
-.card.suit-2,
-.card.suit-3 {
-  color: #c92e4b;
 }
 .card,
 .card.special {
@@ -41,11 +47,10 @@
 }
 .court-art {
   position: absolute;
-  inset: 15% auto 0 -12.5%;
-  width: 125%;
-  height: 85%;
+  inset: auto 0 0 auto;
+  width: auto;
+  height: 78%;
   background-image: url('../assets/cards/courts-approved.webp');
-  background-size: 300% 400%;
   background-repeat: no-repeat;
   pointer-events: none;
 }
@@ -155,9 +160,9 @@ button.card.selected {
     display: none;
   }
   .hand .court-art {
-    inset: 15% auto 0 -12.5%;
-    width: 125%;
-    height: 85%;
+    inset: auto 0 0 auto;
+    width: auto;
+    height: 78%;
   }
   .hand .empty-hand {
     grid-column: 1 / -1;
@@ -332,4 +337,33 @@ button.card.selected {
   .action-buttons select {
     font-size: 16px;
   }
+}
+
+/* One hand-card ratio across viewport heights; compact surrounding spacing instead. */
+.hand .card {
+  height: auto;
+  aspect-ratio: 7 / 10;
+}
+@media (max-width: 850px) {
+  .hand .card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 7 / 10;
+  }
+}
+
+/* Stack the index above the bottom-right portrait. */
+.card.court .card-corner {
+  top: 4px;
+  left: 4px;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  font-size: 18px;
+}
+.played-cards .card.court .card-corner {
+  top: 2px;
+  left: 2px;
+  font-size: 10px;
+  gap: 1px;
 }

@@ -179,3 +179,8 @@ Release verification:
 - Browser verified 375×812 language switching, repeated open/select/cancel/Escape, localized cancel text and focus restoration. Player selection and disabled-state behavior covered by component tests. Actual iPhone Safari/Samsung Internet remain untested. Preview: `/tmp/tichu6-language-modal.png`.
 - Font requirement for follow-up: support Korean, English, Japanese, Simplified Chinese and Traditional Chinese with language-appropriate glyphs; do not choose a Korean-only font as the universal CJK solution. Font and card aspect-ratio changes are not included in this patch.
 - Passed `npm run check`, `npm test` (70 engine/server + 36 UI), `npm run format:check`, `npm run build` and diff whitespace checks. Released `ec758b8` on main; Pages production `a167c7b4-13ce-4a92-9a01-b01338a76aa0` active. Production HTML and all five assets match local SHA-256. GitHub Verify 45223860359 (including Worker integration) and Pages succeeded. Production browser confirmed v0.8.3, Korean/English switching, dismissal/focus return and no console errors; mobile screenshot `/tmp/tichu6-v083-production.png`. Backend unchanged, health v6 passed. No pending release work.
+
+## Court layout release — scoped frontend patch
+
+- Backported only approved court portrait bounds, four suit inks, stacked rank/suit indices, bottom-right alignment and consistent hand-card ratio onto production main. Runtime refactor, protocol validation and dependency/font changes remain on the original branch. No Worker changes required.
+- Passed check, 106 tests, format check and build. All twelve court portraits visually verified at 375px against the approved layout. Production deployment verification pending.
