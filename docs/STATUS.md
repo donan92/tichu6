@@ -183,10 +183,10 @@ Release verification:
 ## Court layout release — scoped frontend patch
 
 - Backported only approved court portrait bounds, four suit inks, stacked rank/suit indices, bottom-right alignment and consistent hand-card ratio onto production main. Runtime refactor, protocol validation and dependency/font changes remain on the original branch. No Worker changes required.
-- Passed check, 106 tests, format check and build. All twelve court portraits visually verified at 375px against the approved layout. Production deployment verification pending.
+- Passed check, 106 tests, format check and build. All twelve court portraits visually verified at 375px against the approved layout. Released together with the numeric pip update below.
 
 ## Numeric pip layouts — frontend release
 
 - Replaced single numeric emblems with exact 2–10 pip counts using standard mirrored columns inspired by the official Balatro deck reference (https://www.fangamer.eu/products/balatro-playing-cards). Lower pips rotate 180 degrees; aces keep one large symbol. Existing vector suits and four inks retained.
 - Regression covers counts, unique positions, horizontal symmetry, rank labels and SVG bounds. Passed check, 106 tests, format check and build. Desktop and 375px previews checked across all four suits; pointer selection and keyboard deselection passed. At 320px the existing 340px page minimum causes horizontal scrolling; individual pip bounds remain intact. Actual iPhone Safari not tested.
-- Preview `/tmp/tichu6-pips-mobile.png`. Frontend-only; production verification pending.
+- Preview `/tmp/tichu6-pips-mobile.png`. Released `a3b0c06` on main; Pages production `ed19d3d1-ac2c-4090-895c-1d882e100c47`. Production index and all five assets match local SHA-256. Existing backend health v6 and authenticated lounge welcome passed; no Worker code deployed. GitHub Verify including Worker/idle integration succeeded: https://github.com/donan92/tichu6/actions/runs/45234721173. Production 375px practice visually verified with no console errors; screenshot `/tmp/tichu6-pips-production.png`.
