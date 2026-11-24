@@ -6,7 +6,9 @@ let temporaryConsent: boolean | undefined;
 export function readTrainingConsent(): boolean {
   if (temporaryConsent !== undefined) return temporaryConsent;
   try {
-    return localStorage.getItem(TRAINING_CONSENT_KEY) === 'true';
+    const saved = localStorage.getItem(TRAINING_CONSENT_KEY);
+    // New visitors default on; never overwrite an explicit opt-out.
+    return saved === null || saved === 'true';
   } catch {
     return false;
   }

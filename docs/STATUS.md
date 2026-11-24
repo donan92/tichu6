@@ -1,5 +1,25 @@
 # Project status / resume point
 
+## v0.8.7 recording preference visibility — deployment in progress
+
+- User requested recording on by default with a visible opt-out notice and
+  radio buttons. Moved TrainingConsent directly below the header on all views.
+  Status, notice and on/off options are always visible; data/retention details
+  remain expandable. Native radio labels have44px targets and keyboard focus.
+- Missing browser preference now defaults on; saved false remains false.
+  Invalid/unreadable storage stays off, and failed writes preserve withdrawal
+  in memory. Existing server authentication and old-client default-off remain.
+- English/Korean packs updated. Tests cover initial default, explicit off across
+  remount/reconnect, handshake propagation, storage failures and repeated choices.
+- check,175 tests (131 unit+44 UI), format:check and build passed. Browser tested
+  on/off, reload retention and arrow-key selection.340px/390px fit without
+  horizontal overflow;320px still encounters the existing page340px minimum.
+  Not real iPhone/Samsung hardware verification. Screenshot:
+  /tmp/tichu6-recording-radio-mobile.jpg.
+- Version/lockfile and localized release note updated to0.8.7. This follows
+  the user's deployment request and UI feedback. Frontend-only release;
+  existing Worker deployment remains unchanged. Production verification pending.
+
 ## v0.8.6 released — 2026-11-24
 
 - Includes the evaluated gentle bot strategy, opt-in private human gameplay

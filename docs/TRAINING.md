@@ -11,8 +11,12 @@ wins on the deals used to choose it.
 
 ## Optional human records
 
-The footer offers an unchecked-by-default collection preference, saved on that
-browser. Disabling it stops future examples. The server associates consent with
+The panel directly below the header always shows the collection status and
+on/off radio buttons. Per the product owner's updated decision, a missing saved
+preference defaults to on, with a visible instruction to turn recording off if
+the player does not agree. Explicit saved opt-outs remain off across reloads;
+unreadable or invalid storage fails closed. Disabling stops future examples.
+The server associates the recording preference with
 the authenticated member, never with a supplied seat. Offline takeover examples
 are labeled `bot`; local practice and non-consenting players are not recorded.
 Older clients that send no consent field default to off.

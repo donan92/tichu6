@@ -26,12 +26,12 @@ onMounted(() => {
 </script>
 <template>
   <AppHeader />
+  <TrainingConsent />
   <HomeView v-if="session.mode === 'home'" />
   <HallView v-else-if="session.mode === 'hall'" />
   <GameView v-else-if="session.round" :game="session.round" />
   <RoomView v-else />
   <LeaveDialog v-if="session.leaving" />
-  <TrainingConsent />
   <div
     id="notice"
     role="status"

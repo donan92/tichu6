@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.7",
+    "summary": "patches.visibleRecordingChoice"
+  },
+  {
     "version": "0.8.6",
     "summary": "patches.botStrategyAndTraining"
   },

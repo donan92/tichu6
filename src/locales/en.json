@@ -5,7 +5,6 @@
   "app.summary": "108 cards · 6 players",
   "app.footer": "A card table for friends",
   "training.title": "Help improve the bots",
-  "training.optIn": "Share my online game decisions",
   "training.description": "If enabled, we use your own hand, moves, and the public board to improve the bots. We do not collect your nickname or session token. Practice games are never collected.",
   "training.retention": "Records are kept for up to 7 days, or less if server capacity requires it. Turning this off stops future recording; it does not delete earlier records.",
   "common.you": "You",
@@ -276,5 +275,14 @@
   "patches.exchangeAndCards": "New card art, exchange receipts and a give-up option.",
   "patches.sixPlayerTeams": "Bots fill empty seats with balanced teams.",
   "patches.serverMaintenance": "Bug fixes.",
-  "patches.botStrategyAndTraining": "Improved bot strategy and optional gameplay recording for training."
+  "patches.botStrategyAndTraining": "Improved bot strategy and optional gameplay recording for training.",
+  "training.enabled": "Online recording on",
+  "training.disabled": "Online recording off",
+  "training.noticeOn": "Recording to improve the bots is on by default. If you do not agree, select “Recording off”.",
+  "training.noticeOff": "Your online gameplay is not being recorded. You can turn recording back on at any time.",
+  "training.choice": "Online gameplay recording preference",
+  "training.on": "Recording on",
+  "training.off": "Recording off",
+  "training.details": "What we collect and how long we keep it",
+  "patches.visibleRecordingChoice": "Recording is on by default, with visible on/off controls at the top."
 }

@@ -243,3 +243,18 @@ it('synchronizes consent changes made during handshake and removes the listener 
   writeTrainingConsent(false);
   expect(socket.sent).toHaveLength(count);
 });
+
+it('sends the new-visitor recording default and preserves explicit opt-outs on reconnect', async () => {
+  const { TRAINING_CONSENT_KEY } = await import('../../src/training-consent');
+  for (const enabled of [true, false]) {
+    if (!enabled) localStorage.setItem(TRAINING_CONSENT_KEY, 'false');
+    const { room } = client();
+    const opening = room.open('Alice');
+    const socket = Socket.instances.at(-1)!;
+    socket.open();
+    expect(JSON.parse(socket.sent[0]).trainingConsent).toBe(enabled);
+    socket.receive({ type: 'welcome' });
+    await opening;
+    room.close();
+  }
+});
