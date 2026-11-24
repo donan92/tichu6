@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.7 recording preference visibility — deployment in progress
+## v0.8.7 recording preference visibility — deployed
 
 - User requested recording on by default with a visible opt-out notice and
   radio buttons. Moved TrainingConsent directly below the header on all views.
@@ -18,7 +18,15 @@
   /tmp/tichu6-recording-radio-mobile.jpg.
 - Version/lockfile and localized release note updated to0.8.7. This follows
   the user's deployment request and UI feedback. Frontend-only release;
-  existing Worker deployment remains unchanged. Production verification pending.
+  Worker remains3cea4505-6a0e-40a7-be41-27a6acf64311, health v6 verified.
+- Released UI commitf453f55 and test fixba4909d to main. Version bump exposed an
+  old test requiring an expired note; fixed it to verify the newest5 localized
+  entries. All175 tests and full checks passed afterwards, including remote CI.
+- Pages deploymentad1b799c-effa-4fa8-959e-abd542bc3a4b succeeded forba4909d.
+  Production homepage and all5 asset hashes match the tested v0.8.7 build.
+  Verify https://github.com/donan92/tichu6/actions/runs/45415643385 and Pages
+  https://github.com/donan92/tichu6/actions/runs/45415643121 succeeded. Local
+  preview server5194 stopped after QA. No pending release work.
 
 ## v0.8.6 released — 2026-11-24
 
