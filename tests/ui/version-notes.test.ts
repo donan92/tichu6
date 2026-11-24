@@ -8,6 +8,9 @@ import HomeView from '../../src/views/HomeView.vue';
 import VersionNotes from '../../src/components/VersionNotes.vue';
 import { useSessionStore } from '../../src/stores/session';
 import { version } from '../../package.json';
+import releases from '../../src/release-notes.json';
+import en from '../../src/locales/en.json';
+import ko from '../../src/locales/ko.json';
 let pinia: ReturnType<typeof createPinia>;
 const wrappers: { unmount: () => void }[] = [];
 const plugins = () => [
@@ -50,7 +53,12 @@ it('opens five newest summaries, closes via button/Escape/backdrop, and restores
     expect(dialog.open).toBe(true);
     expect(dialog.querySelectorAll('li')).toHaveLength(5);
     expect(dialog.querySelector('li')?.textContent).toContain(`v${version}`);
-    expect(dialog.textContent).toContain('Tap the version');
+    for (const release of releases.slice(0, 5))
+      expect(dialog.textContent).toContain(
+        en[release.summary as keyof typeof en],
+      );
+    for (const release of releases.slice(5))
+      expect(dialog.textContent).not.toContain(`v${release.version}`);
     if (dismissal === 'button')
       dialog.querySelector<HTMLButtonElement>('.patch-close')!.click();
     else
@@ -87,6 +95,9 @@ it('header version is separate from leave-game link and footer opens its own loc
   );
   const dialog = dialogs.find((d) => d.open)!;
   expect(dialog.textContent).toContain('최근 5개 업데이트');
-  expect(dialog.textContent).toContain('하던 봇 연습');
+  for (const release of releases.slice(0, 5))
+    expect(dialog.textContent).toContain(
+      ko[release.summary as keyof typeof ko],
+    );
   expect(new Set(dialogs.map((d) => d.id)).size).toBe(2);
 });
