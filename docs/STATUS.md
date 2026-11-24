@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.9 reconnect loading — release pending
+## v0.8.9 reconnect loading — deployed
 
 - Saved sessions show a loading screen before the first render; welcome and
   directory messages do not dismiss it until authoritative hall/state arrives.
@@ -10,7 +10,12 @@
   safe cancellation. check, 179 tests (131 unit + 48 UI), format and build passed.
 - Real local Worker capacity, spectator authorization, bots and reconnect checks
   passed. Loading component visually checked at 390px; real phones unverified.
-- Frontend-only change; backend remains unchanged. Deployment pending.
+- Released cdb52aa to main. Pages fdc0d73c-743e-4ec0-b460-bb2206ff93f1
+  succeeded; production homepage and all asset hashes match the tested build.
+- GitHub Verify passed (including Worker/idle checks):
+  https://github.com/donan92/tichu6/actions/runs/45422193811.
+- Frontend-only release; Worker unchanged, production health v6 passed.
+  Task-owned preview/Worker processes stopped. No pending release work.
 
 ## v0.8.8 lounge-only recording switch — deployed
 
