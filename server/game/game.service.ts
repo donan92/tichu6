@@ -1,5 +1,18 @@
+import {
+  prepareTrainingDecision,
+  appendTrainingDecision,
+  finalizeTrainingSession,
+} from '../training/records.ts';
+import type { RoundState, GameAction } from '../../src/types.ts';
+import type { Room } from '../types.ts';
 import { AppError } from '../../src/messages.js';
-import { startRound, act, botAction, shuffle } from '../../src/game.js';
+import {
+  startRound,
+  act,
+  botAction,
+  shuffle,
+  BOT_POLICY_VERSION,
+} from '../../src/game.js';
 import { gameAction } from '../transport/protocol.ts';
 import { GRACE } from '../policy.ts';
 import type { Member, JsonObject } from '../types.ts';
@@ -49,14 +62,63 @@ export class GameService {
         );
         r.members = filled.map((entry) => entry.member);
         next.names = filled.map((entry) => entry.name);
+        r.trainingMatch = crypto.randomUUID();
       }
       r.state = next;
+      r.trainingSession = crypto.randomUUID();
     } else {
       if (r.state.phase === 'lobby') throw new AppError('error.invalidAction');
-      r.state = act(r.state, seat, action);
+      const before = r.state;
+      r.state = act(before, seat, action);
+      this.record(r, before, seat, action, 'human');
     }
     r.lastActive = Date.now();
     r.lastProgress = Date.now();
+  }
+  private record(
+    r: Room,
+    before: RoundState,
+    seat: number,
+    action: GameAction,
+    source: 'human' | 'bot',
+  ) {
+    // Record opted-in players, including their offline bot takeover, only.
+    if (r.members[seat]?.trainingConsent === true) {
+      // Older in-progress rooms predate match grouping; begin grouping only
+      // when an opted-in record is actually about to be accepted.
+      r.trainingMatch ??= crypto.randomUUID();
+      const decision = prepareTrainingDecision(
+        before,
+        seat,
+        action,
+        source,
+        source === 'bot' ? BOT_POLICY_VERSION : 'human',
+      );
+      if (decision) {
+        r.trainingSession ??= crypto.randomUUID();
+        appendTrainingDecision(
+          this.repository.training,
+          r.trainingSession,
+          decision,
+          Date.now(),
+          r.trainingMatch,
+        );
+      }
+    }
+    if (r.trainingSession && ['roundEnd', 'matchEnd'].includes(r.state.phase)) {
+      const state = r.state as RoundState;
+      finalizeTrainingSession(this.repository.training, r.trainingSession, {
+        scores: state.scores,
+        delta: state.delta,
+        finish: state.finish,
+        winner:
+          !state.delta || state.delta[0] === state.delta[1]
+            ? null
+            : state.delta[0] > state.delta[1]
+              ? 0
+              : 1,
+      });
+    }
   }
   advanceBots(now: number) {
     for (const r of Object.values(this.repository.data.rooms)) {
@@ -90,7 +152,9 @@ export class GameService {
                   ? s.last
                   : -1;
         if (seat != null && seat >= 0 && eligible(seat)) {
-          r.state = act(s, seat, botAction(s, seat));
+          const action = botAction(s, seat);
+          r.state = act(s, seat, action);
+          this.record(r, s, seat, action, 'bot');
           r.lastProgress = now;
         }
       }

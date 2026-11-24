@@ -1,4 +1,6 @@
 import { AppError, event } from './messages.js';
+import { chooseStructureOption } from './bot-structure.js';
+export const BOT_POLICY_VERSION = 'structure-gentle-v1';
 // The rules engine has no DOM or networking dependencies.
 export const LABEL = { 1: '1', 11: 'J', 12: 'Q', 13: 'K', 14: 'A' };
 export const team = (seat) => seat % 2;
@@ -643,36 +645,13 @@ export function botAction(s, seat) {
     );
     if (!options.length) return { type: 'pass' };
   }
-  const made = new Set(
-    shapes
-      .filter((o) => o.cards.length > 1 && !o.play.bomb)
-      .flatMap((o) => o.cards.map((c) => c.id)),
-  );
-  const score = (o) => {
-    const { cards, play } = o;
-    if (cards.length === hand.length) return -10000;
-    let cost = play.power;
-    if (!play.bomb && cards.some((c) => protectedIds.has(c.id))) cost += 2000;
-    if (play.bomb) cost += s.top ? 500 : 4000;
-    if (cards.length > 1 && cards.some((c) => c.rank === 14 && !c.special))
-      cost += 150;
-    if (!s.top) {
-      if (cards.length > 1) cost += 60 - cards.length;
-      else if (made.has(cards[0].id)) cost += 80;
-      if (cards[0].special === 'phoenix' || cards[0].special === 'dragon')
-        cost += 100;
-    }
-    // Keep scoring cards until they have a reasonable chance of capturing a trick.
-    if (!s.top || play.power < 13) cost += Math.max(0, points(cards)) * 2;
-    if (s.top && !play.bomb && points(s.pile) >= 10 && play.power < 13)
-      cost += Math.min(40, points(s.pile) * 2);
-    // Dragon gives the pile away; prefer an ace/phoenix on a valuable pile.
-    if (cards.some((c) => c.special === 'dragon'))
-      cost += Math.max(0, points(s.pile));
-    return cost;
-  };
-  options.sort((a, b) => score(a) - score(b));
-  const o = finishing || options[0];
+  const o =
+    finishing ||
+    chooseStructureOption(hand, shapes, options, {
+      hasTop: !!s.top,
+      urgent,
+      pilePoints: points(s.pile),
+    });
   return {
     type: 'play',
     ids: o.cards.map((c) => c.id),

@@ -216,3 +216,30 @@ it('idle logout returns the session to home and clears private game display', as
     disposePinia(pinia);
   }
 });
+
+it('synchronizes consent changes made during handshake and removes the listener on close', async () => {
+  const { writeTrainingConsent } = await import('../../src/training-consent');
+  writeTrainingConsent(true);
+  const { room } = client();
+  const opening = room.open('Alice');
+  const socket = Socket.instances[0];
+  socket.open();
+  expect(JSON.parse(socket.sent[0]).trainingConsent).toBe(true);
+  writeTrainingConsent(false);
+  expect(socket.sent).toHaveLength(1);
+  socket.receive({ type: 'welcome' });
+  await opening;
+  expect(JSON.parse(socket.sent.at(-1)!)).toEqual({
+    type: 'trainingConsent',
+    enabled: false,
+  });
+  writeTrainingConsent(true);
+  expect(JSON.parse(socket.sent.at(-1)!)).toEqual({
+    type: 'trainingConsent',
+    enabled: true,
+  });
+  room.close();
+  const count = socket.sent.length;
+  writeTrainingConsent(false);
+  expect(socket.sent).toHaveLength(count);
+});

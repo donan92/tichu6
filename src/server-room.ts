@@ -1,5 +1,9 @@
 import { AppError, event as messageEvent } from './messages.js';
 import type { ClientRequest, Message, ServerMessage } from './types';
+import {
+  TRAINING_CONSENT_EVENT,
+  readTrainingConsent,
+} from './training-consent';
 export const API = ['localhost', '127.0.0.1'].includes(location.hostname)
   ? 'http://localhost:8787'
   : 'https://tichu6-server.kelp-swaths-7q.workers.dev';
@@ -56,7 +60,24 @@ export class Room {
   private manual = true;
   private resolve?: () => void;
   private reject?: (error: AppError) => void;
-  constructor(private readonly callbacks: Callbacks) {}
+  private sentTrainingConsent = false;
+  private readonly trainingConsentChanged = () => {
+    if (this.ready && this.socket?.readyState === WebSocket.OPEN) {
+      this.sentTrainingConsent = readTrainingConsent();
+      this.socket.send(
+        JSON.stringify({
+          type: 'trainingConsent',
+          enabled: this.sentTrainingConsent,
+        }),
+      );
+    }
+  };
+  constructor(private readonly callbacks: Callbacks) {
+    window.addEventListener(
+      TRAINING_CONSENT_EVENT,
+      this.trainingConsentChanged,
+    );
+  }
   private remember() {
     try {
       localStorage.setItem(KEY, JSON.stringify(this.session));
@@ -102,8 +123,14 @@ export class Room {
     this.handshake = setTimeout(() => socket.close(), 15000);
     socket.onopen = () => {
       if (this.closed || socket !== this.socket) return;
+      this.sentTrainingConsent = readTrainingConsent();
       socket.send(
-        JSON.stringify({ type: 'hello', ...this.session, manual: this.manual }),
+        JSON.stringify({
+          type: 'hello',
+          ...this.session,
+          manual: this.manual,
+          trainingConsent: this.sentTrainingConsent,
+        }),
       );
       this.manual = false;
     };
@@ -121,6 +148,8 @@ export class Room {
       if (msg.type === 'welcome') {
         welcomed = true;
         this.ready = true;
+        if (this.sentTrainingConsent !== readTrainingConsent())
+          this.trainingConsentChanged();
         this.attempt = 0;
         clearTimeout(this.handshake);
         this.callbacks.onStatus(true);
@@ -206,6 +235,10 @@ export class Room {
     clearTimeout(this.handshake);
     clearInterval(this.heartbeat);
     this.socket?.close();
+    window.removeEventListener(
+      TRAINING_CONSENT_EVENT,
+      this.trainingConsentChanged,
+    );
     this.reject?.(new AppError('error.cancelled'));
     this.resolve = undefined;
     this.reject = undefined;

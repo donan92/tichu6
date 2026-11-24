@@ -1,0 +1,90 @@
+{
+  "schema": 1,
+  "modelSeeds": [
+    101,
+    303,
+    202
+  ],
+  "validationBestMeans": {
+    "101": -62.65625,
+    "202": -99.53125,
+    "303": -80.625
+  },
+  "primarySeed": 101,
+  "primarySelection": "highest validationBest.mean; ties choose lower seed",
+  "primaryThreshold": {
+    "meanAtLeast": 10,
+    "lower95GreaterThan": 0
+  },
+  "secondaryConfigurations": [
+    {
+      "id": "primary-vs-selected",
+      "modelSeats": 3,
+      "opponent": "selected"
+    },
+    {
+      "id": "primary-vs-calls-5.5-7",
+      "modelSeats": 3,
+      "opponent": "calls"
+    },
+    {
+      "id": "primary-mixed1-vs-baseline",
+      "modelSeats": 1,
+      "opponent": "baseline"
+    },
+    {
+      "id": "primary-mixed2-vs-baseline",
+      "modelSeats": 2,
+      "opponent": "baseline"
+    }
+  ],
+  "stageA": {
+    "namespace": "dmc-final-v1",
+    "seedRange": [
+      820000000,
+      820000999
+    ],
+    "pairs": 1000
+  },
+  "stageB": {
+    "namespace": "dmc-final-secondary-v1",
+    "seedRange": [
+      820000000,
+      820000999
+    ],
+    "pairs": 1000
+  },
+  "selectedHeuristic": {
+    "id": "gentle",
+    "variant": "structure",
+    "config": {
+      "structureWeight": 15
+    }
+  },
+  "callingHeuristic": {
+    "variant": "calls",
+    "config": {
+      "grandThreshold": 5.5,
+      "smallThreshold": 7
+    }
+  },
+  "baselineId": "baseline-v0.8.5",
+  "candidateId": "candidate-structure-ledger",
+  "sources": {
+    "../../src/game.js": "cf19e468b60d4a0a93db156576d3c9f46991fd7ce0c4a8616195f9def82d845d",
+    "./policy.mjs": "4ab228f3fde41df462748eadb822bb5a00b9920dff1652ec7b8c309ff76571d4",
+    "./final-evaluate.mjs": "8f5d2dca124f6ef9a2904d2d2226b1998333dfd9ff69f630b709e15449e07983",
+    "../bots/baseline.js": "2038052fa444a5b5e1ee4544e88d522ad8cd20dc76db26320311bd09e231d187",
+    "../bots/candidate.js": "bda89137d45b30e3f3b388bb07a85d642bdcc45a51fc9e2156733ba401e35f95",
+    "../bots/paired-statistics.mjs": "fc18f82ab6589cc5013c156baff277d8bee60c40e2fcc0ef887ac34788fd2789"
+  },
+  "artifactHashes": {
+    "101": "de662a4961dd187057ec641beb450c6f5ab51e73303c57f8c284943cb8d64433",
+    "202": "4c6fe12d9dbaeafaef60dcd6fd84bb0445be7c864d36526f6d3760264789322b",
+    "303": "76a2dc9a93458411b73de6812adbc43cbc92c6c1111c272aaed3e626e27c0ae6"
+  },
+  "limitations": [
+    "Round-score margins, not full-match win rates",
+    "No human play or teammate behavior validation"
+  ]
+}

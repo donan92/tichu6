@@ -1,0 +1,90 @@
+{
+  "status": "complete",
+  "pid": 16111,
+  "primarySeed": 101,
+  "stage": "stage-b-skipped",
+  "completedPairs": 3000,
+  "errors": 0,
+  "stageA": {
+    "101": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": -77.28,
+      "meanMargin95": [
+        -81.395,
+        -73.115
+      ],
+      "gameWinRate": 0.1835,
+      "gameWinRate95": [
+        0.1675,
+        0.1995
+      ],
+      "gameWins": 367,
+      "gameTies": 46,
+      "gameLosses": 1587,
+      "pairWins": 95,
+      "pairTies": 27,
+      "pairLosses": 878,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "202": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": -104.745,
+      "meanMargin95": [
+        -109.105,
+        -100.305
+      ],
+      "gameWinRate": 0.1285,
+      "gameWinRate95": [
+        0.1145,
+        0.143
+      ],
+      "gameWins": 257,
+      "gameTies": 52,
+      "gameLosses": 1691,
+      "pairWins": 39,
+      "pairTies": 20,
+      "pairLosses": 941,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "303": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": -77.35,
+      "meanMargin95": [
+        -82.135,
+        -72.695
+      ],
+      "gameWinRate": 0.2215,
+      "gameWinRate95": [
+        0.2045,
+        0.2385
+      ],
+      "gameWins": 443,
+      "gameTies": 83,
+      "gameLosses": 1474,
+      "pairWins": 134,
+      "pairTies": 22,
+      "pairLosses": 844,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    }
+  },
+  "primaryPass": false,
+  "note": "Primary failed the pre-registered threshold; no alternate model was promoted."
+}

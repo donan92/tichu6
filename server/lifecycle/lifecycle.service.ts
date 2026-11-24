@@ -1,3 +1,4 @@
+import { TRAINING_RETENTION_MS } from '../training/records.ts';
 import { GRACE, TTL, IDLE, ROOM_IDLE } from '../policy.ts';
 import type { RoomRepository } from '../persistence/room.repository.ts';
 import type { Connections } from '../transport/connections.ts';
@@ -90,6 +91,8 @@ export class LifecycleService {
   async schedule() {
     const now = Date.now();
     let at = Infinity;
+    for (const session of this.repository.training.sessions)
+      at = Math.min(at, session.createdAt + TRAINING_RETENTION_MS + 1);
     for (const time of Object.values(this.repository.data.activity))
       at = Math.min(at, time + TTL);
     for (const ws of this.connections.sockets())

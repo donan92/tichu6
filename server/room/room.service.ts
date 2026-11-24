@@ -48,6 +48,7 @@ export class RoomService {
       watch = false;
       r.state.names[own] = name;
       r.members[own]!.idle = false;
+      r.members[own]!.trainingConsent = a.trainingConsent === true;
     }
     if (!watch && own < 0) {
       const active = this.activeMembership(a.hash);
@@ -56,7 +57,11 @@ export class RoomService {
       if (r.state.phase !== 'lobby') throw new AppError('error.watchOnly');
       const seat = r.members.indexOf(null);
       if (seat < 0) throw new AppError('error.seatsFull');
-      r.members[seat] = { hash: a.hash, offlineSince: null };
+      r.members[seat] = {
+        hash: a.hash,
+        offlineSince: null,
+        trainingConsent: a.trainingConsent === true,
+      };
       r.state.names[seat] = name;
     }
     this.leaveWaiting(a.hash, id);

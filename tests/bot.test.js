@@ -9,6 +9,7 @@ import {
   classify,
   partners,
 } from '../src/game.js';
+import { candidate } from '../research/bots/candidate.js';
 const cards = deck();
 const rank = (r, n = 1) =>
   cards.filter((c) => !c.special && c.rank === r).slice(0, n);
@@ -90,21 +91,29 @@ test('mahjong wishes for an ordinary card received from a partner; old states fa
   delete s.exchanges;
   assert.equal(botAction(s, 0).wish, 14);
 });
-test('lead sheds low loose singles before made combinations and keeps aces as singles', () => {
+test('lead sheds low loose cards and keeps a short route through remaining combinations', () => {
   const s = state([...rank(2), ...rank(7, 2), ...rank(14, 2)]);
   assert.deepEqual(chosen(s), [rank(2)[0].id]);
   s.hands[0] = [...rank(14, 2), ...rank(13, 2), special('dragon')];
-  assert.deepEqual(chosen(s), [rank(14)[0].id]);
+  assert.deepEqual(
+    chosen(s),
+    [...rank(13, 2), ...rank(14, 2)].map((c) => c.id),
+  );
   for (const r of [11, 12]) {
     s.hands[0] = [...rank(r), ...rank(7, 2)];
-    assert.deepEqual(chosen(s), [rank(r)[0].id]);
+    assert.deepEqual(
+      chosen(s),
+      rank(7, 2).map((c) => c.id),
+    );
   }
 });
-test('scoring singles are conserved and valuable tricks invite stronger singles', () => {
+test('low singles preserve control cards until an opponent is about to finish', () => {
   const s = state([...rank(5), ...rank(6), ...rank(14)]);
-  assert.deepEqual(chosen(s), [rank(6)[0].id]);
+  assert.deepEqual(chosen(s), [rank(5)[0].id]);
   top(s, rank(10));
   s.hands[0] = [...rank(11), ...rank(14), ...rank(2)];
+  assert.deepEqual(chosen(s), [rank(11)[0].id]);
+  s.hands[1] = rank(2);
   assert.deepEqual(chosen(s), [rank(14)[0].id]);
 });
 test('bombs wait for an opposing valuable trick; partner leads are respected', () => {
@@ -131,10 +140,10 @@ test('mandatory wishes override preservation and finishing overrides teammate pa
   s.hands[0] = rank(14);
   assert.deepEqual(chosen(s), [rank(14)[0].id]);
 });
-test('decisions do not depend on opponents private card identities', () => {
+test('decisions do not depend on other players private card identities', () => {
   const s = state([...rank(2), ...rank(8), ...rank(14)]);
   const before = botAction(s, 0);
-  for (const i of [1, 3, 5])
+  for (const i of [1, 2, 3, 4, 5])
     s.hands[i] = Array.from({ length: 18 }, () => special('dragon'));
   assert.deepEqual(botAction(s, 0), before);
 });
@@ -150,6 +159,27 @@ test('complete bot rounds terminate with only legal actions', () => {
     }
     assert.equal(s.phase, 'roundEnd');
   }
+});
+test('production actions match the frozen evaluated gentle policy throughout a round', () => {
+  let s = startRound(newGame(), deck());
+  let moves = 0;
+  while (!['roundEnd', 'matchEnd'].includes(s.phase) && moves++ < 1500) {
+    const seat =
+      s.phase === 'grand'
+        ? s.ready.findIndex((ready) => !ready)
+        : s.phase === 'exchange'
+          ? s.exchanges.findIndex((exchange) => !exchange)
+          : s.phase === 'trick'
+            ? s.last
+            : s.turn;
+    const action = botAction(s, seat);
+    assert.deepEqual(
+      action,
+      candidate(s, seat, 'structure', { structureWeight: 15 }),
+    );
+    s = act(s, seat, action);
+  }
+  assert.equal(s.phase, 'roundEnd');
 });
 test('two callers receive distinct best cards without breaking a bomb', () => {
   const s = state(

@@ -1,0 +1,7 @@
+// Local workerd compatibility probe only. Never deploy this benchmark.
+{
+  "name": "tichu6-local-model-benchmark",
+  "main": "worker-benchmark.mjs",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": false,
+}

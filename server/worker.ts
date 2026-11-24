@@ -3,7 +3,7 @@ import { ORIGINS } from './policy.ts';
 export { Lounge } from './lounge.ts';
 export { GameRoom } from './legacy-game-room.js';
 
-const app = new Hono<{ Bindings: Env }>();
+const app = new Hono<{ Bindings: Env & { TRAINING_EXPORT_TOKEN?: string } }>();
 app.use('*', async (c, next) => {
   const origin = c.req.header('Origin');
   if (origin && !ORIGINS.has(origin)) return c.text('Forbidden', 403);
@@ -25,6 +25,26 @@ app.use('*', async (c, next) => {
     c.header('Vary', 'Origin');
     c.header('Cache-Control', 'no-store');
   }
+});
+// The optional operator secret is never exposed to frontend code or public URLs.
+app.get('/training/export', async (c) => {
+  const expected = c.env.TRAINING_EXPORT_TOKEN;
+  const provided = c.req.header('Authorization') || '';
+  if (!expected || expected.length < 32 || provided.length > 512)
+    return c.text('Not available', 404);
+  const digest = async (value: string) =>
+    new Uint8Array(
+      await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value)),
+    );
+  const [a, b] = await Promise.all([
+    digest(provided),
+    digest(`Bearer ${expected}`),
+  ]);
+  if (a.reduce((difference, byte, i) => difference | (byte ^ b[i]), 0) !== 0)
+    return c.text('Forbidden', 403);
+  return c.env.LOUNGE.get(c.env.LOUNGE.idFromName('public-v1')).fetch(
+    new Request('https://internal/training-export'),
+  );
 });
 app.all('/health', (c) => c.json({ ok: true, version: 6 }));
 app.all('/lounge', async (c) => {

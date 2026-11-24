@@ -1,0 +1,309 @@
+{
+  "unit": "final-team-score-margin-per-full-match",
+  "limitations": [
+    "One baseline opponent; not evidence against arbitrary strategies or humans",
+    "Bootstrap intervals cover deck sampling, not algorithm selection or training-seed variance",
+    "Development variants used different seed samples; only team-swapped games within a pair share a deck stream",
+    "Calls variants also change hand decomposition; declaration effects are not isolated",
+    "The baseline never declares Tichu; performance against strong callers is untested"
+  ],
+  "selected": {
+    "id": "gentle",
+    "variant": "structure",
+    "config": {
+      "structureWeight": 15
+    }
+  },
+  "matches": 17430,
+  "rounds": 144176,
+  "moves": 27136503,
+  "elapsedSeconds": 7200.544133167,
+  "groups": {
+    "development/structure": {
+      "pairs": 660,
+      "games": 1320,
+      "meanMargin": 293.2878787878788,
+      "meanMargin95": [
+        277.8560606060606,
+        308.780303030303
+      ],
+      "gameWinRate": 0.7924242424242425,
+      "gameWinRate95": [
+        0.7727272727272727,
+        0.8121212121212121
+      ],
+      "gameWins": 1046,
+      "gameTies": 0,
+      "gameLosses": 274,
+      "pairWins": 610,
+      "pairTies": 1,
+      "pairLosses": 49,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "development/hybrid": {
+      "pairs": 660,
+      "games": 1320,
+      "meanMargin": 220.46212121212122,
+      "meanMargin95": [
+        205.65151515151516,
+        235.25
+      ],
+      "gameWinRate": 0.7325757575757575,
+      "gameWinRate95": [
+        0.7113636363636363,
+        0.7522727272727273
+      ],
+      "gameWins": 967,
+      "gameTies": 0,
+      "gameLosses": 353,
+      "pairWins": 571,
+      "pairTies": 5,
+      "pairLosses": 84,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "development/gentle": {
+      "pairs": 660,
+      "games": 1320,
+      "meanMargin": 308.5530303030303,
+      "meanMargin95": [
+        291.92424242424244,
+        324.79545454545456
+      ],
+      "gameWinRate": 0.7977272727272727,
+      "gameWinRate95": [
+        0.7772727272727272,
+        0.8174242424242424
+      ],
+      "gameWins": 1053,
+      "gameTies": 0,
+      "gameLosses": 267,
+      "pairWins": 608,
+      "pairTies": 1,
+      "pairLosses": 51,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "development/shed": {
+      "pairs": 659,
+      "games": 1318,
+      "meanMargin": 249.051593323217,
+      "meanMargin95": [
+        232.32169954476478,
+        265.66767830045524
+      ],
+      "gameWinRate": 0.7405159332321699,
+      "gameWinRate95": [
+        0.7192716236722306,
+        0.7617602427921093
+      ],
+      "gameWins": 976,
+      "gameTies": 0,
+      "gameLosses": 342,
+      "pairWins": 570,
+      "pairTies": 6,
+      "pairLosses": 83,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "development/protect": {
+      "pairs": 659,
+      "games": 1318,
+      "meanMargin": 289.27162367223065,
+      "meanMargin95": [
+        272.4203338391502,
+        306.062215477997
+      ],
+      "gameWinRate": 0.7883156297420334,
+      "gameWinRate95": [
+        0.7670713201820941,
+        0.8103186646433991
+      ],
+      "gameWins": 1039,
+      "gameTies": 0,
+      "gameLosses": 279,
+      "pairWins": 586,
+      "pairTies": 4,
+      "pairLosses": 69,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "development/control": {
+      "pairs": 659,
+      "games": 1318,
+      "meanMargin": 258.4446130500759,
+      "meanMargin95": [
+        243.01972685887708,
+        275.12139605462824
+      ],
+      "gameWinRate": 0.7579666160849773,
+      "gameWinRate95": [
+        0.7374810318664643,
+        0.7784522003034902
+      ],
+      "gameWins": 999,
+      "gameTies": 0,
+      "gameLosses": 319,
+      "pairWins": 575,
+      "pairTies": 2,
+      "pairLosses": 82,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "development/hybrid-gentle": {
+      "pairs": 659,
+      "games": 1318,
+      "meanMargin": 259.2185128983308,
+      "meanMargin95": [
+        243.88467374810318,
+        274.6282245827011
+      ],
+      "gameWinRate": 0.7769347496206374,
+      "gameWinRate95": [
+        0.7579666160849773,
+        0.7966616084977238
+      ],
+      "gameWins": 1024,
+      "gameTies": 0,
+      "gameLosses": 294,
+      "pairWins": 593,
+      "pairTies": 4,
+      "pairLosses": 62,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "development/hybrid-shed": {
+      "pairs": 659,
+      "games": 1318,
+      "meanMargin": 208.23975720789073,
+      "meanMargin95": [
+        193.2321699544765,
+        223.36115326251897
+      ],
+      "gameWinRate": 0.7185128983308042,
+      "gameWinRate95": [
+        0.697268588770865,
+        0.7397572078907435
+      ],
+      "gameWins": 947,
+      "gameTies": 0,
+      "gameLosses": 371,
+      "pairWins": 568,
+      "pairTies": 5,
+      "pairLosses": 86,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "development/calls-conservative": {
+      "pairs": 659,
+      "games": 1318,
+      "meanMargin": 284.60546282245826,
+      "meanMargin95": [
+        268.5660091047041,
+        301.41881638846735
+      ],
+      "gameWinRate": 0.7792109256449166,
+      "gameWinRate95": [
+        0.7594840667678301,
+        0.798937784522003
+      ],
+      "gameWins": 1027,
+      "gameTies": 0,
+      "gameLosses": 291,
+      "pairWins": 596,
+      "pairTies": 3,
+      "pairLosses": 60,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "development/calls-moderate": {
+      "pairs": 659,
+      "games": 1318,
+      "meanMargin": 279.0440060698027,
+      "meanMargin95": [
+        261.7071320182094,
+        295.66009104704096
+      ],
+      "gameWinRate": 0.7602427921092565,
+      "gameWinRate95": [
+        0.7389984825493171,
+        0.7814871016691958
+      ],
+      "gameWins": 1002,
+      "gameTies": 0,
+      "gameLosses": 316,
+      "pairWins": 590,
+      "pairTies": 1,
+      "pairLosses": 68,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "holdout/gentle": {
+      "pairs": 2122,
+      "games": 4244,
+      "meanMargin": 294.6559849198869,
+      "meanMargin95": [
+        285.92130065975493,
+        303.741753063148
+      ],
+      "gameWinRate": 0.7933553251649388,
+      "gameWinRate95": [
+        0.7820452403393026,
+        0.8044297832233742
+      ],
+      "gameWins": 3367,
+      "gameTies": 0,
+      "gameLosses": 877,
+      "pairWins": 1932,
+      "pairTies": 9,
+      "pairLosses": 181,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    }
+  }
+}

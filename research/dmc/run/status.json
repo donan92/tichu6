@@ -1,0 +1,287 @@
+{
+  "status": "complete",
+  "pid": 72454,
+  "mode": "pilot",
+  "namespace": "dmc-training-v1",
+  "startedAt": "2026-11-24T12:26:55.419Z",
+  "deadline": "2026-11-24T12:52:21.494Z",
+  "validationNamespace": "dmc-validation-v1",
+  "validationSeeds": [
+    810000000,
+    810000001,
+    810000002,
+    810000003,
+    810000004,
+    810000005,
+    810000006,
+    810000007,
+    810000008,
+    810000009,
+    810000010,
+    810000011,
+    810000012,
+    810000013,
+    810000014,
+    810000015,
+    810000016,
+    810000017,
+    810000018,
+    810000019,
+    810000020,
+    810000021,
+    810000022,
+    810000023,
+    810000024,
+    810000025,
+    810000026,
+    810000027,
+    810000028,
+    810000029,
+    810000030,
+    810000031
+  ],
+  "warmStart": false,
+  "exactResume": false,
+  "note": "Optimizer state and exact RNG stream are not serialized; restart is forbidden for this output.",
+  "models": [
+    {
+      "seed": 101,
+      "rounds": 5061,
+      "updates": 5061,
+      "moves": 1075337,
+      "validations": [
+        {
+          "round": 1,
+          "mean": -296.875,
+          "weightHash": "c7cf48e8ef6e5bff0355e7b39c7907ad9eeb2c17a82a2e198036e8b96dcca0ad"
+        },
+        {
+          "round": 500,
+          "mean": -171.875,
+          "weightHash": "c3e027c1cf1e335ac6968dd1b9d2a6734e595bad72a91b3a520e17598f77b0f8"
+        },
+        {
+          "round": 1000,
+          "mean": -134.0625,
+          "weightHash": "723648ff6d199066d087fc855b1f85870eabadb9674ba4eeefd5bd0a91c2bb2b"
+        },
+        {
+          "round": 1500,
+          "mean": -159.53125,
+          "weightHash": "9c260a29fea71a902c34b0814f4646d1c2b47529c503d9db85d08c1653b68c78"
+        },
+        {
+          "round": 2000,
+          "mean": -167.5,
+          "weightHash": "c86c34e3ac43138ced2cf85321756e2a559682f2fd91879a81607a20c2d63db8"
+        },
+        {
+          "round": 2500,
+          "mean": -160,
+          "weightHash": "aa18bb8ba59e42baa042accc048a9ba7882b61adb8abfd87169996c2a943a320"
+        },
+        {
+          "round": 3000,
+          "mean": -143.59375,
+          "weightHash": "9aafaa44d236ec276095d0bbdda70a7ac038547b100d00c50d6fc2afb2df0f2c"
+        },
+        {
+          "round": 3500,
+          "mean": -140.78125,
+          "weightHash": "c7159b6e09e32635961aef1deed9963725569a9896a3dc90dca07affe6cecf95"
+        },
+        {
+          "round": 4000,
+          "mean": -132.8125,
+          "weightHash": "1702161d1619e717b9712fc22114db853a8e1886f2e92e22f18597e038769cce"
+        },
+        {
+          "round": 4500,
+          "mean": -62.65625,
+          "weightHash": "7f6528ab0c5c815bb39e631be2aaf654a657836fba298d8270995586746a9aec"
+        },
+        {
+          "round": 5000,
+          "mean": -96.71875,
+          "weightHash": "1f1797ea525330d4bf9575f38ab2fd483cf39fb44d45f0bc08c25ff044d9ed32"
+        },
+        {
+          "round": 5061,
+          "mean": -104.375,
+          "final": true,
+          "weightHash": "80243c847c816b1057bd088c363946e67d6b7c068280e461408f61ab862deeae"
+        }
+      ],
+      "initialWeightHash": "3f2a9fead5c717711fc99e9b1bcd6aaaef8cea18be15f4b6abbe68a0559e3cc8",
+      "hash": "80243c847c816b1057bd088c363946e67d6b7c068280e461408f61ab862deeae",
+      "latestArtifactHash": "35c355251f922b9f20ab590dfea65578cd4c0cfd2ec383a3d72c6a4ab549d9e8",
+      "lastLoss": 0.003960773814469576,
+      "validationBestArtifactHash": "de662a4961dd187057ec641beb450c6f5ab51e73303c57f8c284943cb8d64433",
+      "validationBest": {
+        "round": 4500,
+        "mean": -62.65625,
+        "artifactHash": "de662a4961dd187057ec641beb450c6f5ab51e73303c57f8c284943cb8d64433"
+      }
+    },
+    {
+      "seed": 202,
+      "rounds": 5061,
+      "updates": 5061,
+      "moves": 1109320,
+      "validations": [
+        {
+          "round": 1,
+          "mean": -265.3125,
+          "weightHash": "0ee39be8a69741132e14dc70d60be072cc224325964abe138ca85fe72dd8398b"
+        },
+        {
+          "round": 500,
+          "mean": -214.53125,
+          "weightHash": "f6e8760e98ddcaf252b628fd15c2ec42049af821b6b9e64284b0bcbff8e7773e"
+        },
+        {
+          "round": 1000,
+          "mean": -182.8125,
+          "weightHash": "5ab57a101e23cdb47a9d30e7e2b9621c777c12d77478ee2fac0f5b504637cc12"
+        },
+        {
+          "round": 1500,
+          "mean": -140.3125,
+          "weightHash": "fbca207c8d5341c12a0083d4345851daf4f988da8d60dd8125f4c32b410cf047"
+        },
+        {
+          "round": 2000,
+          "mean": -122.96875,
+          "weightHash": "bbe994126e67700dfb7e2b1d6c07969b9ed317c2c08afa6e8fabb24e7da0a447"
+        },
+        {
+          "round": 2500,
+          "mean": -212.96875,
+          "weightHash": "533470e9ea350f515d2cd298aa832572cf394339158821ac1120e062dde177f7"
+        },
+        {
+          "round": 3000,
+          "mean": -122.34375,
+          "weightHash": "5e66997e9b9ab603145ae19390b26e78b6a2c3f42e8613dae0c0dec578688b5a"
+        },
+        {
+          "round": 3500,
+          "mean": -157.03125,
+          "weightHash": "a70e4432fbe411f8a7ff626806cd20fffd1ebfbe0bd4163085b67a35d4877f43"
+        },
+        {
+          "round": 4000,
+          "mean": -112.03125,
+          "weightHash": "90b7d39556e5007c0765787a0186e1431569424ad06b0a462cb88ab1166925e4"
+        },
+        {
+          "round": 4500,
+          "mean": -110.46875,
+          "weightHash": "310b13c0cc12fc7411c680ac3d824484806fbe601e09bf0d25d41c3bdba2570c"
+        },
+        {
+          "round": 5000,
+          "mean": -121.875,
+          "weightHash": "b77cd0c78d88c06e9422eab920434472018d11a1553f7b2e590e780de5d96644"
+        },
+        {
+          "round": 5061,
+          "mean": -99.53125,
+          "final": true,
+          "weightHash": "e257d2870e822c485866716c9a3ab3b1b0bf86ab6969c873863426ff282670ed"
+        }
+      ],
+      "initialWeightHash": "17121ab7a4bf07aab86633e36c9a38f708daa5cd79e68de885e7aa851a6288bf",
+      "hash": "e257d2870e822c485866716c9a3ab3b1b0bf86ab6969c873863426ff282670ed",
+      "latestArtifactHash": "4c6fe12d9dbaeafaef60dcd6fd84bb0445be7c864d36526f6d3760264789322b",
+      "lastLoss": 0.0033229589462280273,
+      "validationBestArtifactHash": "4c6fe12d9dbaeafaef60dcd6fd84bb0445be7c864d36526f6d3760264789322b",
+      "validationBest": {
+        "round": 5061,
+        "mean": -99.53125,
+        "artifactHash": "4c6fe12d9dbaeafaef60dcd6fd84bb0445be7c864d36526f6d3760264789322b"
+      }
+    },
+    {
+      "seed": 303,
+      "rounds": 5060,
+      "updates": 5060,
+      "moves": 1095561,
+      "validations": [
+        {
+          "round": 1,
+          "mean": -274.53125,
+          "weightHash": "d5c0feee2c95df20a314a26cf0a39b4af83a333cfa13a642ad5478df1e461994"
+        },
+        {
+          "round": 500,
+          "mean": -134.84375,
+          "weightHash": "312d47e46344f91d98b072c629af030fbbfd2885fb988aa29d0b85581bf555a9"
+        },
+        {
+          "round": 1000,
+          "mean": -127.5,
+          "weightHash": "08ea5a51f50d5dc067c132b5d322fa33f64b684491abe8a29b74048f8461eb5c"
+        },
+        {
+          "round": 1500,
+          "mean": -151.71875,
+          "weightHash": "bc4c39a62dab00400e1e2f65eeccaee1f6571b1edbe1a60d1142e85d56b8751a"
+        },
+        {
+          "round": 2000,
+          "mean": -126.40625,
+          "weightHash": "d531c6119d7a607daafb5202d0899672d32403bb660611dcad208449b7757a60"
+        },
+        {
+          "round": 2500,
+          "mean": -100.15625,
+          "weightHash": "12e54a3f394808d755dc1c819c84c186e4f63ff309daf416760b280690924688"
+        },
+        {
+          "round": 3000,
+          "mean": -107.96875,
+          "weightHash": "1af1738f66d3cbe220ec2f7e5afd08ba673f91f7e41d2da57058183eabd93e5f"
+        },
+        {
+          "round": 3500,
+          "mean": -94.0625,
+          "weightHash": "8610ed4242743209076a652054292865198149b82659bcc59cdb096ee0188227"
+        },
+        {
+          "round": 4000,
+          "mean": -91.40625,
+          "weightHash": "71f33fd2b1ed31933b8c37c5c8d891b7ad56c2ec8e8cfa541eda62dc54fc8ad9"
+        },
+        {
+          "round": 4500,
+          "mean": -108.4375,
+          "weightHash": "defce07895b600027ada076f6dc77cb189868c8d8af2f814b97a7b2ea69bd072"
+        },
+        {
+          "round": 5000,
+          "mean": -80.625,
+          "weightHash": "016b7d7e722d45e9c8bb7b895dffe3645c1bd8fdcaa765a54072279e8a0204e6"
+        },
+        {
+          "round": 5060,
+          "mean": -92.8125,
+          "final": true,
+          "weightHash": "e9e1f0f4d01ee22f38e41d47ec37f1da2290f4103743f87c530e5001cd24ffa5"
+        }
+      ],
+      "initialWeightHash": "48aa9e5940f676cc3991fccc4c7a2b50d5e54fda88d4f54036b053803a767d4a",
+      "hash": "e9e1f0f4d01ee22f38e41d47ec37f1da2290f4103743f87c530e5001cd24ffa5",
+      "latestArtifactHash": "1c4828e225356f123cc55ef6fb10719de3919773884f401001c46cb956fa2b13",
+      "lastLoss": 0.04836152866482735,
+      "validationBestArtifactHash": "76a2dc9a93458411b73de6812adbc43cbc92c6c1111c272aaed3e626e27c0ae6",
+      "validationBest": {
+        "round": 5000,
+        "mean": -80.625,
+        "artifactHash": "76a2dc9a93458411b73de6812adbc43cbc92c6c1111c272aaed3e626e27c0ae6"
+      }
+    }
+  ],
+  "errors": 0,
+  "finishedAt": "2026-11-24T12:52:34.151Z"
+}

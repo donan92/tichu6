@@ -4,6 +4,10 @@
   "app.language": "언어",
   "app.summary": "108장 · 6명",
   "app.footer": "친구들과 즐기는 작은 카드 테이블",
+  "training.title": "봇 개선에 참여하기",
+  "training.optIn": "온라인 게임의 내 선택 공유",
+  "training.description": "켜면 내 손패와 플레이, 공개된 보드 상태를 봇 개선에 사용합니다. 닉네임이나 세션 토큰은 수집하지 않습니다. 연습 게임은 수집하지 않습니다.",
+  "training.retention": "기록은 최대 7일 동안, 서버 용량에 따라 더 짧게 보관됩니다. 끄면 이후 기록이 중단되며 이전 기록을 삭제한다는 뜻은 아닙니다.",
   "common.you": "나",
   "common.empty": "빈자리",
   "common.waiting": "대기 중",
@@ -271,5 +275,6 @@
   "patches.practiceResume": "새로고침 후에도 하던 봇 연습 이어하기",
   "patches.exchangeAndCards": "새 카드 디자인·교환 내역·게임 포기 추가",
   "patches.sixPlayerTeams": "빈자리 봇 참여와 균형 잡힌 팀 배정",
-  "patches.serverMaintenance": "버그 수정"
+  "patches.serverMaintenance": "버그 수정",
+  "patches.botStrategyAndTraining": "봇 전략 개선과 선택적 학습용 플레이 기록 추가"
 }

@@ -1,0 +1,200 @@
+{
+  "status": "complete",
+  "pid": 94773,
+  "startedAt": "2026-11-24T11:07:21.493Z",
+  "durationMinutes": 120,
+  "deadline": "2026-11-24T13:07:21.494Z",
+  "phase": "holdout",
+  "pairs": 8715,
+  "matches": 17430,
+  "rounds": 144176,
+  "moves": 27136503,
+  "variants": [
+    {
+      "id": "structure",
+      "variant": "structure",
+      "config": {}
+    },
+    {
+      "id": "hybrid",
+      "variant": "hybrid",
+      "config": {}
+    },
+    {
+      "id": "gentle",
+      "variant": "structure",
+      "config": {
+        "structureWeight": 15
+      }
+    },
+    {
+      "id": "shed",
+      "variant": "structure",
+      "config": {
+        "structureWeight": 80,
+        "breakBomb": 50
+      }
+    },
+    {
+      "id": "protect",
+      "variant": "structure",
+      "config": {
+        "breakBomb": 300,
+        "leadBomb": 80,
+        "responseBomb": 80
+      }
+    },
+    {
+      "id": "control",
+      "variant": "structure",
+      "config": {
+        "powerWeight": 2,
+        "urgentPower": -4
+      }
+    },
+    {
+      "id": "hybrid-gentle",
+      "variant": "hybrid",
+      "config": {
+        "structureWeight": 15,
+        "powerWeight": 2
+      }
+    },
+    {
+      "id": "hybrid-shed",
+      "variant": "hybrid",
+      "config": {
+        "structureWeight": 80,
+        "breakBomb": 50
+      }
+    },
+    {
+      "id": "calls-conservative",
+      "variant": "calls",
+      "config": {
+        "grandThreshold": 8,
+        "smallThreshold": 10
+      }
+    },
+    {
+      "id": "calls-moderate",
+      "variant": "calls",
+      "config": {
+        "grandThreshold": 7,
+        "smallThreshold": 9
+      }
+    }
+  ],
+  "statistics": {
+    "structure": {
+      "pairs": 660,
+      "matches": 1320,
+      "wins": 1046,
+      "mean": 293.287878787879,
+      "m2": 27467115.30303029,
+      "rounds": 10856,
+      "standardError": 7.946792079348377
+    },
+    "hybrid": {
+      "pairs": 660,
+      "matches": 1320,
+      "wins": 967,
+      "mean": 220.46212121212113,
+      "m2": 25971334.053030293,
+      "rounds": 11112,
+      "standardError": 7.727383283764028
+    },
+    "gentle": {
+      "pairs": 660,
+      "matches": 1320,
+      "wins": 1053,
+      "mean": 308.55303030303014,
+      "m2": 30255643.143939413,
+      "rounds": 10823,
+      "standardError": 8.340431493535945
+    },
+    "shed": {
+      "pairs": 659,
+      "matches": 1318,
+      "wins": 976,
+      "mean": 249.0515933232171,
+      "m2": 31615082.245827034,
+      "rounds": 10972,
+      "standardError": 8.538695057576925
+    },
+    "protect": {
+      "pairs": 659,
+      "matches": 1318,
+      "wins": 1039,
+      "mean": 289.27162367223065,
+      "m2": 33026050.379362665,
+      "rounds": 10829,
+      "standardError": 8.727154518397532
+    },
+    "control": {
+      "pairs": 659,
+      "matches": 1318,
+      "wins": 999,
+      "mean": 258.44461305007604,
+      "m2": 29461980.728376348,
+      "rounds": 10955,
+      "standardError": 8.242810515180217
+    },
+    "hybrid-gentle": {
+      "pairs": 659,
+      "matches": 1318,
+      "wins": 1024,
+      "mean": 259.2185128983308,
+      "m2": 25190022.53414264,
+      "rounds": 11048,
+      "standardError": 7.621818873570018
+    },
+    "hybrid-shed": {
+      "pairs": 659,
+      "matches": 1318,
+      "wins": 947,
+      "mean": 208.23975720789073,
+      "m2": 26195108.118361138,
+      "rounds": 11200,
+      "standardError": 7.772387480388783
+    },
+    "calls-conservative": {
+      "pairs": 659,
+      "matches": 1318,
+      "wins": 1027,
+      "mean": 284.6054628224583,
+      "m2": 32062097.420333825,
+      "rounds": 10755,
+      "standardError": 8.59884876229056
+    },
+    "calls-moderate": {
+      "pairs": 659,
+      "matches": 1318,
+      "wins": 1002,
+      "mean": 279.0440060698026,
+      "m2": 31366197.723823924,
+      "rounds": 10807,
+      "standardError": 8.50501891469861
+    }
+  },
+  "selected": {
+    "id": "gentle",
+    "variant": "structure",
+    "config": {
+      "structureWeight": 15
+    }
+  },
+  "holdout": {
+    "gentle": {
+      "pairs": 2122,
+      "matches": 4244,
+      "wins": 3367,
+      "mean": 294.6559849198869,
+      "m2": 92836148.86899136,
+      "rounds": 34819,
+      "standardError": 4.54166957249967
+    }
+  },
+  "errors": 0,
+  "elapsedSeconds": 7200.544133167
+}

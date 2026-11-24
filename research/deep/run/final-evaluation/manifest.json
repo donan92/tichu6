@@ -1,0 +1,93 @@
+{
+  "schema": 1,
+  "modelHash": "5314aaba30f173b330cefc9278c33c169bfc732ce6cc78ee582d723762fa1bd0",
+  "selectedHeuristic": {
+    "id": "gentle",
+    "variant": "structure",
+    "config": {
+      "structureWeight": 15
+    }
+  },
+  "pairsPerConfiguration": 1000,
+  "seedRange": [
+    700000000,
+    700000999
+  ],
+  "shuffleNamespace": "deep-final-v1",
+  "configurations": [
+    {
+      "id": "model3-vs-baseline",
+      "policy": "model",
+      "candidateSeats": 3,
+      "opponent": "baseline"
+    },
+    {
+      "id": "model3-vs-selected-heuristic",
+      "policy": "model",
+      "candidateSeats": 3,
+      "opponent": "selected"
+    },
+    {
+      "id": "model1-baseline2-vs-baseline",
+      "policy": "model",
+      "candidateSeats": 1,
+      "opponent": "baseline"
+    },
+    {
+      "id": "model2-baseline1-vs-baseline",
+      "policy": "model",
+      "candidateSeats": 2,
+      "opponent": "baseline"
+    },
+    {
+      "id": "heuristic3-vs-baseline",
+      "policy": "selected",
+      "candidateSeats": 3,
+      "opponent": "baseline"
+    },
+    {
+      "id": "heuristic3-vs-caller",
+      "policy": "selected",
+      "candidateSeats": 3,
+      "opponent": "calls"
+    },
+    {
+      "id": "heuristic1-baseline2-vs-baseline",
+      "policy": "selected",
+      "candidateSeats": 1,
+      "opponent": "baseline"
+    },
+    {
+      "id": "heuristic2-baseline1-vs-baseline",
+      "policy": "selected",
+      "candidateSeats": 2,
+      "opponent": "baseline"
+    },
+    {
+      "id": "model3-vs-caller",
+      "policy": "model",
+      "candidateSeats": 3,
+      "opponent": "calls"
+    }
+  ],
+  "callingOpponent": {
+    "variant": "calls",
+    "config": {
+      "grandThreshold": 5.5,
+      "smallThreshold": 7
+    }
+  },
+  "sources": {
+    "../../src/game.js": "cf19e468b60d4a0a93db156576d3c9f46991fd7ce0c4a8616195f9def82d845d",
+    "./policy.mjs": "1f79b8f4fe8788e04ecdb6ee489a783d0bbd23c08e0ed61be0f14d5309d31d0d",
+    "./final-evaluate.mjs": "e0bb0522b6ef30b019b8176091791a19a8e55366a8cc90e65aeffc0e3d249275",
+    "../bots/baseline.js": "2038052fa444a5b5e1ee4544e88d522ad8cd20dc76db26320311bd09e231d187",
+    "../bots/candidate.js": "bda89137d45b30e3f3b388bb07a85d642bdcc45a51fc9e2156733ba401e35f95"
+  },
+  "limitations": [
+    "One training seed",
+    "Round scoring only; does not establish full-match win rate",
+    "No off-turn bomb decisions in E0",
+    "Human collaboration untested"
+  ]
+}

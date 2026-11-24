@@ -10,6 +10,7 @@ import HomeView from './views/HomeView.vue';
 import HallView from './views/HallView.vue';
 import RoomView from './views/RoomView.vue';
 import GameView from './views/GameView.vue';
+import TrainingConsent from './components/TrainingConsent.vue';
 const session = useSessionStore();
 const { t, i18next } = useTranslation();
 const { message } = useText();
@@ -30,6 +31,7 @@ onMounted(() => {
   <GameView v-else-if="session.round" :game="session.round" />
   <RoomView v-else />
   <LeaveDialog v-if="session.leaving" />
+  <TrainingConsent />
   <div
     id="notice"
     role="status"

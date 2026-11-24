@@ -1,0 +1,9 @@
+{
+  "namespace": "runtime-shapes-v1",
+  "samples": 10000,
+  "phase": "empty-table lead only",
+  "median": 41,
+  "p95": 88,
+  "max": 114,
+  "limitation": "Sampled representative action generator; not an exhaustive worst-case bound or a game-strength test"
+}

@@ -1,0 +1,332 @@
+{
+  "unit": "team-score-margin-per-round",
+  "manifest": {
+    "schema": 1,
+    "modelHash": "5314aaba30f173b330cefc9278c33c169bfc732ce6cc78ee582d723762fa1bd0",
+    "selectedHeuristic": {
+      "id": "gentle",
+      "variant": "structure",
+      "config": {
+        "structureWeight": 15
+      }
+    },
+    "pairsPerConfiguration": 1000,
+    "seedRange": [
+      700000000,
+      700000999
+    ],
+    "shuffleNamespace": "deep-final-v1",
+    "configurations": [
+      {
+        "id": "model3-vs-baseline",
+        "policy": "model",
+        "candidateSeats": 3,
+        "opponent": "baseline"
+      },
+      {
+        "id": "model3-vs-selected-heuristic",
+        "policy": "model",
+        "candidateSeats": 3,
+        "opponent": "selected"
+      },
+      {
+        "id": "model1-baseline2-vs-baseline",
+        "policy": "model",
+        "candidateSeats": 1,
+        "opponent": "baseline"
+      },
+      {
+        "id": "model2-baseline1-vs-baseline",
+        "policy": "model",
+        "candidateSeats": 2,
+        "opponent": "baseline"
+      },
+      {
+        "id": "heuristic3-vs-baseline",
+        "policy": "selected",
+        "candidateSeats": 3,
+        "opponent": "baseline"
+      },
+      {
+        "id": "heuristic3-vs-caller",
+        "policy": "selected",
+        "candidateSeats": 3,
+        "opponent": "calls"
+      },
+      {
+        "id": "heuristic1-baseline2-vs-baseline",
+        "policy": "selected",
+        "candidateSeats": 1,
+        "opponent": "baseline"
+      },
+      {
+        "id": "heuristic2-baseline1-vs-baseline",
+        "policy": "selected",
+        "candidateSeats": 2,
+        "opponent": "baseline"
+      },
+      {
+        "id": "model3-vs-caller",
+        "policy": "model",
+        "candidateSeats": 3,
+        "opponent": "calls"
+      }
+    ],
+    "callingOpponent": {
+      "variant": "calls",
+      "config": {
+        "grandThreshold": 5.5,
+        "smallThreshold": 7
+      }
+    },
+    "sources": {
+      "../../src/game.js": "cf19e468b60d4a0a93db156576d3c9f46991fd7ce0c4a8616195f9def82d845d",
+      "./policy.mjs": "1f79b8f4fe8788e04ecdb6ee489a783d0bbd23c08e0ed61be0f14d5309d31d0d",
+      "./final-evaluate.mjs": "e0bb0522b6ef30b019b8176091791a19a8e55366a8cc90e65aeffc0e3d249275",
+      "../bots/baseline.js": "2038052fa444a5b5e1ee4544e88d522ad8cd20dc76db26320311bd09e231d187",
+      "../bots/candidate.js": "bda89137d45b30e3f3b388bb07a85d642bdcc45a51fc9e2156733ba401e35f95"
+    },
+    "limitations": [
+      "One training seed",
+      "Round scoring only; does not establish full-match win rate",
+      "No off-turn bomb decisions in E0",
+      "Human collaboration untested"
+    ]
+  },
+  "configurations": {
+    "model3-vs-baseline": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": 60.345,
+      "meanMargin95": [
+        55.625,
+        65.21
+      ],
+      "gameWinRate": 0.6865,
+      "gameWinRate95": [
+        0.6685,
+        0.705
+      ],
+      "gameWins": 1373,
+      "gameTies": 57,
+      "gameLosses": 570,
+      "pairWins": 777,
+      "pairTies": 39,
+      "pairLosses": 184,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "model3-vs-selected-heuristic": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": -10.16,
+      "meanMargin95": [
+        -15.295,
+        -5.265
+      ],
+      "gameWinRate": 0.5005,
+      "gameWinRate95": [
+        0.481,
+        0.52
+      ],
+      "gameWins": 1001,
+      "gameTies": 83,
+      "gameLosses": 916,
+      "pairWins": 483,
+      "pairTies": 48,
+      "pairLosses": 469,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "model1-baseline2-vs-baseline": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": 21.215,
+      "meanMargin95": [
+        17.105,
+        25.255
+      ],
+      "gameWinRate": 0.5405,
+      "gameWinRate95": [
+        0.521,
+        0.559
+      ],
+      "gameWins": 1081,
+      "gameTies": 88,
+      "gameLosses": 831,
+      "pairWins": 598,
+      "pairTies": 56,
+      "pairLosses": 346,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "model2-baseline1-vs-baseline": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": 38.365,
+      "meanMargin95": [
+        33.825,
+        42.92
+      ],
+      "gameWinRate": 0.596,
+      "gameWinRate95": [
+        0.5775,
+        0.6145
+      ],
+      "gameWins": 1192,
+      "gameTies": 75,
+      "gameLosses": 733,
+      "pairWins": 682,
+      "pairTies": 41,
+      "pairLosses": 277,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "heuristic3-vs-baseline": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": 38.415,
+      "meanMargin95": [
+        33.42,
+        43.65
+      ],
+      "gameWinRate": 0.5465,
+      "gameWinRate95": [
+        0.5275,
+        0.5655
+      ],
+      "gameWins": 1093,
+      "gameTies": 65,
+      "gameLosses": 842,
+      "pairWins": 604,
+      "pairTies": 48,
+      "pairLosses": 348,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "heuristic3-vs-caller": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": 4.63,
+      "meanMargin95": [
+        1.565,
+        7.795
+      ],
+      "gameWinRate": 0.497,
+      "gameWinRate95": [
+        0.483,
+        0.511
+      ],
+      "gameWins": 994,
+      "gameTies": 73,
+      "gameLosses": 933,
+      "pairWins": 362,
+      "pairTies": 342,
+      "pairLosses": 296,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "heuristic1-baseline2-vs-baseline": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": 2.205,
+      "meanMargin95": [
+        -1.835,
+        6.215
+      ],
+      "gameWinRate": 0.484,
+      "gameWinRate95": [
+        0.4655,
+        0.503
+      ],
+      "gameWins": 968,
+      "gameTies": 80,
+      "gameLosses": 952,
+      "pairWins": 461,
+      "pairTies": 58,
+      "pairLosses": 481,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "heuristic2-baseline1-vs-baseline": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": 18.49,
+      "meanMargin95": [
+        13.95,
+        23.035
+      ],
+      "gameWinRate": 0.5025,
+      "gameWinRate95": [
+        0.4835,
+        0.5215
+      ],
+      "gameWins": 1005,
+      "gameTies": 62,
+      "gameLosses": 933,
+      "pairWins": 524,
+      "pairTies": 46,
+      "pairLosses": 430,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    },
+    "model3-vs-caller": {
+      "pairs": 1000,
+      "games": 2000,
+      "meanMargin": -12.15,
+      "meanMargin95": [
+        -17.775,
+        -6.89
+      ],
+      "gameWinRate": 0.501,
+      "gameWinRate95": [
+        0.4815,
+        0.5205
+      ],
+      "gameWins": 1002,
+      "gameTies": 59,
+      "gameLosses": 939,
+      "pairWins": 476,
+      "pairTies": 40,
+      "pairLosses": 484,
+      "bootstrap": {
+        "unit": "mirrored-deck-pair",
+        "resamples": 5000,
+        "seed": 731,
+        "method": "percentile"
+      }
+    }
+  }
+}

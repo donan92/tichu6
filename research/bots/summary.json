@@ -1,0 +1,51 @@
+{
+  "researchRounds": 60,
+  "selectedPolicy": "v0.8.5 baseline",
+  "reason": "Development gains failed to generalize to held-out deals; no evidence to replace production strategy.",
+  "summaries": [
+    {
+      "variant": "structure",
+      "label": "development",
+      "rounds": 10,
+      "meanMargin": 42,
+      "pairedStandardError": 36.52396473549935,
+      "wins": 4,
+      "ties": 0,
+      "firstOutRate": 0.6,
+      "meanDecisionMs": 0.2921615255285094
+    },
+    {
+      "variant": "calls",
+      "label": "development",
+      "rounds": 10,
+      "meanMargin": -6,
+      "pairedStandardError": 36.48287269390939,
+      "wins": 3,
+      "ties": 0,
+      "firstOutRate": 0.5,
+      "meanDecisionMs": 0.2975654349775997
+    },
+    {
+      "variant": "hybrid",
+      "label": "development",
+      "rounds": 10,
+      "meanMargin": -9,
+      "pairedStandardError": 25.169425897306436,
+      "wins": 6,
+      "ties": 0,
+      "firstOutRate": 0.3,
+      "meanDecisionMs": 0.20674855848565202
+    },
+    {
+      "variant": "structure",
+      "label": "holdout",
+      "rounds": 30,
+      "meanMargin": -4.666666666666667,
+      "pairedStandardError": 10.459293733174597,
+      "wins": 11,
+      "ties": 2,
+      "firstOutRate": 0.6333333333333333,
+      "meanDecisionMs": 0.26544664390098843
+    }
+  ]
+}

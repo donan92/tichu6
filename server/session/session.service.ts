@@ -68,6 +68,7 @@ export class SessionService {
       name,
       room: null,
       watch: false,
+      trainingConsent: msg.trainingConsent === true,
     });
     const resume = typeof msg.roomId === 'string' ? msg.roomId : old?.room;
     if (resume && this.repository.data.rooms[resume]) {

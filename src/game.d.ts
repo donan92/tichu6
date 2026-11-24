@@ -7,6 +7,7 @@ import type {
   RoundState,
   RoundView,
 } from './types';
+export const BOT_POLICY_VERSION: string;
 export const LABEL: Record<number, string>;
 export function team(seat: number): number;
 export function partners(seat: number): number[];

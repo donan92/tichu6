@@ -86,3 +86,18 @@ test('connection rate limits run before Hono forwards the untouched request to t
   assert.equal(await accepted.text(), 'forwarded');
   assert.equal(forwards, 1);
 });
+
+test('training export is disabled without a secret and rejects incorrect credentials', async () => {
+  for (const [env, authorization, expected] of [
+    [{}, '', 404],
+    [{ TRAINING_EXPORT_TOKEN: 'x'.repeat(32) }, 'Bearer wrong', 403],
+  ]) {
+    const result = await app.fetch(
+      new Request('https://example.com/training/export', {
+        headers: { Authorization: authorization },
+      }),
+      env,
+    );
+    assert.equal(result.status, expected);
+  }
+});

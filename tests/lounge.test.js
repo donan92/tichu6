@@ -24,15 +24,18 @@ function socket() {
   };
 }
 async function setup() {
-  let value;
+  const values = new Map();
   const sockets = [];
   let queue = Promise.resolve();
   const storage = {
-    async get() {
-      return structuredClone(value);
+    async get(key) {
+      return structuredClone(values.get(key));
     },
-    async put(_k, v) {
-      value = structuredClone(v);
+    async put(key, value) {
+      if (typeof key === 'string') values.set(key, structuredClone(value));
+      else
+        for (const [k, v] of Object.entries(key))
+          values.set(k, structuredClone(v));
     },
     async setAlarm() {},
     async deleteAlarm() {},
@@ -686,7 +689,9 @@ test('accepted actions are persisted before state acknowledgement after service 
   const put = f.ctx.storage.put.bind(f.ctx.storage);
   f.ctx.storage.put = async (key, value) => {
     await put(key, value);
-    persistedRevision = value.rooms[room.id].state.revision;
+    persistedRevision = (typeof key === 'string' ? value : key.lounge).rooms[
+      room.id
+    ].state.revision;
   };
   const send = ws.send.bind(ws);
   ws.send = (raw) => {
@@ -702,4 +707,103 @@ test('accepted actions are persisted before state acknowledgement after service 
   });
   assert.equal(persistedRevision, 1);
   assert.equal(last(ws, 'state').value.phase, 'grand');
+});
+
+test('training is opt-in, records accepted own-perspective actions, persists and stops on withdrawal', async () => {
+  const f = await setup();
+  const ws = await user(f, 1);
+  await msg(f.hub, ws, { type: 'create', name: 'Human' });
+  await msg(f.hub, ws, {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  const room = Object.values(f.hub.data.rooms)[0];
+  const seat = room.members.findIndex((m) => m && !m.bot);
+  assert.equal(f.hub.repository.training.sessions.length, 0);
+  await msg(f.hub, ws, {
+    type: 'trainingConsent',
+    enabled: true,
+    seat: (seat + 1) % 6,
+  });
+  assert.equal(room.members[seat].trainingConsent, true);
+  assert.equal(room.members[(seat + 1) % 6].trainingConsent, undefined);
+  await msg(f.hub, ws, {
+    type: 'action',
+    revision: room.state.revision,
+    action: { type: 'grand', call: false },
+  });
+  const archive = f.hub.repository.training;
+  assert.equal(archive.sessions.length, 1);
+  const record = archive.sessions[0].events[0];
+  assert.equal(record.seat, seat);
+  assert.equal(record.ownHand.length, 10);
+  assert.equal(record.source, 'human');
+  assert.equal(JSON.stringify(archive).includes('Human'), false);
+  assert.equal(JSON.stringify(last(ws, 'state')).includes('recordId'), false);
+  await msg(f.hub, ws, {
+    type: 'action',
+    revision: -1,
+    action: { type: 'pass' },
+  });
+  assert.equal(archive.sessions[0].events.length, 1);
+  await msg(f.hub, ws, { type: 'trainingConsent', enabled: false });
+  assert.equal(room.members[seat].trainingConsent, false);
+  f.hub = new Lounge(f.ctx);
+  await f.ready();
+  assert.equal(f.hub.repository.training.sessions[0].events.length, 1);
+  assert.equal(
+    Object.values(f.hub.data.rooms)[0].members[seat].trainingConsent,
+    false,
+  );
+});
+
+test('training match grouping survives next round and reconnect, and changes for a new match', async () => {
+  const f = await setup();
+  const owner = await user(f, 901, 'Group');
+  await msg(f.hub, owner, { type: 'create', name: 'Group' });
+  const room = Object.values(f.hub.data.rooms)[0];
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: room.state.revision,
+    action: { type: 'start' },
+  });
+  const firstMatch = room.trainingMatch;
+  assert.match(firstMatch, /^[0-9a-f-]{36}$/);
+  assert.equal(
+    JSON.stringify(last(owner, 'state').value).includes('trainingMatch'),
+    false,
+  );
+
+  room.state.phase = 'roundEnd';
+  room.state.delta = [0, 0];
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: room.state.revision,
+    action: { type: 'next' },
+  });
+  assert.equal(room.trainingMatch, firstMatch);
+
+  owner.readyState = 3;
+  await f.hub.disconnected(owner);
+  const returned = await user(f, 901, 'Group');
+  await msg(f.hub, returned, {
+    type: 'join',
+    roomId: room.id,
+    watch: false,
+    name: 'Group',
+  });
+  assert.equal(room.trainingMatch, firstMatch);
+
+  const other = await user(f, 902, 'Other');
+  await msg(f.hub, other, { type: 'create', name: 'Other' });
+  const otherRoom = Object.values(f.hub.data.rooms).find(
+    (value) => value.id !== room.id,
+  );
+  await msg(f.hub, other, {
+    type: 'action',
+    revision: otherRoom.state.revision,
+    action: { type: 'start' },
+  });
+  assert.notEqual(otherRoom.trainingMatch, firstMatch);
 });

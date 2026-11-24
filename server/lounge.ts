@@ -1,3 +1,4 @@
+import { exportTrainingArchive } from './training/records.ts';
 import { AppError, event, errorEvent } from '../src/messages.js';
 import { MAX_SOCKETS } from './policy.ts';
 import { RoomRepository } from './persistence/room.repository.ts';
@@ -95,6 +96,18 @@ export class Lounge {
     if (error) throw error;
   }
   async fetch(request: Request) {
+    if (new URL(request.url).pathname === '/training-export') {
+      let body = '';
+      await this.exclusive(async () => {
+        body = JSON.stringify(exportTrainingArchive(this.repository.training));
+      });
+      return new Response(body, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-store',
+        },
+      });
+    }
     if (request.headers.get('Upgrade')?.toLowerCase() !== 'websocket')
       return new Response('WebSocket required', { status: 426 });
     if (this.connections.sockets().length >= MAX_SOCKETS)
@@ -111,6 +124,18 @@ export class Lounge {
   }
   private dispatch(ws: WebSocket, msg: JsonObject) {
     switch (msg.type) {
+      case 'trainingConsent': {
+        if (typeof msg.enabled !== 'boolean')
+          throw new AppError('error.invalidRequest');
+        const attachment = this.connections.authenticated(ws);
+        attachment.trainingConsent = msg.enabled;
+        ws.serializeAttachment(attachment);
+        for (const room of Object.values(this.data.rooms))
+          for (const member of room.members)
+            if (member?.hash === attachment.hash)
+              member.trainingConsent = msg.enabled;
+        break;
+      }
       case 'create':
         this.rooms.create(ws, msg.name);
         break;

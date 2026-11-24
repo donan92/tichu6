@@ -4,3 +4,10 @@ dist
 package-lock.json
 
 worker-configuration.d.ts
+
+# Machine-generated checkpoints and continuously written experiment results.
+research/deep/run/
+research/bots/endurance/
+research/dmc/run/
+research/dmc/smoke-run/
+research/dmc/final-evaluation/

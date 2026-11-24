@@ -1,5 +1,52 @@
 # Project status / resume point
 
+## v0.8.6 release in progress — user authorized deployment
+
+- Includes the evaluated gentle bot strategy, opt-in private human gameplay
+  records, match-group dataset separation and reproducible research artifacts.
+- Version, both lockfile root versions and English/Korean patch note updated.
+- Release validation, ESLint/TypeScript,131 unit+42 UI tests, formatting, build
+  and npm audit passed (0 vulnerabilities). Real Worker/idle suites passed on
+  these runtime changes in the preceding checkpoint; only release metadata
+  changed afterwards.
+- Existing Cloudflare/GitHub credentials verified. No paid service, new secret
+  or permission expansion required. Production export stays disabled without
+  an operator secret. Deployment success is not yet asserted.
+
+## Latest checkpoint — 2026-11-24 bot research complete, local only
+
+- Read [research results](../research/RESULTS.md) first for the current decision.
+  Historical release notes and intermediate running-job notes below are retained.
+- Two-hour experiment finished normally:17,430 matches,144,176 rounds,0 errors.
+  E0 completed74,613 updates; DMC completed5,061/5,061/5,060 updates. All original
+  handles and final-evaluation handles94246/61602 exited0. No training remains live.
+- All predeclared final evaluations completed: E0/rule comparisons9×1,000 pairs;
+  DMC3×1,000 pairs. DMC primary failed its gate; stageB skipped as planned.
+  Never rerun these final sets for tuning. No new training job is authorized by
+  the next-experiment proposal alone.
+- Applied the fixed gentle rule scorer to shared src/game.js:botAction; exact
+  evaluated behavior is preserved with one score computation per option.
+  BOT_POLICY_VERSION=structure-gentle-v1 tags offline takeover records.
+  E0 is stronger than baseline but loses points to gentle/calling opponent;
+  DMC is weaker than baseline. No neural inference or per-turn LLM in production.
+- Rule candidate's frozen full-match confirmation:79.34% wins against baseline,
+  95% interval78.20–80.44%. One-new-bot mixed team's improvement is uncertain;
+  do not claim all team configurations or human collaboration are proven.
+- After adoption: npm run check, npm test (131 unit+42 UI), format:check, build,
+  real local Worker capacity/authorization/reconnect/bot-alarm checks, and
+  separate real local idle/offline-takeover suite all passed. Diff whitespace clean.
+  Consent/export schema2 integration also passed before the isolated bot change.
+- Human records: opt-in only,80KiB/7-day bounded private archive; anonymous match
+  grouping prevents within-match train/test leakage. Legacy ungrouped records
+  are train-only. No real human export/training or production export secret.
+- Branch remains refactor/server-modules, baseline aca4f19/v0.8.5. Changes are
+  uncommitted, unmerged, undeployed. No version bump. A future release must add
+  version/release notes and verify both Pages and Worker deployments.
+
+Next research: controlled warm-start DMC ablation described in
+docs/LLM_MODEL_DECISION.md; use new final seeds, adequate validation and independent
+training seeds. Do not launch it automatically or claim it was run.
+
 ## Last released baseline
 
 - v0.3.0, commit `6f60568`: authoritative Worker, SQLite Durable Objects, automatic reconnect, 45-second offline bots, 24-hour inactive-room retention.
@@ -239,3 +286,347 @@ Release verification:
 - A separate old-to-new local Worker test used the previous JavaScript implementation, saved a started game, restarted with Hono/TypeScript against the same SQLite storage and verified identical room/seat/names/hand/round/scores plus an accepted authenticated action. One-off runner: `/tmp/tichu6-hono-migration.mjs` (baseline c2f0e68). No live room state touched.
 - Passed check, 120 tests (82 unit + 38 UI), format check, production frontend build, Worker dry-run bundle (118.90 KiB / 29.67 KiB gzip) and npm audit (0 findings). Version/lockfile and localized v0.8.5 note updated together; maintenance summary is only “버그 수정” / “Bug fixes.” No UI control changes; no new device-specific QA claim.
 - Released `39a4368` on main. Worker `3e3deb1d-fb09-410b-9de1-f6fb751997ff` verified at 100% traffic; Pages production `41d14597-2f48-41d5-b2c8-c19e02ac621b`. Production homepage and all five asset SHA-256 hashes match the tested v0.8.5 build. Health v6 and a single authenticated production lounge welcome passed; no live game state was reset or load-tested. Deployment prehooks passed. GitHub Verify including local Worker/idle suites succeeded: https://github.com/donan92/tichu6/actions/runs/45312032944. Pages run 45312032211 succeeded. No pending release work.
+
+## Active goal — bot research and reusable gameplay records
+
+- User requested collaborative cheap-model strategy research, at most 100 games,
+  stronger bots, and server-side human gameplay data for later training.
+- Current authoritative baseline is v0.8.5, commit aca4f19 on
+  refactor/server-modules; clean before this task. Do not use the older deleted
+  runtime-boundaries branch as baseline.
+- Frozen current strategy in research/bots/baseline.js and recorded experiment
+  method/budget in research/bots/README.md. No research games executed yet.
+- Full npm test already contains 32 complete rounds (20 engine + 12 bot); reserve
+  those within the 100-round ceiling. Research allocation 60, contingency 8.
+- Two low-cost gpt-5.6-luna agents are reviewing strategy and experiment design,
+  read-only; root owns all game runs and budget. Actual turn simulation will be
+  local, not require model calls in production.
+- Next: implement paired seeded runner, compare candidates, integrate winner and
+  bounded private training records, add notice/export/retention documentation,
+  run required checks plus local Worker integration. No release or data
+  collection has been enabled, and no checks have been run in this goal yet.
+
+### Bot experiment checkpoint
+
+- Executed 60 research rounds; exact reservations, seeds, actions-valid-through-engine
+  results and timing are in research/bots/ledger.json. No full test suite run yet;
+  32 test rounds plus 8 contingency slots remain within the total cap of 100.
+- Low-cost reviewers completed strategy/experiment review. Tested structure,
+  calls and lead-only hybrid on matched deals; selected structure for unseen
+  confirmation. Its development +42 point margin became −4.67 on 30 held-out
+  rounds (paired SE 10.46). Do not claim score improvement or deploy that policy.
+  Baseline remains selected; report.mjs regenerates summary without more games.
+- Research files pass ESLint; full project check/test/build still pending.
+- experiment_design agent is implementing only new server/training/records.ts
+  and tests/training.test.js (pure bounded perspective records, no full games).
+  Root still needs consent/notice, accepted-action/repository integration,
+  operator-only export, retention, server tests and Worker integration.
+
+### Two-hour simulation authorized and running — supersedes 100-round cap
+
+- User explicitly replaced the 100-game limit with roughly two continuous hours
+  of simulation. Historical 60-round ledger remains intact; do not enforce its
+  old budget on the new endurance run.
+- Started 2026-11-24 11:07:21 UTC (20:07 KST), planned end 13:07:21 UTC (22:07 KST).
+- LIVE exec session 83765, OS PID 94773. Command:
+  `node research/bots/endurance.mjs 120 > /tmp/tichu6-endurance.log 2>&1`.
+  Poll this exact handle/process; do not restart from a stale status file.
+- Runner now plays full matches to 1000 points. Ten parameterized policies vs
+  frozen baseline, mirrored team assignments, SHA-256 seeded rejection-sampled
+  Fisher–Yates decks. First 90 minutes development; final 30 minutes freeze best
+  conservative development candidate and evaluate on disjoint holdout seeds.
+- Atomic progress: research/bots/endurance/status.json; per-pair replay seeds,
+  scores and decision latency: results.jsonl. Completion status is written only
+  after loop actually ends. Existing status file prevents accidental duplicate
+  launch. First observed checkpoint: 22 matches / 184 rounds, no errors.
+- Research scripts pass ESLint. Candidate defaults retain earlier behavior;
+  new optional parameters support endurance comparison. No production changes.
+- Next: monitor live run while integrating completed training-record helpers;
+  then inspect final holdout confidence, preserve baseline unless improvement is
+  supported, run project checks and report both result and recording status.
+
+### Training integration checkpoint (local, unreleased)
+
+- Added opt-in footer/hello preference; authenticated trainingConsent updates
+  member preferences. Server records accepted human/consented offline-bot actions
+  only. Own grand hand restricted to ten cards; public top allowlisted.
+- Separate private training-v1 key persists atomically with lounge using multi-key
+  put. Archive <=80KiB, <=100 sessions, <=2000 events/session, seven days from
+  creation (updates do not extend retention); lifecycle alarms prune idle data.
+- Operator-only /training/export disabled absent optional TRAINING_EXPORT_TOKEN
+  > =32 chars. Constant-work SHA256 comparison; no public/spectator data exposure.
+  > scripts/export-training.mjs and prepare-training.mjs export private files and
+  > split human examples by round, not event. docs/TRAINING.md describes bounds.
+- Check, full test suite (92 unit + 40 UI), formatting and build passed. Then
+  tightened retention to creation time; all eight training tests passed again.
+  Use WRANGLER_LOG_PATH=/tmp/tichu6-wrangler.log to avoid home log permissions.
+- Live local Worker session 42286 on localhost:18945, inspector19445, persistence
+  /tmp/tichu6-training-worker. First sandbox startup failed to bind; escalated
+  startup running. NEXT: verify this process, run TEST_API=http://localhost:18945
+  npm run test:server, add real recording/export/restart integration and UI flow
+  checks; operator secret is NOT configured in production. No deployment yet.
+- Two-hour simulation remains live in session83765, pid94773; observed 596 full
+  matches /4878 rounds, zero errors at elapsed231s. Do not restart. Completion
+  planned 2026-11-24 13:07:21 UTC; poll handle and atomic status for actual end.
+
+### Real training path and UI verification
+
+- Existing real Worker integration passed on 18945: capacity races, spectator
+  privacy/authorization, reconnect, alarm-driven bots, exchange and forfeit.
+- New scripts/check-training.mjs passed against isolated local Worker on18946
+  (session94371, inspector19446, persist/tmp/tichu6-training-export-worker).
+  Uses explicitly local-only dummy secret via --var; no production secret.
+  Six synthetic clients finished172 accepted decisions;105 retained perspective
+  examples exported with outcome and truncated=true. Nonconsenting player absent,
+  spectator redaction and anonymous export fields verified, unauth export denied.
+- Synthetic export at /tmp/tichu6-synthetic-training-export.json; converter emitted
+  105 human-labeled synthetic examples into /tmp/tichu6-synthetic-dataset (all in
+  one round/train split, validation/test empty as expected). Not real user data.
+- Browser CUA verified local5176 footer expand, opt-in, reload retaining checked,
+  opt-out,390px no horizontal overflow. Actual phone browser remains untested.
+  UI dev session95213; did not disturb existing5173. Browser task completed.
+- Fixed withdrawal when localStorage setItem throws: current-tab override is
+  honored by transport. Three focused consent tests passed after this fix.
+- Endurance audit by low-cost reviewer found no hidden-hand access or pairing
+  error. A/B roles use same deck stream, but variants use independent seed samples.
+  Report final margin per MATCH (not per round); compute paired win/tie/loss from
+  results.jsonl. Initial60-round LCG experiment is not directly comparable to
+  full matches with SHA decks. All current standings remain development-only.
+- Next: actual restart/recovery of archive, transport consent regression,
+  prepare-training validation/synthetic-export tests, final check/build as needed,
+  monitor session83765 until deadline13:07:21UTC without restarting. No deployment.
+
+### Deep learning and literature-based design (user steering)
+
+- User requested actual deep learned weights, overfitting safeguards, then a
+  literature-backed detailed design. Added exact devDependency @tensorflow/tfjs
+  4.22.0 (registry latest checked); npm audit0. Production is not using it.
+- LIVE deep training session46575, research/deep/train.mjs, logs
+  /tmp/tichu6-deep-training.log. 62→64→64→32→1 network, REINFORCE,32 sampled
+  decisions/round,50% self-play/50% baseline opponent, CPU backend. Checkpoints
+  research/deep/run/. Hash change and1920 gradientupdates verified; no strength
+  claim. Ends at original13:07:21UTC deadline; last15min latest-model holdout.
+- LIVE validation monitor session31738, research/deep/validate.mjs, log
+  /tmp/tichu6-deep-validation.log. Validation-only seeds600000000..600000015,
+  checkpoints every10min, saves best-validation-model.json. This16-pair set is
+  a wiring pilot, not release evidence. Do not confuse latest-model holdout with
+  final testing of the validation-selected checkpoint; latter still needs fresh
+  reserved seeds after freeze. Both new processes reject/avoid accidental state
+  replacement; poll live handles, do not restart because of a stale file.
+- User-facing design saved docs/BOT_LEARNING_PLAN.md in Korean. Reviewed DouZero,
+  ETH Tichu thesis, Other-Play, Hanabi, ReBeL and statistical evaluation paper via
+  official primary sources,20 Exa result items across4workstreams. Recommends
+  DMC action-value model with suit-aware observations/history, all-stage actions,
+  independent seeds, partner cross-play and fixed release gates. E0 exploratory
+  prototype differs from this proposal (no suits/history/call learning etc).
+- Corrected per-round outcome winner to use delta instead of cumulative scores.
+  Added archive load validation helper from reviewer, wired repository to it;
+  missing first10 projection skips record, malformed persisted archives failclosed.
+  Previous tests/build precede latest repository/winner changes; recheck needed.
+- Actual local Worker restart preserved exact exported synthetic training records.
+  Current export Worker session27093 (replaces94371) on18946 samepersist path.
+  Added handshake-withdrawal sync regression:10 transport tests passed; archive
+  helper10 tests passed on agent. Next validate complete diff, finish running
+  E0 jobs, report actual results and propose/implement next gated experiment.
+
+### Literature-plan verification checkpoint
+
+- Added research-only suit-aware exhaustive action oracle and immutable observation
+  adapter. Observation retains only public history types, caps 128 events, strips
+  card IDs, hides future eight cards and stale exchange evidence. These are E1
+  helpers; live E0 training still uses its original policy and has not changed.
+- Combined deep-policy/action/observation tests:13 passed. Complete npm test:
+  107 unit +42 UI passed; npm run check, format:check and build passed. Excluded
+  continuously generated checkpoint/result directories from Prettier, without
+  rewriting running models. No deployment or production bot replacement.
+- At 11:38UTC endurance had4604 matches/38152 rounds, zero errors. Deep E0 had
+  10460 updates; validation checkpoint11:35UTC improved from-300 to+25.3125 mean
+  round margin on16 mirrored pairs. This is small reused development validation,
+  not final generalization evidence. No final heldout result yet.
+- Existing sessions83765,46575,31738 remain running toward13:07:21UTC deadline.
+  Do not restart or alter policy mid-run. Finalize results only after actual
+  completion, separately test validation-selected model on fresh reserved seeds,
+  and preserve baseline unless strength/runtime/privacy gates pass.
+
+### Final evaluation tooling prepared while jobs run
+
+- Re-polled live handles83765/46575/31738; all still running. Previous turn made
+  concrete progress with literature plan, E1 helpers and complete checks.
+- Added paired-statistics helper with deterministic whole-pair bootstrap;
+  two tests verify within-pair dependence, ties and invalid data. Targeted tests
+  and ESLint passed. No individual moves counted as independent observations.
+- endurance-report.mjs requires successful terminal state and cross-checks every
+  pair/outcome against aggregate counts before reporting full-match margins.
+- deep/final-evaluate.mjs requires all E0 jobs complete, verifies validation-best
+  checkpoint hash, freezes model and source/seed manifest, and refuses overwrite.
+  Reserved700000000..700000999 in deep-final-v1 namespace;1000 paired rounds per
+  four opponent/mixed-team conditions. Not run yet; both tools' early-run rejection
+  verified with no final artifacts created. Deep output is round scoring only.
+- Next: finish live jobs at13:07:21UTC, run both final tools once, inspect results,
+  then decide whether a candidate merits further independent-seed/full-match and
+  runtime validation. Do not claim final-test or production improvement yet.
+
+### Dataset integrity and persistence review
+
+- Fixed persisted-record parser rejecting phoenix single half-point power. Cards
+  now validate against engine deck metadata; malformed action IDs are rejected,
+  not filtered/truncated into a different action. Event/public revisions and round
+  numbers must match; seat lists and outcome winner/delta are checked. Dropped
+  archive events mark the remaining session truncated.
+- Exported shared decision/outcome parsers for scripts/training-dataset.mjs.
+  Offline converter validates before creating output, rejects duplicate sessions,
+  records/revisions and missing delta, excludes takeover bots, preserves complete
+  round splits and creates new0700 directory/0600 files without overwrite.
+- Synthetic105-example Worker export still loads identically after local server
+  reload with stricter parser; local18946 readback deep-equal to prior export.
+  No production human data used. Three converter tests cover private fields,
+  partition integrity, malformed records and filesystem behavior.
+- Complete checks passed:113 unit +42 UI tests, check, format:check and build.
+  Both experiment handles83765/46575 re-polled live; validation monitor31738 also
+  live. At11:45UTC latest validation fell to-19.375 while best checkpoint remained
+  +25.3125 on16 pairs; preserve best separately, do not equate latest with best.
+  Next remains completion/final evaluation at original13:07:21UTC deadline.
+
+### Local inference compatibility evidence
+
+- Added separate research/deep Worker benchmark without game bindings or external
+  credentials. Dry-run bundling only, no deployment:2099KiB raw/411KiB gzip.
+- Local workerd session71119 on18947 successfully ran TensorFlow.js CPU inference
+  without nodejs_compat. check-worker-benchmark matched Node scores exactly on
+  synthetic batches1/16/64/256/512; retained tensors stayed8 (41,220 bytes).
+- Amortized local request wall medians:64 rows1.0ms,512 rows7.1ms. Not production
+  CPU accounting, total heap, full-action latency or a multi-room capacity proof.
+  Fixed initial model used, not a selected model or extra heldout game evaluation.
+- Closed only task-owned benchmark Wrangler PIDs41667/41665/41642 after checks;
+  keep original training/endurance jobs running. Artifacts remain under
+  research/deep/run/worker-benchmark.json and /tmp/tichu6-model-bundle.log.
+
+### Opponent-coverage audit before final evaluation
+
+- Current baseline never declares Large/Small Tichu; calls-* candidates also
+  change card selection, so their scores cannot isolate declaration benefits.
+  Added those limitations to endurance README/report (running policies unchanged).
+- Expanded not-yet-run final evaluator to nine predeclared conditions: neural
+  vs baseline/selected/caller; neural1/2 mixed; selected vs baseline/caller;
+  selected1/2 mixed. Same fresh1000 pairs per condition. Caller fixed thresholds
+  5.5/7, strength unproven; save calls/delta/finish per game to check coverage.
+  This supersedes the earlier four-condition note. ESLint/format passed.
+- At ~51min,7570 full matches; validation monitor live with4 checkpoints, latest
+  +9.375 and best+25.3125 on16 pairs. Still development, not final evidence.
+
+### One-hour verified wait checkpoint
+
+- Live handles83765 and46575 repeatedly polled, still running; no restart or
+  policy changes. At~60min endurance8906 matches, errors0. Deep training was
+  already34370 updates at previous poll with26 retained tensors, errors0.
+- Validation has5 checkpoints; latest+17.1875, best+25.3125. Small reused16-pair
+  validation remains exploratory. Next phase transitions: endurance freezes at
+  12:37:21UTC; deep training/validation freeze at12:52:21UTC; full deadline
+  13:07:21UTC. Final evaluator must wait for successful terminal statuses.
+
+### User steering: model suitability and LLM adoption
+
+- User explicitly requested analysis and application if LLM/model changes help.
+  Read primary2026 Hanabi LLM, PokerBench, R3D2, DouZero and current Cloudflare
+  limits/pricing. Decision saved docs/LLM_MODEL_DECISION.md: dedicated RL inference
+  first; LLM research/strategy critique only, no per-turn external API or LLM
+  finetuning. No paid plan, API credential or human-data transfer added.
+- Implemented NEW research/dmc policy/runner with cheap reviewers.221 features:
+  own/remaining suit counts, public played-card/pass history, last controller,
+  pile points, action descriptors, counts/calls/finish/passed;53,249 parameters.
+  MSE actual team delta/1000 unclipped, three independent seeds/deck/RNG/optimizers.
+  Still play/pass-only, representative legalPlays, no GRU/off-turn bombs and no
+  full typed observation boundary. Calls/exchange/collect remain baseline.
+- Fixed history normalization before launch. Smoke session2055 completed in
+  /tmp/tichu6-dmc-smoke-v1:3 rounds per model, all actual weight hashes changed,
+  errors0.8 DMC tests passed including hidden-hand invariance, suit/history,
+  gradient direction, checkpoint parity, other-model independence and stable
+  per-update tensors. Complete check/test/format passed after changes.
+- LIVE DMC session67593, PID72454, started12:26:55UTC, training stop12:52:21UTC
+  (original deadline minus15min), plus final validation. Output research/dmc/run/,
+  log /tmp/tichu6-dmc-training.log. Early68/68/67 updates, errors0. Do not restart.
+  Every25 rounds latest artifacts; every500 validation32 mirrored pairs permodel;
+  per-model validationBest includes exact artifact hash. Optimizer/RNG not saved,
+  so exact resume unavailable. New model receives less time than E0, not an equal
+  compute-budget algorithm comparison.
+- Existing83765/46575/31738 remain untouched. After successful terminal status,
+  E0 final evaluator covers9 conditions; DMC still needs its own fresh final test
+  of all3 frozen validation-best models before any strength/release claim.
+
+### Frozen-candidate transition and DMC final-test gate
+
+- Endurance handle83765 confirmed live after90min. Phase nowholdout; selected
+  gentle = structure with structureWeight15. Initial35 holdout pairs/70matches
+  recorded, but do not conclude from this partial confirmation. Candidate will
+  stay frozen through13:07:21UTC. Original cached policies were not edited.
+- Added research/dmc/final-evaluate.mjs (not run). Requires successful terminal
+  DMC/E0/endurance; verifies and freezes all3 artifacts, selects primary by
+  validationBest.mean (tie lowerseed) before opening new final seeds. StageA:
+  1000 paired rounds/model vsbaseline, dmc-final-v1 seeds820000000..820000999.
+  Primary gate mean>=10/lower95>0. Onfailure skip StageB, never switch based on
+  final scores. Onpass four secondary opponent/mixed-team conditions with a new
+  dmc-final-secondary-v1 namespace. Recorded in manifest; actual final script
+  source hashes included. Local-only synthetic game testing.
+- Root reviewed evaluator, added finite/unique seed validation and explicit
+  per-round units. Syntax/ESLint/Prettier pass; early launch guard rejected still
+  running prerequisites with no final output directory. Do not run until jobs end.
+
+### DMC runtime probe (no policy change)
+
+- Froze one copied DMC checkpoint into run/runtime-probe-model.json without
+  touching training weights. Extracted reusable local benchmark runtime; both
+  E0/DMC entries use it. Actual workerd DMC predictions exactly matched Node;
+  retained8 tensors/212,996 bytes. Feature count221,53,249 parameters.
+- Local amortized request wall medians64 rows3.8ms,512 rows29.7ms. Synthetic only;
+  not production CPU accounting/full-action/multi-room guarantees. Dry-run bundle
+  2323KiB raw/578KiB gzip. No deployment. Benchmark session83123 closed with143
+  after terminating only owned Wrangler PIDs88981/88980/88960.
+- Separate10,000 synthetic18-card hand sample, runtime-shapes-v1 SHA/rejection
+  shuffle, no games or final-test seeds: representative lead-candidate counts
+  median41/p95 88/max114. Not a worst-case completeness bound. Saved in
+  research/dmc/run/candidate-counts.json; model probe worker-benchmark.json.
+
+### Anonymous match grouping and completed development checks
+
+- Export schema2 now includes a random match group shared across rounds and
+  reconnects; a new lobby-to-match start gets a fresh group. Public snapshots
+  exclude it. Existing archived rounds remain readable with null group.
+- Dataset converter splits80/10/10 by match group, not round. Legacy schema1/null
+  groups are training-only; never use unknown match boundaries for evaluation.
+  This prevents within-match leakage, but does not establish player independence.
+- Full npm run check, npm test, npm run format:check and npm run build passed
+  after grouping changes. Local Worker18946 recording integration passed158
+  accepted moves/95 retained synthetic examples, with private export, consent
+  exclusion and spectator redaction. No real human data or production deployment.
+- DMC training handle67593 exited0, statuscomplete/errors0: seeds101/202/303
+  trained5061/5061/5060 rounds; best32-pair validation means -62.65625/-99.53125/
+  -80.625. Final primary remains seed101 by predeclared validation selection.
+- E0 validation handle31738 exited0, selected checkpoint mean44.375 on16 reused
+  validation pairs. E0 training froze74613 rounds and is inholdout; original
+  endurance alsoinholdout, both still wait until13:07:21UTC. No strength claim
+  based on these development results. Run prepared final evaluators once only
+  after successful terminal statuses; do not restart either live job.
+
+### Two-hour run completed; final evaluations launched once
+
+- Original handles83765/46575 exited0. Endurance complete/errors0, elapsed
+  7200.544s,17430 matches/144176 rounds/27136503 moves. No restart occurred.
+  E0 complete/errors0,74613 gradient updates,9087 frozen-latest holdout pairs.
+- Endurance ledger/report consistency checks passed. Frozen gentle holdout:
+  2122 mirrored pairs/4244 full matches, win rate79.3355% (pair-bootstrap95%
+  78.2045–80.4430%), mean final match margin294.656 (95%285.921–303.742).
+  This is against frozen baseline only, not human performance or round margin.
+- Launched prepared final tools only after terminal success: E0 session94246,
+  PID16110, log /tmp/tichu6-deep-final.log; DMC session61602, PID16111, log
+  /tmp/tichu6-dmc-final.log. Both running, no training/weight updates. E0 nine
+  configurations1000 pairs each; DMC stageA three seeds1000 pairs each, primary
+  seed101 preselected by validation, stageB only if predeclared primary gatepass.
+  Do not restart, overwrite output directories or tune using final-test results.
+
+### Final cleanup
+
+- Closed only task-owned local Worker18945/18946 and Vite5176 after passing
+  checks. Model benchmark servers were already closed. User's other servers
+  were not targeted. Research artifacts and local synthetic test records remain.
+- Final model/strategy decision and exact comparison intervals are in
+  research/RESULTS.md. No further training, merge or deployment performed.

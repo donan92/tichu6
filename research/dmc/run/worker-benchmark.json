@@ -1,0 +1,64 @@
+{
+  "featureCount": 221,
+  "parameters": 53249,
+  "modelHash": "6216e67684b27dcf6c5620c26019d3cdd0738fee1ab0ed33c1ee4c769e733224",
+  "runtime": "local workerd, TensorFlow.js CPU backend",
+  "limitations": [
+    "Synthetic feature rows, not complete gameplay latency",
+    "Local request wall time includes transport; not Cloudflare production CPU accounting",
+    "Tensor bytes exclude runtime/native heap and transient allocations",
+    "Does not prove free-tier capacity or multi-room responsiveness"
+  ],
+  "measurements": [
+    {
+      "rows": 1,
+      "iterationsPerRequest": 20,
+      "requests": 7,
+      "amortizedWallMsMedian": 0.2580749999999995,
+      "amortizedWallMsMax": 0.4816417000000001,
+      "maxAbsoluteError": 0,
+      "tensorBytes": 212996,
+      "tensors": 8
+    },
+    {
+      "rows": 16,
+      "iterationsPerRequest": 20,
+      "requests": 7,
+      "amortizedWallMsMedian": 1.0791312500000003,
+      "amortizedWallMsMax": 1.0989625000000003,
+      "maxAbsoluteError": 0,
+      "tensorBytes": 212996,
+      "tensors": 8
+    },
+    {
+      "rows": 64,
+      "iterationsPerRequest": 20,
+      "requests": 7,
+      "amortizedWallMsMedian": 3.8305270500000006,
+      "amortizedWallMsMax": 3.912160400000002,
+      "maxAbsoluteError": 0,
+      "tensorBytes": 212996,
+      "tensors": 8
+    },
+    {
+      "rows": 256,
+      "iterationsPerRequest": 20,
+      "requests": 7,
+      "amortizedWallMsMedian": 14.938610399999993,
+      "amortizedWallMsMax": 15.115843749999993,
+      "maxAbsoluteError": 0,
+      "tensorBytes": 212996,
+      "tensors": 8
+    },
+    {
+      "rows": 512,
+      "iterationsPerRequest": 20,
+      "requests": 7,
+      "amortizedWallMsMedian": 29.669025000000012,
+      "amortizedWallMsMax": 30.18923749999999,
+      "maxAbsoluteError": 0,
+      "tensorBytes": 212996,
+      "tensors": 8
+    }
+  ]
+}

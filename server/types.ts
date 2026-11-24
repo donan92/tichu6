@@ -6,6 +6,7 @@ export interface Member {
   bot?: boolean;
   idle?: boolean;
   offlineSince?: number | null;
+  trainingConsent?: boolean;
 }
 export interface Room {
   id: string;
@@ -14,6 +15,8 @@ export interface Room {
   members: (Member | null)[];
   lastActive: number;
   lastProgress: number;
+  trainingSession?: string;
+  trainingMatch?: string;
 }
 export interface LoungeData {
   rooms: Record<string, Room>;
@@ -27,6 +30,7 @@ export interface Attachment {
   name?: string;
   room?: string | null;
   watch?: boolean;
+  trainingConsent?: boolean;
   idle?: boolean;
 }
 export type AuthenticatedAttachment = Attachment & { hash: string };
