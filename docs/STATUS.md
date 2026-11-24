@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.8 lounge-only recording switch — release in progress
+## v0.8.8 lounge-only recording switch — deployed
 
 - Replaced two radio choices with a native button role=switch, aria-checked,
   visible on/off label and44px target. Updated English/Korean opt-out copy.
@@ -10,7 +10,14 @@
   remount persistence and hall-to-room/practice/home transitions and return.
 - check,176 tests (131 unit+45 UI), format:check and build passed. Version,
   lockfile and localized patch note updated together. Frontend-only release;
-  Worker unchanged. Production verification pending.
+  Worker unchanged, production health v6 passed.
+- Released af937b1 to main. Pages0604342d-defc-4f58-bfb8-0ad4464b64e3 succeeded;
+  homepage and all5 asset hashes match tested v0.8.8. GitHub Verify including
+  local Worker/idle checks passed: https://github.com/donan92/tichu6/actions/runs/45417271450.
+- Production browser restored the existing practice without changing it and
+  showed no recording controls;390px viewport had no horizontal overflow.
+  Hall-only visibility and toggle persistence covered by component tests.
+  No real phone hardware test claimed. No pending release work.
 
 ## v0.8.7 recording preference visibility — deployed
 
