@@ -66,8 +66,9 @@ Node.js 22.13 이상을 사용합니다. `npm run dev`는 5173 포트에서 화�
 
 ## 구조
 
-- `server/worker.js`: Origin/연결 빈도 검사, 라우팅, 기존 GameRoom 보존
-- `server/lounge.js`: 대기실·방 정원, 좌석 인증, 관전, 저장, 봇/만료 알람
+- `server/worker.ts`: Hono HTTP 라우팅, Origin/연결 빈도 검사, 기존 GameRoom 보존
+- `server/lounge.ts`: Durable Object 이벤트·동시 실행 제어·저장 후 응답
+- `server/{session,room,game,lifecycle,persistence,transport}/`: 인증·방 관리·게임 진행·만료·저장·메시지 검증 서비스
 - `src/server-room.ts`: 연결, 자동 재접속, 참가 키 보관
 - `src/game.js`: 서버/연습 공용 규칙 엔진
 - `src/App.vue`, `src/views/`, `src/components/`: 한국어·영어 Vue 화면
@@ -97,7 +98,7 @@ Node.js 22.13 이상을 사용합니다. `npm run dev`는 5173 포트에서 화�
 
 ## 개발 기준
 
-프런트엔드는 Vue SFC·strict TypeScript·Pinia로 구성합니다. 기존 규칙 엔진과 Workers 서버는 JavaScript를 유지하며 ESLint와 테스트를 적용합니다. 공용 엔진의 `.d.ts`는 프런트엔드 타입 경계입니다.
+프런트엔드는 Vue SFC·strict TypeScript·Pinia로 구성합니다. 운영 Workers 서버는 Hono + strict TypeScript 서비스로 구성하고, Cloudflare가 생성한 타입으로 별도 검사합니다. 공용 규칙 엔진과 기존 GameRoom 호환 모듈은 JavaScript를 유지하며 선언 파일과 회귀 테스트를 적용합니다. 이 두 JavaScript 구현 자체는 TypeScript 검사 대상이 아닙니다.
 
 `npm run check`는 ESLint(경고 0개)와 vue-tsc를 실행합니다. `npm test`는 기존 서버/규칙 테스트와 Vue UI/연결 테스트를 실행하고, `npm run format:check`로 Prettier 형식을 검증합니다. GitHub Actions에서도 같은 검증과 로컬 Worker 통합 테스트를 실행합니다.
 

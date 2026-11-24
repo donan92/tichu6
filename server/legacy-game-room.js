@@ -1,58 +1,8 @@
-export { Lounge } from './lounge.js';
+// Retained for existing GameRoom Durable Objects; new traffic uses Lounge.
 import { newGame, startRound, act, view, botAction } from '../src/game.js';
-const ORIGINS = new Set([
-  'https://tichu6.pages.dev',
-  'https://donan92.github.io',
-  'http://localhost:5173',
-  'http://127.0.0.1:5173',
-]);
 const TTL = 86400000,
   GRACE = 45000;
 const json = (value, status = 200) => Response.json(value, { status });
-export default {
-  async fetch(request, env) {
-    const url = new URL(request.url),
-      origin = request.headers.get('Origin');
-    if (origin && !ORIGINS.has(origin))
-      return new Response('Forbidden', { status: 403 });
-    if (request.method === 'OPTIONS')
-      return new Response(null, {
-        headers: {
-          'Access-Control-Allow-Origin': origin || 'https://tichu6.pages.dev',
-          'Access-Control-Allow-Methods': 'POST, GET, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type',
-        },
-      });
-    let response;
-    if (url.pathname === '/health') response = json({ ok: true, version: 6 });
-    else if (url.pathname === '/lounge') {
-      if (!origin || !ORIGINS.has(origin))
-        return new Response('Forbidden', { status: 403 });
-      if (env.CONNECTION_LIMIT) {
-        const { success } = await env.CONNECTION_LIMIT.limit({
-          key: request.headers.get('CF-Connecting-IP') || 'local',
-        });
-        if (!success)
-          return new Response('Too many connection attempts', {
-            status: 429,
-            headers: { 'Retry-After': '60' },
-          });
-      }
-      response = await env.LOUNGE.get(env.LOUNGE.idFromName('public-v1')).fetch(
-        request,
-      );
-    } else return json({ code: 'error.upgrade' }, 410);
-    if (response.status === 101) return response;
-    const headers = new Headers(response.headers);
-    headers.set(
-      'Access-Control-Allow-Origin',
-      origin || 'https://tichu6.pages.dev',
-    );
-    headers.set('Vary', 'Origin');
-    headers.set('Cache-Control', 'no-store');
-    return new Response(response.body, { status: response.status, headers });
-  },
-};
 export class GameRoom {
   constructor(ctx) {
     this.ctx = ctx;

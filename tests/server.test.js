@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { GameRoom } from '../server/worker.js';
-import worker from '../server/worker.js';
+import { GameRoom } from '../server/worker.ts';
+import worker from '../server/worker.ts';
 import { newGame, startRound } from '../src/game.js';
 globalThis.WebSocketRequestResponsePair = class {};
 function fixture(data, sockets = []) {

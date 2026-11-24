@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Lounge, nickname, publicView } from '../server/lounge.js';
+import { Lounge, nickname, publicView } from '../server/lounge.ts';
 import { newGame, startRound } from '../src/game.js';
 globalThis.WebSocketRequestResponsePair = class {};
 function socket() {
@@ -676,4 +676,30 @@ test('room progress migration grants one window and survives repeated hibernatio
   f.hub = new Lounge(f.ctx);
   await f.ready();
   assert.equal(f.hub.data.rooms[id].lastProgress, baseline);
+});
+test('accepted actions are persisted before state acknowledgement after service extraction', async () => {
+  const f = await setup();
+  const ws = await user(f, 1);
+  await msg(f.hub, ws, { type: 'create', name: 'Host' });
+  const room = Object.values(f.hub.data.rooms)[0];
+  let persistedRevision = room.state.revision;
+  const put = f.ctx.storage.put.bind(f.ctx.storage);
+  f.ctx.storage.put = async (key, value) => {
+    await put(key, value);
+    persistedRevision = value.rooms[room.id].state.revision;
+  };
+  const send = ws.send.bind(ws);
+  ws.send = (raw) => {
+    const message = JSON.parse(raw);
+    if (message.type === 'state')
+      assert.equal(message.value.revision, persistedRevision);
+    send(raw);
+  };
+  await msg(f.hub, ws, {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  assert.equal(persistedRevision, 1);
+  assert.equal(last(ws, 'state').value.phase, 'grand');
 });

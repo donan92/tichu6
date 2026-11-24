@@ -4,7 +4,7 @@ Read `AGENTS.md` and `docs/STATUS.md` first. The interface supports English and 
 
 ## Setup
 
-Use Node.js 22.13 or newer (CI uses Node.js 26), Git, and npm. Install development tools with `npm ci` when a lockfile is present. No Cloudflare credential is required for unit tests or the local Worker.
+Use Node.js 22.18 or newer (CI uses Node.js 26), Git, and npm. Install development tools with `npm ci` when a lockfile is present. No Cloudflare credential is required for unit tests or the local Worker.
 
 ```sh
 npm test
@@ -52,7 +52,7 @@ Use i18next semantic keys, e.g. `lounge.createRoom` or `error.invalidNickname`. 
 - `src/main.ts` mounts Vue, Pinia, and i18next-vue. Views and components use `<script setup lang="ts">`.
 - `src/stores/session.ts` owns room membership, connection state, selected cards, and practice scheduling. Keep the WebSocket and raw practice engine state out of deep reactive proxies.
 - `src/server-room.ts` owns transport, bounded initial retries, heartbeat, and private local credentials. Preserve the v4 storage key so existing players can reconnect.
-- `src/types.ts` defines protocol and game view contracts. Shared `src/game.js` remains the authoritative engine, with a declaration boundary for the TypeScript frontend. Server JavaScript is linted and tested, not TypeScript-checked.
+- `src/types.ts` defines protocol and game view contracts. Shared `src/game.js` remains the authoritative engine, with a declaration boundary for the TypeScript frontend. Active server modules use strict TypeScript, checked separately against Wrangler-generated runtime types. The shared engine and preserved legacy GameRoom implementation remain JavaScript and are regression-tested, not TypeScript-checked.
 - `npm run lint:fix` fixes lint issues; `npm run format` applies Prettier. CI requires zero lint warnings, strict type checks, formatting, unit/component tests, a build, an audit, and local Worker integration.
 - JavaScript uses ES2026 via Vite/Oxc. TypeScript 6.0.3 supports named targets only through ES2025, so its no-emit checker uses ESNext. ESNext is not a fixed synonym for ES2026; Vite controls output. Do not introduce unsupported browser APIs solely because types exist.
 - Orval is not used: gameplay uses WebSocket messages, not an OpenAPI HTTP contract. Reconsider if a substantive HTTP API is added.
@@ -77,3 +77,13 @@ multiline/overlong summaries. It runs automatically in `npm run check` (and CI),
 before `npm run build` (Pages), and before `npm run deploy:server`. Update the note
 before running those commands; do not bypass the hooks. This validates completeness,
 not editorial accuracy, so review the one-line summary before merging.
+
+## Server architecture
+
+- `server/worker.ts` uses Hono for HTTP routing, origin checks and connection limits. Durable Object WebSocket upgrades bypass response wrapping; Hono does not own gameplay sockets.
+- `server/lounge.ts` wires services and owns the concurrency gate, persist-before-ack ordering, hibernation and alarm callbacks. Never move an acknowledgement ahead of a successful repository save.
+- `session/` handles token authentication and identity reconnects; `room/` handles membership and public snapshots; `game/` invokes the shared engine; `lifecycle/` handles idle takeover and expiry; `persistence/` owns the unchanged `lounge` storage key. Dependencies are explicit constructor arguments.
+- `transport/protocol.ts` validates unknown JSON before services use it. TypeScript types do not replace runtime validation or authenticated socket identity. Public snapshots use an explicit allowlist.
+- `tsconfig.server.json` is strict and separate from browser DOM types. `npm run typecheck` includes both frontend and server, and `predeploy:server` runs the server check. Wrangler generates ignored `worker-configuration.d.ts` from the current configuration; do not edit it.
+- Node 22.18+ executes erasable TypeScript imports in unit tests; do not use enums, parameter properties, or runtime decorators in these modules. Keep fixtures pointed at the real TypeScript entrypoint. Run local Worker transport and idle suites after server changes.
+- The legacy `GameRoom` binding/class and its JavaScript module are retained for stored objects; the public router never creates new legacy rooms. Do not remove the binding or delete stored rooms as part of refactoring.

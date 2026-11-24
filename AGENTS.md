@@ -28,7 +28,7 @@
 ## Workflow
 
 - Use Vue single-file components with `<script setup lang="ts">`, strict TypeScript, Pinia for shared session state, and Vite. Keep components focused; no HTML string rendering or `v-html`.
-- Reuse the tested JavaScript engine `src/game.js` on both server and practice client. Maintain its TypeScript declarations alongside protocol types when changing its contract. Backend and shared engine remain JavaScript; do not claim they are TypeScript-checked.
+- Reuse the tested JavaScript engine `src/game.js` on both server and practice client. Maintain its TypeScript declarations alongside protocol types when changing its contract. The active backend uses Hono + strict TypeScript with services and a thin Durable Object adapter. Generate Cloudflare types with `npm run types:server`; `npm run typecheck:server` must pass. The shared engine and isolated legacy GameRoom remain JavaScript with declaration boundaries; do not claim their implementations are TypeScript-checked.
 - JavaScript output targets ES2026 in Vite (development and production). TypeScript 6 currently lacks an ES2026 target, so use ESNext for type checking only; switch when the stable compiler supports ES2026. CSS targets are configured separately.
 - Require `npm run check` (ESLint with zero warnings + vue-tsc), `npm test`, `npm run format:check`, and `npm run build`. Use real local Worker integration checks for protocol/transport changes.
 - Test dangerous/large-load capacity scenarios locally, not against users on production.

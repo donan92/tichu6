@@ -270,5 +270,6 @@
   "patches.selectorsAndCards": "Clearer cards and selectors; stalled rooms close automatically.",
   "patches.practiceResume": "Resume bot practice after refreshing.",
   "patches.exchangeAndCards": "New card art, exchange receipts and a give-up option.",
-  "patches.sixPlayerTeams": "Bots fill empty seats with balanced teams."
+  "patches.sixPlayerTeams": "Bots fill empty seats with balanced teams.",
+  "patches.serverMaintenance": "Bug fixes."
 }

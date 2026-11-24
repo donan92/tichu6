@@ -270,5 +270,6 @@
   "patches.selectorsAndCards": "카드·선택 창 개선, 멈춘 방 자동 정리",
   "patches.practiceResume": "새로고침 후에도 하던 봇 연습 이어하기",
   "patches.exchangeAndCards": "새 카드 디자인·교환 내역·게임 포기 추가",
-  "patches.sixPlayerTeams": "빈자리 봇 참여와 균형 잡힌 팀 배정"
+  "patches.sixPlayerTeams": "빈자리 봇 참여와 균형 잡힌 팀 배정",
+  "patches.serverMaintenance": "버그 수정"
 }

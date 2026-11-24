@@ -1,6 +1,6 @@
 // Local integration fixture only. Production wrangler.jsonc never imports this.
-import worker, { GameRoom } from '../../server/worker.js';
-import { Lounge } from '../../server/lounge.js';
+import worker, { GameRoom } from '../../server/worker.ts';
+import { Lounge } from '../../server/lounge.ts';
 export { GameRoom };
 export class TestLounge extends Lounge {
   async fetch(request) {

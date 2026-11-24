@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { readFile, readdir } from 'node:fs/promises';
 import {
   createTranslator,
   languages,
@@ -87,8 +87,12 @@ test('active UI and protocol use codes instead of Korean sentence literals', asy
       /[가-힣]/,
       file,
     );
-  assert.doesNotMatch(
-    await readFile(new URL('../server/lounge.js', import.meta.url), 'utf8'),
-    /[가-힣]/,
-  );
+  const server = new URL('../server/', import.meta.url);
+  for (const file of await readdir(server, { recursive: true }))
+    if (file.endsWith('.ts') && !file.endsWith('.d.ts'))
+      assert.doesNotMatch(
+        await readFile(new URL(file, server), 'utf8'),
+        /[가-힣]/,
+        file,
+      );
 });

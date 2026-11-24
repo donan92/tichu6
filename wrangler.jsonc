@@ -1,6 +1,6 @@
 {
   "name": "tichu6-server",
-  "main": "server/worker.js",
+  "main": "server/worker.ts",
   "compatibility_date": "2026-11-01",
   "account_id": "10db021d5bccb2f48d5738d9da2612ea",
   "durable_objects": {

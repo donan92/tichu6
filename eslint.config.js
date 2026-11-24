@@ -4,7 +4,14 @@ import vue from 'eslint-plugin-vue';
 import globals from 'globals';
 import prettier from 'eslint-config-prettier';
 export default [
-  { ignores: ['dist/**', 'node_modules/**', '.wrangler/**'] },
+  {
+    ignores: [
+      'worker-configuration.d.ts',
+      'dist/**',
+      'node_modules/**',
+      '.wrangler/**',
+    ],
+  },
   js.configs.recommended,
   ...ts.configs.recommended.map((config) => ({
     ...config,

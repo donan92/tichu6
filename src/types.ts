@@ -86,13 +86,13 @@ export type GameAction =
   | { type: 'start' | 'next' | 'tichu' | 'pass' }
   | { type: 'grand'; call: boolean }
   | { type: 'exchange'; ids: string[] }
-  | { type: 'collect'; target: number }
+  | { type: 'collect'; target?: number | null }
   | {
       type: 'play';
       ids: string[];
-      wish: number | null;
-      target: number;
-      phoenixRank: number | null;
+      wish?: number | null;
+      target?: number | null;
+      phoenixRank?: number | null;
     };
 export interface RoomSummary {
   id: string;
