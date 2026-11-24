@@ -33,29 +33,20 @@ onUnmounted(() => window.removeEventListener(TRAINING_CONSENT_EVENT, sync));
     <p :id="`${id}-notice`" class="training-notice">
       {{ t(enabled ? 'training.noticeOn' : 'training.noticeOff') }}
     </p>
-    <fieldset :aria-describedby="`${id}-notice`">
-      <legend>{{ t('training.choice') }}</legend>
-      <label class="training-option" :class="{ selected: enabled }">
-        <input
-          type="radio"
-          :name="`${id}-collection`"
-          value="on"
-          :checked="enabled"
-          @change="changed(true)"
-        />
-        <span>{{ t('training.on') }}</span>
-      </label>
-      <label class="training-option" :class="{ selected: !enabled }">
-        <input
-          type="radio"
-          :name="`${id}-collection`"
-          value="off"
-          :checked="!enabled"
-          @change="changed(false)"
-        />
-        <span>{{ t('training.off') }}</span>
-      </label>
-    </fieldset>
+    <button
+      type="button"
+      role="switch"
+      class="training-toggle"
+      :aria-checked="enabled"
+      :aria-describedby="`${id}-notice`"
+      :aria-label="t('training.choice')"
+      @click="changed(!enabled)"
+    >
+      <span>{{ t(enabled ? 'training.on' : 'training.off') }}</span>
+      <span class="switch-track" :class="{ enabled }" aria-hidden="true">
+        <span class="switch-thumb"></span>
+      </span>
+    </button>
     <details class="training-details">
       <summary>{{ t('training.details') }}</summary>
       <p>{{ t('training.description') }}</p>
@@ -96,52 +87,44 @@ onUnmounted(() => window.removeEventListener(TRAINING_CONSENT_EVENT, sync));
   margin: 8px 0;
   line-height: 1.5;
 }
-.training-panel fieldset {
+.training-toggle {
   display: flex;
-  gap: 8px;
-  min-width: 0;
-  padding: 0;
-  margin: 0;
-  border: 0;
-}
-.training-panel legend {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-}
-.training-option {
-  display: flex;
-  flex-direction: row;
-  flex: 1;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
+  justify-content: space-between;
+  width: 100%;
   min-height: 44px;
-  margin: 0;
-  padding: 0 8px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  cursor: pointer;
+  gap: 12px;
+  padding: 4px 8px;
+  background: transparent;
+  border: 0;
   color: var(--ink);
 }
-.training-option.selected {
-  border-color: var(--lime);
-}
-.training-option:focus-within {
+.training-toggle:focus-visible {
   outline: 2px solid var(--lime);
   outline-offset: 2px;
 }
-.training-option input[type='radio'] {
-  appearance: auto;
-  flex: 0 0 18px;
-  width: 18px;
-  height: 18px;
-  min-height: 0;
-  padding: 0;
-  margin: 0;
-  accent-color: var(--lime);
+.switch-track {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 48px;
+  height: 28px;
+  padding: 3px;
+  box-sizing: border-box;
+  border-radius: 20px;
+  background: #64748b;
+}
+.switch-track.enabled {
+  background: var(--lime);
+}
+.switch-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px #0004;
+}
+.switch-track.enabled .switch-thumb {
+  transform: translateX(20px);
 }
 .training-details {
   margin-top: 8px;

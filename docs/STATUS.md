@@ -1,5 +1,17 @@
 # Project status / resume point
 
+## v0.8.8 lounge-only recording switch — release in progress
+
+- Replaced two radio choices with a native button role=switch, aria-checked,
+  visible on/off label and44px target. Updated English/Korean opt-out copy.
+- TrainingConsent renders only when session.mode=hall. Home, room, game,
+  spectator and practice screens omit it without changing saved preferences.
+- Default-on and explicit saved opt-outs retained. Tests cover repeated toggle,
+  remount persistence and hall-to-room/practice/home transitions and return.
+- check,176 tests (131 unit+45 UI), format:check and build passed. Version,
+  lockfile and localized patch note updated together. Frontend-only release;
+  Worker unchanged. Production verification pending.
+
 ## v0.8.7 recording preference visibility — deployed
 
 - User requested recording on by default with a visible opt-out notice and

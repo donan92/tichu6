@@ -11,8 +11,9 @@ wins on the deals used to choose it.
 
 ## Optional human records
 
-The panel directly below the header always shows the collection status and
-on/off radio buttons. Per the product owner's updated decision, a missing saved
+The lounge panel directly below the header shows the collection status and an
+on/off toggle switch. It is hidden on the home, room, game, spectator and practice
+screens; leaving the lounge does not change the saved preference. Per the product owner's updated decision, a missing saved
 preference defaults to on, with a visible instruction to turn recording off if
 the player does not agree. Explicit saved opt-outs remain off across reloads;
 unreadable or invalid storage fails closed. Disabling stops future examples.

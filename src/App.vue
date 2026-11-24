@@ -26,7 +26,7 @@ onMounted(() => {
 </script>
 <template>
   <AppHeader />
-  <TrainingConsent />
+  <TrainingConsent v-if="session.mode === 'hall'" />
   <HomeView v-if="session.mode === 'home'" />
   <HallView v-else-if="session.mode === 'hall'" />
   <GameView v-else-if="session.round" :game="session.round" />

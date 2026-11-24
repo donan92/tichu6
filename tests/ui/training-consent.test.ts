@@ -1,4 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { nextTick } from 'vue';
+import { createPinia, disposePinia, setActivePinia } from 'pinia';
+import App from '../../src/App.vue';
+import { useSessionStore } from '../../src/stores/session';
 import { mount } from '@vue/test-utils';
 import I18NextVue from 'i18next-vue';
 import { i18next } from '../../src/localization';
@@ -28,24 +32,22 @@ function render() {
 describe('training recording preference', () => {
   it('defaults on with a visible notice and persists an explicit opt-out across remount', async () => {
     const wrapper = render();
-    const on = wrapper.get('input[value="on"]');
-    const off = wrapper.get('input[value="off"]');
-    expect((on.element as HTMLInputElement).checked).toBe(true);
+    const toggle = wrapper.get('[role="switch"]');
+    expect(toggle.attributes('aria-checked')).toBe('true');
     expect(wrapper.get('.training-notice').text()).toContain('on by default');
-    expect(wrapper.get('fieldset').element.closest('details')).toBeNull();
-    await off.setValue();
+    expect(toggle.element.closest('details')).toBeNull();
+    await toggle.trigger('click');
     expect(readTrainingConsent()).toBe(false);
-    expect((on.element as HTMLInputElement).checked).toBe(false);
+    expect(toggle.attributes('aria-checked')).toBe('false');
     expect(localStorage.getItem(TRAINING_CONSENT_KEY)).toBe('false');
-    expect(wrapper.get('[role="status"]').text()).toContain('off');
     wrapper.unmount();
     const restored = render();
-    expect(
-      (restored.get('input[value="off"]').element as HTMLInputElement).checked,
-    ).toBe(true);
-    await restored.get('input[value="on"]').setValue();
+    expect(restored.get('[role="switch"]').attributes('aria-checked')).toBe(
+      'false',
+    );
+    await restored.get('[role="switch"]').trigger('click');
     expect(readTrainingConsent()).toBe(true);
-    await restored.get('input[value="off"]').setValue();
+    await restored.get('[role="switch"]').trigger('click');
     expect(readTrainingConsent()).toBe(false);
   });
 
@@ -68,15 +70,15 @@ describe('training recording preference', () => {
     }
   });
 
-  it('shows labeled native radio options and the opt-out instruction in Korean', async () => {
+  it('shows an accessible toggle and the opt-out instruction in Korean', async () => {
     await i18next.changeLanguage('ko');
     const wrapper = render();
-    expect(wrapper.findAll('input[type="radio"]')).toHaveLength(2);
-    expect(wrapper.get('legend').text()).toContain('수집 여부');
-    expect(wrapper.get('.training-notice').text()).toContain('동의하지 않으면');
-    expect(
-      wrapper.findAll('.training-option').map((label) => label.text()),
-    ).toEqual(['수집 켜기', '수집 끄기']);
+    expect(wrapper.findAll('[role="switch"]')).toHaveLength(1);
+    expect(wrapper.findAll('input[type="radio"]')).toHaveLength(0);
+    expect(wrapper.get('[role="switch"]').attributes('aria-label')).toContain(
+      '수집 여부',
+    );
+    expect(wrapper.get('.training-notice').text()).toContain('토글을 꺼');
     expect(wrapper.get('details').text()).toContain('닉네임');
     expect(wrapper.get('details').attributes('open')).toBeUndefined();
   });
@@ -95,4 +97,44 @@ describe('training recording preference', () => {
       writeTrainingConsent(false);
     }
   });
+});
+
+it('shows collection settings only in the hall and preserves preferences when leaving it', async () => {
+  const pinia = createPinia();
+  setActivePinia(pinia);
+  const session = useSessionStore();
+  const wrapper = mount(App, {
+    global: {
+      plugins: [pinia, [I18NextVue, { i18next }]],
+      stubs: {
+        AppHeader: true,
+        HomeView: true,
+        HallView: true,
+        GameView: true,
+        RoomView: true,
+        LeaveDialog: true,
+      },
+    },
+  });
+  try {
+    expect(wrapper.findComponent(TrainingConsent).exists()).toBe(false);
+    session.mode = 'hall';
+    await nextTick();
+    await wrapper.get('[role="switch"]').trigger('click');
+    expect(readTrainingConsent()).toBe(false);
+    for (const mode of ['room', 'demo', 'home'] as const) {
+      session.mode = mode;
+      await nextTick();
+      expect(wrapper.findComponent(TrainingConsent).exists()).toBe(false);
+      expect(readTrainingConsent()).toBe(false);
+    }
+    session.mode = 'hall';
+    await nextTick();
+    expect(wrapper.get('[role="switch"]').attributes('aria-checked')).toBe(
+      'false',
+    );
+  } finally {
+    wrapper.unmount();
+    disposePinia(pinia);
+  }
 });
