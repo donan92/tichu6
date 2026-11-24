@@ -14,7 +14,13 @@ import type {
 } from '../types';
 export const useSessionStore = defineStore('session', () => {
   const mode = ref<'home' | 'hall' | 'room' | 'demo'>('home');
-  const nickname = ref(savedRoom()?.name ?? '');
+  const savedSession = savedRoom();
+  const nickname = ref(savedSession?.name ?? '');
+  const restoring = ref(
+    !!savedSession &&
+      !savedSession.idle &&
+      /^[A-Za-z0-9]{1,8}$/.test(savedSession.name),
+  );
   const directory = shallowRef<{ rooms: RoomSummary[]; count: number }>({
     rooms: [],
     count: 0,
@@ -44,6 +50,11 @@ export const useSessionStore = defineStore('session', () => {
   // Keep engine state outside Vue's proxies: act() clones it with structuredClone.
   let practice: RoundState | null = null;
   let botTimer: ReturnType<typeof setTimeout> | undefined;
+  let restoreTimer: ReturnType<typeof setTimeout> | undefined;
+  function restored() {
+    restoring.value = false;
+    clearTimeout(restoreTimer);
+  }
   let noticeTimer: ReturnType<typeof setTimeout> | undefined;
   function notify(error: unknown) {
     notice.value =
@@ -74,12 +85,15 @@ export const useSessionStore = defineStore('session', () => {
         directory.value = { rooms: message.rooms, count: message.count };
         break;
       case 'hall':
+        restored();
+        connectionError.value = null;
         mode.value = 'hall';
         game.value = null;
         selected.value = [];
         pending.value = false;
         break;
       case 'state':
+        restored();
         mode.value = 'room';
         game.value = message.value;
         online.value = message.online;
@@ -98,6 +112,8 @@ export const useSessionStore = defineStore('session', () => {
     try {
       const name = validName();
       busy.value = true;
+      restoring.value = true;
+      clearTimeout(restoreTimer);
       connectionError.value = null;
       stopPractice();
       room?.close();
@@ -107,8 +123,10 @@ export const useSessionStore = defineStore('session', () => {
         },
         onError: (message) => {
           if (room === active) {
+            clearTimeout(restoreTimer);
             connectionError.value = message;
             if (message.code === 'error.idleLogout') {
+              restored();
               mode.value = 'home';
               game.value = null;
               selected.value = [];
@@ -126,6 +144,16 @@ export const useSessionStore = defineStore('session', () => {
         onStatus: (status) => {
           if (room !== active) return;
           connected.value = status;
+          clearTimeout(restoreTimer);
+          if (!status && mode.value === 'room') restoring.value = true;
+          if (status && restoring.value) {
+            restoreTimer = setTimeout(() => {
+              if (room !== active || !restoring.value) return;
+              connectionError.value = { code: 'error.connectFailed' };
+              connected.value = false;
+              active.close();
+            }, 15000);
+          }
           pending.value = false;
           if (game.value) game.value = { ...game.value, paused: !status };
         },
@@ -135,7 +163,10 @@ export const useSessionStore = defineStore('session', () => {
       try {
         await active.open(name, manual);
       } catch (error) {
-        if (room === active) notify(error);
+        if (room === active) {
+          connectionError.value ??= errorEvent(error);
+          notify(error);
+        }
       } finally {
         if (room === active) busy.value = false;
       }
@@ -143,6 +174,19 @@ export const useSessionStore = defineStore('session', () => {
       notify(error);
       busy.value = false;
     }
+  }
+  function cancelRestore() {
+    const previous = room;
+    room = null;
+    previous?.close();
+    restored();
+    connected.value = false;
+    busy.value = false;
+    pending.value = false;
+    mode.value = 'home';
+    game.value = null;
+    selected.value = [];
+    connectionError.value = null;
   }
   function publish() {
     if (!practice) return;
@@ -193,6 +237,7 @@ export const useSessionStore = defineStore('session', () => {
       stopPractice();
       nickname.value = saved.nickname;
       practice = saved.state;
+      restored();
       mode.value = 'demo';
       selected.value = [];
       online.value = Array(6).fill(true);
@@ -218,6 +263,7 @@ export const useSessionStore = defineStore('session', () => {
       pending.value = false;
       stopPractice();
       selected.value = [];
+      restored();
       mode.value = 'demo';
       online.value = Array(6).fill(true);
       practice = startRound(
@@ -299,6 +345,7 @@ export const useSessionStore = defineStore('session', () => {
         connected.value = false;
         busy.value = false;
         stopPractice();
+        restored();
         mode.value = 'home';
         game.value = null;
       }
@@ -310,6 +357,7 @@ export const useSessionStore = defineStore('session', () => {
     }
   }
   function dispose() {
+    clearTimeout(restoreTimer);
     room?.close();
     room = null;
     stopPractice();
@@ -318,6 +366,7 @@ export const useSessionStore = defineStore('session', () => {
   onScopeDispose(dispose);
   return {
     mode,
+    restoring,
     nickname,
     directory,
     game,
@@ -333,6 +382,7 @@ export const useSessionStore = defineStore('session', () => {
     connectionError,
     seat,
     enterHall,
+    cancelRestore,
     startPractice,
     restorePractice,
     submit,

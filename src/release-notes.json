@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.9",
+    "summary": "patches.reconnectLoading"
+  },
+  {
     "version": "0.8.8",
     "summary": "patches.loungeRecordingToggle"
   },

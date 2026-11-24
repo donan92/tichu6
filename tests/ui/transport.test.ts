@@ -1,3 +1,8 @@
+import { mount } from '@vue/test-utils';
+import { nextTick } from 'vue';
+import I18NextVue from 'i18next-vue';
+import App from '../../src/App.vue';
+import { i18next } from '../../src/localization';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { createPinia, disposePinia, setActivePinia } from 'pinia';
 import { useSessionStore } from '../../src/stores/session';
@@ -256,5 +261,135 @@ it('sends the new-visitor recording default and preserves explicit opt-outs on r
     socket.receive({ type: 'welcome' });
     await opening;
     room.close();
+  }
+});
+
+it('shows restoration immediately and waits for authoritative state after welcome', async () => {
+  localStorage.setItem(
+    'tichu6-session-v4',
+    JSON.stringify({
+      token: 'a'.repeat(64),
+      name: 'Alice',
+      roomId: 'saved-room',
+      watch: false,
+    }),
+  );
+  const pinia = createPinia();
+  setActivePinia(pinia);
+  const session = useSessionStore();
+  expect(session.restoring).toBe(true);
+  const wrapper = mount(App, {
+    global: {
+      plugins: [pinia, [I18NextVue, { i18next }]],
+      stubs: {
+        AppHeader: true,
+        HomeView: true,
+        HallView: true,
+        GameView: true,
+        RoomView: true,
+        TrainingConsent: true,
+      },
+    },
+  });
+  try {
+    expect(wrapper.find('.connection-loading').exists()).toBe(true);
+    expect(wrapper.find('home-view-stub').exists()).toBe(false);
+    const socket = Socket.instances[0];
+    socket.open();
+    expect(JSON.parse(socket.sent[0])).toMatchObject({
+      roomId: 'saved-room',
+      manual: false,
+    });
+    socket.receive({ type: 'welcome' });
+    socket.receive({ type: 'directory', rooms: [], count: 1 });
+    await nextTick();
+    expect(session.restoring).toBe(true);
+    expect(wrapper.find('.connection-loading').exists()).toBe(true);
+    socket.receive({
+      type: 'state',
+      value: { ...view(startRound(newGame()), 0), roomId: 'saved-room' },
+      online: Array(6).fill(true),
+    });
+    await nextTick();
+    expect(session.restoring).toBe(false);
+    expect(wrapper.find('game-view-stub').exists()).toBe(true);
+    socket.close(1006);
+    await nextTick();
+    expect(wrapper.find('.connection-loading').exists()).toBe(true);
+    expect(session.game?.roomId).toBe('saved-room');
+  } finally {
+    wrapper.unmount();
+    disposePinia(pinia);
+  }
+});
+
+it('finishes restoration only on hall confirmation, and allows retry after missing state', async () => {
+  const pinia = createPinia();
+  setActivePinia(pinia);
+  const session = useSessionStore();
+  session.nickname = 'Alice';
+  try {
+    const opening = session.enterHall();
+    const first = Socket.instances[0];
+    first.open();
+    first.receive({ type: 'welcome' });
+    await opening;
+    await vi.advanceTimersByTimeAsync(15000);
+    expect(session.restoring).toBe(true);
+    expect(session.connectionError?.code).toBe('error.connectFailed');
+    expect(session.connected).toBe(false);
+    const retry = session.enterHall();
+    const second = Socket.instances[1];
+    second.open();
+    second.receive({ type: 'welcome' });
+    await retry;
+    expect(session.connectionError).toBeNull();
+    expect(session.restoring).toBe(true);
+    second.receive({ type: 'hall' });
+    expect(session.restoring).toBe(false);
+    expect(session.mode).toBe('hall');
+    await vi.advanceTimersByTimeAsync(16000);
+    expect(session.connectionError).toBeNull();
+  } finally {
+    disposePinia(pinia);
+  }
+});
+
+it('cancels a failed restore without forfeiting or deleting reconnection credentials', async () => {
+  localStorage.setItem(
+    'tichu6-session-v4',
+    JSON.stringify({
+      token: 'b'.repeat(64),
+      name: 'Alice',
+      roomId: 'saved-room',
+      watch: true,
+    }),
+  );
+  const pinia = createPinia();
+  setActivePinia(pinia);
+  const session = useSessionStore();
+  try {
+    const opening = session.enterHall(false);
+    const socket = Socket.instances[0];
+    socket.open();
+    socket.receive({ type: 'error', code: 'error.connectFailed', params: {} });
+    await opening;
+    expect(session.restoring).toBe(true);
+    expect(session.connectionError?.code).toBe('error.connectFailed');
+    session.cancelRestore();
+    expect(session.restoring).toBe(false);
+    expect(session.mode).toBe('home');
+    expect(savedRoom()).toMatchObject({
+      roomId: 'saved-room',
+      token: 'b'.repeat(64),
+      watch: true,
+    });
+    expect(socket.sent.map((value) => JSON.parse(value).type)).not.toContain(
+      'forfeit',
+    );
+    await vi.advanceTimersByTimeAsync(60000);
+    expect(Socket.instances).toHaveLength(1);
+  } finally {
+    disposePinia(pinia);
   }
 });

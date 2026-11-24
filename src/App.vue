@@ -10,6 +10,7 @@ import HomeView from './views/HomeView.vue';
 import HallView from './views/HallView.vue';
 import RoomView from './views/RoomView.vue';
 import GameView from './views/GameView.vue';
+import ConnectionLoading from './components/ConnectionLoading.vue';
 import TrainingConsent from './components/TrainingConsent.vue';
 const session = useSessionStore();
 const { t, i18next } = useTranslation();
@@ -25,19 +26,22 @@ onMounted(() => {
 });
 </script>
 <template>
-  <AppHeader />
-  <TrainingConsent v-if="session.mode === 'hall'" />
-  <HomeView v-if="session.mode === 'home'" />
-  <HallView v-else-if="session.mode === 'hall'" />
-  <GameView v-else-if="session.round" :game="session.round" />
-  <RoomView v-else />
-  <LeaveDialog v-if="session.leaving" />
-  <div
-    id="notice"
-    role="status"
-    aria-live="polite"
-    :class="{ show: session.notice }"
-  >
-    {{ message(session.notice) }}
-  </div>
+  <ConnectionLoading v-if="session.restoring" />
+  <template v-else>
+    <AppHeader />
+    <TrainingConsent v-if="session.mode === 'hall'" />
+    <HomeView v-if="session.mode === 'home'" />
+    <HallView v-else-if="session.mode === 'hall'" />
+    <GameView v-else-if="session.round" :game="session.round" />
+    <RoomView v-else />
+    <LeaveDialog v-if="session.leaving" />
+    <div
+      id="notice"
+      role="status"
+      aria-live="polite"
+      :class="{ show: session.notice }"
+    >
+      {{ message(session.notice) }}
+    </div>
+  </template>
 </template>

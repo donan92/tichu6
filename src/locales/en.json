@@ -285,5 +285,13 @@
   "training.off": "Recording off",
   "training.details": "What we collect and how long we keep it",
   "patches.visibleRecordingChoice": "Recording is on by default, with visible on/off controls at the top.",
-  "patches.loungeRecordingToggle": "Recording settings now use a toggle shown only in the lounge."
+  "patches.loungeRecordingToggle": "Recording settings now use a toggle shown only in the lounge.",
+  "restore.title": "Connecting to your game",
+  "restore.description": "Checking your seat and game state with the server.",
+  "restore.hint": "Please wait. Your screen will return when the connection is ready.",
+  "restore.failed": "Unable to connect",
+  "restore.retry": "Reconnect",
+  "restore.retryHint": "You can retry using your saved session.",
+  "restore.cancel": "Back to start",
+  "patches.reconnectLoading": "Shows a loading screen while reconnecting to your game, with a retry option if the connection fails."
 }

@@ -1,5 +1,17 @@
 # Project status / resume point
 
+## v0.8.9 reconnect loading — release pending
+
+- Saved sessions show a loading screen before the first render; welcome and
+  directory messages do not dismiss it until authoritative hall/state arrives.
+- Disconnected room sessions show the same screen; errors offer retry or return
+  to start without deleting saved credentials or forfeiting the game.
+- Added transport tests for initial restore, delayed state timeout, retry and
+  safe cancellation. check, 179 tests (131 unit + 48 UI), format and build passed.
+- Real local Worker capacity, spectator authorization, bots and reconnect checks
+  passed. Loading component visually checked at 390px; real phones unverified.
+- Frontend-only change; backend remains unchanged. Deployment pending.
+
 ## v0.8.8 lounge-only recording switch — deployed
 
 - Replaced two radio choices with a native button role=switch, aria-checked,

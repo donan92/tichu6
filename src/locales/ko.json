@@ -285,5 +285,13 @@
   "training.off": "수집 끄기",
   "training.details": "수집 항목과 보관 안내",
   "patches.visibleRecordingChoice": "봇 개선 수집 기본 켜짐과 상단 수집 선택 안내",
-  "patches.loungeRecordingToggle": "수집 설정을 대기실 전용 토글로 변경"
+  "patches.loungeRecordingToggle": "수집 설정을 대기실 전용 토글로 변경",
+  "restore.title": "게임에 연결하고 있어요",
+  "restore.description": "서버에서 내 자리와 게임 상태를 확인하고 있습니다.",
+  "restore.hint": "잠시만 기다려 주세요. 연결되면 원래 화면으로 돌아갑니다.",
+  "restore.failed": "연결하지 못했어요",
+  "restore.retry": "다시 연결",
+  "restore.retryHint": "저장된 참가 정보로 다시 연결할 수 있습니다.",
+  "restore.cancel": "첫 화면으로",
+  "patches.reconnectLoading": "새로고침·재접속 중 게임 복구 화면을 표시하고 연결 실패 시 다시 시도할 수 있습니다."
 }
