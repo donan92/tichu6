@@ -206,3 +206,9 @@ Release verification:
 
 - User rejected the bright preview. Set midpoint inks between the original and bright palettes: spades #17448b, clubs #0c6942, diamonds #ba5114, hearts #ba2835. Supersedes the preceding local preview. Released `e476d46` on main; Cloudflare Pages `7a505fcb-949f-465b-8202-608330eb8f22`. Production HTML/all five asset hashes match the tested build, all four computed suit colors match approved values, backend health v6 and lounge welcome passed. CI including Worker/idle integration passed: https://github.com/donan92/tichu6/actions/runs/45238459501. No Worker changes/deployment. Screenshot `/tmp/tichu6-mid-tone-production.png`.
 - Visually checked all four suits at 375px. Preview `/tmp/tichu6-mid-tone-suits.png`. Check, tests, format and build passed.
+
+## Room progress timeout — implemented locally
+
+- Rooms expire 30 minutes after creation or the last accepted game action, including bot moves. Presence, join/watch, reconnect and pings do not extend the persisted lastProgress clock. All occupants detach to the hall and the room disappears from the directory; expired requests cannot revive it.
+- Expiry is scheduled using Durable Object alarms and checked before gameplay/bot actions. Existing rooms receive one full window on first load; repeated hibernation preserves the baseline. No destructive schema migration or manual live-room reset.
+- Passed check, 110 tests, format and build. Real isolated Worker idle suite passed online player/spectator room expiry, hall return and failed room resurrection. Full isolated Worker capacity/races/privacy/reconnect/bot/exchange/forfeit integration passed on port 18940. Not merged or deployed.

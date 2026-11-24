@@ -455,12 +455,15 @@ test('idle takeover survives hibernation, advances without grace and allows expl
   let r = f.hub.data.rooms[roomId];
   const seat = r.members.findIndex((m) => m?.hash === ws.a.hash);
   const hand = structuredClone(r.state.hands[seat]);
+  // Bot progress midway through the user idle window keeps the room alive.
+  now += IDLE / 2;
+  r.lastProgress = now;
   // Already completed bot decisions, leaving the human as the only blocker.
   r.state.ready = r.members.map((m) => !!m.bot);
   await f.hub.persist();
   f.hub = new Lounge(f.ctx);
   await f.ready();
-  now += IDLE;
+  now += IDLE / 2;
   await f.hub.alarm();
   r = f.hub.data.rooms[roomId];
   assert.equal(ws.code, 4009);
@@ -574,4 +577,103 @@ test('forfeit is authenticated, hands the seat to a bot immediately and prevents
   assert.equal(last(owner, 'state').value.spectator, true);
   assert.equal('exchangeReview' in last(owner, 'state').value, false);
   assert.equal('exchangeReview' in last(watcher, 'state').value, false);
+});
+
+test('room progress expires at 30 minutes despite presence and spectators', async () => {
+  const f = await setup();
+  const owner = await user(f, 1001);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const id = owner.a.room;
+  const watcher = await user(f, 1002);
+  await msg(f.hub, watcher, {
+    type: 'join',
+    roomId: id,
+    watch: true,
+    name: 'Watch',
+  });
+  const room = f.hub.data.rooms[id];
+  const deadline = room.lastProgress + 30 * 60 * 1000;
+  f.hub.refreshPresence();
+  assert.equal(f.hub.expireStalledRooms(deadline - 1), false);
+  assert.equal(f.hub.expireStalledRooms(deadline), true);
+  assert.equal(f.hub.data.rooms[id], undefined);
+  for (const ws of [owner, watcher]) {
+    assert.equal(ws.a.room, null);
+    assert.equal(ws.a.watch, false);
+    assert.equal(ws.readyState, 1);
+  }
+  await f.hub.persist();
+  const restored = new Lounge(f.ctx);
+  await f.ready();
+  assert.equal(restored.data.rooms[id], undefined);
+});
+
+test('only accepted game actions extend room progress and expired actions cannot revive it', async () => {
+  const f = await setup();
+  const owner = await user(f, 1003);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const id = owner.a.room;
+  const room = f.hub.data.rooms[id];
+  room.lastProgress = Date.now() - 60000;
+  const before = room.lastProgress;
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: -1,
+    action: { type: 'start' },
+  });
+  assert.equal(room.lastProgress, before);
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: room.state.revision,
+    action: { type: 'start' },
+  });
+  assert.ok(room.lastProgress > before);
+  room.lastProgress = Date.now() - 30 * 60 * 1000;
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: room.state.revision,
+    action: { type: 'grand', call: false },
+  });
+  assert.equal(f.hub.data.rooms[id], undefined);
+  assert.equal(owner.a.room, null);
+  assert.equal(last(owner, 'hall').type, 'hall');
+});
+
+test('bot progress extends the room deadline but cannot revive an expired room', async () => {
+  const f = await setup();
+  const owner = await user(f, 1004);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const id = owner.a.room;
+  const room = f.hub.data.rooms[id];
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: room.state.revision,
+    action: { type: 'start' },
+  });
+  room.lastProgress = Date.now() - 60000;
+  const before = room.lastProgress;
+  await f.hub.alarm();
+  assert.ok(room.lastProgress > before);
+  room.lastProgress = Date.now() - 30 * 60 * 1000;
+  await f.hub.alarm();
+  assert.equal(f.hub.data.rooms[id], undefined);
+});
+
+test('room progress migration grants one window and survives repeated hibernation', async (t) => {
+  let now = Date.now();
+  t.mock.method(Date, 'now', () => now);
+  const f = await setup();
+  const owner = await user(f, 1005);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const id = owner.a.room;
+  delete f.hub.data.rooms[id].lastProgress;
+  await f.hub.persist();
+  f.hub = new Lounge(f.ctx);
+  await f.ready();
+  const baseline = f.hub.data.rooms[id].lastProgress;
+  assert.equal(baseline, now);
+  now += 60000;
+  f.hub = new Lounge(f.ctx);
+  await f.ready();
+  assert.equal(f.hub.data.rooms[id].lastProgress, baseline);
 });

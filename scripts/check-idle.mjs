@@ -158,6 +158,25 @@ try {
   await until(() => manual.state?.seat === seat);
   assert.equal(manual.state.bots[seat], false);
   assert.equal(manual.state.hand.length, 18);
+  const beforeHall = watcher.messages.filter((m) => m.type === 'hall').length;
+  assert.equal(
+    (await fetch(base + '/__age-room', { method: 'POST' })).status,
+    200,
+  );
+  await until(
+    () => watcher.messages.filter((m) => m.type === 'hall').length > beforeHall,
+  );
+  await until(() => manual.messages.some((m) => m.type === 'hall'));
+  assert.equal(
+    watcher.messages.filter((m) => m.type === 'directory').at(-1).rooms.length,
+    0,
+  );
+  const resumed = await connect('Idle', owner.token, { roomId, manual: true });
+  await until(() => resumed.messages.some((m) => m.type === 'hall'));
+  assert.equal(resumed.state, null);
+  console.log(
+    'PASS real Worker: stalled room expires with online player and spectator, clears directory and cannot reconnect',
+  );
   console.log(
     'PASS real Worker: ping-resistant idle logout, immediate bot takeover, spectator privacy, capacity release, no automatic retry, explicit same-seat return',
   );

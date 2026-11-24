@@ -11,7 +11,8 @@ import {
 } from '../src/game.js';
 const GRACE = 45000,
   TTL = 86400000,
-  IDLE = 30 * 60 * 1000;
+  IDLE = 30 * 60 * 1000,
+  ROOM_IDLE = 30 * 60 * 1000;
 export function nickname(input) {
   if (typeof input !== 'string' || !/^[A-Za-z0-9]{1,8}$/.test(input))
     throw new AppError('error.invalidNickname');
@@ -59,6 +60,9 @@ export class Lounge {
     ctx.blockConcurrencyWhile(async () => {
       this.data = (await ctx.storage.get('lounge')) || { rooms: {} };
       this.data.activity ||= {};
+      // Existing rooms receive one full window when this policy is introduced.
+      for (const r of Object.values(this.data.rooms))
+        r.lastProgress ??= Date.now();
       // Old hibernated sockets get a full idle window when first upgraded.
       for (const ws of this.users()) {
         const { hash } = this.attachment(ws);
@@ -293,6 +297,10 @@ export class Lounge {
           b.toString(16).padStart(2, '0'),
         ).join('');
         await this.exclusive(async () => {
+          if (this.expireStalledRooms(now)) {
+            await this.persist();
+            this.broadcast();
+          }
           this.expireIdle(now);
           const lastActivity = this.data.activity[hash];
           if (
@@ -337,6 +345,10 @@ export class Lounge {
       } else {
         if (!a.hash) throw new AppError('error.enterFirst');
         await this.exclusive(async () => {
+          if (this.expireStalledRooms(now)) {
+            await this.persist();
+            this.broadcast();
+          }
           this.expireIdle(now);
           a = this.attachment(ws);
           if (a.idle) {
@@ -362,6 +374,7 @@ export class Lounge {
               state: newGame(Array(6).fill('')),
               members: Array(6).fill(null),
               lastActive: Date.now(),
+              lastProgress: Date.now(),
             };
             this.enter(ws, id, false, name);
           } else if (msg.type === 'join') {
@@ -469,6 +482,7 @@ export class Lounge {
               r.state = next;
             } else r.state = act(r.state, seat, action);
             r.lastActive = Date.now();
+            r.lastProgress = Date.now();
           } else throw new AppError('error.unsupported');
           this.data.activity[a.hash] = now;
           this.refreshPresence();
@@ -484,7 +498,24 @@ export class Lounge {
         ws.close(4003, 'Admission rejected');
     }
   }
+  expireStalledRooms(now) {
+    let changed = false;
+    for (const [id, r] of Object.entries(this.data.rooms)) {
+      if (now - (r.lastProgress ??= now) < ROOM_IDLE) continue;
+      delete this.data.rooms[id];
+      changed = true;
+      for (const ws of this.users()) {
+        const a = this.attachment(ws);
+        if (a.room !== id) continue;
+        a.room = null;
+        a.watch = false;
+        ws.serializeAttachment(a);
+      }
+    }
+    return changed;
+  }
   cleanup() {
+    this.expireStalledRooms(Date.now());
     for (const [hash, at] of Object.entries(this.data.activity))
       if (
         Date.now() - at >= TTL &&
@@ -547,7 +578,7 @@ export class Lounge {
           (this.data.activity[this.attachment(ws).hash] ?? now) + IDLE,
         );
     for (const r of Object.values(this.data.rooms)) {
-      at = Math.min(at, r.lastActive + TTL);
+      at = Math.min(at, r.lastProgress + ROOM_IDLE);
       const online = this.online(r),
         s = r.state;
       r.members.forEach((m, i) => {
@@ -582,6 +613,7 @@ export class Lounge {
           now - (this.attachment(ws).created || 0) >= 10000
         )
           ws.close(4003, 'Handshake timeout');
+      this.expireStalledRooms(now);
       this.expireIdle(now);
       this.refreshPresence();
       for (const r of Object.values(this.data.rooms)) {
@@ -610,8 +642,10 @@ export class Lounge {
                   : s.phase === 'trick'
                     ? s.last
                     : -1;
-          if (seat >= 0 && eligible(seat))
+          if (seat >= 0 && eligible(seat)) {
             r.state = act(s, seat, botAction(s, seat));
+            r.lastProgress = now;
+          }
         }
       }
       this.cleanup();
