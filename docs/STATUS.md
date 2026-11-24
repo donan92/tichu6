@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.6 release in progress — user authorized deployment
+## v0.8.6 released — 2026-11-24
 
 - Includes the evaluated gentle bot strategy, opt-in private human gameplay
   records, match-group dataset separation and reproducible research artifacts.
@@ -9,9 +9,21 @@
   and npm audit passed (0 vulnerabilities). Real Worker/idle suites passed on
   these runtime changes in the preceding checkpoint; only release metadata
   changed afterwards.
-- Existing Cloudflare/GitHub credentials verified. No paid service, new secret
-  or permission expansion required. Production export stays disabled without
-  an operator secret. Deployment success is not yet asserted.
+- Released commit684763a by fast-forwarding main. Worker
+  3cea4505-6a0e-40a7-be41-27a6acf64311 verified at100% traffic. Pages production
+  0186696e-924d-4491-ac17-8f30b6cffaff succeeded for the same commit.
+- Production homepage and all5 asset SHA-256 hashes match the tested v0.8.6
+  build. Browser verified v0.8.6/latest5 notes, Escape dismissal/focus return,
+  restored practice and unchecked recording preference; no console errors.
+  This is desktop browser QA, not real iPhone/Samsung hardware testing.
+- Production health v6 and one authenticated lounge welcome passed; no room
+  created or live game changed. Export route returns404 without operator secret.
+- GitHub Verify including local Worker/idle suites passed:
+  https://github.com/donan92/tichu6/actions/runs/45405722529.
+  Pages build/deploy also passed:
+  https://github.com/donan92/tichu6/actions/runs/45405720970.
+- Existing credentials and free hosting retained. No new secret, paid service,
+  permission expansion, neural runtime or live-state reset. No pending release work.
 
 ## Latest checkpoint — 2026-11-24 bot research complete, local only
 
