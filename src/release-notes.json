@@ -1,0 +1,7 @@
+[
+  { "version": "0.8.4", "summary": "patches.versionNotes" },
+  { "version": "0.8.3", "summary": "patches.selectorsAndCards" },
+  { "version": "0.8.2", "summary": "patches.practiceResume" },
+  { "version": "0.8.1", "summary": "patches.exchangeAndCards" },
+  { "version": "0.8.0", "summary": "patches.sixPlayerTeams" }
+]

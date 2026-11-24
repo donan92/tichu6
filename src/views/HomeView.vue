@@ -4,7 +4,7 @@ import { useSessionStore } from '../stores/session';
 import NicknameInput from '../components/NicknameInput.vue';
 import PlayingCard from '../components/PlayingCard.vue';
 import GameRules from '../components/GameRules.vue';
-import { version } from '../../package.json';
+import VersionNotes from '../components/VersionNotes.vue';
 import type { Card } from '../types';
 const { t } = useTranslation();
 const session = useSessionStore();
@@ -47,6 +47,6 @@ const samples: Card[] = [
       </form>
     </section>
     <GameRules />
-    <footer>6T · v{{ version }} · {{ t('app.footer') }}</footer>
+    <footer>6T · <VersionNotes /> · {{ t('app.footer') }}</footer>
   </main>
 </template>

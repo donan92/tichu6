@@ -55,3 +55,10 @@
 - Verify the full interaction, not just the resulting value: opening, selecting, dismissal, keyboard focus, and repeated use. Include narrow-screen checks for changed controls.
 - Preserve native form control nodes during live updates, especially open selects. Do not steal focus or scroll during rerenders.
 - Report device-specific verification limits honestly; desktop or narrow viewport checks are not real iPhone Safari testing.
+
+## Release notes (required for every version change)
+
+- Every version bump must update `package.json`, both root versions in `package-lock.json`, and prepend one entry to `src/release-notes.json` in the same change. Keep earlier entries; the version modal shows the latest five.
+- Give each version its own semantic `patches.*` key with one short sentence in every registered locale. Describe only changes players will notice. For maintenance or minor fixes without meaningful player impact, write only “버그 수정” / “Bug fixes.” Do not list implementation details, CI, dependency names or commit IDs in the modal.
+- Before release, run `npm run release:check`; it is also mandatory through `npm run check`, the build prehook and the server-deploy prehook. Never bypass these checks to ship a version without its note. Verify header/footer version triggers, dismissal, focus restoration and narrow screens when changing this UI.
+- Summaries must describe changes actually included in that version. Do not invent historical version numbers for patches that previously shipped under the same version; summarize those changes together.

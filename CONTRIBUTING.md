@@ -58,3 +58,22 @@ Use i18next semantic keys, e.g. `lounge.createRoom` or `error.invalidNickname`. 
 - Orval is not used: gameplay uses WebSocket messages, not an OpenAPI HTTP contract. Reconsider if a substantive HTTP API is added.
 - The js-beautify subdependency overrides update its vulnerable glob/editorconfig versions. Keep them until upstream adopts fixed releases; validate upgrades with component tests and npm audit.
 - Environment files and Worker `.dev.vars` are ignored. Never place secrets in `VITE_*` variables: Vite exposes those to the browser. Account IDs and the public Worker URL are identifiers, not authentication secrets.
+
+## Version and patch-note checklist
+
+For **every version change**, bump `package.json` and the two root version fields
+in `package-lock.json`, then prepend `{ "version": "x.y.z", "summary": "patches.semanticKey" }`
+to `src/release-notes.json`. Add that key to all registered language packs. Keep old
+entries; the modal displays only the newest five, one short sentence per version.
+
+Write for players: new actions, visible improvements, or meaningful fixes. Use
+`버그 수정` / `Bug fixes.` for routine changes with no useful player-facing detail.
+Avoid technical release logs. The initial history groups patches by their actual
+published version; it does not assign new version numbers to older deployments.
+
+`npm run release:check` rejects missing current-version notes, duplicate or
+misordered versions, inconsistent lockfile versions, missing translations, and
+multiline/overlong summaries. It runs automatically in `npm run check` (and CI),
+before `npm run build` (Pages), and before `npm run deploy:server`. Update the note
+before running those commands; do not bypass the hooks. This validates completeness,
+not editorial accuracy, so review the one-line summary before merging.

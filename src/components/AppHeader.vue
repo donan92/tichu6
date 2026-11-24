@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import ChoicePicker from './ChoicePicker.vue';
-import { version } from '../../package.json';
+import VersionNotes from './VersionNotes.vue';
 import { useTranslation } from 'i18next-vue';
 import { languages } from '../i18n.js';
 import { changeLanguage } from '../localization';
@@ -26,13 +26,15 @@ const status = computed(() =>
 </script>
 <template>
   <header>
-    <a
-      class="brand"
-      href="#"
-      @click.prevent="session.mode !== 'home' && (session.leaving = true)"
-      >6<span>T</span><span class="brand-version">v{{ version }}</span
-      ><small>{{ t('app.tagline') }}</small></a
-    >
+    <div class="brand-group">
+      <a
+        class="brand"
+        href="#"
+        @click.prevent="session.mode !== 'home' && (session.leaving = true)"
+        >6<span>T</span><small>{{ t('app.tagline') }}</small></a
+      >
+      <VersionNotes />
+    </div>
     <div class="header-right">
       <ChoicePicker
         v-model="language"
@@ -66,14 +68,10 @@ const status = computed(() =>
 </template>
 
 <style scoped>
-.brand .brand-version {
-  margin-left: 8px;
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1;
-  white-space: nowrap;
-  align-self: center;
+.brand-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
 }
 </style>

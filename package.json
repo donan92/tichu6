@@ -1,12 +1,12 @@
 {
   "name": "tichu6",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite",
     "test": "npm run test:unit && npm run test:ui",
-    "check": "npm run lint && npm run typecheck",
+    "check": "npm run release:check && npm run lint && npm run typecheck",
     "test:server": "node scripts/check-lounge.mjs",
     "dev:server": "wrangler dev --port 8787",
     "deploy:server": "wrangler deploy",
@@ -20,7 +20,10 @@
     "test:unit": "node --test tests/*.test.js",
     "test:ui": "vitest run",
     "assets:cards": "node scripts/build-card-assets.mjs",
-    "test:idle": "node scripts/check-idle.mjs"
+    "test:idle": "node scripts/check-idle.mjs",
+    "release:check": "node scripts/check-release-notes.mjs",
+    "prebuild": "npm run release:check",
+    "predeploy:server": "npm run release:check"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

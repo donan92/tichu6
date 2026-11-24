@@ -262,5 +262,13 @@
   "combo.phoenix": "Phoenix {{rank}} single",
   "practice.saveFailed": "Could not save or remove practice progress. Check browser storage settings.",
   "practice.restoreFailed": "Could not restore saved practice. Please start a new practice game.",
-  "picker.cancel": "Cancel"
+  "picker.cancel": "Cancel",
+  "patches.open": "View release notes for v{{version}}",
+  "patches.title": "Latest 5 updates",
+  "patches.close": "Close",
+  "patches.versionNotes": "Tap the version to see recent updates.",
+  "patches.selectorsAndCards": "Clearer cards and selectors; stalled rooms close automatically.",
+  "patches.practiceResume": "Resume bot practice after refreshing.",
+  "patches.exchangeAndCards": "New card art, exchange receipts and a give-up option.",
+  "patches.sixPlayerTeams": "Bots fill empty seats with balanced teams."
 }
