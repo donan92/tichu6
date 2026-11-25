@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.10 game flow — implemented, not deployed
+## v0.8.10 game flow — deployed
 
 - Branch `fix/game-flow-timers`. Individual Small/Large Tichu penalty arithmetic
   was already correct; added explicit per-caller results and regression tests
@@ -22,9 +22,14 @@
   `npm run test:flow` to CI for deadline persistence and alarm-driven actions.
 - Browser: practice exchange preview/reselection/confirmation, declaration,
   countdown and seat pass badges checked at 390px. Actual phones unverified.
-- Next release step: merge approved changes to main for Pages, deploy Worker
-  separately, and verify both production deployments. No production deployment
-  has been performed for this change.
+- Released `dfa1271` to main on 2026-11-25. Pages deployment
+  `624beb0a-bc54-447f-be67-153117c6f172` is active; production JS/CSS match
+  the tested local build byte-for-byte. Worker deployment
+  `e0618d4e-08e3-4419-9b64-fb27d3eae6de` succeeded; production health is OK.
+- Final local check, 189 tests, format and build passed again before release.
+  GitHub Verify passed, including local Worker, idle and flow integration:
+  https://github.com/donan92/tichu6/actions/runs/45533359974.
+  No pending deployment work. Live games were not disturbed for testing.
 
 ## v0.8.9 reconnect loading — deployed
 
