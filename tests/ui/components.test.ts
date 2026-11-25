@@ -1000,3 +1000,25 @@ it('opens round score history, keeps it open on updates, closes and restores foc
   await nextTick();
   expect(dialog.open).toBe(false);
 });
+
+it('blocks native hand text selection and context menu while retaining ordinary card taps', async () => {
+  const session = useSessionStore();
+  const select = vi.spyOn(session, 'toggleCard').mockImplementation(() => {});
+  const wrapper = mount(HandCards, {
+    props: {
+      hand: [{ id: 'touch-card', rank: 2, suit: 0 }],
+      roundKey: 'touch:1',
+    },
+    global: { plugins: plugins() },
+  });
+  wrappers.push(wrapper);
+  const card = wrapper.get('.card');
+  for (const type of ['selectstart', 'contextmenu']) {
+    const event = new Event(type, { bubbles: true, cancelable: true });
+    card.element.dispatchEvent(event);
+    expect(event.defaultPrevented).toBe(true);
+  }
+  expect(card.attributes('title')).toBeUndefined();
+  await card.trigger('click');
+  expect(select).toHaveBeenCalledExactlyOnceWith('touch-card');
+});

@@ -88,6 +88,7 @@ function move(id: string, offset: number) {
     :delay-on-touch-only="true"
     :touch-start-threshold="5"
     :fallback-tolerance="5"
+    :force-fallback="true"
     :disabled="spectator || session.pending || hand.length < 2"
     draggable=".card"
     ghost-class="hand-drag-ghost"
@@ -101,7 +102,9 @@ function move(id: string, offset: number) {
       :interactive="!spectator"
       :position="index"
       :pick="session.selected.indexOf(card.id)"
-      :title="t('play.dragHandHint')"
+      :aria-description="t('play.dragHandHint')"
+      @contextmenu.prevent
+      @selectstart.prevent
       @select="select"
       @keydown.alt.left.prevent="move(card.id, -1)"
       @keydown.alt.right.prevent="move(card.id, 1)"
@@ -123,8 +126,12 @@ function move(id: string, offset: number) {
   padding: 6px 10px;
   font-size: 12px;
 }
-.hand :deep(.card) {
+.hand :deep(.card),
+.hand :deep(.card *) {
+  -webkit-user-select: none;
+  user-select: none;
   -webkit-touch-callout: none;
+  -webkit-user-drag: none;
 }
 .hand :deep(.hand-drag-ghost) {
   opacity: 0.35;

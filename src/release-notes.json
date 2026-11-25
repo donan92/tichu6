@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.24",
+    "summary": "patches.touchHandDrag"
+  },
+  {
     "version": "0.8.23",
     "summary": "patches.dragonRecipient"
   },

@@ -376,5 +376,6 @@
   "score.total": "Total",
   "score.empty": "No completed rounds yet.",
   "score.missing": "Detailed scores from rounds played on an older version are unavailable.",
-  "score.close": "Close"
+  "score.close": "Close",
+  "patches.touchHandDrag": "Improved mobile hand dragging to prevent text selection and long-press menus."
 }

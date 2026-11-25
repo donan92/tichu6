@@ -376,5 +376,6 @@
   "score.total": "누적",
   "score.empty": "아직 완료된 라운드가 없습니다.",
   "score.missing": "이전 버전에서 진행된 라운드의 상세 점수는 기록되어 있지 않습니다.",
-  "score.close": "닫기"
+  "score.close": "닫기",
+  "patches.touchHandDrag": "모바일 손패 드래그 중 글자 선택과 길게 누르기 메뉴가 나타나는 문제를 개선했습니다."
 }
