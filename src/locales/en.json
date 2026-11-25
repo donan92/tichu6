@@ -318,5 +318,14 @@
   "rules.history": "Only current-trick history is visible during play. Review each trick after the 1,000-point match ends. Exchange choices can be changed and confirmed again until everyone has confirmed.",
   "combo.phoenixLead": "Phoenix single",
   "patches.mobileLabels": "Clearer exchange, pass and Phoenix labels, with up to 3 minutes to reconnect during play.",
-  "play.reconnectWait": "Waiting for reconnection · {{seconds}}s remaining"
+  "play.reconnectWait": "Waiting for reconnection · {{seconds}}s remaining",
+  "play.confirmTitle": "Confirm your choice",
+  "play.confirmAction": "Confirm",
+  "play.confirmDog": "Play the Dog and pass the lead to {{name}}?",
+  "play.confirmWish": "Play the Mahjong with wish: {{rank}}?",
+  "play.confirmDragon": "Give the Dragon trick to {{name}}?",
+  "play.confirmDragonPlay": "Play the Dragon?",
+  "play.wishBombRequired": "You must play a bomb containing the wished rank {{rank}}. Select a bomb that beats the previous bomb.",
+  "error.wishBombPriority": "Wait for the current player to play a bomb fulfilling the wish.",
+  "patches.specialChoicesAndSpectators": "Added special-card confirmations, wish-bomb priority, and spectator hand viewing."
 }

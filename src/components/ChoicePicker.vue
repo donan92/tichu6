@@ -13,6 +13,7 @@ const props = defineProps<{
   label: string;
   options: { value: string; label: string }[];
   disabled?: boolean;
+  compact?: boolean;
 }>();
 const emit = defineEmits<{ 'update:modelValue': [value: string] }>();
 const { t } = useTranslation();
@@ -80,7 +81,7 @@ onBeforeUnmount(() => {
       >
         <section class="choice-panel">
           <h2 :id="`${id}-title`">{{ label }}</h2>
-          <div class="choice-options">
+          <div class="choice-options" :class="{ compact }">
             <button
               v-for="option in options"
               :key="option.value"
@@ -137,6 +138,9 @@ onBeforeUnmount(() => {
 .choice-options {
   display: grid;
   gap: 8px;
+}
+.choice-options.compact {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 .choice-options button {
   min-height: 48px;

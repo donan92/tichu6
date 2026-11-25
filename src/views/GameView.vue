@@ -164,7 +164,27 @@ const tableNote = computed(() =>
         }}</span>
       </div>
     </section>
-    <section class="hand-panel">
+    <section v-if="game.spectator" class="spectator-hands">
+      <section
+        v-for="(hand, index) in game.spectatorHands"
+        :key="index"
+        class="hand-panel"
+      >
+        <h3>
+          {{ game.names[index] }} ·
+          {{ t('play.cardCount', { count: hand.length }) }}
+        </h3>
+        <div class="hand">
+          <PlayingCard
+            v-for="card in sortCards(hand)"
+            :key="card.id"
+            :card="card"
+          />
+          <p v-if="!hand.length">{{ t('play.finished') }}</p>
+        </div>
+      </section>
+    </section>
+    <section v-else class="hand-panel">
       <div class="hand-heading">
         <div>
           <b

@@ -49,3 +49,9 @@ export function visibleHistory(
 export function visibleLog(
   state: LobbyState | RoundState,
 ): (import('./types').Message | string)[];
+
+export function legalPlays(
+  hand: Card[],
+  top?: Combination | null,
+  wish?: number | null,
+): { cards: Card[]; play: Combination }[];

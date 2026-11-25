@@ -390,3 +390,77 @@ test('exchange receipt reveals only own transfers and disappears after own play 
   assert.deepEqual(view(collected, 2).exchangeReview, []);
   assert.equal('exchangeReviewClosed' in view(collected, 2), false);
 });
+
+test('own-turn wish requires a beating wished bomb, not an unrelated bomb', () => {
+  let s = playing([
+    [...pick(3, 4), ...pick(4)],
+    [...pick(8, 4), ...pick(9, 4), ...pick(10)],
+    pick(6),
+    pick(7),
+    pick(11),
+    pick(12),
+  ]);
+  s = act(s, 0, { type: 'play', ids: pick(3, 4).map((c) => c.id) });
+  s.wish = 8;
+  const before = structuredClone(s);
+  assert.throws(() => act(s, 1, { type: 'pass' }));
+  assert.throws(() =>
+    act(s, 1, { type: 'play', ids: pick(9, 4).map((c) => c.id) }),
+  );
+  assert.deepEqual(s, before);
+  s = act(s, 1, { type: 'play', ids: pick(8, 4).map((c) => c.id) });
+  assert.equal(s.wish, null);
+  assert.equal(s.last, 1);
+});
+test('a weaker wished bomb does not prevent passing a stronger bomb', () => {
+  let s = playing([
+    [...pick(9, 4), ...pick(4)],
+    [...pick(8, 4), ...pick(10)],
+    pick(6),
+    pick(7),
+    pick(11),
+    pick(12),
+  ]);
+  s = act(s, 0, { type: 'play', ids: pick(9, 4).map((c) => c.id) });
+  s.wish = 8;
+  s = act(s, 1, { type: 'pass' });
+  assert.equal(s.wish, 8);
+});
+
+test('wish bomb priority rejects interruptions atomically and releases after fulfillment', () => {
+  let s = playing([
+    [...pick(3, 4), ...pick(4)],
+    [...pick(8, 4), ...pick(10)],
+    [...pick(9, 4), ...pick(12)],
+    pick(7),
+    pick(11),
+    pick(6),
+  ]);
+  s = act(s, 0, { type: 'play', ids: pick(3, 4).map((c) => c.id) });
+  s.wish = 8;
+  const before = structuredClone(s);
+  assert.throws(
+    () => act(s, 2, { type: 'play', ids: pick(9, 4).map((c) => c.id) }),
+    (error) => error.code === 'error.wishBombPriority',
+  );
+  assert.deepEqual(s, before);
+  s = act(s, 1, { type: 'play', ids: pick(8, 4).map((c) => c.id) });
+  s = act(s, 2, { type: 'play', ids: pick(9, 4).map((c) => c.id) });
+  assert.equal(s.last, 2);
+  assert.equal(s.wish, null);
+});
+test('bomb interruption stays legal when current player cannot beat with the wish', () => {
+  let s = playing([
+    [...pick(9, 4), ...pick(4)],
+    [...pick(8, 4), ...pick(10)],
+    [...pick(12, 4), ...pick(2)],
+    pick(7),
+    pick(11),
+    pick(6),
+  ]);
+  s = act(s, 0, { type: 'play', ids: pick(9, 4).map((c) => c.id) });
+  s.wish = 8;
+  s = act(s, 2, { type: 'play', ids: pick(12, 4).map((c) => c.id) });
+  assert.equal(s.last, 2);
+  assert.equal(s.wish, 8);
+});

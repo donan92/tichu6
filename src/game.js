@@ -469,6 +469,17 @@ export function act(state, seat, action) {
     if (!p || !beats(p, s.top)) fail('error.combination');
     const inTurn = s.phase === 'play' && s.turn === seat;
     if (!inTurn && (!p.bomb || !s.top)) fail('error.outOfTurn');
+    // Give the current player priority to fulfill a wish over a bomb.
+    if (
+      !inTurn &&
+      s.phase === 'play' &&
+      s.top?.bomb &&
+      s.wish &&
+      s.turn != null &&
+      legalPlays(s.hands[s.turn], s.top, s.wish).length
+    )
+      fail('error.wishBombPriority');
+
     if (
       inTurn &&
       s.wish &&

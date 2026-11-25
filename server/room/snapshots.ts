@@ -75,6 +75,10 @@ export class Snapshots {
     const online = this.connections.online(r);
     const snapshot = publicView(r.state);
     snapshot.names = r.members.map((m, i) => (m ? r.state.names[i] : ''));
+    const state = r.state;
+    if (watch && state.phase !== 'lobby') {
+      snapshot.spectatorHands = state.names.map((_, i) => view(state, i).hand);
+    }
     if (seat >= 0) {
       snapshot.seat = seat;
       snapshot.hand =

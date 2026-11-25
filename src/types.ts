@@ -54,6 +54,7 @@ export interface PublicBase {
   roomId?: string;
   title?: RoomTitle;
   spectator?: boolean;
+  spectatorHands?: Card[][];
   leader?: number;
   paused?: boolean;
   offline?: boolean[];

@@ -1,13 +1,14 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import ActionConfirm from './ActionConfirm.vue';
 import PlayingCard from './PlayingCard.vue';
 import ChoicePicker from './ChoicePicker.vue';
 import { useTranslation } from 'i18next-vue';
-import { beats, classify, LABEL, partners, team } from '../game.js';
+import { beats, classify, legalPlays, LABEL, partners, team } from '../game.js';
 import { useSessionStore } from '../stores/session';
 import { combinationMessage } from '../combinations';
 import { useText } from '../composables/useText';
-import type { RoundView } from '../types';
+import type { GameAction, RoundView } from '../types';
 const props = defineProps<{ game: RoundView }>();
 const session = useSessionStore();
 const { t } = useTranslation();
@@ -28,9 +29,11 @@ const exchangeDraft = computed(() =>
     .filter((entry) => entry.card),
 );
 function chooseDragon(value: string) {
-  target.value = value;
   if (collecting.value && dragon.value)
-    session.submit({ type: 'dragonTarget', target: Number(value) });
+    requestConfirmation(
+      { type: 'dragonTarget', target: Number(value) },
+      t('play.confirmDragon', { name: props.game.names[Number(value)] }),
+    );
 }
 const combo = computed(() =>
   classify(chosen.value, props.game.top, Number(phoenixRank.value) || null),
@@ -144,6 +147,17 @@ const help = computed(() => {
       })
     : t('play.selectHint');
 });
+const wishBombRequired = computed(
+  () =>
+    !props.game.spectator &&
+    props.game.phase === 'play' &&
+    props.game.turn === session.seat &&
+    !!props.game.top?.bomb &&
+    !!props.game.wish &&
+    legalPlays(props.game.hand, props.game.top, props.game.wish).some(
+      (option) => option.play.bomb,
+    ),
+);
 const cannotPlay = computed(
   () =>
     locked.value ||
@@ -152,20 +166,86 @@ const cannotPlay = computed(
     ((props.game.turn !== session.seat || props.game.phase === 'trick') &&
       !combo.value.bomb),
 );
-function play() {
-  session.submit({
+const confirmation = ref<{ action: GameAction; description: string } | null>(
+  null,
+);
+function requestConfirmation(action: GameAction, description: string) {
+  if (locked.value) return;
+  confirmation.value = { action, description };
+}
+function confirmAction() {
+  const pending = confirmation.value;
+  confirmation.value = null;
+  if (!pending || locked.value) return;
+  if (pending.action.type === 'dragonTarget')
+    target.value = String(pending.action.target);
+  session.submit(pending.action);
+}
+watch(
+  () => [
+    props.game.revision,
+    props.game.phase,
+    props.game.turn,
+    session.seat,
+    locked.value,
+    session.selected.join(','),
+  ],
+  () => {
+    confirmation.value = null;
+  },
+);
+function collect(event: MouseEvent) {
+  (event.currentTarget as HTMLButtonElement)?.focus();
+  const action: GameAction = { type: 'collect', target: Number(target.value) };
+  if (dragon.value)
+    requestConfirmation(
+      action,
+      t('play.confirmDragon', { name: props.game.names[Number(target.value)] }),
+    );
+  else session.submit(action);
+}
+function play(event: MouseEvent) {
+  (event.currentTarget as HTMLButtonElement)?.focus();
+  if (cannotPlay.value) return;
+  const action: GameAction = {
     type: 'play',
     ids: [...session.selected],
     wish: wish.value ? Number(wish.value) : null,
     target: Number(target.value),
     phoenixRank: Number(phoenixRank.value) || null,
-  });
+  };
+  if (hasDog.value)
+    requestConfirmation(
+      action,
+      t('play.confirmDog', { name: props.game.names[Number(target.value)] }),
+    );
+  else if (hasMahjong.value)
+    requestConfirmation(
+      action,
+      t('play.confirmWish', {
+        rank: wish.value
+          ? LABEL[Number(wish.value)] || wish.value
+          : t('play.noWish'),
+      }),
+    );
+  else if (chosen.value.some((card) => card.special === 'dragon'))
+    requestConfirmation(action, t('play.confirmDragonPlay'));
+  else session.submit(action);
 }
 </script>
 <template>
+  <ActionConfirm
+    v-if="confirmation"
+    :description="confirmation.description"
+    @cancel="confirmation = null"
+    @confirm="confirmAction"
+  />
   <div class="action-message">
     <h3>{{ heading }}</h3>
     <p>{{ help }}</p>
+    <p v-if="wishBombRequired" role="status">
+      {{ t('play.wishBombRequired', { rank: LABEL[game.wish!] || game.wish }) }}
+    </p>
   </div>
   <template v-if="!game.spectator">
     <div v-if="game.phase === 'grand'" class="action-buttons">
@@ -255,24 +335,25 @@ function play() {
           }))
         "
         @update:model-value="chooseDragon"
-      /><button
-        class="primary"
-        :disabled="locked"
-        @click="session.submit({ type: 'collect', target: Number(target) })"
-      >
+      /><button class="primary" :disabled="locked" @click="collect">
         {{ t(dragon ? 'play.giveTrick' : 'play.collect') }}
       </button>
     </div>
     <div v-else class="action-buttons play-actions">
-      <label v-if="hasMahjong"
-        >{{ t('play.wish')
-        }}<select id="wish" v-model="wish">
-          <option value="">{{ t('play.noWish') }}</option>
-          <option v-for="rank in ranks" :key="rank" :value="String(rank)">
-            {{ LABEL[rank] || rank }}
-          </option>
-        </select></label
-      >
+      <ChoicePicker
+        v-if="hasMahjong"
+        v-model="wish"
+        compact
+        :label="t('play.wish')"
+        :disabled="locked"
+        :options="[
+          { value: '', label: t('play.noWish') },
+          ...ranks.map((rank) => ({
+            value: String(rank),
+            label: String(LABEL[rank] || rank),
+          })),
+        ]"
+      />
       <ChoicePicker
         v-if="hasDog"
         v-model="target"

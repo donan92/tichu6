@@ -473,6 +473,13 @@ describe('Vue interaction regressions', () => {
     wrappers.push(wrapper);
     expect(wrapper.get('.choice-trigger').text()).toContain(game.names[2]);
     await wrapper.get('button.primary').trigger('click');
+    expect(document.querySelector('.action-confirm')).not.toBeNull();
+    (
+      document.querySelector(
+        '.action-confirm button.primary',
+      ) as HTMLButtonElement
+    ).click();
+    await nextTick();
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'play', target: 2 }),
     );
@@ -490,6 +497,13 @@ describe('Vue interaction regressions', () => {
     expect(dialog.open).toBe(false);
     expect(submit).not.toHaveBeenCalled();
     await wrapper.get('button.primary').trigger('click');
+    expect(document.querySelector('.action-confirm')).not.toBeNull();
+    (
+      document.querySelector(
+        '.action-confirm button.primary',
+      ) as HTMLButtonElement
+    ).click();
+    await nextTick();
     expect(submit).toHaveBeenCalledWith(
       expect.objectContaining({ type: 'play', target: 4 }),
     );
@@ -530,9 +544,116 @@ describe('Vue interaction regressions', () => {
     options[1]!.click();
     await nextTick();
     expect(dialog.open).toBe(false);
+    expect(submit).not.toHaveBeenCalled();
+    (
+      document.querySelector(
+        '.action-confirm button.primary',
+      ) as HTMLButtonElement
+    ).click();
+    await nextTick();
     expect(submit).toHaveBeenCalledWith({ type: 'dragonTarget', target: 3 });
     await wrapper.get('button.primary').trigger('click');
+    expect(document.querySelector('.action-confirm')).not.toBeNull();
+    (
+      document.querySelector(
+        '.action-confirm button.primary',
+      ) as HTMLButtonElement
+    ).click();
+    await nextTick();
     expect(submit).toHaveBeenCalledWith({ type: 'collect', target: 3 });
+  });
+  it('uses buttons for Mahjong wishes and requires confirmation, allowing cancel and stale-state dismissal', async () => {
+    const session = useSessionStore();
+    const game = round();
+    game.phase = 'play';
+    game.turn = 0;
+    game.hand = [{ id: 'mahjong', rank: 1, suit: -1, special: 'mahjong' }];
+    session.game = game;
+    session.selected = ['mahjong'];
+    const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
+    const wrapper = mount(GameControls, {
+      props: { game },
+      attachTo: document.body,
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    expect(wrapper.find('select#wish').exists()).toBe(false);
+    await wrapper.get('.choice-trigger').trigger('click');
+    const choices = document.querySelectorAll<HTMLButtonElement>(
+      '.choice-options button',
+    );
+    expect(choices).toHaveLength(14);
+    choices[1]!.click();
+    await nextTick();
+    await wrapper.get('button.primary').trigger('click');
+    expect(submit).not.toHaveBeenCalled();
+    expect(document.querySelector('.action-confirm')?.textContent).toContain(
+      '2',
+    );
+    document
+      .querySelector('.action-confirm')!
+      .dispatchEvent(new Event('cancel'));
+    await nextTick();
+    expect(submit).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(wrapper.get('button.primary').element);
+    await wrapper.get('button.primary').trigger('click');
+    await wrapper.setProps({ game: { ...game, revision: game.revision + 1 } });
+    expect(document.querySelector('.action-confirm')).toBeNull();
+    await wrapper.get('button.primary').trigger('click');
+    (
+      document.querySelector(
+        '.action-confirm button.primary',
+      ) as HTMLButtonElement
+    ).click();
+    await nextTick();
+    expect(submit).toHaveBeenCalledExactlyOnceWith(
+      expect.objectContaining({ type: 'play', wish: 2 }),
+    );
+  });
+  it('shows all six spectator hands without playable card buttons', () => {
+    const game = round();
+    game.spectator = true;
+    game.seat = -1;
+    game.hand = [];
+    game.spectatorHands = Array.from({ length: 6 }, (_, i) => [
+      { id: `0-${i % 4}-2`, rank: 2, suit: i % 4 },
+    ]);
+    const wrapper = mount(GameView, {
+      props: { game },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    expect(wrapper.findAll('.spectator-hands .hand-panel')).toHaveLength(6);
+    expect(wrapper.findAll('.spectator-hands .card')).toHaveLength(6);
+    expect(wrapper.findAll('.spectator-hands button')).toHaveLength(0);
+  });
+  it('announces a required wished bomb only on the player turn and never submits it automatically', async () => {
+    const session = useSessionStore();
+    const game = round();
+    game.phase = 'play';
+    game.turn = 0;
+    game.wish = 8;
+    session.game = game;
+    game.hand = Array.from({ length: 4 }, (_, suit) => ({
+      id: `0-${suit}-8`,
+      suit,
+      rank: 8,
+    }));
+    game.top = { kind: 'bomb', bomb: 1, power: 3, size: 4, cards: [] };
+    const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
+    const wrapper = mount(GameControls, {
+      props: { game },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    expect(wrapper.get('[role="status"]').text()).toContain('8');
+    expect(submit).not.toHaveBeenCalled();
+    await wrapper.setProps({ game: { ...game, turn: 1 } });
+    expect(wrapper.find('[role="status"]').exists()).toBe(false);
+    await wrapper.setProps({
+      game: { ...game, top: { ...game.top!, power: 9 } },
+    });
+    expect(wrapper.find('[role="status"]').exists()).toBe(false);
   });
   it('offers no action buttons or private cards to spectators', () => {
     const game = round();

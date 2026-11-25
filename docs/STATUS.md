@@ -768,3 +768,13 @@ Release verification:
   were not targeted. Research artifacts and local synthetic test records remain.
 - Final model/strategy decision and exact comparison intervals are in
   research/RESULTS.md. No further training, merge or deployment performed.
+
+## Special-card confirmation, wished-bomb priority and spectator hands — release preparation
+
+- User replaced the earlier automatic-bomb request: no new automatic submission. On the current player's turn, UI announces a required beating bomb containing the wish. Engine rejects out-of-turn interruptions while that legal response exists; missing/weaker wished bombs do not reserve priority. Rejection preserves state, and fulfillment clears the restriction. Existing turn/trick timeout behavior remains.
+- Mahjong wish now uses a three-column button modal; Dog/Mahjong/Dragon play and Dragon recipient/collection require explicit confirmation. Cancel/Escape preserve choices, focus returns, and revision/phase/turn/selection changes invalidate pending confirmation.
+- User explicitly changed spectator policy: authenticated room spectators receive six dealt hands through `spectatorHands`; grand shows only the first ten. Player snapshots do not contain opponents' hands. Exchange receipts/choices, credentials and identities remain private, and spectator actions remain forbidden. Updated AGENTS/README accordingly.
+- Local real Worker18949 passed capacity, seat races, spectator hand exposure/player isolation, authorization, reconnect, bots, exchange and forfeit checks. Browser375x667 verified wish grid fits without overflow, selection closes, confirmation opens and cancellation restores focus. Actual iPhone/Samsung hardware not tested.
+- No merge, version bump or deployment in this task. Preserve unrelated research/strategy changes and concurrent status entries. Final `npm run check`, all 211 tests (154 unit + 57 UI), `npm run format:check`, and `npm run build` passed.
+
+- Scoped release prepared on current main, excluding unrelated research commits and untracked strategy work. Version 0.8.12 with Korean/English release notes.

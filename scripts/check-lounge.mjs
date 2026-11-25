@@ -115,6 +115,11 @@ try {
   assert.equal(owner.state.hand.length, 10);
   assert.deepEqual(spectator.state.hand, []);
   assert.equal(spectator.state.seat, -1);
+  assert.deepEqual(
+    spectator.state.spectatorHands.map((hand) => hand.length),
+    [10, 10, 10, 10, 10, 10],
+  );
+  assert.ok(players.every((player) => !('spectatorHands' in player.state)));
   for (const key of ['hands', 'exchanges', 'first', 'members'])
     assert.equal(key in spectator.state, false);
   const denied = await request(
@@ -139,7 +144,7 @@ try {
   assert.deepEqual(restored.state.hand, original);
   assert.equal(restored.directory.count, 30);
   console.log(
-    'PASS real Worker: 30/31 identities, 5/6 room race, six seats, spectators counted, no hidden cards, spectator action spoof rejected, reconnect at full capacity',
+    'PASS real Worker: 30/31 identities, 5/6 room race, six seats, spectators counted, dealt spectator hands, player hand isolation, spectator action spoof rejected, reconnect at full capacity',
   );
   const solo = admitted.find((c) => !players.includes(c) && c !== spectator);
   await request(
