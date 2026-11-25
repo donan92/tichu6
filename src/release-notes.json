@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.11",
+    "summary": "patches.mobileLabels"
+  },
+  {
     "version": "0.8.10",
     "summary": "patches.gameFlow"
   },

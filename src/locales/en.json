@@ -262,7 +262,7 @@
   "combo.straight": "{{low}}–{{high}} straight",
   "combo.straightFlush": "{{low}}–{{high}} straight flush",
   "combo.pairs": "{{low}}–{{high}} consecutive pairs",
-  "combo.phoenix": "Phoenix {{rank}} single",
+  "combo.phoenix": "Phoenix over {{rank}}",
   "practice.saveFailed": "Could not save or remove practice progress. Check browser storage settings.",
   "practice.restoreFailed": "Could not restore saved practice. Please start a new practice game.",
   "picker.cancel": "Cancel",
@@ -297,7 +297,7 @@
   "log.pass": "{{name}} · Pass",
   "log.callResult": "{{name}} · {{call}}-point declaration: {{delta}} points",
   "play.autoCollect": "Trick closes automatically in {{seconds}}s",
-  "play.turnDeadline": "Current turn · {{seconds}}s remaining",
+  "play.turnDeadline": "{{seconds}}s remaining",
   "play.currentTrick": "Current trick history",
   "play.historyLocked": "Previous tricks are available only after the match ends.",
   "play.matchHistory": "Match review",
@@ -315,5 +315,7 @@
   "patches.gameFlow": "Clearer calls and passes, automatic turns and post-match trick review.",
   "rules.flowTitle": "Turn limits and history",
   "rules.timers": "Turns last at most 30 seconds, then automatically pass. When passing is illegal, a legal move is made. Tricks collect automatically after 5 seconds.",
-  "rules.history": "Only current-trick history is visible during play. Review each trick after the 1,000-point match ends. Exchange choices can be changed and confirmed again until everyone has confirmed."
+  "rules.history": "Only current-trick history is visible during play. Review each trick after the 1,000-point match ends. Exchange choices can be changed and confirmed again until everyone has confirmed.",
+  "combo.phoenixLead": "Phoenix single",
+  "patches.mobileLabels": "Fixed exchange names and pass layout, with clearer Phoenix and countdown labels."
 }

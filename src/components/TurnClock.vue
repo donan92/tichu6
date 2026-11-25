@@ -1,9 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue';
+import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useTranslation } from 'i18next-vue';
 const props = defineProps<{ deadline?: number | null; phase: string }>();
 const { t } = useTranslation();
 const now = ref(Date.now());
+watch(
+  () => props.deadline,
+  () => {
+    now.value = Date.now();
+  },
+  { flush: 'sync' },
+);
 let timer: ReturnType<typeof setInterval> | undefined;
 onMounted(() => {
   timer = setInterval(() => {

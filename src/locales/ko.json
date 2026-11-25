@@ -262,7 +262,7 @@
   "combo.straight": "{{low}}–{{high}} 스트레이트",
   "combo.straightFlush": "{{low}}–{{high}} 스트레이트 플러쉬",
   "combo.pairs": "{{low}}–{{high}} 연속 페어",
-  "combo.phoenix": "봉황 {{rank}} 싱글",
+  "combo.phoenix": "{{rank}} 위 봉황",
   "practice.saveFailed": "연습 게임을 저장하거나 삭제하지 못했습니다. 브라우저 저장 공간 설정을 확인해 주세요.",
   "practice.restoreFailed": "저장된 연습 게임을 불러오지 못했습니다. 새 연습 게임을 시작해 주세요.",
   "picker.cancel": "취소",
@@ -297,7 +297,7 @@
   "log.pass": "{{name}} · 패스",
   "log.callResult": "{{name}} · 선언 {{call}}점 정산: {{delta}}점",
   "play.autoCollect": "{{seconds}}초 후 트릭 자동 종료",
-  "play.turnDeadline": "현재 차례 · {{seconds}}초 남음",
+  "play.turnDeadline": "{{seconds}}초 남음",
   "play.currentTrick": "현재 트릭 기록",
   "play.historyLocked": "지난 트릭은 경기 종료 후에만 조회할 수 있습니다.",
   "play.matchHistory": "경기 복기",
@@ -315,5 +315,7 @@
   "patches.gameFlow": "선언 정산·패스 표시 개선, 자동 진행과 경기 종료 후 복기 추가",
   "rules.flowTitle": "진행 시간과 기록",
   "rules.timers": "차례는 최대 30초이며 시간이 지나면 자동 패스합니다. 패스가 불가능하면 가능한 카드를 자동으로 냅니다. 트릭은 5초 뒤 자동으로 가져옵니다.",
-  "rules.history": "진행 중에는 현재 트릭 기록만 보이며, 1,000점 경기가 끝나면 트릭별로 복기할 수 있습니다. 교환 카드는 모두의 확정이 끝나기 전까지 다시 선택해 확정할 수 있습니다."
+  "rules.history": "진행 중에는 현재 트릭 기록만 보이며, 1,000점 경기가 끝나면 트릭별로 복기할 수 있습니다. 교환 카드는 모두의 확정이 끝나기 전까지 다시 선택해 확정할 수 있습니다.",
+  "combo.phoenixLead": "봉황 싱글",
+  "patches.mobileLabels": "교환 이름 가림과 패스 표시를 수정하고 봉황·남은 시간 표시를 알기 쉽게 개선했습니다."
 }

@@ -1,5 +1,19 @@
 # Project status / resume point
 
+## v0.8.11 mobile labels — not deployed
+
+- Exchange recipients now sit above fixed-size preview cards without overlap.
+- Turn clock shows only remaining seconds and refreshes its clock on deadline
+  changes to avoid briefly showing 31 seconds at turn start.
+- Phoenix singles describe the underlying rank (A 위 봉황), including history;
+  lead-strength Phoenix uses a plain single label. Rules and scoring unchanged.
+- Pass badges follow the team label in a reserved 28×16px slot, preserving
+  player height when badges appear. 390px browser exchange selection/reselection
+  and separated name/card bounds verified; six uncalled seats measured 50px.
+  Real iPhone Safari remains unverified.
+- Validation: check, 190 tests (137 unit + 53 UI), format and build passed.
+- Pending release: frontend-only change; no server implementation changes.
+
 ## v0.8.10 game flow — deployed
 
 - Branch `fix/game-flow-timers`. Individual Small/Large Tichu penalty arithmetic

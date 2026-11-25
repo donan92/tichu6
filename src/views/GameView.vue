@@ -91,9 +91,6 @@ const tableNote = computed(() =>
           }}
         </div>
         <div>
-          <span v-if="game.passed.includes(index)" class="pass-badge">{{
-            t('play.passed')
-          }}</span>
           <b
             >{{ name || t('common.empty') }}
             <span v-if="!game.spectator && index === seat" class="you">{{
@@ -104,8 +101,13 @@ const tableNote = computed(() =>
               · {{ t('play.offline') }}</template
             ></b
           ><small
-            >{{ t('common.team', { team: team(index) ? 'B' : 'A' }) }} ·
-            {{ t('play.cardCount', { count: game.counts[index] })
+            >{{ t('common.team', { team: team(index) ? 'B' : 'A' }) }}
+            <span class="pass-slot"
+              ><span v-if="game.passed.includes(index)" class="pass-badge">{{
+                t('play.passed')
+              }}</span></span
+            >
+            · {{ t('play.cardCount', { count: game.counts[index] })
             }}<template v-if="game.calls[index]">
               ·
               {{

@@ -7,7 +7,12 @@ export function combinationMessage(
 ): Message {
   if (play.size === 1 && special && special !== 'mahjong') {
     return special === 'phoenix'
-      ? { code: 'combo.phoenix', params: { rank: rank(play.power) } }
+      ? play.power <= 1.5
+        ? { code: 'combo.phoenixLead' }
+        : {
+            code: 'combo.phoenix',
+            params: { rank: rank(Math.floor(play.power - 0.5)) },
+          }
       : { code: `card.${special}` };
   }
   const kind =
