@@ -12,6 +12,11 @@ const sources: {
   stop: ReturnType<typeof vi.fn>;
 }[] = [];
 class Context {
+  static instances: Context[] = [];
+  onstatechange: (() => void) | null = null;
+  constructor() {
+    Context.instances.push(this);
+  }
   state = 'running';
   currentTime = 0;
   destination = {};
@@ -51,6 +56,7 @@ class Context {
 }
 let pinia: ReturnType<typeof createPinia>;
 beforeEach(() => {
+  Context.instances = [];
   localStorage.clear();
   sources.length = 0;
   pinia = createPinia();
@@ -63,6 +69,74 @@ afterEach(() => {
   disposePinia(pinia);
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
+  vi.useRealTimers();
+});
+
+it('restarts the current file after an interrupted audio session without a visibility event', async () => {
+  vi.mocked(loadAudioFile).mockResolvedValue({} as AudioBuffer);
+  const audio = useAudioStore();
+  await audio.unlock();
+  await flushPromises();
+  const context = Context.instances[0];
+  context.state = 'interrupted';
+  context.onstatechange?.();
+  expect(audio.needsResume).toBe(true);
+  expect(sources[0].stop).toHaveBeenCalled();
+  audio.recover();
+  await flushPromises();
+  expect(audio.needsResume).toBe(false);
+  expect(sources).toHaveLength(2);
+});
+
+it('waits for a pending background suspend before foreground resume', async () => {
+  vi.mocked(loadAudioFile).mockResolvedValue({} as AudioBuffer);
+  const audio = useAudioStore();
+  await audio.unlock();
+  await flushPromises();
+  const context = Context.instances[0];
+  let finish!: () => void;
+  vi.spyOn(context, 'suspend').mockImplementation(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = () => {
+          context.state = 'suspended';
+          resolve();
+        };
+      }),
+  );
+  const resume = vi.spyOn(context, 'resume');
+  audio.suspend();
+  audio.recover();
+  await flushPromises();
+  expect(resume).not.toHaveBeenCalled();
+  finish();
+  await flushPromises();
+  expect(context.state).toBe('running');
+  expect(sources).toHaveLength(2);
+});
+
+it('times out a stuck Safari resume and recreates the context on the next user tap', async () => {
+  vi.mocked(loadAudioFile).mockResolvedValue({} as AudioBuffer);
+  const audio = useAudioStore();
+  await audio.unlock();
+  await flushPromises();
+  const context = Context.instances[0];
+  context.state = 'interrupted';
+  context.onstatechange?.();
+  vi.spyOn(context, 'resume').mockImplementation(
+    () => new Promise<void>(() => {}),
+  );
+  vi.useFakeTimers();
+  audio.recover();
+  await vi.advanceTimersByTimeAsync(1600);
+  expect(audio.needsResume).toBe(true);
+  expect(audio.failed).toBe(true);
+  await audio.unlock();
+  await vi.advanceTimersByTimeAsync(0);
+  expect(Context.instances).toHaveLength(2);
+  expect(audio.needsResume).toBe(false);
+  expect(audio.failed).toBe(false);
+  expect(context.state).toBe('closed');
 });
 function pendingBuffer() {
   let resolve!: (buffer: AudioBuffer) => void;

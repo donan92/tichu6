@@ -179,3 +179,37 @@ it('warns only the active player in the last five seconds, excluding grace and s
   expect(warningKey({ ...game, turn: 1 }, 5000)).toBeNull();
   expect(warningKey({ ...game, reconnectUntil: 9000 }, 5000)).toBeNull();
 });
+
+it('plays a pass swoosh even when the pass starts our turn or closes the trick', () => {
+  const before = { ...round(), turn: 1, passed: [] };
+  const after = { ...before, revision: 11, turn: 0, passed: [1] };
+  expect(effectForTransition(before, after)).toBe('pass');
+  expect(effectForTransition(before, { ...after, phase: 'trick' })).toBe(
+    'pass',
+  );
+  expect(effectForTransition(after, after)).toBeNull();
+  expect(effectForTransition(null, after)).toBeNull();
+});
+
+it('offers an explicit retry after Safari interrupts playback', async () => {
+  const audio = useAudioStore();
+  audio.available = true;
+  audio.needsResume = true;
+  const unlock = vi.spyOn(audio, 'unlock').mockResolvedValue();
+  wrapper = mount(SoundSettings, {
+    attachTo: document.body,
+    global: { plugins: [pinia, [I18NextVue, { i18next }]] },
+  });
+  await wrapper.get('.sound-trigger').trigger('click');
+  const retry = [
+    ...document.querySelectorAll<HTMLButtonElement>('.sound-dialog button'),
+  ].find((b) => b.textContent === 'Resume sound')!;
+  expect(retry).toBeTruthy();
+  retry.click();
+  expect(unlock).toHaveBeenCalledTimes(2);
+  audio.needsResume = false;
+  await nextTick();
+  expect(document.querySelector('.sound-dialog')?.textContent).not.toContain(
+    'Resume sound',
+  );
+});

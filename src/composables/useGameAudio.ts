@@ -56,13 +56,18 @@ export function useGameAudio() {
     if (document.hidden) audio.suspend();
     else {
       previous = live() ? session.game : null;
-      if (audio.unlocked) void audio.unlock();
+      audio.recover();
     }
   }
   onMounted(() => {
     document.addEventListener('pointerdown', gesture);
     document.addEventListener('keydown', gesture);
+    document.addEventListener('touchend', gesture, { passive: true });
+    document.addEventListener('click', gesture);
     document.addEventListener('visibilitychange', visibility);
+    window.addEventListener('pageshow', visibility);
+    window.addEventListener('pagehide', audio.suspend);
+    window.addEventListener('focus', visibility);
     timer = setInterval(() => {
       const key = live() ? warningKey(session.game, Date.now()) : null;
       if (key && key !== lastWarning) void audio.playEffect('time');
@@ -74,6 +79,11 @@ export function useGameAudio() {
     audio.suspend();
     document.removeEventListener('pointerdown', gesture);
     document.removeEventListener('keydown', gesture);
+    document.removeEventListener('touchend', gesture);
+    document.removeEventListener('click', gesture);
     document.removeEventListener('visibilitychange', visibility);
+    window.removeEventListener('pageshow', visibility);
+    window.removeEventListener('pagehide', audio.suspend);
+    window.removeEventListener('focus', visibility);
   });
 }

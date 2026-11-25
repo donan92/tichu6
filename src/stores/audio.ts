@@ -50,6 +50,7 @@ export const useAudioStore = defineStore('audio', () => {
   const available = ref(typeof AudioContext !== 'undefined');
   const unlocked = ref(false);
   const failed = ref(false);
+  const needsResume = ref(false);
   const track = ref<MusicTrack>('lobby');
   let ctx: AudioContext | undefined,
     musicGain: GainNode | undefined,
@@ -60,6 +61,8 @@ export const useAudioStore = defineStore('audio', () => {
   let musicEpoch = 0,
     effectEpoch = 0,
     disposed = false;
+  let resumeEpoch = 0;
+  let suspending: Promise<void> = Promise.resolve();
   const musicCache = new Map<MusicTrack, Promise<AudioBuffer>>();
   const effectCache = new Map<Effect, Promise<AudioBuffer>>();
   const audible = () =>
@@ -145,23 +148,82 @@ export const useAudioStore = defineStore('audio', () => {
       failed.value = true;
     }
   }
-  async function unlock() {
+  async function unlock(userGesture = true) {
     if (!available.value || disposed || document.hidden) return;
+    const attempt = ++resumeEpoch;
     try {
+      // A fresh context created by a real tap can recover Safari's stuck
+      // interrupted context. Never discard a healthy, already-running context.
+      if (
+        ctx &&
+        ctx.state !== 'running' &&
+        userGesture &&
+        (needsResume.value || failed.value)
+      ) {
+        const old = ctx;
+        stopMusic();
+        stopEffect();
+        old.onstatechange = null;
+        ctx = undefined;
+        void old.close().catch(() => {});
+        suspending = Promise.resolve();
+      }
       if (!ctx) {
         ctx = new AudioContext({ latencyHint: 'playback' });
         musicGain = ctx.createGain();
         effectGain = ctx.createGain();
         musicGain.connect(ctx.destination);
         effectGain.connect(ctx.destination);
+        const owned = ctx;
+        owned.onstatechange = () => {
+          if (disposed || ctx !== owned) return;
+          if (owned.state !== 'running') {
+            stopMusic();
+            stopEffect();
+            needsResume.value = unlocked.value;
+          } else if (!document.hidden && unlocked.value) {
+            needsResume.value = false;
+            if (!music) void syncMusic();
+          }
+        };
         gains();
       }
-      if (ctx.state !== 'running') await ctx.resume();
-      if (disposed) return;
-      unlocked.value = ctx.state === 'running';
-      if (unlocked.value && !music) void syncMusic();
+      const owned = ctx;
+      if (!userGesture) await suspending;
+      if (attempt !== resumeEpoch || disposed || document.hidden) return;
+      let timeout: ReturnType<typeof setTimeout> | undefined;
+      try {
+        if (owned.state !== 'running')
+          await Promise.race([
+            owned.resume(),
+            new Promise<never>((_resolve, reject) => {
+              timeout = setTimeout(
+                () => reject(new Error('Audio resume timed out')),
+                1500,
+              );
+            }),
+          ]);
+      } finally {
+        clearTimeout(timeout);
+      }
+      if (
+        disposed ||
+        ctx !== owned ||
+        attempt !== resumeEpoch ||
+        document.hidden
+      )
+        return;
+      if (owned.state !== 'running')
+        throw new Error('Audio remains interrupted');
+      unlocked.value = true;
+      needsResume.value = false;
+      failed.value = false;
+      if (!music) void syncMusic();
     } catch {
-      failed.value = true;
+      if (attempt === resumeEpoch && !disposed) {
+        failed.value = true;
+        needsResume.value = true;
+      }
     }
   }
   async function playEffect(key: Effect) {
@@ -198,9 +260,17 @@ export const useAudioStore = defineStore('audio', () => {
     }
   }
   function suspend() {
+    resumeEpoch++;
+    needsResume.value = unlocked.value;
     stopMusic();
     stopEffect();
-    if (ctx?.state === 'running') void ctx.suspend().catch(() => {});
+    if (ctx?.state === 'running') suspending = ctx.suspend().catch(() => {});
+  }
+  function recover() {
+    if (!unlocked.value || document.hidden || disposed) return;
+    stopMusic();
+    stopEffect();
+    void unlock(false);
   }
   watch(settings, () => {
     try {
@@ -232,9 +302,11 @@ export const useAudioStore = defineStore('audio', () => {
     available,
     unlocked,
     failed,
+    needsResume,
     track,
     unlock,
     playEffect,
     suspend,
+    recover,
   };
 });

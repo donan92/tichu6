@@ -139,6 +139,13 @@ onBeforeUnmount(() => {
           {{ t(!audio.available ? 'audio.unavailable' : 'audio.failed') }}
         </p>
         <p class="sound-note">{{ t('audio.saved') }}</p>
+        <button
+          v-if="audio.needsResume && audio.available"
+          type="button"
+          @click="audio.unlock()"
+        >
+          {{ t('audio.resume') }}
+        </button>
         <button class="sound-close" type="button" @click="close">
           {{ t('audio.close') }}
         </button>

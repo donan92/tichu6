@@ -52,3 +52,13 @@ Encoded files are decoded and checked for valid format, finite output and headro
 Local/production browser checks cannot establish real iPhone speaker behavior.
 The user reported iPhone crackling in v0.8.25. Its exact cause remains unconfirmed;
 a real-device listening check is required after the file-playback release.
+
+## App-switch recovery (v0.8.27)
+
+Visibility, page restoration and focus events request recovery. AudioContext
+state changes invalidate stopped sources even when Safari did not emit a
+visibility event. Recovery waits for an outstanding suspend; a resume that stays
+pending longer than1.5seconds exposes a retry. A trusted touch/click recreates
+an interrupted context when needed. The sound modal offers Resume sound.
+Automatic recovery is attempted but cannot bypass Safari autoplay policy.
+Pass cues use a short paper swoosh and take priority over the next-turn chime.

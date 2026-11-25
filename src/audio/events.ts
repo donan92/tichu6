@@ -83,13 +83,20 @@ export function effectForTransition(
   if (next.counts.some((count, i) => count < previous.counts[i])) return 'card';
   if (previous.phase === 'trick' && next.phase === 'play') return 'collect';
   if (
+    previous.phase === 'play' &&
+    (next.passed.length > previous.passed.length ||
+      (previous.turn !== null &&
+        previous.turn !== next.turn &&
+        next.passed.includes(previous.turn)))
+  )
+    return 'pass';
+  if (
     !next.spectator &&
     next.turn === next.seat &&
     previous.turn !== next.turn &&
     next.phase === 'play'
   )
     return 'turn';
-  if (next.passed.length > previous.passed.length) return 'pass';
   return null;
 }
 

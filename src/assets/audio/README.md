@@ -15,3 +15,6 @@ fades. Vite emits content-hashed URLs for cache-safe releases. Total2.91MB.
 
 No external service, samples, voices, artist imitation or paid licenses used.
 Physical iPhone playback and subjective listening quality remain unverified.
+
+In v0.8.27, pass.mp3 is a short filtered paper-swish edit of the original card
+recording, encoded at192kbps with fades; it replaces the low pitched pass tone.

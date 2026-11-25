@@ -1,5 +1,23 @@
 # Project status / resume point
 
+## v0.8.27 pass swoosh and Safari resume — prepared
+
+- User requests a short pass swoosh and reports silence after switching from
+  another app back to iPhone Safari. Replaced pass.mp3 with a short filtered
+  paper-swish edit of the original card recording; no runtime synthesis.
+- Pass now takes priority over the own-turn cue, including the final pass into
+  trick collection. Repeated/initial snapshots remain silent.
+- Recovery now observes visibility, pageshow/pagehide, focus and AudioContext
+  state changes. Foreground resume waits for a pending suspend, discards stale
+  attempts and times out a stuck resume. A subsequent trusted touch/click can
+  recreate an interrupted context; the modal exposes Resume sound when needed.
+- Tests reproduce interruption without a visibility event, suspend/resume races,
+  permanently pending resume and gesture recovery. This is not physical iPhone
+  confirmation; real-device listening and app-switch testing remain required.
+- Validation: check,155 unit +91 UI tests,format:check and build passed.
+  Pass MP3 decodes cleanly with peak-15.01dBFS. Frontend only; backend unchanged.
+  Deployment pending; real iPhone app-switch verification remains outstanding.
+
 ## v0.8.26 audio files — deployed
 
 - User reports crackling on iPhone and requests audio files rather than code
