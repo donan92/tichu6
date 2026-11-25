@@ -271,7 +271,8 @@ function play(event: MouseEvent) {
     ids: [...session.selected],
     phoenixRank: Number(phoenixRank.value) || null,
   };
-  if (hasDog.value) session.submit({ type: 'prepareDog' });
+  if (combo.value?.bomb) session.submit(action);
+  else if (hasDog.value) session.submit({ type: 'prepareDog' });
   else if (hasMahjong.value)
     requestConfirmation(action, t('play.wish'), 'wish');
   else if (chosen.value.some((card) => card.special === 'dragon'))

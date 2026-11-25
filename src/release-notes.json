@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.20",
+    "summary": "patches.immediateBombs"
+  },
+  {
     "version": "0.8.19",
     "summary": "patches.activePlayerContrast"
   },

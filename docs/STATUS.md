@@ -862,3 +862,9 @@ Release verification:
 
 - Current-turn player keeps orange border and gains off-white background/dark-blue name, readable secondary text and dark own-player badge. Team badge colors remain unchanged; existing active-turn condition controls highlighting.
 - Check,218 tests,format and build passed. Browser preview verified computed active colors and visible contrast; viewport override did not apply (observed1280px), so no narrow-device verification claim. Temporary fixture removed. Frontend-only release; Worker implementation unchanged. Deployment pending.
+
+## v0.8.20 immediate bomb submission
+
+- User requested bombs bypass confirmation. GameControls now submits an already-classified legal bomb directly from Play; normal combinations and special-card choices retain confirmation. Existing strength/turn/wish validation remains server-authoritative.
+- Added four UI regressions covering rank bombs and straight-flush bombs on own/other turns, exact single submission and no dialog. Check,222 tests (155 unit +67 UI),format and build passed. Frontend-only; no Worker code change.
+- Priorv0.8.19 live HTML/JS/CSS matched its local build. Current deployment verification pending.

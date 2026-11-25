@@ -51,6 +51,53 @@ function round(): RoundView {
   return view(startRound(newGame()), 0);
 }
 describe('Vue interaction regressions', () => {
+  it.each([
+    ['rank', 0],
+    ['rank', 1],
+    ['straightFlush', 0],
+    ['straightFlush', 1],
+  ] as const)(
+    'submits %s bombs immediately on turn %s without confirmation',
+    async (kind, turn) => {
+      const session = useSessionStore();
+      const game = round();
+      game.phase = 'play';
+      game.turn = turn;
+      game.top = {
+        kind: 'single',
+        power: 2,
+        bomb: 0,
+        size: 1,
+        cards: [{ id: 'top', rank: 2, suit: 1 }],
+      };
+      game.hand =
+        kind === 'rank'
+          ? Array.from({ length: 4 }, (_, suit) => ({
+              id: `bomb-${suit}`,
+              rank: 8,
+              suit,
+            }))
+          : Array.from({ length: 5 }, (_, i) => ({
+              id: `bomb-${i}`,
+              rank: i + 3,
+              suit: 0,
+            }));
+      session.game = game;
+      session.selected = game.hand.map((card) => card.id);
+      const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
+      const wrapper = mount(GameControls, {
+        props: { game },
+        global: { plugins: plugins() },
+      });
+      wrappers.push(wrapper);
+      await wrapper.get('button.primary').trigger('click');
+      expect(submit).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining({ type: 'play', ids: session.selected }),
+      );
+      expect(document.querySelector('.action-confirm')).toBeNull();
+    },
+  );
+
   it.each([100, 200] as const)(
     'confirms declaration %s after requesting its one-time allowance',
     async (call) => {
