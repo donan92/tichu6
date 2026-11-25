@@ -816,3 +816,10 @@ Release verification:
 - Supersedes the earlier Dragon auto-team-pool decision: if every opponent finished, the winner explicitly chooses a finished opponent to receive the trick. Removed the unpublished team-owned pool implementation.
 - Required check, 214 tests (152 unit +62 UI), formatting and build passed. Real local Worker check (`TEST_API=http://localhost:18952 node scripts/check-lobby.mjs`) passed seventh-player rejection, manual waiting/seat assignment, countdown cancellation, automatic start, within-team shuffle and identity pairing. Previous local flow/lounge checks cover the earlier timing/privacy batch.
 - Browser fixture at375px confirms manual lobby fits without horizontal overflow; fixed participant counter wrapping. Temporary fixture removed. Actual iPhone/Samsung hardware remains unverified. Next release requires version/locale release notes and both Pages and Worker deployment verification; no deployment claimed.
+
+## v0.8.14 deployment verified — 2026-11-25
+
+- Main `c0f65ba` releases the turn-feedback/privacy batch `662de08` and manual teams/declaration confirmation `1d8e0f4`, with bilingual release notes. No unrelated research changes included.
+- Required check,214 tests,format,build and local Worker flow passed. CI45630069309 succeeded including real Worker capacity/auth/idle/flow checks. Pages45630068204 succeeded; Cloudflare Pages production deployment `0fe28aa9-b670-4b4a-b624-2c73264ea102` points to this commit.
+- Worker `9f4985b1-a55a-4696-b528-5991e02ca880` is deployed at100%; health returnedok/version6. Production Pages HTML/JS/CSS match the v0.8.14 local build byte-for-byte. One production lounge welcome succeeded and its socket was closed. No live-game mutation, storage reset or migration required.
+- Supersedes the earlier not-deployed notes for this batch. Actual iPhone/Samsung device verification remains pending.
