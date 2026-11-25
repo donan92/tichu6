@@ -392,3 +392,48 @@ button.card.selected {
   width: 20cqw;
   height: 20cqw;
 }
+
+/* All screen sizes use a bounded grid: no centered overflowing flex row. */
+.hand .card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  margin: 0;
+  height: auto;
+  aspect-ratio: 7 / 10;
+}
+.hand button.card:hover,
+.hand button.card.selected {
+  transform: none;
+}
+.game,
+.hand-panel {
+  min-width: 0;
+}
+.hand {
+  box-sizing: border-box;
+}
+@media (min-width: 851px) {
+  .hand {
+    grid-template-columns: repeat(9, minmax(0, 1fr));
+  }
+}
+@media (max-width: 600px) {
+  .hand {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    padding-inline: 4px;
+  }
+}
+
+.game .played-cards {
+  flex-wrap: wrap;
+  gap: 4px;
+  min-width: 0;
+}
+.game .played-cards .card {
+  margin-left: 0;
+}
+.game .table-center {
+  min-width: 0;
+  max-width: 100%;
+}

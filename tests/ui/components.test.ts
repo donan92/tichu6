@@ -9,6 +9,9 @@ import { act, newGame, startRound, view } from '../../src/game.js';
 import LeaveDialog from '../../src/components/LeaveDialog.vue';
 import AppHeader from '../../src/components/AppHeader.vue';
 import PlayingCard from '../../src/components/PlayingCard.vue';
+import TurnClock from '../../src/components/TurnClock.vue';
+import DeclarationNotice from '../../src/components/DeclarationNotice.vue';
+import PassAction from '../../src/components/PassAction.vue';
 import GameControls from '../../src/components/GameControls.vue';
 import GameView from '../../src/views/GameView.vue';
 import HallView from '../../src/views/HallView.vue';
@@ -47,6 +50,71 @@ function round(): RoundView {
   return view(startRound(newGame()), 0);
 }
 describe('Vue interaction regressions', () => {
+  it('shows extension at ten seconds and red progress warning at five', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(1000);
+    const wrapper = mount(TurnClock, {
+      props: {
+        deadline: 31000,
+        duration: 30000,
+        phase: 'play',
+        canExtend: true,
+      },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    expect(wrapper.find('button').exists()).toBe(false);
+    await vi.advanceTimersByTimeAsync(20000);
+    expect(wrapper.find('button').exists()).toBe(true);
+    await wrapper.get('button').trigger('click');
+    expect(wrapper.emitted('extend')).toHaveLength(1);
+    await vi.advanceTimersByTimeAsync(5000);
+    expect(wrapper.classes()).toContain('urgent');
+    expect(wrapper.get('progress').attributes('value')).toBe('5000');
+  });
+  it('announces new declarations and closes each notice after five seconds', async () => {
+    vi.useFakeTimers();
+    const game = round();
+    const wrapper = mount(DeclarationNotice, {
+      props: { game },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    expect(document.querySelector('.declaration-overlay')).toBeNull();
+    await wrapper.setProps({ game: { ...game, calls: [100, 0, 0, 0, 0, 0] } });
+    expect(
+      document.querySelector('.declaration-overlay')?.textContent,
+    ).toContain(game.names[0]);
+    await vi.advanceTimersByTimeAsync(4999);
+    expect(document.querySelector('.declaration-overlay')).not.toBeNull();
+    await vi.advanceTimersByTimeAsync(1);
+    expect(document.querySelector('.declaration-overlay')).toBeNull();
+  });
+  it('requires confirmation before passing with a legal combination', async () => {
+    const session = useSessionStore();
+    const game = round();
+    game.phase = 'play';
+    game.turn = 0;
+    game.hand = [{ id: '0-0-8', rank: 8, suit: 0 }];
+    game.top = { kind: 'single', power: 3, bomb: 0, size: 1, cards: [] };
+    session.game = game;
+    const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
+    const wrapper = mount(PassAction, {
+      props: { game },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    await wrapper.get('button').trigger('click');
+    expect(submit).not.toHaveBeenCalled();
+    (
+      document.querySelector(
+        '.action-confirm button.primary',
+      ) as HTMLButtonElement
+    ).click();
+    await nextTick();
+    expect(submit).toHaveBeenCalledWith({ type: 'pass' });
+  });
+
   it('shows private exchange partners and team-colored ranked plays, then removes the receipt', async () => {
     const session = useSessionStore();
     const game = round();
@@ -493,6 +561,18 @@ describe('Vue interaction regressions', () => {
       expect(wrapper.find('.choice-trigger').exists()).toBe(false);
       expect(document.querySelector('.action-confirm')).toBeNull();
       await wrapper.get('button.primary').trigger('click');
+      if (special === 'dog') {
+        expect(submit).toHaveBeenCalledWith({ type: 'prepareDog' });
+        await wrapper.setProps({
+          game: {
+            ...game,
+            dogPending: 0,
+            deadline: Date.now() + 30000,
+            deadlineDuration: 30000,
+          },
+        });
+        submit.mockClear();
+      }
       const confirm = () =>
         document.querySelector<HTMLButtonElement>(
           '.action-confirm button.primary',
@@ -535,28 +615,11 @@ describe('Vue interaction regressions', () => {
       );
       await wrapper.get('button.primary').trigger('click');
       await wrapper.setProps({
-        game: { ...game, revision: game.revision + 1 },
+        game: { ...game, turn: 1, revision: game.revision + 1 },
       });
       expect(document.querySelector('.action-confirm')).toBeNull();
     },
   );
-  it('shows all six spectator hands without playable card buttons', () => {
-    const game = round();
-    game.spectator = true;
-    game.seat = -1;
-    game.hand = [];
-    game.spectatorHands = Array.from({ length: 6 }, (_, i) => [
-      { id: `0-${i % 4}-2`, rank: 2, suit: i % 4 },
-    ]);
-    const wrapper = mount(GameView, {
-      props: { game },
-      global: { plugins: plugins() },
-    });
-    wrappers.push(wrapper);
-    expect(wrapper.findAll('.spectator-hands .hand-panel')).toHaveLength(6);
-    expect(wrapper.findAll('.spectator-hands .card')).toHaveLength(6);
-    expect(wrapper.findAll('.spectator-hands button')).toHaveLength(0);
-  });
   it('announces a required wished bomb only on the player turn and never submits it automatically', async () => {
     const session = useSessionStore();
     const game = round();

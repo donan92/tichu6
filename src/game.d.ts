@@ -55,3 +55,9 @@ export function legalPlays(
   top?: Combination | null,
   wish?: number | null,
 ): { cards: Card[]; play: Combination }[];
+
+export function recipientSeats(
+  state: RoundState,
+  seat: number,
+  kind: 'dog' | 'dragon',
+): number[];

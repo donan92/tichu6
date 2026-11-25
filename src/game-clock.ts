@@ -1,4 +1,4 @@
-import { act, botAction } from './game.js';
+import { act, botAction, recipientSeats } from './game.js';
 import type { GameAction, LobbyState, RoundState } from './types';
 export const TURN_MS = 30_000;
 export const TRICK_MS = 5_000;
@@ -15,12 +15,20 @@ export function syncDeadline(state: LobbyState | RoundState, now = Date.now()) {
     state.phase,
     state.turn,
     state.last,
+    state.dogPending,
     state.top?.cards.map((c) => c.id).join(','),
     state.passed.join(','),
   ].join(':');
   if (state.deadlineKey !== key || !Number.isFinite(state.deadline)) {
     state.deadlineKey = key;
-    state.deadline = now + (state.phase === 'trick' ? TRICK_MS : TURN_MS);
+    state.deadlineDuration =
+      state.phase === 'trick'
+        ? state.top?.cards[0]?.special === 'dragon'
+          ? TURN_MS
+          : TRICK_MS
+        : TURN_MS;
+    state.deadline = now + state.deadlineDuration;
+    state.extensionUsed = false;
   }
 }
 export function dueAction(
@@ -33,7 +41,11 @@ export function dueAction(
       seat: state.last,
       action: {
         type: 'collect',
-        target: state.dragonTarget ?? (state.last + 1) % 6,
+        target: recipientSeats(state, state.last, 'dragon').includes(
+          state.dragonTarget ?? -1,
+        )
+          ? state.dragonTarget
+          : recipientSeats(state, state.last, 'dragon')[0],
       },
     };
   if (state.phase !== 'play' || state.turn == null) return null;

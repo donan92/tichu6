@@ -114,7 +114,7 @@ test('simultaneous room creation cannot exceed five and server supplies nonempty
     assert.ok(r.title.adjective && r.title.noun && r.title.number);
   assert.equal(last(users[5], 'error').code, 'error.roomsFull');
 });
-test('spectators see dealt hands, cannot act or spoof a seat, and count globally', async () => {
+test('spectators never receive hands, cannot act or spoof a seat, and count globally', async () => {
   const f = await setup();
   const users = await Promise.all(
     Array.from({ length: 7 }, (_, i) => user(f, i + 1)),
@@ -142,10 +142,7 @@ test('spectators see dealt hands, cannot act or spoof a seat, and count globally
   const snapshot = last(users[6], 'state').value;
   assert.equal(snapshot.seat, -1);
   assert.deepEqual(snapshot.hand, []);
-  assert.deepEqual(
-    snapshot.spectatorHands.map((hand) => hand.length),
-    [10, 10, 10, 10, 10, 10],
-  );
+  assert.equal('spectatorHands' in snapshot, false);
   assert.equal('spectatorHands' in last(users[0], 'state').value, false);
   for (const key of ['hands', 'first', 'exchanges', 'members'])
     assert.equal(key in snapshot, false);

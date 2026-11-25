@@ -797,3 +797,13 @@ Release verification:
 - Main `f756ab9` includes play-first special choices (`8d53742`) and localized release notes. Check, 201 tests, formatting and build passed; CI45596595168 succeeded including local Worker, idle and flow integration.
 - Pages45596594227 succeeded. Production HTML, JavaScript and CSS match the local v0.8.13 build byte-for-byte. Existing Worker remains at100% version `e70a926b-1c57-4a1b-b741-3bdab26ff471`, healthok/version6; no backend change or redeploy required.
 - Earlier not-deployed note for this follow-up is superseded. Original research workspace remains untouched. Real iPhone/Samsung verification remains pending.
+
+## Turn feedback, timing, privacy and responsive cards — local implementation
+
+- Branch `feat/turn-feedback-and-timing` in `/tmp/tichu-special-release`, based on released v0.8.13. Original research worktree untouched. No version bump, merge or deployment yet.
+- User reversed spectator visibility: removed spectatorHands from server snapshots/types/UI; players and spectators receive only their authorized hand/public board. Exchange details and credentials remain private. AGENTS/README and real Worker tests reflect the reversal.
+- Added five-second declaration dialog, persisted two-minute ordinary-turn allowance on Small Tichu, progress/last-five-second red warning, one server-authorized +30s request during final10s, and a persisted Dog-selection stage with its own30s. Dragon collection now allows30s. No paid services or schema reset.
+- Finished Dog/Dragon recipients excluded. Dog may target either finished partner only if both finished, then next active seat leads. If every opponent finished, Dragon trick enters a separate team-owned card pool and scores directly for that team; it cannot be transferred with the last player's captured cards. Older saves without that pool remain compatible.
+- Moved pass to hand heading on own turn; confirms a pass when legal plays exist. Play confirms combination/count. Enlarged board1.3x and replaced desktop centered horizontal hand flex with responsive grid; played cards wrap. Removed340px body minimum.
+- Browser checked18 cards at320/375/768/1024/1440px: document width equals viewport, every card is inside horizontal bounds. Verified pass confirmation/cancel/focus restoration at375px. Screenshot `/tmp/tichu-ux-mobile.png`. Actual iPhone/Samsung hardware not tested.
+- Check, unit/UI tests, format and build passed; final totals:149 unit +59 UI =208 passing tests. Local Worker flow also passed early-extension rejection and duplicate-request single-use enforcement. Local flow verifies30s Dragon and reconnect behavior; lounge suite verifies spectator privacy/capacity. Never report this as deployed until both frontend and Worker are released.

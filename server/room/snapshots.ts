@@ -28,6 +28,9 @@ export function publicView(s: GameState): GameView {
     trickNumber: round?.trickNumber,
     callResults: round?.callResults || [],
     deadline: round?.deadline ?? null,
+    deadlineDuration: round?.deadlineDuration ?? null,
+    extensionUsed: round?.extensionUsed ?? false,
+    dogPending: round?.dogPending ?? null,
     dragonTarget: round?.dragonTarget ?? null,
     counts: s.hands.map((h) => h.length),
     ready: round?.ready || [],
@@ -75,10 +78,6 @@ export class Snapshots {
     const online = this.connections.online(r);
     const snapshot = publicView(r.state);
     snapshot.names = r.members.map((m, i) => (m ? r.state.names[i] : ''));
-    const state = r.state;
-    if (watch && state.phase !== 'lobby') {
-      snapshot.spectatorHands = state.names.map((_, i) => view(state, i).hand);
-    }
     if (seat >= 0) {
       snapshot.seat = seat;
       snapshot.hand =

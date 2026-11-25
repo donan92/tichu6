@@ -123,7 +123,7 @@ test('timeout leads and mandatory wishes use legal plays instead of invalid pass
   assert.equal(due.action.type, 'play');
   assert.doesNotThrow(() => act(s, due.seat, due.action));
 });
-test('tricks wait five seconds and only the collector can choose a dragon opponent without extending time', () => {
+test('dragon tricks allow thirty seconds and only the collector can choose a dragon opponent without extending time', () => {
   let s = playing([
     [cards.find((c) => c.special === 'dragon')],
     pick(4),
@@ -135,14 +135,14 @@ test('tricks wait five seconds and only the collector can choose a dragon oppone
   s = act(s, 0, { type: 'play', ids: ['dragon'] });
   for (const i of [1, 2, 3, 4, 5]) s = act(s, i, { type: 'pass' });
   syncDeadline(s, 1000);
-  assert.equal(s.deadline, 6000);
+  assert.equal(s.deadline, 31000);
   assert.throws(() => act(s, 1, { type: 'dragonTarget', target: 3 }));
   assert.throws(() => act(s, 0, { type: 'dragonTarget', target: 2 }));
   s = act(s, 0, { type: 'dragonTarget', target: 5 });
   syncDeadline(s, 3000);
-  assert.equal(s.deadline, 6000);
-  assert.equal(dueAction(s, 5999), null);
-  const due = dueAction(s, 6000);
+  assert.equal(s.deadline, 31000);
+  assert.equal(dueAction(s, 30999), null);
+  const due = dueAction(s, 31000);
   assert.deepEqual(due, { seat: 0, action: { type: 'collect', target: 5 } });
   s = act(s, due.seat, due.action);
   assert.equal(s.captured[5][0].special, 'dragon');

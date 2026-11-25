@@ -5,6 +5,14 @@ export const BOT_POLICY_VERSION = 'structure-gentle-v1';
 export const LABEL = { 1: '1', 11: 'J', 12: 'Q', 13: 'K', 14: 'A' };
 export const team = (seat) => seat % 2;
 export const partners = (seat) => [(seat + 2) % 6, (seat + 4) % 6];
+export function recipientSeats(s, seat, kind) {
+  const seats =
+    kind === 'dog'
+      ? partners(seat)
+      : [1, 3, 5].map((offset) => (seat + offset) % 6);
+  const active = seats.filter((i) => s.hands[i].length > 0);
+  return kind === 'dog' && !active.length ? seats : active;
+}
 export function deck() {
   const cards = [];
   for (let copy = 0; copy < 2; copy++)
@@ -253,6 +261,9 @@ export function startRound(s, cards = shuffle(deck())) {
   s.trickHistory ||= [];
   s.callResults = [];
   s.dragonTarget = null;
+  s.dogPending = null;
+  s.extensionUsed = false;
+  s.deadlineDuration = null;
   s.deadline = null;
   s.deadlineKey = null;
   s.phase = 'grand';
@@ -268,6 +279,7 @@ export function startRound(s, cards = shuffle(deck())) {
   s.played = Array(6).fill(false);
   s.exchanges = Array(6).fill(null);
   s.exchangeReviewClosed = false;
+  s.teamCaptured = [[], []];
   s.captured = Array.from({ length: 6 }, () => []);
   s.finish = [];
   s.top = null;
@@ -295,6 +307,9 @@ function finishRound(s) {
       delta[1 - team(loser)] += points(s.hands[loser]);
     }
     s.captured.forEach((p, i) => (delta[team(i)] += points(p)));
+    (s.teamCaptured || [[], []]).forEach((cards, i) => {
+      delta[i] += points(cards);
+    });
   }
   // Each caller must personally finish first, even on a team triple victory.
   s.callResults = s.calls.flatMap((call, seat) =>
@@ -368,9 +383,22 @@ export function visibleHistory(s) {
 }
 function collect(s, recipient) {
   s.exchangeReviewClosed = true;
-  s.captured[recipient].push(...s.pile);
+  if (recipient == null) {
+    const opponent = 1 - team(s.last);
+    s.teamCaptured ||= [[], []];
+    s.teamCaptured[opponent].push(...s.pile);
+    log(
+      s,
+      event('log.dragonTeam', {
+        team: opponent ? 'B' : 'A',
+        points: points(s.pile),
+      }),
+    );
+  } else {
+    s.captured[recipient].push(...s.pile);
+    log(s, event('log.collect', { name: s.names[recipient] }));
+  }
   s.pile = [];
-  log(s, event('log.collect', { name: s.names[recipient] }));
   if (ending(s)) {
     finishRound(s);
     return;
@@ -397,7 +425,42 @@ export function act(state, seat, action) {
     s.trickNumber = 1;
     s.log = [];
   }
-  if (action.type === 'grand') {
+  if (
+    s.dogPending != null &&
+    action.type !== 'tichu' &&
+    !(
+      seat === s.dogPending &&
+      action.type === 'play' &&
+      action.ids?.length === 1 &&
+      action.ids[0] === 'dog'
+    )
+  )
+    fail('error.dogSelectionPending');
+  if (action.type === 'extendTime') {
+    const remaining = (s.deadline ?? 0) - Date.now();
+    if (
+      s.phase !== 'play' ||
+      s.turn !== seat ||
+      s.dogPending != null ||
+      s.extensionUsed ||
+      remaining <= 0 ||
+      remaining > 10000
+    )
+      fail('error.timeExtension');
+    s.deadline += 30000;
+    s.deadlineDuration = (s.deadlineDuration ?? 30000) + 30000;
+    s.extensionUsed = true;
+  } else if (action.type === 'prepareDog') {
+    if (
+      s.phase !== 'play' ||
+      s.turn !== seat ||
+      s.top ||
+      !h.some((c) => c.special === 'dog')
+    )
+      fail('error.dogTarget');
+    if (s.wish && legalPlays(h, s.top, s.wish).length) fail('error.wishPass');
+    s.dogPending = seat;
+  } else if (action.type === 'grand') {
     if (
       s.phase !== 'grand' ||
       s.ready[seat] ||
@@ -452,6 +515,15 @@ export function act(state, seat, action) {
     )
       fail('error.tichuPhase');
     s.calls[seat] = 100;
+    if (
+      s.phase === 'play' &&
+      s.deadlineDuration === 30000 &&
+      s.dogPending == null &&
+      s.deadline > Date.now()
+    ) {
+      s.deadline = Date.now() + 120000;
+      s.deadlineDuration = 120000;
+    }
     log(s, event('log.tichu', { name: s.names[seat] }));
   } else if (action.type === 'play') {
     if (!['play', 'trick'].includes(s.phase) || !h.length)
@@ -493,7 +565,10 @@ export function act(state, seat, action) {
       (!Number.isInteger(action.wish) || action.wish < 2 || action.wish > 14)
     )
       fail('error.wishRange');
-    if (p.kind === 'dog' && !partners(seat).includes(action.target))
+    if (
+      p.kind === 'dog' &&
+      !recipientSeats(s, seat, 'dog').includes(action.target)
+    )
       fail('error.dogTarget');
     s.hands[seat] = h.filter((c) => !action.ids.includes(c.id));
     s.played[seat] = true;
@@ -508,6 +583,7 @@ export function act(state, seat, action) {
       s.wish = action.wish ?? null;
     if (cards.some((c) => !c.special && c.rank === s.wish)) s.wish = null;
     if (p.kind === 'dog') {
+      s.dogPending = null;
       s.captured[seat].push(...cards);
       s.turn = s.hands[action.target].length
         ? action.target
@@ -569,7 +645,7 @@ export function act(state, seat, action) {
       !Number.isInteger(action.target) ||
       action.target < 0 ||
       action.target > 5 ||
-      team(action.target) === team(seat)
+      !recipientSeats(s, seat, 'dragon').includes(action.target)
     )
       fail('error.dragonTarget');
     s.dragonTarget = action.target;
@@ -582,11 +658,17 @@ export function act(state, seat, action) {
       (!Number.isInteger(action.target) ||
         action.target < 0 ||
         action.target > 5 ||
-        team(action.target) === team(seat))
+        !recipientSeats(s, seat, 'dragon').includes(action.target))
     )
       fail('error.dragonTarget');
     collect(s, dragon ? action.target : seat);
   } else fail('error.unknownRequest');
+  if (
+    s.phase === 'trick' &&
+    s.top?.cards[0]?.special === 'dragon' &&
+    !recipientSeats(s, s.last, 'dragon').length
+  )
+    collect(s, null);
   if (['roundEnd', 'matchEnd'].includes(s.phase)) archiveTrick(s);
   s.revision++;
   return s;
@@ -627,11 +709,13 @@ export function view(s, seat) {
     first,
     exchanges,
     captured,
+    teamCaptured,
     exchangeReviewClosed,
     trickHistory,
     deadlineKey,
     ...pub
   } = s;
+  void teamCaptured;
   void trickHistory;
   void deadlineKey;
   void exchangeReviewClosed;
@@ -717,7 +801,14 @@ function botWish(s, seat) {
 }
 export function botAction(s, seat) {
   if (s.phase === 'grand') return { type: 'grand', call: false };
-  if (s.phase === 'trick') return { type: 'collect', target: (seat + 1) % 6 };
+  if (s.phase === 'trick')
+    return { type: 'collect', target: recipientSeats(s, seat, 'dragon')[0] };
+  if (s.dogPending === seat)
+    return {
+      type: 'play',
+      ids: ['dog'],
+      target: recipientSeats(s, seat, 'dog')[0],
+    };
   const hand = s.hands[seat],
     shapes = legalPlays(hand);
   const protectedIds = bombCards(hand, shapes);
@@ -755,7 +846,7 @@ export function botAction(s, seat) {
     ids: o.cards.map((c) => c.id),
     target:
       partners(seat).find((i) => s.calls[i] && s.hands[i].length) ??
-      partners(seat)[0],
+      recipientSeats(s, seat, 'dog')[0],
     wish: botWish(s, seat),
   };
 }

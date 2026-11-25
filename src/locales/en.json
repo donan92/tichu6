@@ -328,5 +328,15 @@
   "play.wishBombRequired": "You must play a bomb containing the wished rank {{rank}}. Select a bomb that beats the previous bomb.",
   "error.wishBombPriority": "Wait for the current player to play a bomb fulfilling the wish.",
   "patches.specialChoicesAndSpectators": "Added special-card confirmations, wish-bomb priority, and spectator hand viewing.",
-  "patches.playFirstChoices": "Choose the recipient or wish after pressing Play cards or Give trick."
+  "patches.playFirstChoices": "Choose the recipient or wish after pressing Play cards or Give trick.",
+  "error.dogSelectionPending": "Choose a teammate to receive the Dog.",
+  "error.timeExtension": "You can extend once when 10 seconds or less remain.",
+  "play.timeRemaining": "Time remaining",
+  "play.extendTime": "+30 seconds",
+  "play.confirmPass": "You have a legal play. Pass anyway?",
+  "play.confirmCombination": "Play {{count}} cards as {{kind}}?",
+  "play.declarationTitle": "Tichu declaration",
+  "play.declarationNotice": "{{name}} declared {{call}}!",
+  "play.dismissNotice": "Close (auto-closes after 5 seconds)",
+  "log.dragonTeam": "The Dragon trick awarded {{points}} points directly to Team {{team}}."
 }

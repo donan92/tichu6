@@ -7,6 +7,8 @@ import type { RoundView } from '../types';
 import { combinationMessage } from '../combinations';
 import ExchangeReview from '../components/ExchangeReview.vue';
 import PlayingCard from '../components/PlayingCard.vue';
+import PassAction from '../components/PassAction.vue';
+import DeclarationNotice from '../components/DeclarationNotice.vue';
 import GameControls from '../components/GameControls.vue';
 import TurnClock from '../components/TurnClock.vue';
 import TrickHistory from '../components/TrickHistory.vue';
@@ -27,6 +29,7 @@ const tableNote = computed(() =>
 </script>
 <template>
   <main class="game">
+    <DeclarationNotice :game="game" />
     <div class="game-bar">
       <div>
         <span class="eyebrow">{{
@@ -74,6 +77,16 @@ const tableNote = computed(() =>
       :deadline="game.deadline"
       :phase="game.phase"
       :reconnect-until="game.reconnectUntil"
+      :duration="game.deadlineDuration"
+      :can-extend="
+        !game.spectator &&
+        game.turn === session.seat &&
+        !game.extensionUsed &&
+        game.dogPending == null &&
+        !session.pending &&
+        !game.paused
+      "
+      @extend="session.submit({ type: 'extendTime' })"
     />
     <section class="table" :aria-label="t('play.tableLabel')">
       <div
@@ -164,28 +177,14 @@ const tableNote = computed(() =>
         }}</span>
       </div>
     </section>
-    <section v-if="game.spectator" class="spectator-hands">
-      <section
-        v-for="(hand, index) in game.spectatorHands"
-        :key="index"
-        class="hand-panel"
-      >
-        <h3>
-          {{ game.names[index] }} ·
-          {{ t('play.cardCount', { count: hand.length }) }}
-        </h3>
-        <div class="hand">
-          <PlayingCard
-            v-for="card in sortCards(hand)"
-            :key="card.id"
-            :card="card"
-          />
-          <p v-if="!hand.length">{{ t('play.finished') }}</p>
-        </div>
-      </section>
-    </section>
-    <section v-else class="hand-panel">
-      <div class="hand-heading">
+    <section class="hand-panel">
+      <PassAction
+        v-if="
+          !game.spectator && game.phase === 'play' && game.turn === session.seat
+        "
+        :game="game"
+      />
+      <div v-else class="hand-heading">
         <div>
           <b
             >{{ t(game.spectator ? 'play.spectatorView' : 'play.hand') }}

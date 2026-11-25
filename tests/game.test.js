@@ -296,8 +296,9 @@ test('last finishing dragon still needs donation before scoring', () => {
   s.finish = [0, 1, 2, 3];
   s = act(s, 4, { type: 'play', ids: ['dragon'] });
   assert.equal(s.phase, 'trick');
-  s = act(s, 4, { type: 'collect', target: 1 });
-  assert.deepEqual(s.delta, [5, 25]);
+  assert.throws(() => act(s, 4, { type: 'collect', target: 1 }));
+  s = act(s, 4, { type: 'collect', target: 5 });
+  assert.deepEqual(s.delta, [30, 0]);
 });
 test('tichu allowed after passing but not after playing, no double declaration', () => {
   let s = playing([

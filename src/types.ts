@@ -40,6 +40,9 @@ export interface PublicBase {
   trickNumber?: number;
   callResults?: CallResult[];
   deadline?: number | null;
+  deadlineDuration?: number | null;
+  extensionUsed?: boolean;
+  dogPending?: number | null;
   reconnectUntil?: number | null;
   dragonTarget?: number | null;
   exchangeReview?: ExchangeReview[];
@@ -54,7 +57,6 @@ export interface PublicBase {
   roomId?: string;
   title?: RoomTitle;
   spectator?: boolean;
-  spectatorHands?: Card[][];
   leader?: number;
   paused?: boolean;
   offline?: boolean[];
@@ -97,12 +99,13 @@ export interface RoundState extends Omit<
   first: string[][];
   exchanges: (string[] | null)[];
   captured: Card[][];
+  teamCaptured?: Card[][];
   pile: Card[];
   exchangeReviewClosed?: boolean;
   deadlineKey?: string | null;
 }
 export type GameAction =
-  | { type: 'start' | 'next' | 'tichu' | 'pass' }
+  | { type: 'start' | 'next' | 'tichu' | 'pass' | 'prepareDog' | 'extendTime' }
   | { type: 'grand'; call: boolean }
   | { type: 'exchange'; ids: string[] }
   | { type: 'dragonTarget'; target: number }

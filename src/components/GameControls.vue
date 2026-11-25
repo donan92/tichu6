@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import TurnClock from './TurnClock.vue';
 import ActionConfirm from './ActionConfirm.vue';
 import PlayingCard from './PlayingCard.vue';
 import { useTranslation } from 'i18next-vue';
@@ -51,6 +52,12 @@ const recipients = computed(() =>
       collecting.value && dragon.value
         ? team(seat) !== team(session.seat)
         : partners(session.seat).includes(seat),
+    )
+    .filter(
+      ({ seat }) =>
+        props.game.counts[seat] > 0 ||
+        (!collecting.value &&
+          partners(session.seat).every((i) => props.game.counts[i] === 0)),
     ),
 );
 watch(hasPhoenix, (shown) => {
@@ -193,8 +200,9 @@ function confirmAction() {
 }
 watch(
   () => [
-    props.game.revision,
     props.game.phase,
+    props.game.top,
+    props.game.hand.map((card) => card.id).join(','),
     props.game.turn,
     session.seat,
     locked.value,
@@ -212,19 +220,50 @@ function collect(event: MouseEvent) {
 }
 function play(event: MouseEvent) {
   (event.currentTarget as HTMLButtonElement)?.focus();
+  if (props.game.dogPending === session.seat) {
+    requestConfirmation(
+      { type: 'play', ids: ['dog'] },
+      t('play.dogTarget'),
+      'dog',
+    );
+    return;
+  }
   if (cannotPlay.value) return;
   const action: GameAction = {
     type: 'play',
     ids: [...session.selected],
     phoenixRank: Number(phoenixRank.value) || null,
   };
-  if (hasDog.value) requestConfirmation(action, t('play.dogTarget'), 'dog');
+  if (hasDog.value) session.submit({ type: 'prepareDog' });
   else if (hasMahjong.value)
     requestConfirmation(action, t('play.wish'), 'wish');
   else if (chosen.value.some((card) => card.special === 'dragon'))
     requestConfirmation(action, t('play.confirmDragonPlay'));
-  else session.submit(action);
+  else
+    requestConfirmation(
+      action,
+      t('play.confirmCombination', {
+        kind: message(combinationMessage(combo.value!)),
+        count: chosen.value.length,
+      }),
+    );
 }
+watch(
+  () => [props.game.dogPending, props.game.revision, locked.value],
+  () => {
+    if (
+      props.game.dogPending === session.seat &&
+      !locked.value &&
+      !confirmation.value
+    )
+      requestConfirmation(
+        { type: 'play', ids: ['dog'] },
+        t('play.dogTarget'),
+        'dog',
+      );
+  },
+  { immediate: true, flush: 'post' },
+);
 </script>
 <template>
   <ActionConfirm
@@ -234,6 +273,12 @@ function play(event: MouseEvent) {
     @cancel="confirmation = null"
     @confirm="confirmAction"
   >
+    <TurnClock
+      v-if="confirmation.kind === 'dog' || confirmation.kind === 'dragon'"
+      :deadline="game.deadline"
+      :duration="game.deadlineDuration"
+      :phase="game.phase"
+    />
     <div
       v-if="confirmation.kind"
       class="special-choices"
@@ -357,17 +402,10 @@ function play(event: MouseEvent) {
         {{ t('play.tichuShort') }}
       </button>
       <button
-        :disabled="
-          locked ||
-          game.turn !== session.seat ||
-          game.phase !== 'play' ||
-          !game.top
-        "
-        @click="session.submit({ type: 'pass' })"
+        class="primary"
+        :disabled="cannotPlay && game.dogPending !== session.seat"
+        @click="play"
       >
-        {{ t('play.pass') }}
-      </button>
-      <button class="primary" :disabled="cannotPlay" @click="play">
         {{ t(combo?.bomb ? 'play.bomb' : 'play.cards') }}
       </button>
     </div>

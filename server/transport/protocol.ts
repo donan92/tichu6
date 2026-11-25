@@ -20,6 +20,8 @@ export function gameAction(input: unknown): GameAction {
   if (
     !object(input) ||
     ![
+      'prepareDog',
+      'extendTime',
       'start',
       'next',
       'grand',
@@ -55,6 +57,8 @@ export function gameAction(input: unknown): GameAction {
   }
   // Return only validated protocol fields; seat/identity never come from input.
   switch (input.type) {
+    case 'prepareDog':
+    case 'extendTime':
     case 'start':
     case 'next':
     case 'tichu':

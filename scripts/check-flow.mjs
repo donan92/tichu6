@@ -123,8 +123,38 @@ try {
   assert.ok(deadline - Date.now() > 28000 && deadline - Date.now() <= 30000);
   assert.deepEqual(owner.state.trickHistory, []);
   const returned = await connect('Clock', owner.token, { roomId });
-  await until(() => returned.state?.phase === 'play');
+  await until(() => returned.state?.phase === 'play', 35000);
   assert.equal(returned.state.deadline, deadline);
+  returned.ws.send(
+    JSON.stringify({
+      type: 'action',
+      revision: returned.state.revision,
+      action: { type: 'extendTime' },
+    }),
+  );
+  await until(() =>
+    returned.messages.some(
+      (m) => m.type === 'error' && m.code === 'error.timeExtension',
+    ),
+  );
+  await fetch(base + '/__flow-age');
+  await until(() => returned.state.deadline < Date.now() + 2000);
+  const shortDeadline = returned.state.deadline;
+  const revision = returned.state.revision;
+  const extension = JSON.stringify({
+    type: 'action',
+    revision,
+    action: { type: 'extendTime' },
+  });
+  returned.ws.send(extension);
+  returned.ws.send(extension);
+  await until(() => returned.state.extensionUsed === true);
+  assert.equal(returned.state.deadline, shortDeadline + 30000);
+  await until(() =>
+    returned.messages.some(
+      (m) => m.type === 'error' && m.code === 'error.staleState',
+    ),
+  );
   await fetch(base + '/__flow-age');
   await until(() => returned.state?.passed.includes(0));
   assert.equal(returned.state.turn, 1);
@@ -137,7 +167,7 @@ try {
   await fetch(base + '/__flow-trick');
   await until(() => returned.state?.phase === 'trick');
   const collectAt = returned.state.deadline;
-  assert.ok(collectAt - Date.now() > 4000 && collectAt - Date.now() <= 5000);
+  assert.ok(collectAt - Date.now() > 29000 && collectAt - Date.now() <= 30000);
   watcher.ws.send(
     JSON.stringify({
       type: 'action',
@@ -160,7 +190,7 @@ try {
   await until(() => returned.state?.dragonTarget === 3);
   assert.equal(returned.state.deadline, collectAt);
   assert.equal(returned.state.phase, 'trick');
-  await until(() => returned.state?.phase === 'play');
+  await until(() => returned.state?.phase === 'play', 35000);
   assert.ok(Date.now() >= collectAt);
   assert.equal(returned.state.capturedPoints[3], 25);
   assert.deepEqual(returned.state.trickHistory, []);
@@ -193,7 +223,7 @@ try {
     'PASS real Worker: disconnect grace, early reconnect, repeated disconnect cannot extend deadline, offline timeout pass',
   );
   console.log(
-    'PASS real Worker: persistent 30s deadline, reconnect unchanged, alarm auto-pass, five-second dragon collection, authenticated target, no previous-trick disclosure',
+    'PASS real Worker: persistent 30s deadline, reconnect unchanged, alarm auto-pass, thirty-second dragon collection, authenticated target, no previous-trick disclosure',
   );
 } catch (error) {
   console.error(logs);
