@@ -66,6 +66,15 @@ export function effectForTransition(
   }
   if (next.phase === 'roundEnd' && previous.phase !== 'roundEnd')
     return 'round';
+  // The local turn cue must not be swallowed by the preceding play/pass.
+  if (
+    !next.spectator &&
+    next.seat >= 0 &&
+    next.phase === 'play' &&
+    next.turn === next.seat &&
+    (previous.phase !== 'play' || previous.turn !== next.turn)
+  )
+    return 'turn';
   if (next.calls.some((call, i) => call === 200 && previous.calls[i] !== call))
     return 'large';
   if (next.calls.some((call, i) => call === 100 && previous.calls[i] !== call))
@@ -90,13 +99,6 @@ export function effectForTransition(
         next.passed.includes(previous.turn)))
   )
     return 'pass';
-  if (
-    !next.spectator &&
-    next.turn === next.seat &&
-    previous.turn !== next.turn &&
-    next.phase === 'play'
-  )
-    return 'turn';
   return null;
 }
 

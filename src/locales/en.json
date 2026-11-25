@@ -398,5 +398,6 @@
   "patches.gameAudio": "Added lobby and game music, sound effects, and separate volume controls.",
   "patches.audioFiles": "Switched music and effects to audio files with smoother transitions.",
   "audio.resume": "Resume sound",
-  "patches.audioResumeAndPass": "Added a soft pass swoosh and improved audio recovery after switching apps."
+  "patches.audioResumeAndPass": "Added a soft pass swoosh and improved audio recovery after switching apps.",
+  "patches.clearTurnChime": "A clear chime announces your turn."
 }

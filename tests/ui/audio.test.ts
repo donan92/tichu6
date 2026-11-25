@@ -180,10 +180,11 @@ it('warns only the active player in the last five seconds, excluding grace and s
   expect(warningKey({ ...game, reconnectUntil: 9000 }, 5000)).toBeNull();
 });
 
-it('plays a pass swoosh even when the pass starts our turn or closes the trick', () => {
+it('prioritizes our turn after a pass, retaining the swoosh for other players and trick closure', () => {
   const before = { ...round(), turn: 1, passed: [] };
   const after = { ...before, revision: 11, turn: 0, passed: [1] };
-  expect(effectForTransition(before, after)).toBe('pass');
+  expect(effectForTransition(before, after)).toBe('turn');
+  expect(effectForTransition(before, { ...after, turn: 2 })).toBe('pass');
   expect(effectForTransition(before, { ...after, phase: 'trick' })).toBe(
     'pass',
   );
@@ -212,4 +213,29 @@ it('offers an explicit retry after Safari interrupts playback', async () => {
   expect(document.querySelector('.sound-dialog')?.textContent).not.toContain(
     'Resume sound',
   );
+});
+
+it('announces turn after a play, exchange or collection but never repeats or alerts spectators', () => {
+  const before = { ...round(), turn: 1 };
+  const after = {
+    ...before,
+    revision: 11,
+    turn: 0,
+    counts: [18, 17, 18, 18, 18, 18],
+  };
+  expect(effectForTransition(before, after)).toBe('turn');
+  for (const phase of ['exchange', 'trick'] as const) {
+    expect(effectForTransition({ ...before, phase, turn: 0 }, after)).toBe(
+      'turn',
+    );
+  }
+  expect(effectForTransition(after, { ...after, revision: 12 })).toBeNull();
+  expect(effectForTransition(null, after)).toBeNull();
+  expect(effectForTransition(before, { ...after, revision: 12 })).toBeNull();
+  expect(
+    effectForTransition(
+      { ...before, spectator: true },
+      { ...after, spectator: true },
+    ),
+  ).toBe('card');
 });

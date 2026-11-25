@@ -1,5 +1,13 @@
 # Project status / resume point
 
+## v0.8.28 clear turn chime — release ready
+
+- Uses the exact approved MP3 sample. The local turn alert takes priority over
+  the preceding play/pass, including entry from exchange and trick collection.
+  Other players retain action cues; initial/skipped snapshots remain silent.
+- check, all 155 unit + 92 UI tests, format:check and build passed.
+- No backend changes. Physical iPhone listening remains unverified.
+
 ## v0.8.27 pass swoosh and Safari resume — deployed
 
 - User requests a short pass swoosh and reports silence after switching from

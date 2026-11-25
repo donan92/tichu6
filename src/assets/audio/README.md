@@ -18,3 +18,6 @@ Physical iPhone playback and subjective listening quality remain unverified.
 
 In v0.8.27, pass.mp3 is a short filtered paper-swish edit of the original card
 recording, encoded at192kbps with fades; it replaces the low pitched pass tone.
+
+In v0.8.28, turn.mp3 is the user-approved 0.7-second two-note chime preview,
+an offline pitch/timing edit of join.wav, encoded at192kbps.
