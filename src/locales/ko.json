@@ -362,5 +362,9 @@
   "patches.stableConfirmations": "확인창이 저절로 닫히는 문제와 봇 추가 오류를 고치고 카드 숫자·문양을 키웠습니다.",
   "patches.activePlayerContrast": "현재 차례인 플레이어를 밝은 배경과 짙은 글자로 강조했습니다.",
   "patches.immediateBombs": "폭탄은 확인창 없이 바로 제출됩니다.",
-  "patches.phoenixPosition": "봉황을 조합에서 대신하는 숫자 위치에 정렬합니다."
+  "patches.phoenixPosition": "봉황을 조합에서 대신하는 숫자 위치에 정렬합니다.",
+  "play.resetSort": "정렬 초기화",
+  "play.dragHandHint": "드래그로 순서 변경 · 모바일은 길게 누르기 · 키보드는 Alt+←/→",
+  "play.currentTurn": "현재 차례",
+  "patches.handOrderAndTurn": "손패를 드래그해 정렬하고 초기화할 수 있으며, 다크모드의 현재 차례 표시를 개선했습니다."
 }

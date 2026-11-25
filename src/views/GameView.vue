@@ -7,6 +7,7 @@ import type { RoundView } from '../types';
 import { combinationMessage, sortCombinationCards } from '../combinations';
 import ExchangeReview from '../components/ExchangeReview.vue';
 import PlayingCard from '../components/PlayingCard.vue';
+import HandCards from '../components/HandCards.vue';
 import PassAction from '../components/PassAction.vue';
 import DeclarationNotice from '../components/DeclarationNotice.vue';
 import GameControls from '../components/GameControls.vue';
@@ -93,6 +94,9 @@ const tableNote = computed(() =>
         v-for="(name, index) in game.names"
         :key="index"
         class="player"
+        :aria-current="
+          game.phase === 'play' && game.turn === index ? 'true' : undefined
+        "
         :class="[
           `pos-${(seat - index + 6) % 6}`,
           { active: game.phase === 'play' && game.turn === index },
@@ -131,6 +135,11 @@ const tableNote = computed(() =>
                 t(game.calls[index] === 200 ? 'play.grand' : 'play.tichuShort')
               }}</template
             ></small
+          >
+          <span
+            v-if="game.phase === 'play' && game.turn === index"
+            class="turn-indicator"
+            >{{ t('play.currentTurn') }}</span
           >
         </div>
       </div>
@@ -203,28 +212,12 @@ const tableNote = computed(() =>
             ></b
           >
         </div>
-        <button
-          class="quiet"
-          :disabled="!session.selected.length"
-          @click="session.selected = []"
-        >
-          {{ t('play.clear') }}
-        </button>
       </div>
-      <div class="hand">
-        <PlayingCard
-          v-for="(card, index) in game.hand"
-          :key="card.id"
-          :card="card"
-          :interactive="!game.spectator"
-          :position="index"
-          :pick="session.selected.indexOf(card.id)"
-          @select="session.toggleCard"
-        />
-        <p v-if="!game.hand.length" class="empty-hand">
-          {{ t(game.spectator ? 'play.private' : 'play.finished') }}
-        </p>
-      </div>
+      <HandCards
+        :hand="game.hand"
+        :spectator="game.spectator"
+        :round-key="`${game.roomId ?? 'practice'}:${game.round}`"
+      />
       <div class="controls"><GameControls :game="game" /></div>
     </section>
     <ExchangeReview

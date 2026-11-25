@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.22",
+    "summary": "patches.handOrderAndTurn"
+  },
+  {
     "version": "0.8.21",
     "summary": "patches.phoenixPosition"
   },

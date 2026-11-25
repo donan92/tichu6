@@ -15,6 +15,8 @@ import PassAction from '../../src/components/PassAction.vue';
 import RoomView from '../../src/views/RoomView.vue';
 import GameControls from '../../src/components/GameControls.vue';
 import GameView from '../../src/views/GameView.vue';
+import HandCards from '../../src/components/HandCards.vue';
+import { VueDraggable } from 'vue-draggable-plus';
 import HallView from '../../src/views/HallView.vue';
 import NicknameInput from '../../src/components/NicknameInput.vue';
 import type { RoundView } from '../../src/types';
@@ -51,6 +53,66 @@ function round(): RoundView {
   return view(startRound(newGame()), 0);
 }
 describe('Vue interaction regressions', () => {
+  it('preserves custom hand order across snapshots and resets without changing selected cards', async () => {
+    const session = useSessionStore();
+    const hand = [
+      { id: 'a', rank: 2, suit: 0 },
+      { id: 'b', rank: 3, suit: 0 },
+      { id: 'c', rank: 4, suit: 0 },
+    ];
+    session.game = { ...round(), hand };
+    session.selected = ['b'];
+    const wrapper = mount(HandCards, {
+      props: { hand, roundKey: 'room:1' },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    const list = wrapper.findComponent(VueDraggable);
+    list.vm.$emit('update:modelValue', [hand[2], hand[0], hand[1]]);
+    await nextTick();
+    const ids = () =>
+      wrapper
+        .findAllComponents(PlayingCard)
+        .map((card) => card.props('card').id);
+    expect(ids()).toEqual(['c', 'a', 'b']);
+    await wrapper.setProps({ hand: structuredClone(hand) });
+    expect(ids()).toEqual(['c', 'a', 'b']);
+    expect(session.selected).toEqual(['b']);
+    await wrapper
+      .findAll('button')
+      .find((b) => b.text() === i18next.t('play.resetSort'))!
+      .trigger('click');
+    expect(ids()).toEqual(['a', 'b', 'c']);
+    expect(session.selected).toEqual(['b']);
+    await wrapper
+      .findAll('.hand button')[2]
+      .trigger('keydown', { key: 'ArrowLeft', altKey: true });
+    expect(ids()).toEqual(['a', 'c', 'b']);
+    await wrapper.setProps({
+      hand: [hand[1], hand[2], { id: 'd', rank: 5, suit: 0 }],
+    });
+    expect(ids()).toEqual(['c', 'b', 'd']);
+    await wrapper.setProps({ roundKey: 'room:2' });
+    expect(ids()).toEqual(['b', 'c', 'd']);
+  });
+  it('does not select a card from the click immediately after dragging', async () => {
+    const session = useSessionStore();
+    const hand = round().hand;
+    session.game = { ...round(), hand };
+    const toggle = vi.spyOn(session, 'toggleCard');
+    const wrapper = mount(HandCards, {
+      props: { hand, roundKey: 'room:1' },
+      global: { plugins: plugins() },
+    });
+    wrappers.push(wrapper);
+    const list = wrapper.findComponent(VueDraggable);
+    list.vm.$emit('start');
+    await wrapper.find('.hand button').trigger('click');
+    list.vm.$emit('end');
+    await wrapper.find('.hand button').trigger('click');
+    expect(toggle).not.toHaveBeenCalled();
+  });
+
   it.each([
     ['rank', 0],
     ['rank', 1],

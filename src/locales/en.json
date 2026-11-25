@@ -362,5 +362,9 @@
   "patches.stableConfirmations": "Fixed disappearing confirmations and bot additions, and enlarged card ranks and suits.",
   "patches.activePlayerContrast": "Highlighted the current player with a light background and dark text.",
   "patches.immediateBombs": "Bombs now play immediately without a confirmation dialog.",
-  "patches.phoenixPosition": "Phoenix is placed at the rank it represents in a played combination."
+  "patches.phoenixPosition": "Phoenix is placed at the rank it represents in a played combination.",
+  "play.resetSort": "Reset order",
+  "play.dragHandHint": "Drag to reorder · hold on touch screens · Alt+Left/Right with keyboard",
+  "play.currentTurn": "Current turn",
+  "patches.handOrderAndTurn": "Reorder your hand by dragging, reset its order, and see the current turn more clearly in dark mode."
 }

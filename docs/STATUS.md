@@ -873,3 +873,10 @@ Release verification:
 
 - Played-table cards now sort Phoenix using the engine-accepted phoenixRank, placing it next to the represented rank rather than always at the far right. Hand sorting and card identity/rank remain untouched; singles or metadata-free legacy combinations retain ordinary ordering.
 - Four regression cases cover interior straight position, explicitly selected full-house role, pair sequence and pair, including input/card immutability. Check,226 tests (155 unit +71 UI),format and build passed. Frontend-only release; backend unchanged. Includes preceding immediate-bomb/current-player contrast releases. Deployment verification pending.
+
+## v0.8.22 hand ordering and dark-mode turn visibility
+
+- HandCards uses vue-draggable-plus 0.6.1 for mouse dragging and touch long-press reordering, with upper-right reset and Alt+Left/Right keyboard support. Manual order survives equivalent snapshots, prunes played cards, appends new cards and resets each round; selection and authoritative hand data are unchanged. Manual order is local to the mounted game view, not persisted across reloads.
+- Current-turn player retains orange outline and gains an explicit localized label. Dark-mode media styling uses warm light amber with dark navy text rather than white inversion. Actual iPhone/Samsung dark-mode behavior remains unverified.
+- Added regression coverage for reorder/reset, snapshot reconciliation, round reset, keyboard movement and accidental click suppression after dragging. Browser drag and reset verified; reset button disabled after restoring automatic order. Final checks and frontend deployment pending. Backend unchanged.
+- Final check,228 tests (155 unit +73 UI),format and production build passed. No protocol/backend change, so existing Worker remains in place. Desktop browser verified drag without selecting cards and reset to automatic order; phone hardware remains a QA limitation.

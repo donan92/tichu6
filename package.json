@@ -1,6 +1,6 @@
 {
   "name": "tichu6",
-  "version": "0.8.21",
+  "version": "0.8.22",
   "private": true,
   "type": "module",
   "scripts": {
@@ -55,7 +55,8 @@
     "i18next-browser-languagedetector": "^8.3.1",
     "i18next-vue": "^5.4.0",
     "pinia": "^4.1.0",
-    "vue": "^3.5.46"
+    "vue": "^3.5.46",
+    "vue-draggable-plus": "0.6.1"
   },
   "engines": {
     "node": ">=22.18.0"
