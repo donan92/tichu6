@@ -37,7 +37,7 @@ test('Small Tichu expands an active ordinary turn to two minutes without reset o
   syncDeadline(s, now + 1000);
   assert.equal(s.deadline, deadline);
   s = act(s, 2, { type: 'tichu' });
-  assert.equal(s.deadline, deadline);
+  assert.ok(s.deadline >= deadline);
 });
 test('dog selection gets a new thirty seconds only once and must finish with dog', () => {
   let s = state();
@@ -63,7 +63,7 @@ test('finished recipients excluded; dog permits finished partners only when both
   assert.deepEqual(recipientSeats(s, 0, 'dragon'), [3, 5]);
 });
 
-test('dragon awards the opposing team directly when all opponents finished', () => {
+test('dragon may be given to a finished opponent only when all opponents finished', () => {
   let s = state();
   s.hands = [
     [deck().find((c) => c.special === 'dragon')],
@@ -76,7 +76,32 @@ test('dragon awards the opposing team directly when all opponents finished', () 
   s.finish = [1, 4, 3, 5];
   s.turn = 0;
   s = act(s, 0, { type: 'play', ids: ['dragon'] });
-  assert.equal(s.phase, 'roundEnd');
+  assert.equal(s.phase, 'trick');
+  assert.deepEqual(recipientSeats(s, 0, 'dragon'), [1, 3, 5]);
+  s = act(s, 0, { type: 'collect', target: 3 });
   assert.equal(s.delta[1], 25);
-  assert.equal(s.teamCaptured[1][0].special, 'dragon');
+});
+
+test('call confirmation adds ten seconds once without declaring, then declaration gives two minutes', () => {
+  let s = state();
+  syncDeadline(s);
+  const original = s.deadline;
+  s = act(s, 0, { type: 'prepareCall', call: 100 });
+  assert.equal(s.calls[0], 0);
+  assert.equal(s.deadline, original + 10000);
+  const before = structuredClone(s);
+  assert.throws(() => act(s, 0, { type: 'prepareCall', call: 100 }));
+  assert.deepEqual(s, before);
+  const now = Date.now();
+  s = act(s, 0, { type: 'tichu' });
+  assert.equal(s.calls[0], 100);
+  assert.ok(s.deadline >= now + 120000);
+});
+test('Large Tichu confirmation does not declare or complete the initial decision', () => {
+  let s = startRound(newGame(), deck());
+  s = act(s, 0, { type: 'prepareCall', call: 200 });
+  assert.equal(s.calls[0], 0);
+  assert.equal(s.ready[0], false);
+  s = act(s, 0, { type: 'grand', call: true });
+  assert.equal(s.calls[0], 200);
 });

@@ -338,5 +338,16 @@
   "play.declarationTitle": "Tichu declaration",
   "play.declarationNotice": "{{name}} declared {{call}}!",
   "play.dismissNotice": "Close (auto-closes after 5 seconds)",
-  "log.dragonTeam": "The Dragon trick awarded {{points}} points directly to Team {{team}}."
+  "room.teamMode": "Team selection",
+  "room.randomMode": "Fully random",
+  "room.manualMode": "Choose teams",
+  "room.waitingSeats": "Waiting area",
+  "room.moveToWaiting": "Move to waiting area",
+  "room.takeSeat": "Take seat",
+  "room.autoStarting": "Starting automatically in {{seconds}} seconds.",
+  "error.seatOccupied": "This seat is already occupied.",
+  "error.fillSeats": "Fill all six seats to start automatically in manual mode.",
+  "play.confirmSmall": "Declare Small Tichu (±100 points)?",
+  "play.confirmLarge": "Declare Large Tichu (±200 points)?",
+  "room.manualHint": "Choose an empty seat on your preferred team. Once all six players are seated, the game starts in 10 seconds and seats shuffle within each team."
 }

@@ -62,3 +62,9 @@
 - Give each version its own semantic `patches.*` key with one short sentence in every registered locale. Describe only changes players will notice. For maintenance or minor fixes without meaningful player impact, write only “버그 수정” / “Bug fixes.” Do not list implementation details, CI, dependency names or commit IDs in the modal.
 - Before release, run `npm run release:check`; it is also mandatory through `npm run check`, the build prehook and the server-deploy prehook. Never bypass these checks to ship a version without its note. Verify header/footer version triggers, dismissal, focus restoration and narrow screens when changing this UI.
 - Summaries must describe changes actually included in that version. Do not invent historical version numbers for patches that previously shipped under the same version; summarize those changes together.
+
+## Lobby team selection
+
+- Host chooses balanced random teams or manual teams. Manual mode starts all participants waiting; at most six participants including waiting seats, excluding spectators. Occupied seats reject arrivals. All six online and seated starts a persisted ten-second countdown; losing readiness cancels it. Shuffle only within chosen teams at start.
+- Declaration confirmation adds ten seconds to an existing running clock once per player per round. Confirming Small Tichu preserves the two-minute turn allowance. Large Tichu preparation currently has no countdown.
+- If all opponents have finished, Dragon may be given to a finished opponent; do not automatically assign its points to a team.

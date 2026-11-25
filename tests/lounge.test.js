@@ -348,11 +348,7 @@ test('randomized membership preserves identity/name pairs and teams through foll
     assert.equal(s.hand.length, 10);
   }
   r.state.phase = 'roundEnd';
-  const leader = users.find(
-    (u) =>
-      r.members.findIndex((m) => m.hash === u.a.hash) ===
-      f.hub.online(r).findIndex(Boolean),
-  );
+  const leader = users.find((u) => u.a.hash === r.hostHash);
   await msg(f.hub, leader, {
     type: 'action',
     revision: r.state.revision,
@@ -808,4 +804,86 @@ test('training match grouping survives next round and reconnect, and changes for
     action: { type: 'start' },
   });
   assert.notEqual(otherRoom.trainingMatch, firstMatch);
+});
+
+test('manual lobby reserves six participants, serializes seat claims, cancels countdown and keeps chosen teams', async () => {
+  const f = await setup();
+  const users = [];
+  for (let i = 0; i < 7; i++) users.push(await user(f, 600 + i, `Seat${i}`));
+  await msg(f.hub, users[0], { type: 'create', name: 'Seat0' });
+  const id = last(users[0], 'state').value.roomId;
+  for (let i = 1; i < 6; i++)
+    await msg(f.hub, users[i], {
+      type: 'join',
+      roomId: id,
+      watch: false,
+      name: `Seat${i}`,
+    });
+  const r = f.hub.data.rooms[id];
+  await msg(f.hub, users[1], {
+    type: 'action',
+    revision: r.state.revision,
+    action: { type: 'teamMode', mode: 'manual' },
+  });
+  assert.equal(last(users[1], 'error').code, 'error.coordinator');
+  await msg(f.hub, users[0], {
+    type: 'action',
+    revision: r.state.revision,
+    action: { type: 'teamMode', mode: 'manual' },
+  });
+  assert.equal(last(users[0], 'state').value.waitingPlayers.length, 6);
+  assert.deepEqual(last(users[0], 'state').value.names, Array(6).fill(''));
+  await msg(f.hub, users[6], {
+    type: 'join',
+    roomId: id,
+    watch: false,
+    name: 'Seat6',
+  });
+  assert.equal(last(users[6], 'error').code, 'error.seatsFull');
+  const revision = r.state.revision;
+  await Promise.all(
+    [0, 1].map((i) =>
+      msg(f.hub, users[i], {
+        type: 'action',
+        revision,
+        action: { type: 'chooseSeat', target: 0 },
+      }),
+    ),
+  );
+  assert.equal(r.seatMap.filter((i) => i != null).length, 1);
+  await msg(f.hub, users[1], {
+    type: 'action',
+    revision: r.state.revision,
+    action: { type: 'chooseSeat', target: 0 },
+  });
+  assert.equal(last(users[1], 'error').code, 'error.seatOccupied');
+  for (let i = 1; i < 6; i++)
+    await msg(f.hub, users[i], {
+      type: 'action',
+      revision: r.state.revision,
+      action: { type: 'chooseSeat', target: i },
+    });
+  assert.ok(r.autoStartAt >= Date.now() + 9000);
+  await msg(f.hub, users[0], {
+    type: 'action',
+    revision: r.state.revision,
+    action: { type: 'chooseSeat', target: -1 },
+  });
+  assert.equal(r.autoStartAt, null);
+  assert.equal(r.members.filter(Boolean).length, 6);
+  await msg(f.hub, users[0], {
+    type: 'action',
+    revision: r.state.revision,
+    action: { type: 'chooseSeat', target: 0 },
+  });
+  const teams = r.members.map((m, i) => ({ hash: m.hash, team: i % 2 }));
+  r.autoStartAt = Date.now() - 1;
+  await f.hub.alarm();
+  assert.equal(r.state.phase, 'grand');
+  for (const entry of teams)
+    assert.equal(
+      r.members.findIndex((m) => m.hash === entry.hash) % 2,
+      entry.team,
+    );
+  assert.equal(r.members.filter(Boolean).length, 6);
 });

@@ -12,6 +12,7 @@ import PlayingCard from '../../src/components/PlayingCard.vue';
 import TurnClock from '../../src/components/TurnClock.vue';
 import DeclarationNotice from '../../src/components/DeclarationNotice.vue';
 import PassAction from '../../src/components/PassAction.vue';
+import RoomView from '../../src/views/RoomView.vue';
 import GameControls from '../../src/components/GameControls.vue';
 import GameView from '../../src/views/GameView.vue';
 import HallView from '../../src/views/HallView.vue';
@@ -50,6 +51,82 @@ function round(): RoundView {
   return view(startRound(newGame()), 0);
 }
 describe('Vue interaction regressions', () => {
+  it.each([100, 200] as const)(
+    'confirms declaration %s after requesting its one-time allowance',
+    async (call) => {
+      const session = useSessionStore();
+      const game = round();
+      game.phase = call === 200 ? 'grand' : 'play';
+      game.turn = 0;
+      session.game = game;
+      const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
+      const wrapper = mount(GameControls, {
+        props: { game },
+        global: { plugins: plugins() },
+      });
+      wrappers.push(wrapper);
+      const text = i18next.t(
+        call === 200 ? 'play.grandYes' : 'play.tichuShort',
+      );
+      await wrapper
+        .findAll('button')
+        .find((b) => b.text() === text)!
+        .trigger('click');
+      expect(submit).toHaveBeenCalledExactlyOnceWith({
+        type: 'prepareCall',
+        call,
+      });
+      await wrapper.setProps({
+        game: {
+          ...game,
+          callConfirmUsed: [true, false, false, false, false, false],
+        },
+      });
+      expect(document.querySelector('.action-confirm')).not.toBeNull();
+      expect(submit).toHaveBeenCalledTimes(1);
+      document
+        .querySelector('.action-confirm')!
+        .dispatchEvent(new Event('cancel'));
+      await nextTick();
+      expect(submit).toHaveBeenCalledTimes(1);
+      await wrapper
+        .findAll('button')
+        .find((b) => b.text() === text)!
+        .trigger('click');
+      (
+        document.querySelector(
+          '.action-confirm button.primary',
+        ) as HTMLButtonElement
+      ).click();
+      await nextTick();
+      expect(submit).toHaveBeenLastCalledWith(
+        call === 200 ? { type: 'grand', call: true } : { type: 'tichu' },
+      );
+    },
+  );
+  it('shows waiting members and disables occupied manual seats', async () => {
+    const session = useSessionStore();
+    session.connected = true;
+    session.game = {
+      ...round(),
+      phase: 'lobby',
+      teamMode: 'manual',
+      isHost: true,
+      names: ['Seated', '', '', '', '', ''],
+      assignedSeat: -1,
+      waitingPlayers: [{ name: 'Waiting', own: true }],
+      participantCount: 2,
+    };
+    const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
+    const wrapper = mount(RoomView, { global: { plugins: plugins() } });
+    wrappers.push(wrapper);
+    expect(wrapper.text()).toContain('Waiting');
+    const seats = wrapper.findAll('.roster-row button');
+    expect(seats[0].attributes('disabled')).toBeDefined();
+    await seats[1].trigger('click');
+    expect(submit).toHaveBeenCalledWith({ type: 'chooseSeat', target: 1 });
+  });
+
   it('shows extension at ten seconds and red progress warning at five', async () => {
     vi.useFakeTimers();
     vi.setSystemTime(1000);

@@ -1,3 +1,4 @@
+import { hostSeat } from './lobby-policy.ts';
 import {
   exchangeReview,
   points,
@@ -30,6 +31,7 @@ export function publicView(s: GameState): GameView {
     deadline: round?.deadline ?? null,
     deadlineDuration: round?.deadlineDuration ?? null,
     extensionUsed: round?.extensionUsed ?? false,
+    callConfirmUsed: round?.callConfirmUsed ?? [],
     dogPending: round?.dogPending ?? null,
     dragonTarget: round?.dragonTarget ?? null,
     counts: s.hands.map((h) => h.length),
@@ -86,6 +88,19 @@ export class Snapshots {
           : view(r.state, seat).hand;
       snapshot.exchangeReview = exchangeReview(r.state, seat);
     }
+    const manual = r.state.phase === 'lobby' && r.teamMode === 'manual';
+    const map = r.seatMap ?? Array(6).fill(null);
+    const assigned = manual ? map.indexOf(seat) : seat;
+    const leader = hostSeat(r, online);
+    const waitingPlayers = manual
+      ? r.members.flatMap((m, i) =>
+          m && !map.includes(i)
+            ? [{ name: r.state.names[i], own: i === seat }]
+            : [],
+        )
+      : [];
+    if (manual)
+      snapshot.names = map.map((i) => (i == null ? '' : r.state.names[i]));
     return {
       type: 'state' as const,
       value: {
@@ -99,12 +114,18 @@ export class Snapshots {
         roomId: r.id,
         title: r.title,
         spectator: seat < 0,
-        leader: online.findIndex(Boolean),
+        leader: manual ? map.indexOf(leader) : leader,
+        isHost: seat >= 0 && seat === leader,
+        teamMode: r.teamMode ?? 'random',
+        assignedSeat: assigned,
+        autoStartAt: r.autoStartAt ?? null,
+        waitingPlayers,
+        participantCount: r.members.filter(Boolean).length,
         offline: online.map((x, i) => !x && !r.members[i]?.bot),
         bots: r.members.map((m) => !!(m?.bot || m?.idle)),
         paused: false,
       },
-      online,
+      online: manual ? map.map((i) => i != null && online[i]) : online,
     };
   }
   broadcast() {

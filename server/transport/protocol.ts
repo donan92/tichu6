@@ -20,8 +20,11 @@ export function gameAction(input: unknown): GameAction {
   if (
     !object(input) ||
     ![
+      'prepareCall',
       'prepareDog',
       'extendTime',
+      'teamMode',
+      'chooseSeat',
       'start',
       'next',
       'grand',
@@ -43,6 +46,26 @@ export function gameAction(input: unknown): GameAction {
       input.ids.some((id) => typeof id !== 'string' || id.length > 30)
     )
       throw new AppError('error.invalidCards');
+  }
+  if (input.type === 'prepareCall') {
+    if (input.call !== 100 && input.call !== 200)
+      throw new AppError('error.invalidCall');
+    return { type: 'prepareCall', call: input.call };
+  }
+  if (input.type === 'teamMode') {
+    if (input.mode !== 'random' && input.mode !== 'manual')
+      throw new AppError('error.invalidChoice');
+    return { type: 'teamMode', mode: input.mode };
+  }
+  if (input.type === 'chooseSeat') {
+    if (
+      typeof input.target !== 'number' ||
+      !Number.isInteger(input.target) ||
+      input.target < -1 ||
+      input.target > 5
+    )
+      throw new AppError('error.invalidChoice');
+    return { type: 'chooseSeat', target: input.target };
   }
   for (const key of ['target', 'wish', 'phoenixRank']) {
     const value = input[key];

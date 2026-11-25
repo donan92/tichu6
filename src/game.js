@@ -11,7 +11,7 @@ export function recipientSeats(s, seat, kind) {
       ? partners(seat)
       : [1, 3, 5].map((offset) => (seat + offset) % 6);
   const active = seats.filter((i) => s.hands[i].length > 0);
-  return kind === 'dog' && !active.length ? seats : active;
+  return active.length ? active : seats;
 }
 export function deck() {
   const cards = [];
@@ -276,10 +276,10 @@ export function startRound(s, cards = shuffle(deck())) {
   );
   s.ready = Array(6).fill(false);
   s.calls = Array(6).fill(0);
+  s.callConfirmUsed = Array(6).fill(false);
   s.played = Array(6).fill(false);
   s.exchanges = Array(6).fill(null);
   s.exchangeReviewClosed = false;
-  s.teamCaptured = [[], []];
   s.captured = Array.from({ length: 6 }, () => []);
   s.finish = [];
   s.top = null;
@@ -307,9 +307,6 @@ function finishRound(s) {
       delta[1 - team(loser)] += points(s.hands[loser]);
     }
     s.captured.forEach((p, i) => (delta[team(i)] += points(p)));
-    (s.teamCaptured || [[], []]).forEach((cards, i) => {
-      delta[i] += points(cards);
-    });
   }
   // Each caller must personally finish first, even on a team triple victory.
   s.callResults = s.calls.flatMap((call, seat) =>
@@ -383,21 +380,8 @@ export function visibleHistory(s) {
 }
 function collect(s, recipient) {
   s.exchangeReviewClosed = true;
-  if (recipient == null) {
-    const opponent = 1 - team(s.last);
-    s.teamCaptured ||= [[], []];
-    s.teamCaptured[opponent].push(...s.pile);
-    log(
-      s,
-      event('log.dragonTeam', {
-        team: opponent ? 'B' : 'A',
-        points: points(s.pile),
-      }),
-    );
-  } else {
-    s.captured[recipient].push(...s.pile);
-    log(s, event('log.collect', { name: s.names[recipient] }));
-  }
+  s.captured[recipient].push(...s.pile);
+  log(s, event('log.collect', { name: s.names[recipient] }));
   s.pile = [];
   if (ending(s)) {
     finishRound(s);
@@ -436,7 +420,24 @@ export function act(state, seat, action) {
     )
   )
     fail('error.dogSelectionPending');
-  if (action.type === 'extendTime') {
+  if (action.type === 'prepareCall') {
+    if (action.call !== 100 && action.call !== 200) fail('error.invalidCall');
+    const large = action.call === 200;
+    if (
+      (large
+        ? s.phase !== 'grand' || s.ready[seat]
+        : !['exchange', 'play', 'trick'].includes(s.phase) || s.played[seat]) ||
+      s.calls[seat] ||
+      s.callConfirmUsed?.[seat]
+    )
+      fail('error.tichuPhase');
+    s.callConfirmUsed ||= Array(6).fill(false);
+    s.callConfirmUsed[seat] = true;
+    if (s.deadline > Date.now()) {
+      s.deadline += 10000;
+      s.deadlineDuration = (s.deadlineDuration ?? 30000) + 10000;
+    }
+  } else if (action.type === 'extendTime') {
     const remaining = (s.deadline ?? 0) - Date.now();
     if (
       s.phase !== 'play' ||
@@ -515,14 +516,9 @@ export function act(state, seat, action) {
     )
       fail('error.tichuPhase');
     s.calls[seat] = 100;
-    if (
-      s.phase === 'play' &&
-      s.deadlineDuration === 30000 &&
-      s.dogPending == null &&
-      s.deadline > Date.now()
-    ) {
-      s.deadline = Date.now() + 120000;
-      s.deadlineDuration = 120000;
+    if (s.phase === 'play' && s.dogPending == null && s.deadline > Date.now()) {
+      s.deadline = Math.max(s.deadline, Date.now() + 120000);
+      s.deadlineDuration = Math.max(s.deadlineDuration ?? 0, 120000);
     }
     log(s, event('log.tichu', { name: s.names[seat] }));
   } else if (action.type === 'play') {
@@ -663,12 +659,6 @@ export function act(state, seat, action) {
       fail('error.dragonTarget');
     collect(s, dragon ? action.target : seat);
   } else fail('error.unknownRequest');
-  if (
-    s.phase === 'trick' &&
-    s.top?.cards[0]?.special === 'dragon' &&
-    !recipientSeats(s, s.last, 'dragon').length
-  )
-    collect(s, null);
   if (['roundEnd', 'matchEnd'].includes(s.phase)) archiveTrick(s);
   s.revision++;
   return s;
@@ -709,13 +699,11 @@ export function view(s, seat) {
     first,
     exchanges,
     captured,
-    teamCaptured,
     exchangeReviewClosed,
     trickHistory,
     deadlineKey,
     ...pub
   } = s;
-  void teamCaptured;
   void trickHistory;
   void deadlineKey;
   void exchangeReviewClosed;

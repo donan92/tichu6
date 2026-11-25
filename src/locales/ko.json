@@ -338,5 +338,16 @@
   "play.declarationTitle": "티츄 선언",
   "play.declarationNotice": "{{name}}님이 {{call}}를 선언했습니다!",
   "play.dismissNotice": "닫기 (5초 후 자동 닫힘)",
-  "log.dragonTeam": "용 트릭 {{points}}점이 팀 {{team}}에 자동 귀속되었습니다."
+  "room.teamMode": "팀 구성 방식",
+  "room.randomMode": "완전 랜덤",
+  "room.manualMode": "팀 직접 선택",
+  "room.waitingSeats": "대기석",
+  "room.moveToWaiting": "대기석으로 이동",
+  "room.takeSeat": "앉기",
+  "room.autoStarting": "{{seconds}}초 후 자동 시작합니다.",
+  "error.seatOccupied": "이미 다른 사람이 앉은 자리입니다.",
+  "error.fillSeats": "직접 선택 모드에서는 여섯 자리를 채우면 자동으로 시작합니다.",
+  "play.confirmSmall": "스몰 티츄(±100점)를 선언할까요?",
+  "play.confirmLarge": "라지 티츄(±200점)를 선언할까요?",
+  "room.manualHint": "원하는 팀의 빈 좌석을 선택하세요. 6명이 모두 앉으면 10초 후 시작하며, 같은 팀 안에서 자리만 섞습니다."
 }

@@ -1,3 +1,4 @@
+import { syncLobby } from '../room/lobby-policy.ts';
 import { syncReconnectClock } from '../game/reconnect-clock.ts';
 import { TRAINING_RETENTION_MS } from '../training/records.ts';
 import { GRACE, TTL, IDLE, ROOM_IDLE } from '../policy.ts';
@@ -28,6 +29,7 @@ export class LifecycleService {
         }
       });
       syncReconnectClock(r, online, now);
+      syncLobby(r, online, now);
       if (online.some(Boolean)) r.lastActive = now;
     }
   }
@@ -112,6 +114,8 @@ export class LifecycleService {
         );
     for (const r of Object.values(this.repository.data.rooms)) {
       at = Math.min(at, r.lastProgress + ROOM_IDLE);
+      if (r.state.phase === 'lobby' && r.autoStartAt != null)
+        at = Math.min(at, r.autoStartAt);
       if (r.state.phase !== 'lobby' && r.state.deadline != null)
         at = Math.min(at, r.state.deadline);
       const online = this.connections.online(r),

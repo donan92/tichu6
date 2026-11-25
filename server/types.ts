@@ -9,6 +9,10 @@ export interface Member {
   trainingConsent?: boolean;
 }
 export interface Room {
+  teamMode?: 'random' | 'manual';
+  seatMap?: (number | null)[];
+  hostHash?: string;
+  autoStartAt?: number | null;
   reconnectTurn?: { key: string; until: number; resumed: boolean };
   id: string;
   title: RoomTitle;

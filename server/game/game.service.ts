@@ -1,3 +1,4 @@
+import { hostSeat, syncLobby } from '../room/lobby-policy.ts';
 import { syncReconnectClock } from './reconnect-clock.ts';
 import { syncDeadline, dueAction } from '../../src/game-clock.ts';
 import {
@@ -39,12 +40,66 @@ export class GameService {
     )
       throw new AppError('error.staleState');
     const action = gameAction(msg.action);
-    if (action.type === 'start' || action.type === 'next') {
-      if (seat !== this.connections.online(r).findIndex(Boolean))
+    if (action.type === 'teamMode' || action.type === 'chooseSeat') {
+      if (r.state.phase !== 'lobby') throw new AppError('error.invalidAction');
+      if (action.type === 'teamMode') {
+        if (seat !== hostSeat(r, this.connections.online(r)))
+          throw new AppError('error.coordinator');
+        if (r.teamMode !== action.mode) {
+          r.teamMode = action.mode;
+          r.seatMap = Array(6).fill(null);
+          r.autoStartAt = null;
+        }
+      } else {
+        if (r.teamMode !== 'manual') throw new AppError('error.invalidAction');
+        const map = r.seatMap ?? Array(6).fill(null);
+        if (
+          action.target >= 0 &&
+          map[action.target] != null &&
+          map[action.target] !== seat
+        )
+          throw new AppError('error.seatOccupied');
+        r.seatMap = map.map((i) => (i === seat ? null : i));
+        if (action.target >= 0) r.seatMap[action.target] = seat;
+        r.autoStartAt = null;
+      }
+      r.state.revision++;
+      syncLobby(r, this.connections.online(r));
+    } else if (action.type === 'start' || action.type === 'next') {
+      if (seat !== hostSeat(r, this.connections.online(r)))
         throw new AppError('error.coordinator');
-      // Deal/validate before changing membership; rejected starts stay atomic.
-      const next = startRound(structuredClone(r.state));
-      if (r.state.phase === 'lobby') {
+      if (r.state.phase === 'lobby' && r.teamMode === 'manual')
+        throw new AppError('error.fillSeats');
+      this.start(r);
+    } else {
+      if (r.state.phase === 'lobby') throw new AppError('error.invalidAction');
+      const before = r.state;
+      r.state = act(before, seat, action);
+      this.record(r, before, seat, action, 'human');
+    }
+    syncDeadline(r.state);
+    r.lastActive = Date.now();
+    r.lastProgress = Date.now();
+  }
+  private start(r: Room) {
+    // Deal/validate before changing membership; rejected starts stay atomic.
+    const next = startRound(structuredClone(r.state));
+    if (r.state.phase === 'lobby') {
+      if (r.teamMode === 'manual') {
+        if (!r.seatMap?.every((i) => i != null && r.members[i]))
+          throw new AppError('error.fillSeats');
+        const mapped = r.seatMap.map((i) => ({
+          member: r.members[i!]!,
+          name: r.state.names[i!],
+        }));
+        const a = shuffle([mapped[0], mapped[2], mapped[4]]),
+          b = shuffle([mapped[1], mapped[3], mapped[5]]);
+        const filled = Array.from({ length: 6 }, (_, i) =>
+          i % 2 ? b.pop()! : a.pop()!,
+        );
+        r.members = filled.map((entry) => entry.member);
+        next.names = filled.map((entry) => entry.name);
+      } else {
         const humans = shuffle(
           r.members.flatMap((member, i) =>
             member ? [{ member, name: r.state.names[i] }] : [],
@@ -64,18 +119,14 @@ export class GameService {
         );
         r.members = filled.map((entry) => entry.member);
         next.names = filled.map((entry) => entry.name);
-        r.trainingMatch = crypto.randomUUID();
       }
-      r.state = next;
-      r.trainingSession = crypto.randomUUID();
-    } else {
-      if (r.state.phase === 'lobby') throw new AppError('error.invalidAction');
-      const before = r.state;
-      r.state = act(before, seat, action);
-      this.record(r, before, seat, action, 'human');
+      r.trainingMatch = crypto.randomUUID();
+      r.autoStartAt = null;
+      r.seatMap = undefined;
     }
+    r.state = next;
+    r.trainingSession = crypto.randomUUID();
     syncDeadline(r.state);
-    r.lastActive = Date.now();
     r.lastProgress = Date.now();
   }
   private record(
@@ -127,7 +178,14 @@ export class GameService {
   advanceTimed(now: number) {
     let changed = false;
     for (const r of Object.values(this.repository.data.rooms)) {
-      if (r.state.phase === 'lobby') continue;
+      if (r.state.phase === 'lobby') {
+        syncLobby(r, this.connections.online(r), now);
+        if (r.autoStartAt != null && now >= r.autoStartAt) {
+          this.start(r);
+          changed = true;
+        }
+        continue;
+      }
       syncReconnectClock(r, this.connections.online(r), now);
       const due = dueAction(r.state, now);
       if (!due) continue;
@@ -166,6 +224,8 @@ export class GameService {
         r.members = r.members.map((m, i) => {
           if (!eligible(i)) return m;
           s.names[i] = '';
+          r.seatMap = r.seatMap?.map((slot) => (slot === i ? null : slot));
+          r.autoStartAt = null;
           return null;
         });
       } else if (online.some(Boolean) || r.members.some((m) => m?.idle)) {

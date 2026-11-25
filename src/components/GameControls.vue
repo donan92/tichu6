@@ -56,8 +56,11 @@ const recipients = computed(() =>
     .filter(
       ({ seat }) =>
         props.game.counts[seat] > 0 ||
-        (!collecting.value &&
-          partners(session.seat).every((i) => props.game.counts[i] === 0)),
+        (collecting.value
+          ? props.game.counts.every(
+              (count, i) => team(i) === team(session.seat) || count === 0,
+            )
+          : partners(session.seat).every((i) => props.game.counts[i] === 0)),
     ),
 );
 watch(hasPhoenix, (shown) => {
@@ -183,6 +186,35 @@ function requestConfirmation(
   if (locked.value) return;
   confirmation.value = { action, description, kind, choice: null };
 }
+const pendingCall = ref<100 | 200 | null>(null);
+function requestCall(call: 100 | 200, event: MouseEvent) {
+  (event.currentTarget as HTMLButtonElement).focus();
+  if (locked.value) return;
+  pendingCall.value = call;
+  if (props.game.callConfirmUsed?.[session.seat]) openCall();
+  else session.submit({ type: 'prepareCall', call });
+}
+function openCall() {
+  const call = pendingCall.value;
+  if (call == null) return;
+  pendingCall.value = null;
+  requestConfirmation(
+    call === 200 ? { type: 'grand', call: true } : { type: 'tichu' },
+    t(call === 200 ? 'play.confirmLarge' : 'play.confirmSmall'),
+  );
+}
+watch(
+  () => [props.game.callConfirmUsed?.[session.seat], locked.value],
+  () => {
+    if (
+      pendingCall.value &&
+      props.game.callConfirmUsed?.[session.seat] &&
+      !locked.value
+    )
+      openCall();
+  },
+  { flush: 'post' },
+);
 function confirmAction() {
   const pending = confirmation.value;
   if (!pending || locked.value || (pending.kind && pending.choice === null))
@@ -307,7 +339,7 @@ watch(
       <button
         class="accent"
         :disabled="locked || game.ready[session.seat]"
-        @click="session.submit({ type: 'grand', call: true })"
+        @click="requestCall(200, $event)"
       >
         {{ t('play.grandYes') }}</button><button
         class="primary"
@@ -364,7 +396,7 @@ watch(
         <button
           class="quiet"
           :disabled="locked || !!game.calls[session.seat]"
-          @click="session.submit({ type: 'tichu' })"
+          @click="requestCall(100, $event)"
         >
           {{ t('play.tichu') }}</button><button
           class="primary"
@@ -397,7 +429,7 @@ watch(
         :disabled="
           locked || game.played[session.seat] || !!game.calls[session.seat]
         "
-        @click="session.submit({ type: 'tichu' })"
+        @click="requestCall(100, $event)"
       >
         {{ t('play.tichuShort') }}
       </button>

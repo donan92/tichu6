@@ -42,6 +42,7 @@ export interface PublicBase {
   deadline?: number | null;
   deadlineDuration?: number | null;
   extensionUsed?: boolean;
+  callConfirmUsed?: boolean[];
   dogPending?: number | null;
   reconnectUntil?: number | null;
   dragonTarget?: number | null;
@@ -58,6 +59,13 @@ export interface PublicBase {
   title?: RoomTitle;
   spectator?: boolean;
   leader?: number;
+  isHost?: boolean;
+  teamMode?: 'random' | 'manual';
+  seatMap?: (number | null)[];
+  waitingPlayers?: { name: string; own: boolean }[];
+  assignedSeat?: number;
+  autoStartAt?: number | null;
+  participantCount?: number;
   paused?: boolean;
   offline?: boolean[];
   bots?: boolean[];
@@ -99,12 +107,14 @@ export interface RoundState extends Omit<
   first: string[][];
   exchanges: (string[] | null)[];
   captured: Card[][];
-  teamCaptured?: Card[][];
   pile: Card[];
   exchangeReviewClosed?: boolean;
   deadlineKey?: string | null;
 }
 export type GameAction =
+  | { type: 'prepareCall'; call: 100 | 200 }
+  | { type: 'teamMode'; mode: 'random' | 'manual' }
+  | { type: 'chooseSeat'; target: number }
   | { type: 'start' | 'next' | 'tichu' | 'pass' | 'prepareDog' | 'extendTime' }
   | { type: 'grand'; call: boolean }
   | { type: 'exchange'; ids: string[] }

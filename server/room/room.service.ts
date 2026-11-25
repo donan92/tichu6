@@ -35,6 +35,8 @@ export class RoomService {
         r.members = r.members.map((m, i) => {
           if (m?.hash !== hash) return m;
           r.state.names[i] = '';
+          r.seatMap = r.seatMap?.map((slot) => (slot === i ? null : slot));
+          r.autoStartAt = null;
           return null;
         });
       }
@@ -57,6 +59,8 @@ export class RoomService {
       if (r.state.phase !== 'lobby') throw new AppError('error.watchOnly');
       const seat = r.members.indexOf(null);
       if (seat < 0) throw new AppError('error.seatsFull');
+      r.seatMap = r.seatMap?.map((i) => (i === seat ? null : i));
+      r.autoStartAt = null;
       r.members[seat] = {
         hash: a.hash,
         offlineSince: null,
@@ -81,6 +85,9 @@ export class RoomService {
     const id = crypto.randomUUID();
     this.repository.data.rooms[id] = {
       id,
+      hostHash: a.hash,
+      teamMode: 'random',
+      seatMap: Array(6).fill(null),
       title: title(),
       state: newGame(Array(6).fill('')),
       members: Array(6).fill(null),
