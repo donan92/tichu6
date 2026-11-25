@@ -902,3 +902,8 @@ Release verification:
 - v0.8.23 Worker2d2f7696-95b4-4c8f-8f67-1b2a12a52933 deployed at100%; health ok/protocol6. Pages45642743272 succeeded and live HTML/JS/CSS matched the local build. Verify45642744625 exposed an existing random idle-seat test assumption (bot may already have led one card);9ed2977 corrected that assumption while preserving exact restored-hand comparison. Verify45643175298 passed including Worker, idle and flow integration checks.
 - v0.8.24 disables native selection/callouts/image dragging on hand cards and descendants, cancels selectstart/contextmenu, replaces the long-press title tooltip with accessible description and uses Sortable fallback dragging. No global touchmove prevention or page-wide selection restriction. Normal taps and post-drag click suppression retained.
 - Check,232 tests (155 unit +77 UI),format and build passed; new event regression verifies native menu/selection cancellation and ordinary tap selection. Real iPhone Safari/Samsung magnifier behavior remains unverified on hardware. Frontend-only follow-up; server remains v0.8.23 implementation. Deployment verification pending.
+
+## v0.8.24 deployment verified
+
+- Main54a3226 deployed. Pages45643749191 and Verify45643749435 succeeded, including local Worker, idle and full-flow integrations. Production HTML/JS/CSS matched local0.8.24 build. Backend remains verified2d2f7696-95b4-4c8f-8f67-1b2a12a52933 (v0.8.23 score history and Dragon transfer marker).
+- Supersedes pending release notes above. No production room reset or deletion. Actual mobile long-press magnifier behavior still requires iPhone/Samsung hardware confirmation.
