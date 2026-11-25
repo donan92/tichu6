@@ -379,6 +379,9 @@ export function visibleHistory(s) {
   return s.phase === 'matchEnd' ? s.trickHistory || [] : [];
 }
 function collect(s, recipient) {
+  if (s.top?.cards.length === 1 && s.top.cards[0].special === 'dragon') {
+    s.dragonTransfer = { round: s.round, trick: s.trickNumber, recipient };
+  }
   s.exchangeReviewClosed = true;
   s.captured[recipient].push(...s.pile);
   log(s, event('log.collect', { name: s.names[recipient] }));

@@ -552,3 +552,35 @@ select {
     color: #10253b;
   }
 }
+
+.dragon-recipient {
+  display: inline-block;
+  border-radius: 4px;
+  animation: dragon-recipient-pulse 1s ease-in-out 5;
+}
+.dragon-received {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+}
+@keyframes dragon-recipient-pulse {
+  0%,
+  100% {
+    background: #f6cf87;
+    color: #10253b;
+    box-shadow: 0 0 0 3px #f6cf87;
+  }
+  50% {
+    background: #a94d15;
+    color: #fff;
+    box-shadow: 0 0 0 3px #a94d15;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dragon-recipient {
+    animation: none;
+    background: #f6cf87;
+    color: #10253b;
+    box-shadow: 0 0 0 3px #f6cf87;
+  }
+}

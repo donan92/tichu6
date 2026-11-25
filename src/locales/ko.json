@@ -366,5 +366,6 @@
   "play.resetSort": "정렬 초기화",
   "play.dragHandHint": "드래그로 순서 변경 · 모바일은 길게 누르기 · 키보드는 Alt+←/→",
   "play.currentTurn": "현재 차례",
-  "patches.handOrderAndTurn": "손패를 드래그해 정렬하고 초기화할 수 있으며, 다크모드의 현재 차례 표시를 개선했습니다."
+  "patches.handOrderAndTurn": "손패를 드래그해 정렬하고 초기화할 수 있으며, 다크모드의 현재 차례 표시를 개선했습니다.",
+  "play.dragonReceived": "용을 받았습니다"
 }

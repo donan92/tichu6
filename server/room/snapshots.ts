@@ -27,6 +27,7 @@ export function publicView(s: GameState): GameView {
   const fields = {
     trickHistory: visibleHistory(s),
     trickNumber: round?.trickNumber,
+    dragonTransfer: round?.dragonTransfer,
     callResults: round?.callResults || [],
     deadline: round?.deadline ?? null,
     deadlineDuration: round?.deadlineDuration ?? null,

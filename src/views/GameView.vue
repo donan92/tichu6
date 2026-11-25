@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref, watch, onBeforeUnmount } from 'vue';
 import { useText } from '../composables/useText';
 import { useSessionStore } from '../stores/session';
 import { LABEL, team } from '../game.js';
@@ -17,6 +17,29 @@ import GameRules from '../components/GameRules.vue';
 const props = defineProps<{ game: RoundView }>();
 const session = useSessionStore();
 const { t, message, title } = useText();
+const dragonRecipient = ref<number | null>(null);
+let dragonTimer: ReturnType<typeof setTimeout> | undefined;
+watch(
+  () => JSON.stringify(props.game.dragonTransfer),
+  (value, previous) => {
+    if (value === previous) return;
+    clearTimeout(dragonTimer);
+    const transfer = props.game.dragonTransfer;
+    dragonRecipient.value =
+      transfer?.round === props.game.round ? transfer.recipient : null;
+    dragonTimer = setTimeout(() => {
+      dragonRecipient.value = null;
+    }, 5000);
+  },
+);
+watch(
+  () => props.game.round,
+  () => {
+    clearTimeout(dragonTimer);
+    dragonRecipient.value = null;
+  },
+);
+onBeforeUnmount(() => clearTimeout(dragonTimer));
 const seat = computed(() => Math.max(0, session.seat));
 const tableNote = computed(() =>
   props.game.phase === 'grand'
@@ -112,7 +135,7 @@ const tableNote = computed(() =>
           }}
         </div>
         <div>
-          <b
+          <b :class="{ 'dragon-recipient': dragonRecipient === index }"
             >{{ name || t('common.empty') }}
             <span v-if="!game.spectator && index === seat" class="you">{{
               t('common.you')
@@ -135,6 +158,12 @@ const tableNote = computed(() =>
                 t(game.calls[index] === 200 ? 'play.grand' : 'play.tichuShort')
               }}</template
             ></small
+          >
+          <span
+            v-if="dragonRecipient === index"
+            class="dragon-received"
+            role="status"
+            >{{ t('play.dragonReceived') }}</span
           >
           <span
             v-if="game.phase === 'play' && game.turn === index"

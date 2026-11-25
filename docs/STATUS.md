@@ -885,3 +885,8 @@ Release verification:
 
 - Main7a5cfb9 deployed. Pages45640736374 and Verify45640738743 succeeded, including local Worker integration, idle and flow checks. Live Pages HTML/JS/CSS matched the local0.8.22 build byte-for-byte; existing Worker health returned ok/protocol6. Frontend-only release; Worker version remains f109ff69-c7e0-491d-bb93-00f69bab28f8 from0.8.18.
 - Preceding0.8.21 Verify45638874626 and Pages45638874179 also succeeded;0.8.22 includes Phoenix role ordering and direct bomb submission. Local preview stopped and temporary browser tab closed. No production room state modified for this release.
+
+## Dragon recipient feedback (implemented, not deployed)
+
+- Accepted Dragon collection records a public round/trick/recipient marker, explicitly included in server snapshots. GameView highlights the recipient name for five seconds, once per new marker; initial/reconnect snapshots do not replay old transfers. Equivalent broadcasts do not restart the timer. New rounds/unmount clear it. Reduced-motion preference uses static emphasis, with bilingual received-Dragon text.
+- Check,230 tests (155 unit +75 UI),format and build passed. Real local Worker test:flow passed. Regression tests cover final-trick Dragon donation, recipient identity, repeated snapshots, expiry, subsequent donations and initial historical state. Actual mobile animation not visually verified. No version bump or production deployment in this change; next release requires both Worker and Pages because the event marker is server-authoritative.

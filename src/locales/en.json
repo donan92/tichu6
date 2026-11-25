@@ -366,5 +366,6 @@
   "play.resetSort": "Reset order",
   "play.dragHandHint": "Drag to reorder · hold on touch screens · Alt+Left/Right with keyboard",
   "play.currentTurn": "Current turn",
-  "patches.handOrderAndTurn": "Reorder your hand by dragging, reset its order, and see the current turn more clearly in dark mode."
+  "patches.handOrderAndTurn": "Reorder your hand by dragging, reset its order, and see the current turn more clearly in dark mode.",
+  "play.dragonReceived": "Received the Dragon"
 }

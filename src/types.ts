@@ -36,6 +36,7 @@ export interface CallResult {
   delta: number;
 }
 export interface PublicBase {
+  dragonTransfer?: { round: number; trick: number; recipient: number };
   trickHistory?: TrickHistory[];
   trickNumber?: number;
   callResults?: CallResult[];
