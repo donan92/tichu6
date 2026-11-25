@@ -184,10 +184,7 @@ const tableNote = computed(() =>
           v-for="(card, index) in game.hand"
           :key="card.id"
           :card="card"
-          :interactive="
-            !game.spectator &&
-            !(game.phase === 'exchange' && game.exchangeReady[seat])
-          "
+          :interactive="!game.spectator"
           :position="index"
           :pick="session.selected.indexOf(card.id)"
           @select="session.toggleCard"

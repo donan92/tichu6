@@ -5,8 +5,9 @@
 - Branch `fix/game-flow-timers`. Individual Small/Large Tichu penalty arithmetic
   was already correct; added explicit per-caller results and regression tests
   for teammate-first finishes, including triple victories.
-- Exchange drafts show recipients and can be reset until the player's own
-  confirmation; confirmed choices remain immutable. Callers and passed seats
+- User clarified 1B/2A/3A: exchange choices can be replaced until all players
+  confirm; the final confirmation atomically transfers the latest saved choices.
+  Unsaved edits do not replace a previous confirmation. Callers and passed seats
   are visible on the table. Played cards are rank-sorted.
 - Current trick only during play, including server spectator projections.
   Archived tricks become available after the whole 1,000-point match ends.

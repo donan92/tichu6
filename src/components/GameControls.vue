@@ -210,7 +210,7 @@ function play() {
           )
         }}
       </p>
-      <div v-if="!game.exchangeReady[session.seat]" class="exchange-draft">
+      <div class="exchange-draft">
         <div v-for="(entry, index) in exchangeDraft" :key="index">
           <span>{{ entry.name }}</span><PlayingCard
             v-if="entry.card"
@@ -221,11 +221,7 @@ function play() {
       <div class="action-buttons">
         <button
           class="quiet"
-          :disabled="
-            locked ||
-            game.exchangeReady[session.seat] ||
-            !session.selected.length
-          "
+          :disabled="locked || !session.selected.length"
           @click="session.selected = []"
         >
           {{ t('play.exchangeReselect') }}
@@ -237,11 +233,7 @@ function play() {
         >
           {{ t('play.tichu') }}</button><button
           class="primary"
-          :disabled="
-            locked ||
-            game.exchangeReady[session.seat] ||
-            session.selected.length !== 2
-          "
+          :disabled="locked || session.selected.length !== 2"
           @click="
             session.submit({ type: 'exchange', ids: [...session.selected] })
           "

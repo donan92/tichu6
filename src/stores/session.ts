@@ -330,8 +330,6 @@ export const useSessionStore = defineStore('session', () => {
   function toggleCard(id: string) {
     if (
       game.value?.spectator ||
-      (game.value?.phase === 'exchange' &&
-        game.value.exchangeReady[seat.value]) ||
       !game.value?.hand.some((card) => card.id === id)
     )
       return;

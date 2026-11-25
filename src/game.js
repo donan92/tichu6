@@ -412,8 +412,7 @@ export function act(state, seat, action) {
       log(s, event('log.exchange'));
     }
   } else if (action.type === 'exchange') {
-    if (s.phase !== 'exchange' || s.exchanges[seat])
-      fail('error.exchangePhase');
+    if (s.phase !== 'exchange') fail('error.exchangePhase');
     if (
       !Array.isArray(action.ids) ||
       action.ids.length !== 2 ||

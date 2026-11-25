@@ -308,12 +308,12 @@
   "play.callFailure": "Did not finish first · Penalty",
   "play.autoDragonHelp": "Choose an opponent within 5 seconds. Otherwise the next opposing seat receives the trick.",
   "play.autoCollectHelp": "The trick is collected automatically after 5 seconds.",
-  "play.exchangeLocked": "Exchange confirmed. Your outgoing cards can no longer be changed.",
-  "play.exchangeEditable": "Check declarations and choose cards. You can reselect until you confirm.",
+  "play.exchangeLocked": "Exchange confirmed. You can select and confirm replacement cards until everyone confirms. If everyone finishes while you are editing, your last confirmed cards are exchanged.",
+  "play.exchangeEditable": "You can select and confirm replacement cards until everyone completes the exchange.",
   "play.exchangeReselect": "Reselect cards",
   "play.exchangeConfirm": "Confirm exchange {{count}}/2",
   "patches.gameFlow": "Clearer calls and passes, automatic turns and post-match trick review.",
   "rules.flowTitle": "Turn limits and history",
   "rules.timers": "Turns last at most 30 seconds, then automatically pass. When passing is illegal, a legal move is made. Tricks collect automatically after 5 seconds.",
-  "rules.history": "Only current-trick history is visible during play. Review each trick after the 1,000-point match ends. Exchange choices can be changed until you confirm your own exchange."
+  "rules.history": "Only current-trick history is visible during play. Review each trick after the 1,000-point match ends. Exchange choices can be changed and confirmed again until everyone has confirmed."
 }

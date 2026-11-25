@@ -36,7 +36,7 @@ test('each declaration loses its full stake when a teammate finishes first, incl
     assert.equal(s.delta[0], -call);
   }
 });
-test('exchange accepts changed unconfirmed selections after a call but never changes a confirmed exchange', () => {
+test('exchange replaces confirmed selections after a call until the final player confirms', () => {
   let s = startRound(newGame());
   for (let i = 0; i < 6; i++) s = act(s, i, { type: 'grand', call: false });
   const first = s.hands[0].slice(0, 2).map((c) => c.id),
@@ -44,10 +44,20 @@ test('exchange accepts changed unconfirmed selections after a call but never cha
   s = act(s, 2, { type: 'tichu' });
   s = act(s, 0, { type: 'exchange', ids: revised });
   s = act(s, 4, { type: 'tichu' });
-  assert.throws(() => act(s, 0, { type: 'exchange', ids: first }), {
+  s = act(s, 0, { type: 'exchange', ids: first });
+  assert.deepEqual(s.exchanges[0], first);
+  for (let i = 1; i < 6; i++)
+    s = act(s, i, {
+      type: 'exchange',
+      ids: s.hands[i].slice(0, 2).map((c) => c.id),
+    });
+  assert.equal(s.phase, 'play');
+  assert.ok(s.hands[2].some((c) => c.id === first[0]));
+  assert.ok(s.hands[4].some((c) => c.id === first[1]));
+  assert.ok(revised.every((id) => s.hands[0].some((c) => c.id === id)));
+  assert.throws(() => act(s, 0, { type: 'exchange', ids: revised }), {
     code: 'error.exchangePhase',
   });
-  assert.deepEqual(s.exchanges[0], revised);
 });
 test('past tricks are absent from player/spectator snapshots until match end and played cards are sorted', () => {
   let s = playing([

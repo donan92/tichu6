@@ -48,7 +48,7 @@ it('identifies callers, failed individual calls, and each passed seat on the tab
   expect(w.get('.call-results').text()).toContain('-100');
   expect(w.get('.call-results').text()).toContain('Penalty');
 });
-it('keeps the exchange draft after someone calls and locks it only on personal confirmation', async () => {
+it('keeps the exchange draft after someone calls and allows revision after personal confirmation', async () => {
   const game = view(startRound(newGame()), 0);
   game.phase = 'exchange';
   const session = useSessionStore();
@@ -74,8 +74,10 @@ it('keeps the exchange draft after someone calls and locks it only on personal c
   session.game = confirmed;
   await w.setProps({ game: confirmed });
   session.toggleCard(game.hand[0]!.id);
-  expect(session.selected).toEqual([]);
-  expect(w.get('button.primary').attributes('disabled')).toBeDefined();
+  session.toggleCard(game.hand[1]!.id);
+  expect(session.selected).toHaveLength(2);
+  await w.vm.$nextTick();
+  expect(w.get('button.primary').attributes('disabled')).toBeUndefined();
 });
 it('hides even accidentally provided archived tricks until match end, then offers per-trick disclosure', async () => {
   const game = view(startRound(newGame()), 0);
