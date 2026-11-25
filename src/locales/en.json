@@ -358,5 +358,6 @@
   "room.addBot": "Add bot",
   "room.removeBot": "Remove bot",
   "room.teamSeatsHint": "Only teams are fixed. Seats shuffle within each team when the game starts. New players replace bots starting from the top seat.",
-  "patches.manualBotsAndCardFit": "Add or remove bots in team selection, and played cards now fit the table space."
+  "patches.manualBotsAndCardFit": "Add or remove bots in team selection, and played cards now fit the table space.",
+  "patches.stableConfirmations": "Fixed disappearing confirmations and bot additions, and enlarged card ranks and suits."
 }

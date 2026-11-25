@@ -208,6 +208,21 @@ describe('Vue interaction regressions', () => {
     wrappers.push(wrapper);
     await wrapper.get('button').trigger('click');
     expect(submit).not.toHaveBeenCalled();
+    const initialDialog = document.querySelector('.action-confirm');
+    await wrapper.setProps({ game: JSON.parse(JSON.stringify(game)) });
+    expect(document.querySelector('.action-confirm')).toBe(initialDialog);
+    await wrapper.setProps({
+      game: {
+        ...JSON.parse(JSON.stringify(game)),
+        revision: game.revision + 1,
+      },
+    });
+    expect(document.querySelector('.action-confirm')).toBe(initialDialog);
+    session.pending = true;
+    await nextTick();
+    expect(document.querySelector('.action-confirm')).toBe(initialDialog);
+    session.pending = false;
+    await nextTick();
     (
       document.querySelector(
         '.action-confirm button.primary',
@@ -215,6 +230,8 @@ describe('Vue interaction regressions', () => {
     ).click();
     await nextTick();
     expect(submit).toHaveBeenCalledWith({ type: 'pass' });
+    await wrapper.setProps({ game: { ...game, turn: 1 } });
+    expect(document.querySelector('.action-confirm')).toBeNull();
   });
 
   it('shows private exchange partners and team-colored ranked plays, then removes the receipt', async () => {
@@ -689,6 +706,12 @@ describe('Vue interaction regressions', () => {
       choices[1]!.click();
       await nextTick();
       expect(submit).not.toHaveBeenCalled();
+      expect(confirm().disabled).toBe(false);
+      const beforeRefresh = document.querySelector('.action-confirm');
+      await wrapper.setProps({
+        game: JSON.parse(JSON.stringify(wrapper.props('game'))),
+      });
+      expect(document.querySelector('.action-confirm')).toBe(beforeRefresh);
       expect(confirm().disabled).toBe(false);
       document
         .querySelector('.action-confirm')!

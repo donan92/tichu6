@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.18",
+    "summary": "patches.stableConfirmations"
+  },
+  {
     "version": "0.8.17",
     "summary": "patches.manualBotsAndCardFit"
   },

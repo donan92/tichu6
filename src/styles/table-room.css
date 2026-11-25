@@ -505,3 +505,18 @@ select {
     );
   }
 }
+
+/* Scale rank and suit with the played card, including court-card indices. */
+.game .played-cards .card {
+  container-type: inline-size;
+}
+.game .played-cards .card .card-corner {
+  font-size: clamp(13px, 23cqw, 28px);
+  top: 4cqw;
+  left: 4cqw;
+  gap: 2cqw;
+}
+.game .played-cards .card .card-corner .suit-icon {
+  width: clamp(10px, 16cqw, 20px);
+  height: clamp(10px, 16cqw, 20px);
+}

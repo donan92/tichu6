@@ -24,11 +24,22 @@ function pass(event: MouseEvent) {
   else session.submit({ type: 'pass' });
 }
 function confirm() {
-  confirming.value = false;
   if (!disabled.value) session.submit({ type: 'pass' });
 }
 watch(
-  () => [props.game.revision, session.pending],
+  [
+    () => props.game.phase,
+    () => props.game.round,
+    () => props.game.turn,
+    () => props.game.last,
+    () => JSON.stringify(props.game.top),
+    () => props.game.hand.map((card) => card.id).join(','),
+    () => props.game.passed.join(','),
+    () => props.game.wish,
+    () => props.game.dogPending,
+    () => props.game.paused,
+    () => session.seat,
+  ],
   () => {
     confirming.value = false;
   },
@@ -41,6 +52,7 @@ watch(
   <ActionConfirm
     v-if="confirming"
     :description="t('play.confirmPass')"
+    :disabled="disabled"
     @cancel="confirming = false"
     @confirm="confirm"
   />

@@ -69,3 +69,5 @@
 - Declaration confirmation adds ten seconds to an existing running clock once per player per round. Confirming Small Tichu preserves the two-minute turn allowance. Declarations and exchange share one persisted three-minute preparation deadline; confirmation cannot extend this cap. Expiry declines pending Large calls and bots complete pending exchanges.
 - If all opponents have finished, Dragon may be given to a finished opponent; do not automatically assign its points to a team.
 - In manual-team lobby, host may add/remove bots up to six minus human participants (waiting included). Human arrivals replace the first bot in displayed seat order and enter waiting. Bots survive lobby alarms; six occupied seats with all humans online trigger auto-start. Public room joinability must allow replacing bots. Explain that team choice is fixed but actual seats shuffle within that team.
+
+- Durable Objects use immediate code updates in wrangler.jsonc. Default deferred updates can serve stale action handlers for five minutes despite a successful deployment; verify actual new behavior before publishing matching frontend changes. Never clear state to force an update.

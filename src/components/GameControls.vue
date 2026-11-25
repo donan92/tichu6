@@ -227,23 +227,28 @@ function confirmAction() {
     pending.kind
   )
     action.target = Number(pending.choice);
-  confirmation.value = null;
   session.submit(action);
 }
+// Compare semantic values, not freshly deserialized snapshot objects.
+// Presence/alarm broadcasts must not discard a recipient or wish selection.
 watch(
-  () => [
-    props.game.phase,
-    props.game.top,
-    props.game.hand.map((card) => card.id).join(','),
-    props.game.turn,
-    session.seat,
-    locked.value,
-    session.selected.join(','),
+  [
+    () => props.game.phase,
+    () => props.game.round,
+    () => JSON.stringify(props.game.top),
+    () => props.game.hand.map((card) => card.id).join(','),
+    () => props.game.turn,
+    () => props.game.last,
+    () => props.game.wish,
+    () => props.game.calls[session.seat],
+    () => session.seat,
+    () => session.selected.join(','),
   ],
   () => {
     confirmation.value = null;
   },
 );
+
 function collect(event: MouseEvent) {
   (event.currentTarget as HTMLButtonElement)?.focus();
   const action: GameAction = { type: 'collect' };
@@ -301,7 +306,7 @@ watch(
   <ActionConfirm
     v-if="confirmation"
     :description="confirmationText"
-    :disabled="!!confirmation.kind && confirmation.choice === null"
+    :disabled="locked || (!!confirmation.kind && confirmation.choice === null)"
     @cancel="confirmation = null"
     @confirm="confirmAction"
   >
