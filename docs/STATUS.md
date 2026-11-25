@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.27 pass swoosh and Safari resume — prepared
+## v0.8.27 pass swoosh and Safari resume — deployed
 
 - User requests a short pass swoosh and reports silence after switching from
   another app back to iPhone Safari. Replaced pass.mp3 with a short filtered
@@ -16,7 +16,13 @@
   confirmation; real-device listening and app-switch testing remain required.
 - Validation: check,155 unit +91 UI tests,format:check and build passed.
   Pass MP3 decodes cleanly with peak-15.01dBFS. Frontend only; backend unchanged.
-  Deployment pending; real iPhone app-switch verification remains outstanding.
+  Real iPhone app-switch verification remains outstanding.
+- Commit2fb1265 is on main. Cloudflare production1d55ea97.tichu6.pages.dev
+  serves HTML/JS/CSS and pass MP3 identical to the tested build. Production
+  browser shows0.8.27 and the modal/preview without errors. Worker health
+  remains ok/protocol6; no server deploy or live-room changes.
+- Verify45653380812 passed through local Worker and idle checks; final flow
+  verification was still running at this documentation update.
 
 ## v0.8.26 audio files — deployed
 
