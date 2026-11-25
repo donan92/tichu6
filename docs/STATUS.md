@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.26 audio files — in progress
+## v0.8.26 audio files — deployed
 
 - User reports crackling on iPhone and requests audio files rather than code
   synthesis. The exact device-specific cause is not established; no claim that
@@ -20,8 +20,17 @@
 - v0.8.26 check,155 unit +86 UI tests,format and build passed. All18 MP3s
   decode to finite samples; maximum peak-6.98dBFS with no clipping. Built-preview
   browser verified music/effect controls and practice track transition without
-  console warnings/errors. Deployment pending. Preserve backend version
+  console warnings/errors. Preserve backend version
   2d2f7696-95b4-4c8f-8f67-1b2a12a52933. Real iPhone listening remains required.
+- Released aaa60fb to main. GitHub push-triggered runs did not appear during
+  verification after the prior GitHub Pages HTTP500; used the identical tested
+  dist for direct Cloudflare production deployment a81cc475.tichu6.pages.dev.
+  Live HTML,JS,CSS and all18 MP3 files matched local bytes. Production browser
+  shows0.8.26 and sound modal/preview without errors. Worker health remains
+  ok/protocol6; no backend deployment or live-room mutation.
+- GitHub CI for aaa60fb has not run yet; local checks above passed. Do not
+  describe the earlier0.8.25 CI run as covering0.8.26. User must recheck on iPhone;
+  crackling elimination is not claimed from desktop or waveform checks.
 
 ## v0.8.25 audio release — prepared
 
