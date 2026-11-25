@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.11 mobile labels and reconnect grace — not deployed
+## v0.8.11 mobile labels and reconnect grace — deployed
 
 - Exchange recipients now sit above fixed-size preview cards without overlap.
 - Turn clock shows only remaining seconds and refreshes its clock on deadline
@@ -22,7 +22,14 @@
   Local Worker flow test covers disconnect, early return, flapping and timeout.
 - Reconnect validation: check, 194 tests (140 unit + 54 UI), format and build
   passed; real local Worker flow and idle checks passed.
-- Pending release requires both Pages and Worker deployment.
+- Released `cb5f8df` to main on 2026-11-25. Pages deployment
+  `079158d5-2172-4c67-8895-ef0a8fe7384b` is active; production JS/CSS match
+  the tested build byte-for-byte. Worker version
+  `7408be7c-0b1e-4da8-8b91-644af027f045` deployed; production health is OK.
+- Pages build and Verify (including all Worker integration checks) succeeded.
+  No pending deployment work. Verify run:
+  https://github.com/donan92/tichu6/actions/runs/45537406900.
+  Live games were not disturbed for testing.
 
 ## v0.8.10 game flow — deployed
 
