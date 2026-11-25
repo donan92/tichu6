@@ -1,11 +1,13 @@
 # Project status / resume point
 
-## v0.8.28 clear turn chime — release ready
+## v0.8.28 clear turn chime — deployed
 
 - Uses the exact approved MP3 sample. The local turn alert takes priority over
   the preceding play/pass, including entry from exchange and trick collection.
   Other players retain action cues; initial/skipped snapshots remain silent.
 - check, all 155 unit + 92 UI tests, format:check and build passed.
+- Commit2981406 deployed to a72d8caa.tichu6.pages.dev. Production HTML, JS
+  and turn MP3 byte-match the tested build. Worker health is ok/protocol6.
 - No backend changes. Physical iPhone listening remains unverified.
 
 ## v0.8.27 pass swoosh and Safari resume — deployed
