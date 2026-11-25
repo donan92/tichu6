@@ -91,6 +91,9 @@ onUnmounted(() => clearInterval(timer));
           {{ t('room.moveToWaiting') }}
         </button>
       </template>
+      <p v-if="session.game.teamMode === 'manual'">
+        {{ t('room.teamSeatsHint') }}
+      </p>
       <h2>{{ t('room.seats') }}</h2>
       <div class="roster">
         <div v-for="(_, index) in 6" :key="index" class="roster-row">
@@ -109,19 +112,53 @@ onUnmounted(() => clearInterval(timer));
               ></small
             >
           </div>
-          <button
-            v-if="session.game.teamMode === 'manual' && !session.game.spectator"
-            :disabled="
-              !!session.game.names[index] ||
-              session.pending ||
-              !session.connected
-            "
-            @click="session.submit({ type: 'chooseSeat', target: index })"
-          >
-            {{ t('room.takeSeat') }}
-          </button>
+          <div class="seat-actions">
+            <button
+              v-if="
+                session.game.teamMode === 'manual' && !session.game.spectator
+              "
+              :disabled="
+                !!session.game.names[index] ||
+                session.pending ||
+                !session.connected
+              "
+              @click="session.submit({ type: 'chooseSeat', target: index })"
+            >
+              {{ t('room.takeSeat') }}
+            </button>
+            <button
+              v-if="
+                session.game.teamMode === 'manual' &&
+                isHost &&
+                (!session.game.names[index] || session.game.bots?.[index])
+              "
+              :disabled="
+                session.pending ||
+                !session.connected ||
+                (!session.game.bots?.[index] &&
+                  (session.game.participantCount ?? 0) >= 6)
+              "
+              @click="
+                session.submit({
+                  type: 'setBot',
+                  target: index,
+                  enabled: !session.game.bots?.[index],
+                })
+              "
+            >
+              {{
+                t(session.game.bots?.[index] ? 'room.removeBot' : 'room.addBot')
+              }}
+            </button>
+          </div>
           <span class="seat-status">{{
-            t(session.online[index] ? 'common.online' : 'common.waiting')
+            t(
+              session.game.bots?.[index]
+                ? 'common.bot'
+                : session.online[index]
+                  ? 'common.online'
+                  : 'common.waiting',
+            )
           }}</span>
         </div>
       </div>
@@ -143,6 +180,23 @@ onUnmounted(() => clearInterval(timer));
 </template>
 
 <style scoped>
+.roster-row {
+  flex-wrap: wrap;
+}
+.seat-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+@media (max-width: 600px) {
+  .seat-actions {
+    flex-basis: 100%;
+    width: 100%;
+  }
+  .seat-actions button {
+    flex: 1;
+  }
+}
 .counter {
   flex-shrink: 0;
   white-space: nowrap;

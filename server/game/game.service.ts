@@ -40,12 +40,43 @@ export class GameService {
     )
       throw new AppError('error.staleState');
     const action = gameAction(msg.action);
-    if (action.type === 'teamMode' || action.type === 'chooseSeat') {
+    if (
+      action.type === 'teamMode' ||
+      action.type === 'chooseSeat' ||
+      action.type === 'setBot'
+    ) {
       if (r.state.phase !== 'lobby') throw new AppError('error.invalidAction');
-      if (action.type === 'teamMode') {
+      if (action.type === 'setBot') {
+        if (seat !== hostSeat(r, this.connections.online(r)))
+          throw new AppError('error.coordinator');
+        if (r.teamMode !== 'manual') throw new AppError('error.invalidAction');
+        const map = r.seatMap ?? Array(6).fill(null);
+        const member = map[action.target];
+        if (action.enabled) {
+          if (member != null) throw new AppError('error.seatOccupied');
+          const free = r.members.indexOf(null);
+          if (free < 0) throw new AppError('error.seatsFull');
+          r.members[free] = { bot: true };
+          r.state.names[free] = `Bot${action.target + 1}`;
+          map[action.target] = free;
+        } else {
+          if (member == null || !r.members[member]?.bot)
+            throw new AppError('error.invalidChoice');
+          r.members[member] = null;
+          r.state.names[member] = '';
+          map[action.target] = null;
+        }
+        r.seatMap = map;
+        r.autoStartAt = null;
+      } else if (action.type === 'teamMode') {
         if (seat !== hostSeat(r, this.connections.online(r)))
           throw new AppError('error.coordinator');
         if (r.teamMode !== action.mode) {
+          r.members = r.members.map((m, i) => {
+            if (!m?.bot) return m;
+            r.state.names[i] = '';
+            return null;
+          });
           r.teamMode = action.mode;
           r.seatMap = Array(6).fill(null);
           r.autoStartAt = null;
@@ -246,7 +277,7 @@ export class GameService {
       };
       if (s.phase === 'lobby') {
         r.members = r.members.map((m, i) => {
-          if (!eligible(i)) return m;
+          if (m?.bot || !eligible(i)) return m;
           s.names[i] = '';
           r.seatMap = r.seatMap?.map((slot) => (slot === i ? null : slot));
           r.autoStartAt = null;

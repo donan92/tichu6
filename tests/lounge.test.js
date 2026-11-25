@@ -908,3 +908,50 @@ test('preparation timeout resolves all pending humans in one persisted alarm', a
   assert.ok(r.state.exchanges.every(Boolean));
   assert.equal(last(owner, 'state').value.phase, 'play');
 });
+
+test('manual lobby bots are host-controlled, bounded, replaceable in seat order and survive alarms', async () => {
+  const f = await setup();
+  const owner = await user(f, 6001, 'Host');
+  await msg(f.hub, owner, { type: 'create', name: 'Host' });
+  const r = Object.values(f.hub.data.rooms)[0];
+  const action = async (ws, a) =>
+    msg(f.hub, ws, { type: 'action', revision: r.state.revision, action: a });
+  await action(owner, { type: 'teamMode', mode: 'manual' });
+  await action(owner, { type: 'chooseSeat', target: 0 });
+  for (const target of [5, 3, 1, 4, 2])
+    await action(owner, { type: 'setBot', target, enabled: true });
+  assert.equal(r.members.filter((m) => m?.bot).length, 5);
+  assert.equal(
+    last(owner, 'directory').rooms.find((room) => room.id === r.id).canJoin,
+    true,
+  );
+  assert.ok(r.autoStartAt > Date.now());
+  await f.hub.alarm();
+  assert.equal(r.members.filter((m) => m?.bot).length, 5);
+  const guest = await user(f, 6002, 'Guest');
+  await msg(f.hub, guest, {
+    type: 'join',
+    roomId: r.id,
+    watch: false,
+    name: 'Guest',
+  });
+  assert.equal(r.members.filter((m) => m?.bot).length, 4);
+  assert.equal(r.seatMap[1], null);
+  assert.ok(r.members[r.seatMap[2]].bot);
+  assert.equal(r.autoStartAt, null);
+  const revision = r.state.revision;
+  await action(guest, { type: 'setBot', target: 2, enabled: false });
+  assert.equal(r.state.revision, revision);
+  await action(owner, { type: 'setBot', target: 1, enabled: true });
+  assert.equal(r.members.filter(Boolean).length, 6);
+  assert.equal(r.seatMap[1], null);
+  await action(owner, { type: 'setBot', target: 5, enabled: false });
+  assert.equal(r.members.filter((m) => m?.bot).length, 3);
+  await action(owner, { type: 'setBot', target: 5, enabled: true });
+  await action(guest, { type: 'chooseSeat', target: 1 });
+  assert.ok(r.autoStartAt > Date.now());
+  r.autoStartAt = Date.now() - 1;
+  await f.hub.alarm();
+  assert.equal(r.state.phase, 'grand');
+  assert.equal(r.members.filter((m) => m?.bot).length, 4);
+});

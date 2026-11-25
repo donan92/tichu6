@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.17",
+    "summary": "patches.manualBotsAndCardFit"
+  },
+  {
     "version": "0.8.16",
     "summary": "patches.preparationAndBoard"
   },

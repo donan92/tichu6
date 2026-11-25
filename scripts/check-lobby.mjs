@@ -53,11 +53,18 @@ try {
   await until(() => clients[0].state?.roomId);
   const roomId = clients[0].state.roomId;
   await action(clients[0], { type: 'teamMode', mode: 'manual' });
+  for (const target of [5, 3, 1, 4, 2])
+    await action(clients[0], { type: 'setBot', target, enabled: true });
+  assert.equal(clients[0].state.bots.filter(Boolean).length, 5);
+  await action(clients[0], { type: 'setBot', target: 5, enabled: false });
+  await action(clients[0], { type: 'setBot', target: 5, enabled: true });
   for (let i = 1; i < 6; i++) {
     clients[i].ws.send(
       JSON.stringify({ type: 'join', roomId, watch: false, name: `Lobby${i}` }),
     );
     await until(() => clients[i].state?.roomId === roomId);
+    await until(() => clients[0].state.bots.filter(Boolean).length === 5 - i);
+    assert.equal(clients[0].state.names[i], '');
   }
   assert.equal(clients[0].state.waitingPlayers.length, 6);
   assert.deepEqual(clients[0].state.names, Array(6).fill(''));

@@ -67,6 +67,9 @@ export class Snapshots {
       round: r.state.round,
       scores: r.state.scores,
       players: r.members.filter(Boolean).length,
+      canJoin:
+        r.state.phase === 'lobby' &&
+        r.members.filter((m) => m && !m.bot).length < 6,
       online: this.connections.online(r).filter(Boolean).length,
       spectators: this.connections.users().filter((ws) => {
         const a = this.connections.attachment(ws);
@@ -122,7 +125,9 @@ export class Snapshots {
         waitingPlayers,
         participantCount: r.members.filter(Boolean).length,
         offline: online.map((x, i) => !x && !r.members[i]?.bot),
-        bots: r.members.map((m) => !!(m?.bot || m?.idle)),
+        bots: manual
+          ? map.map((i) => i != null && !!r.members[i]?.bot)
+          : r.members.map((m) => !!(m?.bot || m?.idle)),
         paused: false,
       },
       online: manual ? map.map((i) => i != null && online[i]) : online,

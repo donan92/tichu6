@@ -144,7 +144,9 @@ describe('Vue interaction regressions', () => {
     const wrapper = mount(RoomView, { global: { plugins: plugins() } });
     wrappers.push(wrapper);
     expect(wrapper.text()).toContain('Waiting');
-    const seats = wrapper.findAll('.roster-row button');
+    const seats = wrapper
+      .findAll('.roster-row button')
+      .filter((b) => b.text() === i18next.t('room.takeSeat'));
     expect(seats[0].attributes('disabled')).toBeDefined();
     await seats[1].trigger('click');
     expect(submit).toHaveBeenCalledWith({ type: 'chooseSeat', target: 1 });

@@ -25,6 +25,7 @@ export function gameAction(input: unknown): GameAction {
       'extendTime',
       'teamMode',
       'chooseSeat',
+      'setBot',
       'start',
       'next',
       'grand',
@@ -56,6 +57,17 @@ export function gameAction(input: unknown): GameAction {
     if (input.mode !== 'random' && input.mode !== 'manual')
       throw new AppError('error.invalidChoice');
     return { type: 'teamMode', mode: input.mode };
+  }
+  if (input.type === 'setBot') {
+    if (
+      typeof input.target !== 'number' ||
+      !Number.isInteger(input.target) ||
+      input.target < 0 ||
+      input.target > 5 ||
+      typeof input.enabled !== 'boolean'
+    )
+      throw new AppError('error.invalidChoice');
+    return { type: 'setBot', target: input.target, enabled: input.enabled };
   }
   if (input.type === 'chooseSeat') {
     if (

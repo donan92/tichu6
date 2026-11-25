@@ -12,7 +12,7 @@ export function syncLobby(room: Room, online: boolean[], now = Date.now()) {
     i != null && room.members[i] ? i : null,
   );
   const ready =
-    room.members.every((m, i) => !!m && !m.bot && online[i]) &&
+    room.members.every((m, i) => !!m && (m.bot || online[i])) &&
     (room.teamMode !== 'manual' || room.seatMap.every((i) => i != null));
   if (!ready) room.autoStartAt = null;
   else room.autoStartAt ??= now + 10000;

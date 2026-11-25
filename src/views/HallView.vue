@@ -73,7 +73,8 @@ const session = useSessionStore();
             class="primary"
             :disabled="
               !session.connected ||
-              (!room.mine && (room.phase !== 'lobby' || room.players >= 6))
+              (!room.mine &&
+                !(room.canJoin ?? (room.phase === 'lobby' && room.players < 6)))
             "
             @click="session.joinRoom(room.id)"
           >

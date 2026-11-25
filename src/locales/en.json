@@ -349,10 +349,14 @@
   "error.fillSeats": "Fill all six seats to start automatically in manual mode.",
   "play.confirmSmall": "Declare Small Tichu (±100 points)?",
   "play.confirmLarge": "Declare Large Tichu (±200 points)?",
-  "room.manualHint": "Choose an empty seat on your preferred team. Once all six players are seated, the game starts in 10 seconds and seats shuffle within each team.",
+  "room.manualHint": "Choose an empty seat to select your team. The host can add bots; filling all six seats starts a ten-second countdown.",
   "patches.teamsAndTurnControls": "Added team selection, declaration confirmation and turn timers, with improved card layout and spectator privacy.",
   "room.startWithBots": "Fill empty seats with bots and start",
   "patches.lobbyStartCompatibility": "Restored the room start button and clarified starting with bots in empty seats.",
   "play.preparationDeadline": "{{seconds}}s left for declaration and exchange · bots finish pending choices when time expires.",
-  "patches.preparationAndBoard": "Limited declaration and exchange to three minutes total and enlarged the game board."
+  "patches.preparationAndBoard": "Limited declaration and exchange to three minutes total and enlarged the game board.",
+  "room.addBot": "Add bot",
+  "room.removeBot": "Remove bot",
+  "room.teamSeatsHint": "Only teams are fixed. Seats shuffle within each team when the game starts. New players replace bots starting from the top seat.",
+  "patches.manualBotsAndCardFit": "Add or remove bots in team selection, and played cards now fit the table space."
 }

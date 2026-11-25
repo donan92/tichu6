@@ -115,6 +115,7 @@ export type GameAction =
   | { type: 'prepareCall'; call: 100 | 200 }
   | { type: 'teamMode'; mode: 'random' | 'manual' }
   | { type: 'chooseSeat'; target: number }
+  | { type: 'setBot'; target: number; enabled: boolean }
   | { type: 'start' | 'next' | 'tichu' | 'pass' | 'prepareDog' | 'extendTime' }
   | { type: 'grand'; call: boolean }
   | { type: 'exchange'; ids: string[] }
@@ -134,6 +135,7 @@ export interface RoomSummary {
   round: number;
   scores: number[];
   players: number;
+  canJoin?: boolean;
   online: number;
   spectators: number;
   mine: boolean;

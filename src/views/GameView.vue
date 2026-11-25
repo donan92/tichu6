@@ -157,7 +157,14 @@ const tableNote = computed(() =>
               )
             }}</span
           >
-          <div class="played-cards">
+          <div
+            class="played-cards"
+            :style="{
+              '--played-columns': Math.min(9, game.top.cards.length),
+              '--played-rows': Math.ceil(game.top.cards.length / 9),
+              '--played-mobile-columns': Math.min(6, game.top.cards.length),
+            }"
+          >
             <PlayingCard
               v-for="card in sortCards(game.top.cards)"
               :key="card.id"

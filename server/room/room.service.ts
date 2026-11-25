@@ -57,7 +57,12 @@ export class RoomService {
       if (active && active.id !== id)
         throw new AppError('error.activeGameWatch');
       if (r.state.phase !== 'lobby') throw new AppError('error.watchOnly');
-      const seat = r.members.indexOf(null);
+      // Human arrivals replace the first bot in displayed seat order.
+      const bot =
+        r.teamMode === 'manual'
+          ? r.seatMap?.find((i) => i != null && r.members[i]?.bot)
+          : undefined;
+      const seat = bot ?? r.members.indexOf(null);
       if (seat < 0) throw new AppError('error.seatsFull');
       r.seatMap = r.seatMap?.map((i) => (i === seat ? null : i));
       r.autoStartAt = null;
