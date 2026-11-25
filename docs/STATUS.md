@@ -851,3 +851,9 @@ Release verification:
 - Played-card rank/suit now scale with card inline container size. Desktop117.8px card measured26.6px rank/18.5px suit; mobile53px card measured13px/10px. Browser preview confirmed visible K and suit; no phone hardware claim. Temporary fixtures removed.
 - v0.8.17 CI45634240422 and Pages45634239553 succeeded; live assets matched build. However real production setBot returned invalidAction despite current deployed Worker. Cloudflare changed DO default code update strategy to deferred300s (official docs: https://developers.cloudflare.com/durable-objects/deployments/durable-objects-code-updates/). Applied existing version0daaac64-c1b6-43f2-81fa-19f96801f365 with explicit immediate strategy; production test room then successfully added and removed a bot. Test room left/cleaned; no existing player room changed. Record immediate strategy in wrangler config to avoid frontend/backend skew on future releases.
 - Check,218 tests,format and build passed. Version0.8.18 with bilingual patch note; deployment verification pending.
+
+## v0.8.18 deployment verified
+
+- Mainbf8b47e deployed; CI45636111714 and Pages45636110454 succeeded. Cloudflare Pagesfa273f59-d78f-4bf4-b605-ae8e7161bfea serves assets byte-identical to localv0.8.18 build.
+- Workerf109ff69-c7e0-491d-bb93-00f69bab28f8 deployed at100% with immediate strategy; healthok/version6. Production bot addition/removal was verified after forcing the preceding identical action implementation to update immediately; test room left afterwards. No live room reset or deletion.
+- Supersedes pending deployment note above. Temporary local font-preview server stopped. Real iPhone/Samsung confirmation behavior remains a device QA limitation; cloned-snapshot regressions pass in component tests.
