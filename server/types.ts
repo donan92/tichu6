@@ -9,6 +9,7 @@ export interface Member {
   trainingConsent?: boolean;
 }
 export interface Room {
+  reconnectTurn?: { key: string; until: number; resumed: boolean };
   id: string;
   title: RoomTitle;
   state: GameState;

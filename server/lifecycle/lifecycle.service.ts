@@ -1,3 +1,4 @@
+import { syncReconnectClock } from '../game/reconnect-clock.ts';
 import { TRAINING_RETENTION_MS } from '../training/records.ts';
 import { GRACE, TTL, IDLE, ROOM_IDLE } from '../policy.ts';
 import type { RoomRepository } from '../persistence/room.repository.ts';
@@ -26,6 +27,7 @@ export class LifecycleService {
           else m.offlineSince ??= now;
         }
       });
+      syncReconnectClock(r, online, now);
       if (online.some(Boolean)) r.lastActive = now;
     }
   }
@@ -121,7 +123,7 @@ export class LifecycleService {
           ((online.some(Boolean) || r.members.some((member) => member?.idle)) &&
             ((s.phase === 'grand' && !s.ready[i]) ||
               (s.phase === 'exchange' && !s.exchanges[i]) ||
-              (s.phase === 'play' && s.turn === i)));
+              (s.phase === 'play' && s.turn === i && (m.bot || m.idle))));
         if (needs)
           at = Math.min(
             at,

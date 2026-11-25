@@ -1,3 +1,4 @@
+import { syncReconnectClock } from './reconnect-clock.ts';
 import { syncDeadline, dueAction } from '../../src/game-clock.ts';
 import {
   prepareTrainingDecision,
@@ -127,7 +128,7 @@ export class GameService {
     let changed = false;
     for (const r of Object.values(this.repository.data.rooms)) {
       if (r.state.phase === 'lobby') continue;
-      syncDeadline(r.state, now);
+      syncReconnectClock(r, this.connections.online(r), now);
       const due = dueAction(r.state, now);
       if (!due) continue;
       const before = r.state;
@@ -141,7 +142,7 @@ export class GameService {
         'bot',
         before.phase === 'trick' ? 'auto-collect-v1' : 'turn-timeout-v1',
       );
-      syncDeadline(r.state, now);
+      syncReconnectClock(r, this.connections.online(r), now);
       r.lastProgress = now;
       changed = true;
     }
@@ -176,11 +177,16 @@ export class GameService {
               : s.phase === 'play'
                 ? s.turn
                 : -1;
-        if (seat != null && seat >= 0 && eligible(seat)) {
+        if (
+          seat != null &&
+          seat >= 0 &&
+          eligible(seat) &&
+          (s.phase !== 'play' || r.members[seat]?.bot || r.members[seat]?.idle)
+        ) {
           const action = botAction(s, seat);
           r.state = act(s, seat, action);
           this.record(r, s, seat, action, 'bot');
-          syncDeadline(r.state, now);
+          syncReconnectClock(r, this.connections.online(r), now);
           r.lastProgress = now;
         }
       }

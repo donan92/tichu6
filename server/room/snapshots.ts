@@ -87,6 +87,12 @@ export class Snapshots {
       type: 'state' as const,
       value: {
         ...snapshot,
+        reconnectUntil:
+          r.state.phase === 'play' &&
+          r.reconnectTurn?.key === r.state.deadlineKey &&
+          !r.reconnectTurn?.resumed
+            ? r.reconnectTurn?.until
+            : null,
         roomId: r.id,
         title: r.title,
         spectator: seat < 0,

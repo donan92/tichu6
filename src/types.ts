@@ -40,6 +40,7 @@ export interface PublicBase {
   trickNumber?: number;
   callResults?: CallResult[];
   deadline?: number | null;
+  reconnectUntil?: number | null;
   dragonTarget?: number | null;
   exchangeReview?: ExchangeReview[];
   phase: Phase;

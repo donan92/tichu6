@@ -70,7 +70,11 @@ const tableNote = computed(() =>
         </strong>
       </span>
     </div>
-    <TurnClock :deadline="game.deadline" :phase="game.phase" />
+    <TurnClock
+      :deadline="game.deadline"
+      :phase="game.phase"
+      :reconnect-until="game.reconnectUntil"
+    />
     <section class="table" :aria-label="t('play.tableLabel')">
       <div
         v-for="(name, index) in game.names"

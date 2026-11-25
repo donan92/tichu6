@@ -17,7 +17,7 @@ Vue 3·TypeScript·Pinia 화면과 Vite 정적 빌드는 Cloudflare Pages, 게�
 - 같은 브라우저의 다른 탭으로 복귀하면 기존 연결을 교체합니다. 여러 명 테스트는 별도 브라우저 프로필을 사용하세요.
 - 브라우저 데이터 삭제·다른 기기에서는 복구할 수 없습니다. 회원 계정이나 기기 간 복구 코드는 아직 없습니다.
 - 방장이 나가도 게임은 유지됩니다. 현재 연결된 가장 앞 좌석이 시작/다음 라운드 담당자가 됩니다.
-- 연결이 끊긴 좌석은 45초 유예 후 봇이 대신 행동합니다. 복귀하면 즉시 직접 플레이합니다. 대기실의 끊긴 자리는 45초 후 해제합니다.
+- 플레이 중 연결이 끊기면 끊긴 시점부터 최대 3분 대기 후 30초 제한으로 자동 패스합니다(패스 불가 시 합법적인 자동 플레이). 먼저 복귀하면 복귀 시점부터 30초이며, 같은 차례의 반복 재접속은 시간을 연장하지 않습니다. 대기실·선언·교환 단계는 기존 45초 유예를 유지합니다.
 - 방 생성 또는 마지막 정상 게임 행동(봇 포함) 이후 30분간 진행이 없으면 접속자 유무와 관계없이 방을 종료합니다. 입장·관전·재접속·핑은 시간을 연장하지 않으며, 남아 있는 참가자는 라운지로 돌아갑니다.
 
 ## 실행과 검증
@@ -137,7 +137,7 @@ cards locally without submitting an action does not count as a server action.
 
 Idle sockets lose authorization and close with code 4009, freeing a connected-user
 slot. Waiting seats are removed. During a match the seat immediately becomes
-bot-controlled, without the ordinary 45-second disconnect grace period. If all
+bot-controlled, without the ordinary disconnect grace period. If all
 humans become idle, bots finish the current round; they do not start new rounds
 without a user. Rooms expire 30 minutes after creation or the last accepted game action (including bots), even with connected users. Joining, watching, reconnecting and pinging do not extend this deadline. Connected occupants return to the lounge. Existing rooms receive a full 30-minute window when this policy first loads.
 

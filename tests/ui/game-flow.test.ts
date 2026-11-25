@@ -131,3 +131,19 @@ it('counts down and restores a persisted practice deadline without extending it'
   expect(session.round?.passed).toContain(0);
   expect(session.round?.turn).toBe(1);
 });
+
+it('shows reconnection grace before switching to the normal thirty-second countdown', async () => {
+  vi.useFakeTimers();
+  vi.setSystemTime(1000);
+  const w = mount(TurnClock, {
+    props: { phase: 'play', deadline: 211000, reconnectUntil: 181000 },
+    global: global(),
+  });
+  mounted.push(w);
+  expect(w.text()).toContain('Waiting for reconnection');
+  expect(w.text()).toContain('180s');
+  await vi.advanceTimersByTimeAsync(180000);
+  expect(w.text()).toBe('30s remaining');
+  await w.setProps({ reconnectUntil: null, deadline: 211000 });
+  expect(w.text()).toBe('30s remaining');
+});

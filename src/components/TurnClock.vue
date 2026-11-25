@@ -1,7 +1,11 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useTranslation } from 'i18next-vue';
-const props = defineProps<{ deadline?: number | null; phase: string }>();
+const props = defineProps<{
+  deadline?: number | null;
+  phase: string;
+  reconnectUntil?: number | null;
+}>();
 const { t } = useTranslation();
 const now = ref(Date.now());
 watch(
@@ -18,8 +22,18 @@ onMounted(() => {
   }, 250);
 });
 onUnmounted(() => clearInterval(timer));
+const waiting = computed(
+  () => props.phase === 'play' && (props.reconnectUntil ?? 0) > now.value,
+);
 const seconds = computed(() =>
-  Math.max(0, Math.ceil(((props.deadline ?? now.value) - now.value) / 1000)),
+  Math.max(
+    0,
+    Math.ceil(
+      ((waiting.value ? props.reconnectUntil! : (props.deadline ?? now.value)) -
+        now.value) /
+        1000,
+    ),
+  ),
 );
 </script>
 <template>
@@ -30,9 +44,16 @@ const seconds = computed(() =>
     aria-live="off"
   >
     {{
-      t(phase === 'trick' ? 'play.autoCollect' : 'play.turnDeadline', {
-        seconds,
-      })
+      t(
+        waiting
+          ? 'play.reconnectWait'
+          : phase === 'trick'
+            ? 'play.autoCollect'
+            : 'play.turnDeadline',
+        {
+          seconds,
+        },
+      )
     }}
   </p>
 </template>

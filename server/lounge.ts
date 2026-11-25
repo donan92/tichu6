@@ -50,6 +50,7 @@ export class Lounge {
         const { hash } = this.connections.authenticated(ws);
         this.data.activity[hash] ??= Date.now();
       }
+      this.refreshPresence();
       await this.persist();
       await this.schedule();
     });

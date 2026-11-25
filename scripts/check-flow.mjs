@@ -166,6 +166,32 @@ try {
   assert.deepEqual(returned.state.trickHistory, []);
   assert.deepEqual(watcher.state.trickHistory, []);
   assert.deepEqual(returned.state.log, []);
+  await fetch(base + '/__flow-play');
+  await until(
+    () => watcher.state?.phase === 'play' && watcher.state?.turn === 0,
+  );
+  returned.ws.close();
+  await until(() => watcher.state?.reconnectUntil > Date.now());
+  const waitUntil = watcher.state.reconnectUntil;
+  assert.ok(
+    waitUntil - Date.now() > 175000 && waitUntil - Date.now() <= 180000,
+  );
+  assert.equal(watcher.state.deadline, waitUntil + 30000);
+  const rejoined = await connect('Clock', owner.token, { roomId });
+  await until(() => rejoined.state?.phase === 'play');
+  assert.equal(rejoined.state.reconnectUntil, null);
+  assert.ok(rejoined.state.deadline - Date.now() <= 30000);
+  const resumedDeadline = rejoined.state.deadline;
+  rejoined.ws.close();
+  await until(
+    () => watcher.state?.offline[0] && watcher.state.reconnectUntil == null,
+  );
+  assert.equal(watcher.state.deadline, resumedDeadline);
+  await fetch(base + '/__flow-age');
+  await until(() => watcher.state?.passed.includes(0));
+  console.log(
+    'PASS real Worker: disconnect grace, early reconnect, repeated disconnect cannot extend deadline, offline timeout pass',
+  );
   console.log(
     'PASS real Worker: persistent 30s deadline, reconnect unchanged, alarm auto-pass, five-second dragon collection, authenticated target, no previous-trick disclosure',
   );

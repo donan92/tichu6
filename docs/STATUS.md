@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.11 mobile labels — not deployed
+## v0.8.11 mobile labels and reconnect grace — not deployed
 
 - Exchange recipients now sit above fixed-size preview cards without overlap.
 - Turn clock shows only remaining seconds and refreshes its clock on deadline
@@ -12,7 +12,17 @@
   and separated name/card bounds verified; six uncalled seats measured 50px.
   Real iPhone Safari remains unverified.
 - Validation: check, 190 tests (137 unit + 53 UI), format and build passed.
-- Pending release: frontend-only change; no server implementation changes.
+- Added persisted per-turn reconnect grace: disconnect time + 180 seconds,
+  then 30 seconds to act. Early reconnection starts 30 seconds immediately;
+  repeated disconnects in that turn cannot extend it. Normal disconnected human
+  turns use timeout/pass rather than the old 45-second bot strategy takeover.
+  Bots, forfeits and idle seats continue immediately; lobby/grand/exchange retain
+  their existing 45-second policy. Trick collection still takes five seconds.
+- Grace deadline is public; internal per-turn allowance stays server-only.
+  Local Worker flow test covers disconnect, early return, flapping and timeout.
+- Reconnect validation: check, 194 tests (140 unit + 54 UI), format and build
+  passed; real local Worker flow and idle checks passed.
+- Pending release requires both Pages and Worker deployment.
 
 ## v0.8.10 game flow — deployed
 
