@@ -1,8 +1,7 @@
 import { defineStore } from 'pinia';
 import { onScopeDispose, reactive, ref, watch } from 'vue';
-import { composeMusic } from '../audio/music';
-import type { MusicTrack } from '../audio/music';
-import { renderEffect } from '../audio/effects';
+import { loadAudioFile } from '../audio/files';
+import type { MusicTrack } from '../audio/files';
 import type { Effect } from '../audio/events';
 
 const storageKey = 'tichu6-audio-v1';
@@ -48,10 +47,7 @@ export const useAudioStore = defineStore('audio', () => {
     /* Private browsing. */
   }
   const settings = reactive(readAudioSettings(saved));
-  const available = ref(
-    typeof AudioContext !== 'undefined' &&
-      typeof OfflineAudioContext !== 'undefined',
-  );
+  const available = ref(typeof AudioContext !== 'undefined');
   const unlocked = ref(false);
   const failed = ref(false);
   const track = ref<MusicTrack>('lobby');
@@ -60,6 +56,7 @@ export const useAudioStore = defineStore('audio', () => {
     effectGain: GainNode | undefined;
   let music: AudioBufferSourceNode | undefined,
     effect: AudioBufferSourceNode | undefined;
+  let musicFade: GainNode | undefined, effectFade: GainNode | undefined;
   let musicEpoch = 0,
     effectEpoch = 0,
     disposed = false;
@@ -70,18 +67,42 @@ export const useAudioStore = defineStore('audio', () => {
   function stopMusic() {
     musicEpoch++;
     if (music) {
-      music.stop();
-      music.disconnect();
+      fadeOut(music, musicFade);
       music = undefined;
     }
   }
   function stopEffect() {
     effectEpoch++;
     if (effect) {
-      effect.stop();
-      effect.disconnect();
+      fadeOut(effect, effectFade);
       effect = undefined;
     }
+  }
+  function fadeOut(source: AudioBufferSourceNode, fade?: GainNode) {
+    if (ctx && fade && ctx.state === 'running') {
+      fade.gain.cancelScheduledValues(ctx.currentTime);
+      fade.gain.setTargetAtTime(0, ctx.currentTime, 0.006);
+      source.stop(ctx.currentTime + 0.03);
+    } else source.stop();
+    source.onended = () => {
+      source.disconnect();
+      fade?.disconnect();
+    };
+  }
+  function fadeIn(
+    source: AudioBufferSourceNode,
+    destination: GainNode,
+  ): GainNode {
+    const fade = ctx!.createGain();
+    fade.gain.setValueAtTime(0, ctx!.currentTime);
+    fade.gain.linearRampToValueAtTime(1, ctx!.currentTime + 0.012);
+    source.connect(fade);
+    fade.connect(destination);
+    source.onended = () => {
+      source.disconnect();
+      fade.disconnect();
+    };
+    return fade;
   }
   function gains() {
     if (!ctx) return;
@@ -103,7 +124,7 @@ export const useAudioStore = defineStore('audio', () => {
       selected = track.value;
     try {
       if (!musicCache.has(selected))
-        musicCache.set(selected, composeMusic(selected));
+        musicCache.set(selected, loadAudioFile(ctx!, selected));
       const buffer = await musicCache.get(selected)!;
       if (
         epoch !== musicEpoch ||
@@ -116,7 +137,7 @@ export const useAudioStore = defineStore('audio', () => {
       music = ctx.createBufferSource();
       music.buffer = buffer;
       music.loop = true;
-      music.connect(musicGain);
+      musicFade = fadeIn(music, musicGain);
       music.start();
       failed.value = false;
     } catch {
@@ -128,7 +149,7 @@ export const useAudioStore = defineStore('audio', () => {
     if (!available.value || disposed || document.hidden) return;
     try {
       if (!ctx) {
-        ctx = new AudioContext();
+        ctx = new AudioContext({ latencyHint: 'playback' });
         musicGain = ctx.createGain();
         effectGain = ctx.createGain();
         musicGain.connect(ctx.destination);
@@ -148,7 +169,7 @@ export const useAudioStore = defineStore('audio', () => {
     stopEffect();
     const epoch = effectEpoch;
     try {
-      if (!effectCache.has(key)) effectCache.set(key, renderEffect(key));
+      if (!effectCache.has(key)) effectCache.set(key, loadAudioFile(ctx!, key));
       const buffer = await effectCache.get(key)!;
       if (
         epoch !== effectEpoch ||
@@ -160,7 +181,7 @@ export const useAudioStore = defineStore('audio', () => {
         return;
       effect = ctx.createBufferSource();
       effect.buffer = buffer;
-      effect.connect(effectGain);
+      effectFade = fadeIn(effect, effectGain);
       effect.start();
       if (
         ['bomb', 'dragon', 'large', 'round', 'win', 'lose'].includes(key) &&

@@ -1,5 +1,28 @@
 # Project status / resume point
 
+## v0.8.26 audio files — in progress
+
+- User reports crackling on iPhone and requests audio files rather than code
+  synthesis. The exact device-specific cause is not established; no claim that
+  file conversion alone proves an iPhone fix.
+- Exported the approved arrangements and revised cues once on the development
+  machine, encoded18 local MP3 assets at44.1kHz (2.91MB total). Original exported
+  PCM has0 clipped samples. Removed all runtime oscillators/noise generation and
+  OfflineAudioContext code. Files are fetched and decoded at the playback
+  context's sample rate; per-source fades avoid abrupt interrupted waveforms.
+- Web Audio remains only for file playback and independent gain controls. Uses
+  playback latency hint; preserves mute, persistence, visibility and stale-load
+  guards. Assets are original project audio, not new third-party recordings.
+- v0.8.25 commit1562078 was deployed to Cloudflare341ea14b-9f64-432c-99dd-36cb6c2e7ba5;
+  production HTML/JS/CSS matched, speaker modal and version verified in-browser.
+  Verify45650682181 passed all integrations. Separate GitHub Pages45650681724
+  failed with HTTP500; retry API also returned500. Actual Cloudflare site works.
+- v0.8.26 check,155 unit +86 UI tests,format and build passed. All18 MP3s
+  decode to finite samples; maximum peak-6.98dBFS with no clipping. Built-preview
+  browser verified music/effect controls and practice track transition without
+  console warnings/errors. Deployment pending. Preserve backend version
+  2d2f7696-95b4-4c8f-8f67-1b2a12a52933. Real iPhone listening remains required.
+
 ## v0.8.25 audio release — prepared
 
 - Ported only the approved audio work onto main v0.8.24; unrelated research,

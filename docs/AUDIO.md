@@ -1,46 +1,54 @@
 # Game audio
 
-The header speaker opens a native modal with independent music/effect enable
-switches and volume sliders, plus a card-effect preview. Values are stored under
-`tichu6-audio-v1`; invalid saved values fall back or clamp to 0–100. Storage failure
-does not block gameplay. Defaults are music 25%, effects 45%, both enabled.
+The header speaker opens a native modal with independent music/effect switches,
+volume sliders and a card-effect preview. Settings persist under
+`tichu6-audio-v1`; invalid values fall back or clamp to0–100. Defaults are music25%,
+effects45%, both enabled. Storage failures never block the game.
 
-Audio starts after a pointer or keyboard gesture, subject to browser autoplay
-policy. Hidden tabs suspend playback and discard effects; returning resumes the
-current music where browser policy permits. Browsers without Web Audio retain
-fully functional silent gameplay and show an unavailable message in settings.
+## File playback
 
-## Music and effects
+All sound comes from18 committed MP3 files under `src/assets/audio`, approximately
+2.91MB in total. There are no runtime oscillators, noise generators, synthesis or
+OfflineAudioContexts. The assets retain the approved compositions and revised
+cues; see the asset README for provenance and encoding. This is a delivery change,
+not a claim that the synthesized timbres have become studio recordings.
 
-- `src/audio/music.ts`: original approved straight-time jazz-synth arrangements.
-  Home/lounge/room lobby and match end use the 96 BPM, 60-second lobby loop.
-  Declarations, exchange, play and round end use the 88 BPM, approximately
-  65-second game loop, without a high lead or hi-hats and with a 1.45 kHz low-pass.
-  Occasional half-beat accents remain; there is no swing. Render tails wrap into
-  the beginning of each loop. No external music service, asset download or fee.
-- `src/audio/effects.ts`: card, bomb, Small/Large Tichu, arrival, warning, dragon,
-  shuffle, own turn, exchange, trick collection, finish, round/match result and
-  quiet pass cues. The dragon and shuffle use the revised preview synthesis.
-- `src/audio/events.ts`: effects derive only from accepted public snapshots.
-  Results/special plays take precedence; only one effect plays at once. Ordinary
-  actions may take precedence over the separate own-turn cue. Initial snapshots,
-  reconnects, changed rooms/seats and skipped revisions do not replay history.
-  Arrival is based on newly occupied human lobby seats, not a global lounge ping.
-  Warning ticks occur only for the local active player during the final five
-  seconds, never for spectators or the offline reconnect grace countdown.
+`src/audio/files.ts` loads content-hashed asset URLs and decodes them at the
+playback AudioContext's sample rate. The Pinia store caches decoded files and
+controls separate music/effect gain buses. Web Audio is used solely for playback
+and volume control, with a playback latency hint and short per-source fades.
+This preserves independent volume controls on iOS, where media element volume
+has historically been restricted; see Apple's
+[Safari media guide](https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/Device-SpecificConsiderations/Device-SpecificConsiderations.html).
 
-The Pinia audio store owns a single live AudioContext, independent gain buses,
-and lazily cached offline renders (two music loops and bounded effect variants).
-Generation counters discard stale renders after mute, track changes, hiding or
-disposal. Volume changes preserve playback position. Important effects briefly
-reduce music volume. The application composable handles lifecycle and snapshots;
-no server/protocol or game-engine changes are required.
+Music starts following a user gesture. Hidden tabs suspend sound and discard
+stale effects; returning resumes music when browser autoplay policy permits.
+Pending downloads cannot start after mute, track change, hiding or disposal.
+Volume adjustments preserve playback position. Important effects briefly duck
+music. Unsupported browsers retain silent gameplay.
+
+The96 BPM lobby track plays on home/lounge/room lobby and match end. The88 BPM
+mellow game track covers declarations, exchange, play and round end. It omits high
+leads/hi-hats and was mastered with a1.45kHz low-pass. Both are straight-time with
+occasional half-beat accents. MP3 loop boundaries may have a brief decoder gap on
+some browsers; no seamless-loop claim is made for all devices.
+
+## Event cues
+
+`src/audio/events.ts` selects one cue from public accepted snapshots: card, bomb,
+Small/Large Tichu, arrival, deadline warning, dragon, shuffle, own turn, exchange,
+trick collection, finish, round/match result and quiet pass. Results and special
+plays take priority. Baselines, reconnects, changed rooms/seats and revision gaps
+never replay history. A match's seat randomization still allows the deal cue.
+Warnings apply only to the active local player's final five seconds, excluding
+spectators and reconnect grace. Arrivals are newly occupied human room-lobby
+seats, not global lounge pings.
 
 ## Verification limits
 
-Regression tests cover independent controls, persistence, repeated modal dismissal
-and focus restoration, snapshot priorities, warning eligibility and asynchronous
-mute/track/suspend races. Local browser checks cover 320/375px layouts, saved
-settings after reload, practice-track selection and absence of browser errors.
-Desktop viewport checks do not establish physical iPhone Safari audio behavior,
-speaker balance or listening quality. Verify those on a device before release.
+Tests cover settings, modal dismissal/focus, snapshot priorities, warning gates,
+asynchronous mute/track/suspend races and preservation of playback position.
+Encoded files are decoded and checked for valid format, finite output and headroom.
+Local/production browser checks cannot establish real iPhone speaker behavior.
+The user reported iPhone crackling in v0.8.25. Its exact cause remains unconfirmed;
+a real-device listening check is required after the file-playback release.

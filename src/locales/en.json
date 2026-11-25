@@ -395,5 +395,6 @@
   "audio.failed": "Audio could not play. Reopen these settings to retry.",
   "audio.saved": "Settings are saved on this device. Audio pauses when you switch tabs.",
   "audio.close": "Close",
-  "patches.gameAudio": "Added lobby and game music, sound effects, and separate volume controls."
+  "patches.gameAudio": "Added lobby and game music, sound effects, and separate volume controls.",
+  "patches.audioFiles": "Switched music and effects to audio files with smoother transitions."
 }

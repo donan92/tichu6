@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.26",
+    "summary": "patches.audioFiles"
+  },
+  {
     "version": "0.8.25",
     "summary": "patches.gameAudio"
   },

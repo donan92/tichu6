@@ -2,12 +2,10 @@ import { afterEach, beforeEach, expect, it, vi } from 'vitest';
 import { createPinia, disposePinia, setActivePinia } from 'pinia';
 import { nextTick } from 'vue';
 import { flushPromises } from '@vue/test-utils';
-import { composeMusic } from '../../src/audio/music';
-import { renderEffect } from '../../src/audio/effects';
+import { loadAudioFile } from '../../src/audio/files';
 import { useAudioStore } from '../../src/stores/audio';
 
-vi.mock('../../src/audio/music', () => ({ composeMusic: vi.fn() }));
-vi.mock('../../src/audio/effects', () => ({ renderEffect: vi.fn() }));
+vi.mock('../../src/audio/files', () => ({ loadAudioFile: vi.fn() }));
 const sources: {
   buffer: unknown;
   start: ReturnType<typeof vi.fn>;
@@ -19,8 +17,14 @@ class Context {
   destination = {};
   createGain() {
     return {
-      gain: { setTargetAtTime: vi.fn(), cancelScheduledValues: vi.fn() },
+      gain: {
+        setTargetAtTime: vi.fn(),
+        cancelScheduledValues: vi.fn(),
+        setValueAtTime: vi.fn(),
+        linearRampToValueAtTime: vi.fn(),
+      },
       connect: vi.fn(),
+      disconnect: vi.fn(),
     };
   }
   createBufferSource() {
@@ -52,10 +56,8 @@ beforeEach(() => {
   pinia = createPinia();
   setActivePinia(pinia);
   vi.stubGlobal('AudioContext', Context);
-  vi.stubGlobal('OfflineAudioContext', class {});
   vi.spyOn(document, 'hidden', 'get').mockReturnValue(false);
-  vi.mocked(composeMusic).mockReset();
-  vi.mocked(renderEffect).mockReset();
+  vi.mocked(loadAudioFile).mockReset();
 });
 afterEach(() => {
   disposePinia(pinia);
@@ -70,9 +72,9 @@ function pendingBuffer() {
   return { promise, resolve };
 }
 
-it('never starts music muted while an offline render is pending', async () => {
+it('never starts music muted while an file decode is pending', async () => {
   const pending = pendingBuffer();
-  vi.mocked(composeMusic).mockReturnValue(pending.promise);
+  vi.mocked(loadAudioFile).mockReturnValue(pending.promise);
   const audio = useAudioStore();
   await audio.unlock();
   audio.settings.music = false;
@@ -82,10 +84,10 @@ it('never starts music muted while an offline render is pending', async () => {
   expect(sources).toHaveLength(0);
 });
 
-it('starts only the latest track after out-of-order renders, without restarting for volume changes', async () => {
+it('starts only the latest track after out-of-order downloads, without restarting for volume changes', async () => {
   const lobby = pendingBuffer(),
     game = pendingBuffer();
-  vi.mocked(composeMusic).mockImplementation((track) =>
+  vi.mocked(loadAudioFile).mockImplementation((_context, track) =>
     track === 'lobby' ? lobby.promise : game.promise,
   );
   const audio = useAudioStore();
@@ -106,15 +108,15 @@ it('starts only the latest track after out-of-order renders, without restarting 
 });
 
 it('cancels pending effects when muted or suspended and never queues them before unlock', async () => {
-  vi.mocked(composeMusic).mockResolvedValue({} as AudioBuffer);
+  vi.mocked(loadAudioFile).mockResolvedValue({} as AudioBuffer);
   const audio = useAudioStore();
   audio.settings.music = false;
   await nextTick();
   await audio.playEffect('bomb');
-  expect(renderEffect).not.toHaveBeenCalled();
+  expect(loadAudioFile).not.toHaveBeenCalled();
   await audio.unlock();
   const pending = pendingBuffer();
-  vi.mocked(renderEffect).mockReturnValue(pending.promise);
+  vi.mocked(loadAudioFile).mockReturnValue(pending.promise);
   const playing = audio.playEffect('bomb');
   audio.settings.effects = false;
   await nextTick();
@@ -124,7 +126,7 @@ it('cancels pending effects when muted or suspended and never queues them before
   audio.settings.effects = true;
   await nextTick();
   const second = pendingBuffer();
-  vi.mocked(renderEffect).mockReturnValue(second.promise);
+  vi.mocked(loadAudioFile).mockReturnValue(second.promise);
   const next = audio.playEffect('dragon');
   audio.suspend();
   second.resolve({} as AudioBuffer);
