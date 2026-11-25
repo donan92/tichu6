@@ -778,3 +778,9 @@ Release verification:
 - No merge, version bump or deployment in this task. Preserve unrelated research/strategy changes and concurrent status entries. Final `npm run check`, all 211 tests (154 unit + 57 UI), `npm run format:check`, and `npm run build` passed.
 
 - Scoped release prepared on current main, excluding unrelated research commits and untracked strategy work. Version 0.8.12 with Korean/English release notes.
+
+## v0.8.12 release verified — 2026-11-25
+
+- Scoped main commit `b4b4637` releases special-card confirmation, wished-bomb priority and spectator dealt hands. Unrelated research work remains on its original branch/worktree.
+- Release checks passed: check, 201 tests (144 unit + 57 UI), format, build and isolated Worker18950 integration. CI45585046484 succeeded including Worker/idle/flow checks. Pages45585045657 succeeded.
+- Worker `e70a926b-1c57-4a1b-b741-3bdab26ff471` is at100%; health returnedok/version6. Production HTML/JS/CSS exactly match the v0.8.12 local build; production lounge welcome passed. No storage migration/reset. Temporary local Worker stopped. Actual iPhone/Samsung hardware remains unverified.
