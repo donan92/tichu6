@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.15",
+    "summary": "patches.lobbyStartCompatibility"
+  },
+  {
     "version": "0.8.14",
     "summary": "patches.teamsAndTurnControls"
   },

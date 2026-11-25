@@ -350,5 +350,7 @@
   "play.confirmSmall": "Declare Small Tichu (±100 points)?",
   "play.confirmLarge": "Declare Large Tichu (±200 points)?",
   "room.manualHint": "Choose an empty seat on your preferred team. Once all six players are seated, the game starts in 10 seconds and seats shuffle within each team.",
-  "patches.teamsAndTurnControls": "Added team selection, declaration confirmation and turn timers, with improved card layout and spectator privacy."
+  "patches.teamsAndTurnControls": "Added team selection, declaration confirmation and turn timers, with improved card layout and spectator privacy.",
+  "room.startWithBots": "Fill empty seats with bots and start",
+  "patches.lobbyStartCompatibility": "Restored the room start button and clarified starting with bots in empty seats."
 }

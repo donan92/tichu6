@@ -104,6 +104,29 @@ describe('Vue interaction regressions', () => {
       );
     },
   );
+  it('keeps bot start available for older lobby snapshots without isHost', async () => {
+    const session = useSessionStore();
+    session.game = {
+      ...round(),
+      phase: 'lobby',
+      names: ['Owner', '', '', '', '', ''],
+      leader: 0,
+      spectator: false,
+    };
+    session.connected = true;
+    const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
+    const wrapper = mount(RoomView, { global: { plugins: plugins() } });
+    wrappers.push(wrapper);
+    const start = wrapper
+      .findAll('button')
+      .find((b) => b.text() === i18next.t('room.startWithBots'))!;
+    expect(start.exists()).toBe(true);
+    await start.trigger('click');
+    expect(submit).toHaveBeenCalledWith({ type: 'start' });
+    session.game = { ...session.game, isHost: false };
+    await nextTick();
+    expect(wrapper.text()).not.toContain(i18next.t('room.startWithBots'));
+  });
   it('shows waiting members and disables occupied manual seats', async () => {
     const session = useSessionStore();
     session.connected = true;

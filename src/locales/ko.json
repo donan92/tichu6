@@ -350,5 +350,7 @@
   "play.confirmSmall": "스몰 티츄(±100점)를 선언할까요?",
   "play.confirmLarge": "라지 티츄(±200점)를 선언할까요?",
   "room.manualHint": "원하는 팀의 빈 좌석을 선택하세요. 6명이 모두 앉으면 10초 후 시작하며, 같은 팀 안에서 자리만 섞습니다.",
-  "patches.teamsAndTurnControls": "직접 팀 선택과 선언 확인, 차례 시간 안내를 추가하고 카드 배치와 관전 정보 보호를 개선했습니다."
+  "patches.teamsAndTurnControls": "직접 팀 선택과 선언 확인, 차례 시간 안내를 추가하고 카드 배치와 관전 정보 보호를 개선했습니다.",
+  "room.startWithBots": "빈자리를 봇으로 채우고 시작",
+  "patches.lobbyStartCompatibility": "방 시작 버튼을 복구하고 빈자리를 봇으로 채우는 시작 방법을 명확히 했습니다."
 }

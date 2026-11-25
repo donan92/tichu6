@@ -823,3 +823,9 @@ Release verification:
 - Required check,214 tests,format,build and local Worker flow passed. CI45630069309 succeeded including real Worker capacity/auth/idle/flow checks. Pages45630068204 succeeded; Cloudflare Pages production deployment `0fe28aa9-b670-4b4a-b624-2c73264ea102` points to this commit.
 - Worker `9f4985b1-a55a-4696-b528-5991e02ca880` is deployed at100%; health returnedok/version6. Production Pages HTML/JS/CSS match the v0.8.14 local build byte-for-byte. One production lounge welcome succeeded and its socket was closed. No live-game mutation, storage reset or migration required.
 - Supersedes the earlier not-deployed notes for this batch. Actual iPhone/Samsung device verification remains pending.
+
+## v0.8.15 lobby start compatibility hotfix
+
+- User reported five empty seats when alone. Bots are filled on explicit random-mode start, not on room entry; manual mode still requires six seated humans per the approved rule.
+- Observed an existing browser lobby missing teamMode/isHost fields: its coordinator had no start button. Reload restored a separate saved practice game, so the report's exact original transport cause is not proven. Added a narrow fallback to authenticated snapshot leader only when isHost is absent; explicit false and spectator remain denied. Server start authorization is unchanged.
+- Start button now explicitly says it fills empty seats with bots. Regression test covers missing field, emitted start action, and explicit non-host denial. Check,215 tests (152 unit +63 UI),format and build passed. Frontend-only release; Worker remains v0.8.14 implementation.

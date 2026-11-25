@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { computed, ref, onMounted, onUnmounted } from 'vue';
 import { useText } from '../composables/useText';
 import { useSessionStore } from '../stores/session';
 import { team } from '../game.js';
 import GameRules from '../components/GameRules.vue';
 const session = useSessionStore();
 const { t, title, message } = useText();
+const isHost = computed(() => {
+  const game = session.game;
+  return (
+    !!game &&
+    !game.spectator &&
+    (game.isHost ?? (session.seat >= 0 && session.seat === game.leader))
+  );
+});
 const now = ref(Date.now());
 let timer: ReturnType<typeof setInterval>;
 onMounted(() => {
@@ -50,9 +58,7 @@ onUnmounted(() => clearInterval(timer));
           v-for="mode in ['random', 'manual'] as const"
           :key="mode"
           :aria-pressed="session.game.teamMode === mode"
-          :disabled="
-            !session.game.isHost || session.pending || !session.connected
-          "
+          :disabled="!isHost || session.pending || !session.connected"
           @click="session.submit({ type: 'teamMode', mode })"
         >
           {{ t(mode === 'random' ? 'room.randomMode' : 'room.manualMode') }}
@@ -121,7 +127,7 @@ onUnmounted(() => clearInterval(timer));
       </div>
       <button
         v-if="
-          session.game.isHost &&
+          isHost &&
           session.game.teamMode !== 'manual' &&
           !session.game.autoStartAt
         "
@@ -129,7 +135,7 @@ onUnmounted(() => clearInterval(timer));
         :disabled="!session.connected || session.pending"
         @click="session.submit({ type: 'start' })"
       >
-        {{ t('room.start') }}
+        {{ t('room.startWithBots') }}
       </button>
     </section>
     <GameRules />
