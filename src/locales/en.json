@@ -327,5 +327,6 @@
   "play.confirmDragonPlay": "Play the Dragon?",
   "play.wishBombRequired": "You must play a bomb containing the wished rank {{rank}}. Select a bomb that beats the previous bomb.",
   "error.wishBombPriority": "Wait for the current player to play a bomb fulfilling the wish.",
-  "patches.specialChoicesAndSpectators": "Added special-card confirmations, wish-bomb priority, and spectator hand viewing."
+  "patches.specialChoicesAndSpectators": "Added special-card confirmations, wish-bomb priority, and spectator hand viewing.",
+  "patches.playFirstChoices": "Choose the recipient or wish after pressing Play cards or Give trick."
 }
