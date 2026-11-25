@@ -41,3 +41,11 @@ export function exchangeReview(
   state: LobbyState | RoundState,
   seat: number,
 ): ExchangeReview[];
+
+export function visibleHistory(
+  state: LobbyState | RoundState,
+): import('./types').TrickHistory[];
+
+export function visibleLog(
+  state: LobbyState | RoundState,
+): (import('./types').Message | string)[];

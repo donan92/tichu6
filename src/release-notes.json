@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.10",
+    "summary": "patches.gameFlow"
+  },
+  {
     "version": "0.8.9",
     "summary": "patches.reconnectLoading"
   },

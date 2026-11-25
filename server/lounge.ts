@@ -167,6 +167,10 @@ export class Lounge {
       this.broadcast();
     }
     this.lifecycle.expireIdle(now);
+    if (this.game.advanceTimed(now)) {
+      await this.persist();
+      this.broadcast();
+    }
   }
   async webSocketMessage(ws: WebSocket, raw: string | ArrayBuffer) {
     try {
@@ -276,6 +280,7 @@ export class Lounge {
       this.expireStalledRooms(now);
       this.lifecycle.expireIdle(now);
       this.refreshPresence();
+      this.game.advanceTimed(now);
       this.game.advanceBots(now);
       this.lifecycle.cleanup();
       await this.persist();

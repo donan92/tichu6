@@ -1,3 +1,4 @@
+import { syncDeadline } from '../../src/game-clock.ts';
 import {
   createTrainingArchive,
   loadTrainingArchive,
@@ -24,8 +25,10 @@ export class RoomRepository {
       now,
     );
     this.data.activity ||= {};
-    for (const room of Object.values(this.data.rooms))
+    for (const room of Object.values(this.data.rooms)) {
       room.lastProgress ??= now;
+      syncDeadline(room.state, now);
+    }
   }
   async save() {
     pruneTrainingArchive(this.training);

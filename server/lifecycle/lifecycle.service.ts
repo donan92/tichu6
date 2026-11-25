@@ -110,6 +110,8 @@ export class LifecycleService {
         );
     for (const r of Object.values(this.repository.data.rooms)) {
       at = Math.min(at, r.lastProgress + ROOM_IDLE);
+      if (r.state.phase !== 'lobby' && r.state.deadline != null)
+        at = Math.min(at, r.state.deadline);
       const online = this.connections.online(r),
         s = r.state;
       r.members.forEach((m, i) => {
@@ -119,8 +121,7 @@ export class LifecycleService {
           ((online.some(Boolean) || r.members.some((member) => member?.idle)) &&
             ((s.phase === 'grand' && !s.ready[i]) ||
               (s.phase === 'exchange' && !s.exchanges[i]) ||
-              (s.phase === 'play' && s.turn === i) ||
-              (s.phase === 'trick' && s.last === i)));
+              (s.phase === 'play' && s.turn === i)));
         if (needs)
           at = Math.min(
             at,

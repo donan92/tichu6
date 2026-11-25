@@ -27,6 +27,7 @@ export function gameAction(input: unknown): GameAction {
       'tichu',
       'pass',
       'collect',
+      'dragonTarget',
       'play',
     ].includes(typeof input.type === 'string' ? input.type : '')
   )
@@ -63,6 +64,10 @@ export function gameAction(input: unknown): GameAction {
       return { type: 'grand', call: input.call as boolean };
     case 'exchange':
       return { type: 'exchange', ids: input.ids as string[] };
+    case 'dragonTarget':
+      if (typeof input.target !== 'number')
+        throw new AppError('error.invalidChoice');
+      return { type: 'dragonTarget', target: input.target };
     case 'collect':
       return {
         type: 'collect',

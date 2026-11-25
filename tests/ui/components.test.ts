@@ -530,7 +530,7 @@ describe('Vue interaction regressions', () => {
     options[1]!.click();
     await nextTick();
     expect(dialog.open).toBe(false);
-    expect(submit).not.toHaveBeenCalled();
+    expect(submit).toHaveBeenCalledWith({ type: 'dragonTarget', target: 3 });
     await wrapper.get('button.primary').trigger('click');
     expect(submit).toHaveBeenCalledWith({ type: 'collect', target: 3 });
   });

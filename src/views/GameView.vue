@@ -2,12 +2,14 @@
 import { computed } from 'vue';
 import { useText } from '../composables/useText';
 import { useSessionStore } from '../stores/session';
-import { LABEL, team } from '../game.js';
+import { LABEL, team, sortCards } from '../game.js';
 import type { RoundView } from '../types';
 import { combinationMessage } from '../combinations';
 import ExchangeReview from '../components/ExchangeReview.vue';
 import PlayingCard from '../components/PlayingCard.vue';
 import GameControls from '../components/GameControls.vue';
+import TurnClock from '../components/TurnClock.vue';
+import TrickHistory from '../components/TrickHistory.vue';
 import GameRules from '../components/GameRules.vue';
 const props = defineProps<{ game: RoundView }>();
 const session = useSessionStore();
@@ -53,6 +55,22 @@ const tableNote = computed(() =>
     <div v-if="game.paused" class="warning" role="alert">
       {{ t('connection.restoring') }}
     </div>
+    <div
+      v-if="game.calls.some(Boolean)"
+      class="declarations"
+      aria-live="polite"
+    >
+      <span v-for="(call, index) in game.calls" :key="index">
+        <strong
+          v-if="call"
+          :class="team(index) ? 'played-team-b' : 'played-team-a'"
+        >
+          {{ game.names[index] }} ·
+          {{ t(call === 200 ? 'play.grand' : 'play.tichuShort') }}
+        </strong>
+      </span>
+    </div>
+    <TurnClock :deadline="game.deadline" :phase="game.phase" />
     <section class="table" :aria-label="t('play.tableLabel')">
       <div
         v-for="(name, index) in game.names"
@@ -73,6 +91,9 @@ const tableNote = computed(() =>
           }}
         </div>
         <div>
+          <span v-if="game.passed.includes(index)" class="pass-badge">{{
+            t('play.passed')
+          }}</span>
           <b
             >{{ name || t('common.empty') }}
             <span v-if="!game.spectator && index === seat" class="you">{{
@@ -119,7 +140,7 @@ const tableNote = computed(() =>
           >
           <div class="played-cards">
             <PlayingCard
-              v-for="card in game.top.cards"
+              v-for="card in sortCards(game.top.cards)"
               :key="card.id"
               :card="card"
             />
@@ -127,7 +148,7 @@ const tableNote = computed(() =>
           <span class="table-note">{{
             game.phase === 'trick'
               ? t('play.collectWaiting')
-              : t('play.passes', { count: game.passed.length })
+              : t('play.turn', { name: game.names[game.turn ?? 0] })
           }}</span></template
         ><template v-else
           ><div class="table-mark">6T</div>
@@ -163,7 +184,10 @@ const tableNote = computed(() =>
           v-for="(card, index) in game.hand"
           :key="card.id"
           :card="card"
-          :interactive="!game.spectator"
+          :interactive="
+            !game.spectator &&
+            !(game.phase === 'exchange' && game.exchangeReady[seat])
+          "
           :position="index"
           :pick="session.selected.indexOf(card.id)"
           @select="session.toggleCard"
@@ -180,16 +204,15 @@ const tableNote = computed(() =>
       :names="game.names"
     />
     <GameRules />
-    <details class="activity">
-      <summary>
-        {{ t('play.history') }}
-        <span>{{ message(game.log.at(-1) ?? '') }}</span>
-      </summary>
-      <ol>
-        <li v-for="(entry, index) in game.log.slice().reverse()" :key="index">
-          {{ message(entry) }}
-        </li>
-      </ol>
-    </details>
+    <section v-if="game.callResults?.length" class="call-results">
+      <h3>{{ t('play.callResults') }}</h3>
+      <p v-for="result in game.callResults" :key="result.seat">
+        {{ game.names[result.seat] }} ·
+        {{ t(result.call === 200 ? 'play.grand' : 'play.tichuShort') }} ·
+        {{ t(result.success ? 'play.callSuccess' : 'play.callFailure') }}
+        <strong>{{ result.delta > 0 ? '+' : '' }}{{ result.delta }}</strong>
+      </p>
+    </section>
+    <TrickHistory :game="game" />
   </main>
 </template>

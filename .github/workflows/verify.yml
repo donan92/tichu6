@@ -37,3 +37,4 @@ jobs:
           fi
           npm run test:server || { cat "$RUNNER_TEMP/worker.log"; exit 1; }
       - run: npm run test:idle
+      - run: npm run test:flow

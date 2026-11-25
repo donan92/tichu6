@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
+import PlayingCard from './PlayingCard.vue';
 import ChoicePicker from './ChoicePicker.vue';
 import { useTranslation } from 'i18next-vue';
 import { beats, classify, LABEL, partners, team } from '../game.js';
@@ -18,6 +19,19 @@ const ranks = Array.from({ length: 13 }, (_, index) => index + 2);
 const chosen = computed(() =>
   props.game.hand.filter((card) => session.selected.includes(card.id)),
 );
+const exchangeDraft = computed(() =>
+  session.selected
+    .map((id, index) => ({
+      card: props.game.hand.find((card) => card.id === id),
+      name: props.game.names[partners(session.seat)[index]],
+    }))
+    .filter((entry) => entry.card),
+);
+function chooseDragon(value: string) {
+  target.value = value;
+  if (collecting.value && dragon.value)
+    session.submit({ type: 'dragonTarget', target: Number(value) });
+}
 const combo = computed(() =>
   classify(chosen.value, props.game.top, Number(phoenixRank.value) || null),
 );
@@ -51,6 +65,14 @@ watch(
   (values) => {
     if (!values.some((value) => String(value.seat) === target.value))
       target.value = String(values[0]?.seat ?? '');
+  },
+  { immediate: true },
+);
+watch(
+  () => [props.game.phase, props.game.last, props.game.dragonTarget],
+  () => {
+    if (collecting.value && dragon.value)
+      target.value = String(props.game.dragonTarget ?? (session.seat + 1) % 6);
   },
   { immediate: true },
 );
@@ -104,7 +126,8 @@ const help = computed(() => {
       second: game.names[seats[1]],
     });
   }
-  if (collecting.value) return t('play.collectHelp');
+  if (collecting.value)
+    return t(dragon.value ? 'play.autoDragonHelp' : 'play.autoCollectHelp');
   return chosen.value.length
     ? t('play.selection', {
         count: chosen.value.length,
@@ -177,30 +200,60 @@ function play() {
         {{ t('play.leave') }}
       </button>
     </div>
-    <div v-else-if="game.phase === 'exchange'" class="action-buttons">
-      <button
-        class="quiet"
-        :disabled="locked || !!game.calls[session.seat]"
-        @click="session.submit({ type: 'tichu' })"
-      >
-        {{ t('play.tichu') }}</button><button
-        class="primary"
-        :disabled="
-          locked ||
-          game.exchangeReady[session.seat] ||
-          session.selected.length !== 2
-        "
-        @click="
-          session.submit({ type: 'exchange', ids: [...session.selected] })
-        "
-      >
-        {{ t('play.exchange', { count: session.selected.length }) }}
-      </button>
+    <div v-else-if="game.phase === 'exchange'" class="exchange-actions">
+      <p>
+        {{
+          t(
+            game.exchangeReady[session.seat]
+              ? 'play.exchangeLocked'
+              : 'play.exchangeEditable',
+          )
+        }}
+      </p>
+      <div v-if="!game.exchangeReady[session.seat]" class="exchange-draft">
+        <div v-for="(entry, index) in exchangeDraft" :key="index">
+          <span>{{ entry.name }}</span><PlayingCard
+            v-if="entry.card"
+            :card="entry.card"
+          />
+        </div>
+      </div>
+      <div class="action-buttons">
+        <button
+          class="quiet"
+          :disabled="
+            locked ||
+            game.exchangeReady[session.seat] ||
+            !session.selected.length
+          "
+          @click="session.selected = []"
+        >
+          {{ t('play.exchangeReselect') }}
+        </button>
+        <button
+          class="quiet"
+          :disabled="locked || !!game.calls[session.seat]"
+          @click="session.submit({ type: 'tichu' })"
+        >
+          {{ t('play.tichu') }}</button><button
+          class="primary"
+          :disabled="
+            locked ||
+            game.exchangeReady[session.seat] ||
+            session.selected.length !== 2
+          "
+          @click="
+            session.submit({ type: 'exchange', ids: [...session.selected] })
+          "
+        >
+          {{ t('play.exchangeConfirm', { count: session.selected.length }) }}
+        </button>
+      </div>
     </div>
     <div v-else-if="collecting" class="action-buttons">
       <ChoicePicker
         v-if="dragon"
-        v-model="target"
+        :model-value="target"
         :label="t('play.recipient')"
         :disabled="locked"
         :options="
@@ -209,6 +262,7 @@ function play() {
             label: recipient.name,
           }))
         "
+        @update:model-value="chooseDragon"
       /><button
         class="primary"
         :disabled="locked"

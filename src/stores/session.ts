@@ -1,3 +1,4 @@
+import { syncDeadline, dueAction } from '../game-clock';
 import { computed, onScopeDispose, ref, shallowRef } from 'vue';
 import { defineStore } from 'pinia';
 import { act, botAction, newGame, startRound, view, shuffle } from '../game.js';
@@ -190,6 +191,7 @@ export const useSessionStore = defineStore('session', () => {
   }
   function publish() {
     if (!practice) return;
+    syncDeadline(practice);
     try {
       savePractice(practice, nickname.value);
     } catch {
@@ -214,8 +216,19 @@ export const useSessionStore = defineStore('session', () => {
         (ready, index) => index > 0 && !ready,
       );
     else if (practice.phase === 'play') next = practice.turn ?? -1;
-    else if (practice.phase === 'trick') next = practice.last ?? -1;
-    if (next > 0)
+
+    const timed = practice.deadline;
+    const delay = timed == null ? Infinity : Math.max(0, timed - Date.now());
+    if (delay <= (next > 0 ? 800 : Infinity) && Number.isFinite(delay)) {
+      botTimer = setTimeout(() => {
+        if (!practice || mode.value !== 'demo') return;
+        const due = dueAction(practice);
+        if (due) {
+          practice = act(practice, due.seat, due.action);
+          publish();
+        }
+      }, delay);
+    } else if (next > 0)
       botTimer = setTimeout(() => {
         if (!practice || mode.value !== 'demo') return;
         try {
@@ -317,6 +330,8 @@ export const useSessionStore = defineStore('session', () => {
   function toggleCard(id: string) {
     if (
       game.value?.spectator ||
+      (game.value?.phase === 'exchange' &&
+        game.value.exchangeReady[seat.value]) ||
       !game.value?.hand.some((card) => card.id === id)
     )
       return;

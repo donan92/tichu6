@@ -236,7 +236,7 @@ const fail = (code, params) => {
 };
 const log = (s, message) => {
   s.log.push(message);
-  s.log = s.log.slice(-40);
+  s.log = s.log.slice(-1024);
 };
 const nextActive = (s, seat) => {
   for (let i = 1; i <= 6; i++) {
@@ -248,6 +248,13 @@ const nextActive = (s, seat) => {
 export function startRound(s, cards = shuffle(deck())) {
   if (!['lobby', 'roundEnd'].includes(s.phase)) fail('error.roundStart');
   s.round++;
+  s.log = [];
+  s.trickNumber = 1;
+  s.trickHistory ||= [];
+  s.callResults = [];
+  s.dragonTarget = null;
+  s.deadline = null;
+  s.deadlineKey = null;
   s.phase = 'grand';
   s.hands = Array.from({ length: 6 }, (_, i) =>
     sortCards(cards.slice(i * 18, i * 18 + 18)),
@@ -289,9 +296,30 @@ function finishRound(s) {
     }
     s.captured.forEach((p, i) => (delta[team(i)] += points(p)));
   }
-  s.calls.forEach((call, i) => {
-    if (call) delta[team(i)] += i === s.finish[0] ? call : -call;
-  });
+  // Each caller must personally finish first, even on a team triple victory.
+  s.callResults = s.calls.flatMap((call, seat) =>
+    call
+      ? [
+          {
+            seat,
+            call,
+            success: seat === s.finish[0],
+            delta: seat === s.finish[0] ? call : -call,
+          },
+        ]
+      : [],
+  );
+  for (const result of s.callResults) {
+    delta[team(result.seat)] += result.delta;
+    log(
+      s,
+      event('log.callResult', {
+        name: s.names[result.seat],
+        call: result.call,
+        delta: result.delta,
+      }),
+    );
+  }
   s.delta = delta;
   s.scores = s.scores.map((n, i) => n + delta[i]);
   s.phase =
@@ -313,6 +341,31 @@ function ending(s) {
       s.finish.slice(0, 3).every((i) => team(i) === team(s.finish[0])))
   );
 }
+function archiveTrick(s) {
+  s.trickHistory ||= [];
+  s.trickNumber ||= 1;
+  if (
+    !s.trickHistory.some(
+      (t) => t.round === s.round && t.trick === s.trickNumber,
+    )
+  )
+    s.trickHistory.push({
+      round: s.round,
+      trick: s.trickNumber,
+      entries: structuredClone(s.log),
+    });
+}
+function nextTrick(s) {
+  archiveTrick(s);
+  s.trickNumber = (s.trickNumber || 1) + 1;
+  s.log = [];
+}
+export function visibleLog(s) {
+  return s.phase === 'lobby' || s.trickNumber ? s.log : [];
+}
+export function visibleHistory(s) {
+  return s.phase === 'matchEnd' ? s.trickHistory || [] : [];
+}
 function collect(s, recipient) {
   s.exchangeReviewClosed = true;
   s.captured[recipient].push(...s.pile);
@@ -326,6 +379,7 @@ function collect(s, recipient) {
   s.top = null;
   s.passed = [];
   s.phase = 'play';
+  nextTrick(s);
 }
 // All mutations are validated on a clone: invalid actions are atomic.
 export function act(state, seat, action) {
@@ -339,6 +393,10 @@ export function act(state, seat, action) {
     fail('error.invalidRequest');
   const s = structuredClone(state),
     h = s.hands[seat];
+  if (!s.trickNumber) {
+    s.trickNumber = 1;
+    s.log = [];
+  }
   if (action.type === 'grand') {
     if (
       s.phase !== 'grand' ||
@@ -405,8 +463,9 @@ export function act(state, seat, action) {
       new Set(action.ids).size !== action.ids.length
     )
       fail('error.selectCards');
-    const cards = action.ids.map((id) => h.find((c) => c.id === id));
-    if (cards.some((c) => !c)) fail('error.ownership');
+    const owned = action.ids.map((id) => h.find((c) => c.id === id));
+    if (owned.some((c) => !c)) fail('error.ownership');
+    const cards = sortCards(owned);
     const p = classify(cards, s.top, action.phoenixRank || null);
     if (!p || !beats(p, s.top)) fail('error.combination');
     const inTurn = s.phase === 'play' && s.turn === seat;
@@ -448,10 +507,12 @@ export function act(state, seat, action) {
         event('log.dog', { name: s.names[seat], target: s.names[s.turn] }),
       );
       if (ending(s)) finishRound(s);
+      else nextTrick(s);
     } else {
       s.top = { ...p, cards };
       s.pile.push(...cards);
       s.last = seat;
+      s.dragonTarget = null;
       s.passed = [];
       s.turn = nextActive(s, seat);
       s.phase = 'play';
@@ -482,6 +543,7 @@ export function act(state, seat, action) {
     if (s.phase !== 'play' || s.turn !== seat || !s.top) fail('error.leadPass');
     if (s.wish && legalPlays(h, s.top, s.wish).length) fail('error.wishPass');
     if (!s.passed.includes(seat)) s.passed.push(seat);
+    log(s, event('log.pass', { name: s.names[seat] }));
     const other = s.hands
       .map((hand, i) => (hand.length && i !== s.last ? i : -1))
       .filter((i) => i >= 0);
@@ -489,6 +551,18 @@ export function act(state, seat, action) {
       s.phase = 'trick';
       s.turn = s.last;
     } else s.turn = nextActive(s, seat);
+  } else if (action.type === 'dragonTarget') {
+    if (
+      s.phase !== 'trick' ||
+      seat !== s.last ||
+      s.top?.cards[0]?.special !== 'dragon' ||
+      !Number.isInteger(action.target) ||
+      action.target < 0 ||
+      action.target > 5 ||
+      team(action.target) === team(seat)
+    )
+      fail('error.dragonTarget');
+    s.dragonTarget = action.target;
   } else if (action.type === 'collect') {
     if (s.phase !== 'trick' || seat !== s.last) fail('error.collector');
     const dragon =
@@ -503,6 +577,7 @@ export function act(state, seat, action) {
       fail('error.dragonTarget');
     collect(s, dragon ? action.target : seat);
   } else fail('error.unknownRequest');
+  if (['roundEnd', 'matchEnd'].includes(s.phase)) archiveTrick(s);
   s.revision++;
   return s;
 }
@@ -537,7 +612,18 @@ export function exchangeReview(s, seat) {
     .filter((entry) => entry.sent || entry.received);
 }
 export function view(s, seat) {
-  const { hands, first, exchanges, captured, exchangeReviewClosed, ...pub } = s;
+  const {
+    hands,
+    first,
+    exchanges,
+    captured,
+    exchangeReviewClosed,
+    trickHistory,
+    deadlineKey,
+    ...pub
+  } = s;
+  void trickHistory;
+  void deadlineKey;
   void exchangeReviewClosed;
   const hand =
     s.phase === 'grand'
@@ -545,6 +631,8 @@ export function view(s, seat) {
       : hands[seat];
   return {
     ...pub,
+    trickHistory: visibleHistory(s),
+    log: visibleLog(s),
     seat,
     hand,
     counts: hands.map((h) => h.length),

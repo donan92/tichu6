@@ -4,6 +4,7 @@ const { t } = useTranslation();
 const sections = [
   ['deckTitle', 'deck', 'bombs'],
   ['gameTitle', 'calls', 'scoring'],
+  ['flowTitle', 'timers', 'history'],
   ['serverTitle', 'server', 'reconnect'],
 ];
 </script>

@@ -1,5 +1,30 @@
 # Project status / resume point
 
+## v0.8.10 game flow — implemented, not deployed
+
+- Branch `fix/game-flow-timers`. Individual Small/Large Tichu penalty arithmetic
+  was already correct; added explicit per-caller results and regression tests
+  for teammate-first finishes, including triple victories.
+- Exchange drafts show recipients and can be reset until the player's own
+  confirmation; confirmed choices remain immutable. Callers and passed seats
+  are visible on the table. Played cards are rank-sorted.
+- Current trick only during play, including server spectator projections.
+  Archived tricks become available after the whole 1,000-point match ends.
+  Old saved mixed logs are hidden because their trick boundaries are unknown.
+- Active Hono/DO backend and practice use persisted 30-second turn deadlines
+  and 5-second collection deadlines. Reconnect, calls and dragon-target changes
+  do not extend them. Illegal passes (lead/mandatory wish) use a legal bot move.
+  Dragon defaults to the next opposing seat unless the collector chooses one.
+- Validation: check (strict frontend/server types and lint), 189 tests
+  (137 unit + 52 UI), format check and build passed. Real local Worker capacity,
+  authorization, reconnect, idle and flow integration checks passed. Added
+  `npm run test:flow` to CI for deadline persistence and alarm-driven actions.
+- Browser: practice exchange preview/reselection/confirmation, declaration,
+  countdown and seat pass badges checked at 390px. Actual phones unverified.
+- Next release step: merge approved changes to main for Pages, deploy Worker
+  separately, and verify both production deployments. No production deployment
+  has been performed for this change.
+
 ## v0.8.9 reconnect loading — deployed
 
 - Saved sessions show a loading screen before the first render; welcome and

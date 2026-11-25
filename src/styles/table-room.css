@@ -408,3 +408,38 @@ select {
     font-size: 12px;
   }
 }
+
+.declarations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 16px;
+  margin: 8px 0;
+}
+.pass-badge {
+  display: inline-block;
+  padding: 2px 6px;
+  margin-right: 4px;
+  border: 1px solid #b7c4d2;
+  border-radius: 6px;
+  color: #e3eaf1;
+  font-size: 12px;
+}
+.exchange-draft {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin: 8px 0;
+}
+.exchange-draft > div {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.exchange-draft .card {
+  width: 42px;
+}
+.call-results {
+  padding: 12px;
+  border: 1px solid #526078;
+  border-radius: 10px;
+}

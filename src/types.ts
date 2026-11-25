@@ -24,7 +24,23 @@ export interface ExchangeReview {
   sent?: Card;
   received?: Card;
 }
+export interface TrickHistory {
+  round: number;
+  trick: number;
+  entries: (Message | string)[];
+}
+export interface CallResult {
+  seat: number;
+  call: number;
+  success: boolean;
+  delta: number;
+}
 export interface PublicBase {
+  trickHistory?: TrickHistory[];
+  trickNumber?: number;
+  callResults?: CallResult[];
+  deadline?: number | null;
+  dragonTarget?: number | null;
   exchangeReview?: ExchangeReview[];
   phase: Phase;
   names: string[];
@@ -81,11 +97,13 @@ export interface RoundState extends Omit<
   captured: Card[][];
   pile: Card[];
   exchangeReviewClosed?: boolean;
+  deadlineKey?: string | null;
 }
 export type GameAction =
   | { type: 'start' | 'next' | 'tichu' | 'pass' }
   | { type: 'grand'; call: boolean }
   | { type: 'exchange'; ids: string[] }
+  | { type: 'dragonTarget'; target: number }
   | { type: 'collect'; target?: number | null }
   | {
       type: 'play';

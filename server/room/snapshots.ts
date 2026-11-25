@@ -1,4 +1,10 @@
-import { exchangeReview, points, view } from '../../src/game.js';
+import {
+  exchangeReview,
+  points,
+  view,
+  visibleHistory,
+  visibleLog,
+} from '../../src/game.js';
 import type { GameView } from '../../src/types';
 import type { GameState, Room } from '../types.ts';
 import type { RoomRepository } from '../persistence/room.repository.ts';
@@ -12,12 +18,17 @@ export function publicView(s: GameState): GameView {
     scores: s.scores,
     revision: s.revision,
     names: s.names,
-    log: s.log,
+    log: visibleLog(s),
     seat: -1,
     hand: [],
   };
   const round = s.phase === 'lobby' ? undefined : s;
   const fields = {
+    trickHistory: visibleHistory(s),
+    trickNumber: round?.trickNumber,
+    callResults: round?.callResults || [],
+    deadline: round?.deadline ?? null,
+    dragonTarget: round?.dragonTarget ?? null,
     counts: s.hands.map((h) => h.length),
     ready: round?.ready || [],
     calls: round?.calls || [],

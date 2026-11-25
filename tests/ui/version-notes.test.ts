@@ -58,7 +58,12 @@ it('opens five newest summaries, closes via button/Escape/backdrop, and restores
         en[release.summary as keyof typeof en],
       );
     for (const release of releases.slice(5))
-      expect(dialog.textContent).not.toContain(`v${release.version}`);
+      expect(
+        Array.from(
+          dialog.querySelectorAll('.patch-version'),
+          (node) => node.textContent,
+        ),
+      ).not.toContain(`v${release.version}`);
     if (dismissal === 'button')
       dialog.querySelector<HTMLButtonElement>('.patch-close')!.click();
     else

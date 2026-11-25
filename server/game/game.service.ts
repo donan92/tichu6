@@ -1,3 +1,4 @@
+import { syncDeadline, dueAction } from '../../src/game-clock.ts';
 import {
   prepareTrainingDecision,
   appendTrainingDecision,
@@ -72,6 +73,7 @@ export class GameService {
       r.state = act(before, seat, action);
       this.record(r, before, seat, action, 'human');
     }
+    syncDeadline(r.state);
     r.lastActive = Date.now();
     r.lastProgress = Date.now();
   }
@@ -81,6 +83,7 @@ export class GameService {
     seat: number,
     action: GameAction,
     source: 'human' | 'bot',
+    policyVersion = BOT_POLICY_VERSION,
   ) {
     // Record opted-in players, including their offline bot takeover, only.
     if (r.members[seat]?.trainingConsent === true) {
@@ -92,7 +95,7 @@ export class GameService {
         seat,
         action,
         source,
-        source === 'bot' ? BOT_POLICY_VERSION : 'human',
+        source === 'bot' ? policyVersion : 'human',
       );
       if (decision) {
         r.trainingSession ??= crypto.randomUUID();
@@ -119,6 +122,30 @@ export class GameService {
               : 1,
       });
     }
+  }
+  advanceTimed(now: number) {
+    let changed = false;
+    for (const r of Object.values(this.repository.data.rooms)) {
+      if (r.state.phase === 'lobby') continue;
+      syncDeadline(r.state, now);
+      const due = dueAction(r.state, now);
+      if (!due) continue;
+      const before = r.state;
+      r.state = act(before, due.seat, due.action);
+      // Automatic moves are never labelled as human training decisions.
+      this.record(
+        r,
+        before,
+        due.seat,
+        due.action,
+        'bot',
+        before.phase === 'trick' ? 'auto-collect-v1' : 'turn-timeout-v1',
+      );
+      syncDeadline(r.state, now);
+      r.lastProgress = now;
+      changed = true;
+    }
+    return changed;
   }
   advanceBots(now: number) {
     for (const r of Object.values(this.repository.data.rooms)) {
@@ -148,13 +175,12 @@ export class GameService {
               ? s.exchanges.findIndex((x, i) => !x && eligible(i))
               : s.phase === 'play'
                 ? s.turn
-                : s.phase === 'trick'
-                  ? s.last
-                  : -1;
+                : -1;
         if (seat != null && seat >= 0 && eligible(seat)) {
           const action = botAction(s, seat);
           r.state = act(s, seat, action);
           this.record(r, s, seat, action, 'bot');
+          syncDeadline(r.state, now);
           r.lastProgress = now;
         }
       }
