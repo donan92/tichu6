@@ -457,159 +457,89 @@ describe('Vue interaction regressions', () => {
       'true',
     );
   });
-  it('keeps a valid dog default and lets a modal choose the other partner before play', async () => {
-    const session = useSessionStore();
-    const game = round();
-    game.phase = 'play';
-    game.turn = 0;
-    game.hand = [{ id: 'dog', rank: 0, suit: -1, special: 'dog' }];
-    session.game = game;
-    session.selected = ['dog'];
-    const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
-    const wrapper = mount(GameControls, {
-      props: { game },
-      global: { plugins: plugins() },
-    });
-    wrappers.push(wrapper);
-    expect(wrapper.get('.choice-trigger').text()).toContain(game.names[2]);
-    await wrapper.get('button.primary').trigger('click');
-    expect(document.querySelector('.action-confirm')).not.toBeNull();
-    (
-      document.querySelector(
-        '.action-confirm button.primary',
-      ) as HTMLButtonElement
-    ).click();
-    await nextTick();
-    expect(submit).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'play', target: 2 }),
-    );
-    submit.mockClear();
-    await wrapper.get('.choice-trigger').trigger('click');
-    const dialog = document.querySelector(
-      'dialog.choice-dialog',
-    ) as HTMLDialogElement;
-    const choices = dialog.querySelectorAll<HTMLButtonElement>(
-      '.choice-options button',
-    );
-    expect(choices).toHaveLength(2);
-    choices[1]!.click();
-    await nextTick();
-    expect(dialog.open).toBe(false);
-    expect(submit).not.toHaveBeenCalled();
-    await wrapper.get('button.primary').trigger('click');
-    expect(document.querySelector('.action-confirm')).not.toBeNull();
-    (
-      document.querySelector(
-        '.action-confirm button.primary',
-      ) as HTMLButtonElement
-    ).click();
-    await nextTick();
-    expect(submit).toHaveBeenCalledWith(
-      expect.objectContaining({ type: 'play', target: 4 }),
-    );
-    await wrapper.get('.choice-trigger').trigger('click');
-    await wrapper.setProps({ game: { ...game, paused: true } });
-    expect(dialog.open).toBe(false);
-    expect(wrapper.get('.choice-trigger').attributes('disabled')).toBeDefined();
-  });
-  it('selects an opponent for dragon collection and updates after seat changes', async () => {
-    const session = useSessionStore();
-    const game = round();
-    game.phase = 'trick';
-    game.last = 0;
-    game.top = {
-      kind: 'single',
-      power: 16,
-      size: 1,
-      bomb: 0,
-      cards: [{ id: 'dragon', special: 'dragon', rank: 16, suit: -1 }],
-    };
-    session.game = game;
-    const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
-    const wrapper = mount(GameControls, {
-      props: { game },
-      global: { plugins: plugins() },
-    });
-    wrappers.push(wrapper);
-    await wrapper.get('.choice-trigger').trigger('click');
-    const dialog = document.querySelector(
-      'dialog.choice-dialog',
-    ) as HTMLDialogElement;
-    const options = dialog.querySelectorAll<HTMLButtonElement>(
-      '.choice-options button',
-    );
-    expect(
-      [...options].map((button) => button.textContent?.replace('✓', '').trim()),
-    ).toEqual([game.names[1], game.names[3], game.names[5]]);
-    options[1]!.click();
-    await nextTick();
-    expect(dialog.open).toBe(false);
-    expect(submit).not.toHaveBeenCalled();
-    (
-      document.querySelector(
-        '.action-confirm button.primary',
-      ) as HTMLButtonElement
-    ).click();
-    await nextTick();
-    expect(submit).toHaveBeenCalledWith({ type: 'dragonTarget', target: 3 });
-    await wrapper.get('button.primary').trigger('click');
-    expect(document.querySelector('.action-confirm')).not.toBeNull();
-    (
-      document.querySelector(
-        '.action-confirm button.primary',
-      ) as HTMLButtonElement
-    ).click();
-    await nextTick();
-    expect(submit).toHaveBeenCalledWith({ type: 'collect', target: 3 });
-  });
-  it('uses buttons for Mahjong wishes and requires confirmation, allowing cancel and stale-state dismissal', async () => {
-    const session = useSessionStore();
-    const game = round();
-    game.phase = 'play';
-    game.turn = 0;
-    game.hand = [{ id: 'mahjong', rank: 1, suit: -1, special: 'mahjong' }];
-    session.game = game;
-    session.selected = ['mahjong'];
-    const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
-    const wrapper = mount(GameControls, {
-      props: { game },
-      attachTo: document.body,
-      global: { plugins: plugins() },
-    });
-    wrappers.push(wrapper);
-    expect(wrapper.find('select#wish').exists()).toBe(false);
-    await wrapper.get('.choice-trigger').trigger('click');
-    const choices = document.querySelectorAll<HTMLButtonElement>(
-      '.choice-options button',
-    );
-    expect(choices).toHaveLength(14);
-    choices[1]!.click();
-    await nextTick();
-    await wrapper.get('button.primary').trigger('click');
-    expect(submit).not.toHaveBeenCalled();
-    expect(document.querySelector('.action-confirm')?.textContent).toContain(
-      '2',
-    );
-    document
-      .querySelector('.action-confirm')!
-      .dispatchEvent(new Event('cancel'));
-    await nextTick();
-    expect(submit).not.toHaveBeenCalled();
-    expect(document.activeElement).toBe(wrapper.get('button.primary').element);
-    await wrapper.get('button.primary').trigger('click');
-    await wrapper.setProps({ game: { ...game, revision: game.revision + 1 } });
-    expect(document.querySelector('.action-confirm')).toBeNull();
-    await wrapper.get('button.primary').trigger('click');
-    (
-      document.querySelector(
-        '.action-confirm button.primary',
-      ) as HTMLButtonElement
-    ).click();
-    await nextTick();
-    expect(submit).toHaveBeenCalledExactlyOnceWith(
-      expect.objectContaining({ type: 'play', wish: 2 }),
-    );
-  });
+  it.each(['dog', 'mahjong', 'dragon'] as const)(
+    'opens %s choices only after the action button and submits only after confirmation',
+    async (special) => {
+      const session = useSessionStore();
+      const game = round();
+      game.phase = special === 'dragon' ? 'trick' : 'play';
+      game.turn = 0;
+      game.last = 0;
+      game.hand = [
+        {
+          id: special,
+          rank: special === 'dog' ? 0 : special === 'mahjong' ? 1 : 16,
+          suit: -1,
+          special,
+        },
+      ];
+      if (special === 'dragon')
+        game.top = {
+          kind: 'single',
+          power: 16,
+          size: 1,
+          bomb: 0,
+          cards: game.hand,
+        };
+      session.game = game;
+      session.selected = [special];
+      const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
+      const wrapper = mount(GameControls, {
+        props: { game },
+        attachTo: document.body,
+        global: { plugins: plugins() },
+      });
+      wrappers.push(wrapper);
+      expect(wrapper.find('.choice-trigger').exists()).toBe(false);
+      expect(document.querySelector('.action-confirm')).toBeNull();
+      await wrapper.get('button.primary').trigger('click');
+      const confirm = () =>
+        document.querySelector<HTMLButtonElement>(
+          '.action-confirm button.primary',
+        )!;
+      expect(confirm().disabled).toBe(true);
+      const choices = document.querySelectorAll<HTMLButtonElement>(
+        '.special-choices button',
+      );
+      expect(choices.length).toBe(
+        special === 'dog' ? 2 : special === 'mahjong' ? 14 : 3,
+      );
+      choices[1]!.click();
+      await nextTick();
+      expect(submit).not.toHaveBeenCalled();
+      expect(confirm().disabled).toBe(false);
+      document
+        .querySelector('.action-confirm')!
+        .dispatchEvent(new Event('cancel'));
+      await nextTick();
+      expect(submit).not.toHaveBeenCalled();
+      expect(document.activeElement).toBe(
+        wrapper.get('button.primary').element,
+      );
+      await wrapper.get('button.primary').trigger('click');
+      expect(confirm().disabled).toBe(true);
+      document
+        .querySelectorAll<HTMLButtonElement>('.special-choices button')[1]!
+        .click();
+      await nextTick();
+      confirm().click();
+      await nextTick();
+      expect(submit).toHaveBeenCalledExactlyOnceWith(
+        expect.objectContaining(
+          special === 'dragon'
+            ? { type: 'collect', target: 3 }
+            : special === 'dog'
+              ? { type: 'play', target: 4 }
+              : { type: 'play', wish: 2 },
+        ),
+      );
+      await wrapper.get('button.primary').trigger('click');
+      await wrapper.setProps({
+        game: { ...game, revision: game.revision + 1 },
+      });
+      expect(document.querySelector('.action-confirm')).toBeNull();
+    },
+  );
   it('shows all six spectator hands without playable card buttons', () => {
     const game = round();
     game.spectator = true;

@@ -2,7 +2,6 @@
 import { computed, ref, watch } from 'vue';
 import ActionConfirm from './ActionConfirm.vue';
 import PlayingCard from './PlayingCard.vue';
-import ChoicePicker from './ChoicePicker.vue';
 import { useTranslation } from 'i18next-vue';
 import { beats, classify, legalPlays, LABEL, partners, team } from '../game.js';
 import { useSessionStore } from '../stores/session';
@@ -13,9 +12,7 @@ const props = defineProps<{ game: RoundView }>();
 const session = useSessionStore();
 const { t } = useTranslation();
 const { message } = useText();
-const wish = ref(''),
-  target = ref(''),
-  phoenixRank = ref('');
+const phoenixRank = ref('');
 const ranks = Array.from({ length: 13 }, (_, index) => index + 2);
 const chosen = computed(() =>
   props.game.hand.filter((card) => session.selected.includes(card.id)),
@@ -28,13 +25,6 @@ const exchangeDraft = computed(() =>
     }))
     .filter((entry) => entry.card),
 );
-function chooseDragon(value: string) {
-  if (collecting.value && dragon.value)
-    requestConfirmation(
-      { type: 'dragonTarget', target: Number(value) },
-      t('play.confirmDragon', { name: props.game.names[Number(value)] }),
-    );
-}
 const combo = computed(() =>
   classify(chosen.value, props.game.top, Number(phoenixRank.value) || null),
 );
@@ -62,29 +52,6 @@ const recipients = computed(() =>
         ? team(seat) !== team(session.seat)
         : partners(session.seat).includes(seat),
     ),
-);
-watch(
-  recipients,
-  (values) => {
-    if (!values.some((value) => String(value.seat) === target.value))
-      target.value = String(values[0]?.seat ?? '');
-  },
-  { immediate: true },
-);
-watch(
-  () => [props.game.phase, props.game.last, props.game.dragonTarget],
-  () => {
-    if (collecting.value && dragon.value)
-      target.value = String(props.game.dragonTarget ?? (session.seat + 1) % 6);
-  },
-  { immediate: true },
-);
-watch(
-  () => props.game.round,
-  () => {
-    wish.value = '';
-    phoenixRank.value = '';
-  },
 );
 watch(hasPhoenix, (shown) => {
   if (!shown) phoenixRank.value = '';
@@ -166,20 +133,63 @@ const cannotPlay = computed(
     ((props.game.turn !== session.seat || props.game.phase === 'trick') &&
       !combo.value.bomb),
 );
-const confirmation = ref<{ action: GameAction; description: string } | null>(
-  null,
+type ChoiceKind = 'dog' | 'wish' | 'dragon';
+const confirmation = ref<{
+  action: GameAction;
+  description: string;
+  kind?: ChoiceKind;
+  choice: string | null;
+} | null>(null);
+const choiceOptions = computed(() =>
+  confirmation.value?.kind === 'wish'
+    ? [
+        { value: '', label: t('play.noWish') },
+        ...ranks.map((rank) => ({
+          value: String(rank),
+          label: String(LABEL[rank] || rank),
+        })),
+      ]
+    : recipients.value.map((recipient) => ({
+        value: String(recipient.seat),
+        label: recipient.name,
+      })),
 );
-function requestConfirmation(action: GameAction, description: string) {
+const confirmationText = computed(() => {
+  const pending = confirmation.value;
+  if (!pending) return '';
+  if (!pending.kind || pending.choice === null) return pending.description;
+  return pending.kind === 'wish'
+    ? t('play.confirmWish', {
+        rank: pending.choice
+          ? LABEL[Number(pending.choice)] || pending.choice
+          : t('play.noWish'),
+      })
+    : t(pending.kind === 'dog' ? 'play.confirmDog' : 'play.confirmDragon', {
+        name: props.game.names[Number(pending.choice)],
+      });
+});
+function requestConfirmation(
+  action: GameAction,
+  description: string,
+  kind?: ChoiceKind,
+) {
   if (locked.value) return;
-  confirmation.value = { action, description };
+  confirmation.value = { action, description, kind, choice: null };
 }
 function confirmAction() {
   const pending = confirmation.value;
+  if (!pending || locked.value || (pending.kind && pending.choice === null))
+    return;
+  const action = pending.action;
+  if (pending.kind === 'wish' && action.type === 'play')
+    action.wish = pending.choice ? Number(pending.choice) : null;
+  else if (
+    (action.type === 'play' || action.type === 'collect') &&
+    pending.kind
+  )
+    action.target = Number(pending.choice);
   confirmation.value = null;
-  if (!pending || locked.value) return;
-  if (pending.action.type === 'dragonTarget')
-    target.value = String(pending.action.target);
-  session.submit(pending.action);
+  session.submit(action);
 }
 watch(
   () => [
@@ -196,12 +206,8 @@ watch(
 );
 function collect(event: MouseEvent) {
   (event.currentTarget as HTMLButtonElement)?.focus();
-  const action: GameAction = { type: 'collect', target: Number(target.value) };
-  if (dragon.value)
-    requestConfirmation(
-      action,
-      t('play.confirmDragon', { name: props.game.names[Number(target.value)] }),
-    );
+  const action: GameAction = { type: 'collect' };
+  if (dragon.value) requestConfirmation(action, t('play.recipient'), 'dragon');
   else session.submit(action);
 }
 function play(event: MouseEvent) {
@@ -210,24 +216,11 @@ function play(event: MouseEvent) {
   const action: GameAction = {
     type: 'play',
     ids: [...session.selected],
-    wish: wish.value ? Number(wish.value) : null,
-    target: Number(target.value),
     phoenixRank: Number(phoenixRank.value) || null,
   };
-  if (hasDog.value)
-    requestConfirmation(
-      action,
-      t('play.confirmDog', { name: props.game.names[Number(target.value)] }),
-    );
+  if (hasDog.value) requestConfirmation(action, t('play.dogTarget'), 'dog');
   else if (hasMahjong.value)
-    requestConfirmation(
-      action,
-      t('play.confirmWish', {
-        rank: wish.value
-          ? LABEL[Number(wish.value)] || wish.value
-          : t('play.noWish'),
-      }),
-    );
+    requestConfirmation(action, t('play.wish'), 'wish');
   else if (chosen.value.some((card) => card.special === 'dragon'))
     requestConfirmation(action, t('play.confirmDragonPlay'));
   else session.submit(action);
@@ -236,10 +229,27 @@ function play(event: MouseEvent) {
 <template>
   <ActionConfirm
     v-if="confirmation"
-    :description="confirmation.description"
+    :description="confirmationText"
+    :disabled="!!confirmation.kind && confirmation.choice === null"
     @cancel="confirmation = null"
     @confirm="confirmAction"
-  />
+  >
+    <div
+      v-if="confirmation.kind"
+      class="special-choices"
+      :class="{ ranks: confirmation.kind === 'wish' }"
+    >
+      <button
+        v-for="option in choiceOptions"
+        :key="option.value"
+        type="button"
+        :aria-pressed="confirmation.choice === option.value"
+        @click="confirmation.choice = option.value"
+      >
+        {{ option.label }}
+      </button>
+    </div>
+  </ActionConfirm>
   <div class="action-message">
     <h3>{{ heading }}</h3>
     <p>{{ help }}</p>
@@ -323,49 +333,11 @@ function play(event: MouseEvent) {
       </div>
     </div>
     <div v-else-if="collecting" class="action-buttons">
-      <ChoicePicker
-        v-if="dragon"
-        :model-value="target"
-        :label="t('play.recipient')"
-        :disabled="locked"
-        :options="
-          recipients.map((recipient) => ({
-            value: String(recipient.seat),
-            label: recipient.name,
-          }))
-        "
-        @update:model-value="chooseDragon"
-      /><button class="primary" :disabled="locked" @click="collect">
+      <button class="primary" :disabled="locked" @click="collect">
         {{ t(dragon ? 'play.giveTrick' : 'play.collect') }}
       </button>
     </div>
     <div v-else class="action-buttons play-actions">
-      <ChoicePicker
-        v-if="hasMahjong"
-        v-model="wish"
-        compact
-        :label="t('play.wish')"
-        :disabled="locked"
-        :options="[
-          { value: '', label: t('play.noWish') },
-          ...ranks.map((rank) => ({
-            value: String(rank),
-            label: String(LABEL[rank] || rank),
-          })),
-        ]"
-      />
-      <ChoicePicker
-        v-if="hasDog"
-        v-model="target"
-        :label="t('play.dogTarget')"
-        :disabled="locked"
-        :options="
-          recipients.map((recipient) => ({
-            value: String(recipient.seat),
-            label: recipient.name,
-          }))
-        "
-      />
       <label v-if="hasPhoenix"
         >{{ t('play.phoenixRank')
         }}<select id="phoenixRank" v-model="phoenixRank">
@@ -401,3 +373,21 @@ function play(event: MouseEvent) {
     </div>
   </template>
 </template>
+
+<style scoped>
+.special-choices {
+  display: grid;
+  gap: 8px;
+}
+.special-choices.ranks {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.special-choices button {
+  margin: 0;
+  min-height: 44px;
+}
+.special-choices button[aria-pressed='true'] {
+  border-color: #efb64e;
+  color: #efb64e;
+}
+</style>

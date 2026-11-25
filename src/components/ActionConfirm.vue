@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted, onBeforeUnmount, useTemplateRef, useId } from 'vue';
 import { useTranslation } from 'i18next-vue';
-defineProps<{ description: string }>();
+defineProps<{ description: string; disabled?: boolean }>();
 const emit = defineEmits<{ confirm: []; cancel: [] }>();
 const { t } = useTranslation();
 const id = useId();
@@ -25,11 +25,12 @@ onBeforeUnmount(() => {
     >
       <div>
         <h2 :id="id">{{ t('play.confirmTitle') }}</h2>
+        <slot />
         <p>{{ description }}</p>
         <button autofocus @click="emit('cancel')">
           {{ t('picker.cancel') }}
         </button>
-        <button class="primary" @click="emit('confirm')">
+        <button :disabled="disabled" class="primary" @click="emit('confirm')">
           {{ t('play.confirmAction') }}
         </button>
       </div>

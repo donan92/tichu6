@@ -784,3 +784,10 @@ Release verification:
 - Scoped main commit `b4b4637` releases special-card confirmation, wished-bomb priority and spectator dealt hands. Unrelated research work remains on its original branch/worktree.
 - Release checks passed: check, 201 tests (144 unit + 57 UI), format, build and isolated Worker18950 integration. CI45585046484 succeeded including Worker/idle/flow checks. Pages45585045657 succeeded.
 - Worker `e70a926b-1c57-4a1b-b741-3bdab26ff471` is at100%; health returnedok/version6. Production HTML/JS/CSS exactly match the v0.8.12 local build; production lounge welcome passed. No storage migration/reset. Temporary local Worker stopped. Actual iPhone/Samsung hardware remains unverified.
+
+## Play-first special-card selection — local follow-up
+
+- Implemented on `fix/play-first-special-choice` in `/tmp/tichu-special-release` from the deployed v0.8.12 baseline; original research workspace is preserved.
+- Removed pre-play Dog/Mahjong selectors and the separate Dragon recipient selector. Play opens a button-choice confirmation for Dog/Mahjong; Give trick opens opponent choice for Dragon. No default is silently submitted: choose a button then confirm, or cancel without submitting. Dragon play retains its confirmation; recipient choice occurs when awarding its won trick.
+- Modal choice and submission now occur in one dialog; no intermediate dragonTarget request. Selection/revision/phase/turn changes dismiss stale pending actions. Existing game clocks and server rules are unchanged.
+- Required check, all201 tests (144 unit/57 UI), format and build passed. Tests cover all three choice flows, no pre-action controls, disabled confirmation before choosing, cancellation/focus restoration, repeated opening and stale revision dismissal. Real phone visual verification not performed for this follow-up. Not deployed.
