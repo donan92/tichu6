@@ -1,4 +1,4 @@
-import { LABEL } from './game.js';
+import { LABEL, sortCards } from './game.js';
 import type { Card, Combination, Message } from './types';
 const rank = (value: number) => LABEL[value] ?? String(value);
 export function combinationMessage(
@@ -26,4 +26,15 @@ export function combinationMessage(
       },
     };
   return { code: `combo.${kind}`, params: { rank: rank(play.power) } };
+}
+
+// Use the rank accepted by the engine, not a new interpretation of the cards.
+export function sortCombinationCards(
+  play: Combination & { cards: Card[] },
+): Card[] {
+  const cards = sortCards(play.cards);
+  if (play.size <= 1 || play.phoenixRank == null) return cards;
+  const rank = (card: Card) =>
+    card.special === 'phoenix' ? play.phoenixRank! : card.rank;
+  return cards.sort((a, b) => rank(a) - rank(b));
 }

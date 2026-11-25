@@ -361,5 +361,6 @@
   "patches.manualBotsAndCardFit": "Add or remove bots in team selection, and played cards now fit the table space.",
   "patches.stableConfirmations": "Fixed disappearing confirmations and bot additions, and enlarged card ranks and suits.",
   "patches.activePlayerContrast": "Highlighted the current player with a light background and dark text.",
-  "patches.immediateBombs": "Bombs now play immediately without a confirmation dialog."
+  "patches.immediateBombs": "Bombs now play immediately without a confirmation dialog.",
+  "patches.phoenixPosition": "Phoenix is placed at the rank it represents in a played combination."
 }

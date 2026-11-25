@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.21",
+    "summary": "patches.phoenixPosition"
+  },
+  {
     "version": "0.8.20",
     "summary": "patches.immediateBombs"
   },

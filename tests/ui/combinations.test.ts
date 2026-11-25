@@ -1,7 +1,11 @@
 import { expect, it } from 'vitest';
-import { combinationMessage } from '../../src/combinations';
+import {
+  combinationMessage,
+  sortCombinationCards,
+} from '../../src/combinations';
 import { i18next } from '../../src/localization';
-import type { Combination } from '../../src/types';
+import { classify } from '../../src/game.js';
+import type { Card, Combination } from '../../src/types';
 it('renders ranked combinations and actual ranges in both languages', async () => {
   const cases: [Combination, string][] = [
     [{ kind: 'single', power: 6, size: 1, bomb: 0 }, '6 싱글'],
@@ -48,4 +52,25 @@ it('describes phoenix singles using the underlying rank instead of fractional po
     'phoenix',
   );
   expect(i18next.t(label.code, label.params ?? {})).toBe('Phoenix over A');
+});
+
+it.each([
+  [[4, 5, 7, 8], 6, [4, 5, 'phoenix', 7, 8]],
+  [[3, 3, 10, 10], 3, [3, 3, 'phoenix', 10, 10]],
+  [[4, 4, 5, 6, 6], 5, [4, 4, 5, 'phoenix', 6, 6]],
+  [[9], 9, [9, 'phoenix']],
+])('places Phoenix at its accepted role in %j', (ranks, role, expected) => {
+  const cards: Card[] = (ranks as number[]).map((rank, i) => ({
+    id: String(i),
+    rank,
+    suit: i % 4,
+  }));
+  cards.push({ id: 'phoenix', rank: 15, suit: -1, special: 'phoenix' });
+  const before = structuredClone(cards);
+  const play = classify(cards, null, role as number)!;
+  expect(play).not.toBeNull();
+  const sorted = sortCombinationCards({ ...play, cards });
+  expect(sorted.map((card) => card.special || card.rank)).toEqual(expected);
+  expect(cards).toEqual(before);
+  expect(sorted.find((card) => card.special === 'phoenix')?.rank).toBe(15);
 });

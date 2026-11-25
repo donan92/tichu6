@@ -361,5 +361,6 @@
   "patches.manualBotsAndCardFit": "팀 직접 선택에서 봇을 추가·삭제할 수 있고, 낸 카드가 게임판 공간에 맞춰 커집니다.",
   "patches.stableConfirmations": "확인창이 저절로 닫히는 문제와 봇 추가 오류를 고치고 카드 숫자·문양을 키웠습니다.",
   "patches.activePlayerContrast": "현재 차례인 플레이어를 밝은 배경과 짙은 글자로 강조했습니다.",
-  "patches.immediateBombs": "폭탄은 확인창 없이 바로 제출됩니다."
+  "patches.immediateBombs": "폭탄은 확인창 없이 바로 제출됩니다.",
+  "patches.phoenixPosition": "봉황을 조합에서 대신하는 숫자 위치에 정렬합니다."
 }

@@ -2,9 +2,9 @@
 import { computed } from 'vue';
 import { useText } from '../composables/useText';
 import { useSessionStore } from '../stores/session';
-import { LABEL, team, sortCards } from '../game.js';
+import { LABEL, team } from '../game.js';
 import type { RoundView } from '../types';
-import { combinationMessage } from '../combinations';
+import { combinationMessage, sortCombinationCards } from '../combinations';
 import ExchangeReview from '../components/ExchangeReview.vue';
 import PlayingCard from '../components/PlayingCard.vue';
 import PassAction from '../components/PassAction.vue';
@@ -166,7 +166,7 @@ const tableNote = computed(() =>
             }"
           >
             <PlayingCard
-              v-for="card in sortCards(game.top.cards)"
+              v-for="card in sortCombinationCards(game.top)"
               :key="card.id"
               :card="card"
             />

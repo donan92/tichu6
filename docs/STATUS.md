@@ -868,3 +868,8 @@ Release verification:
 - User requested bombs bypass confirmation. GameControls now submits an already-classified legal bomb directly from Play; normal combinations and special-card choices retain confirmation. Existing strength/turn/wish validation remains server-authoritative.
 - Added four UI regressions covering rank bombs and straight-flush bombs on own/other turns, exact single submission and no dialog. Check,222 tests (155 unit +67 UI),format and build passed. Frontend-only; no Worker code change.
 - Priorv0.8.19 live HTML/JS/CSS matched its local build. Current deployment verification pending.
+
+## v0.8.21 Phoenix combination position
+
+- Played-table cards now sort Phoenix using the engine-accepted phoenixRank, placing it next to the represented rank rather than always at the far right. Hand sorting and card identity/rank remain untouched; singles or metadata-free legacy combinations retain ordinary ordering.
+- Four regression cases cover interior straight position, explicitly selected full-house role, pair sequence and pair, including input/card immutability. Check,226 tests (155 unit +71 UI),format and build passed. Frontend-only release; backend unchanged. Includes preceding immediate-bomb/current-player contrast releases. Deployment verification pending.
