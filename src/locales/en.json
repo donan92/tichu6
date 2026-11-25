@@ -349,5 +349,6 @@
   "error.fillSeats": "Fill all six seats to start automatically in manual mode.",
   "play.confirmSmall": "Declare Small Tichu (±100 points)?",
   "play.confirmLarge": "Declare Large Tichu (±200 points)?",
-  "room.manualHint": "Choose an empty seat on your preferred team. Once all six players are seated, the game starts in 10 seconds and seats shuffle within each team."
+  "room.manualHint": "Choose an empty seat on your preferred team. Once all six players are seated, the game starts in 10 seconds and seats shuffle within each team.",
+  "patches.teamsAndTurnControls": "Added team selection, declaration confirmation and turn timers, with improved card layout and spectator privacy."
 }
