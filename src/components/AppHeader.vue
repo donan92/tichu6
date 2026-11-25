@@ -2,6 +2,7 @@
 import { computed } from 'vue';
 import ChoicePicker from './ChoicePicker.vue';
 import VersionNotes from './VersionNotes.vue';
+import SoundSettings from './SoundSettings.vue';
 import { useTranslation } from 'i18next-vue';
 import { languages } from '../i18n.js';
 import { changeLanguage } from '../localization';
@@ -63,6 +64,7 @@ const status = computed(() =>
           )
         }}
       </button>
+      <SoundSettings />
     </div>
   </header>
 </template>

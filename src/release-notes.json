@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.25",
+    "summary": "patches.gameAudio"
+  },
+  {
     "version": "0.8.24",
     "summary": "patches.touchHandDrag"
   },

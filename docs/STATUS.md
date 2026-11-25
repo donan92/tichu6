@@ -1,5 +1,24 @@
 # Project status / resume point
 
+## v0.8.25 audio release — prepared
+
+- Ported only the approved audio work onto main v0.8.24; unrelated research,
+  spectator and game-rule WIP remains in the original checkout.
+- Header speaker modal independently controls music and effects, persists local
+  settings and supports preview, keyboard dismissal and focus restoration.
+- Original straight-time jazz-synth lobby/game loops, mellow game register,
+  prioritized public-state effect cues and own-turn warning ticks. No external
+  audio service. Hidden tabs suspend audio; stale renders cannot play after mute.
+- Added regression tests for settings, snapshot selection and asynchronous audio
+  lifecycle; volume changes retain playback position. See docs/AUDIO.md.
+- Node26 release validation passed: check (ESLint and frontend/server types),
+  155 unit tests,86 UI tests,format:check,release:check and build. npm ci audit
+  found0 vulnerabilities. Original pre-port UI was checked at320/375px; actual
+  iPhone audio output remains unverified.
+- Frontend-only release: backend unchanged; deployment list confirms active
+  Worker2d2f7696-95b4-4c8f-8f67-1b2a12a52933 and health ok/protocol6.
+  Pages deployment verification pending; do not infer deployment from this entry.
+
 ## v0.8.11 mobile labels and reconnect grace — deployed
 
 - Exchange recipients now sit above fixed-size preview cards without overlap.

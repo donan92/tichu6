@@ -12,6 +12,8 @@ import RoomView from './views/RoomView.vue';
 import GameView from './views/GameView.vue';
 import ConnectionLoading from './components/ConnectionLoading.vue';
 import TrainingConsent from './components/TrainingConsent.vue';
+import { useGameAudio } from './composables/useGameAudio';
+useGameAudio();
 const session = useSessionStore();
 const { t, i18next } = useTranslation();
 const { message } = useText();
