@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.23",
+    "summary": "patches.dragonRecipient"
+  },
+  {
     "version": "0.8.22",
     "summary": "patches.handOrderAndTurn"
   },

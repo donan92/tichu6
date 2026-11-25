@@ -890,3 +890,9 @@ Release verification:
 
 - Accepted Dragon collection records a public round/trick/recipient marker, explicitly included in server snapshots. GameView highlights the recipient name for five seconds, once per new marker; initial/reconnect snapshots do not replay old transfers. Equivalent broadcasts do not restart the timer. New rounds/unmount clear it. Reduced-motion preference uses static emphasis, with bilingual received-Dragon text.
 - Check,230 tests (155 unit +75 UI),format and build passed. Real local Worker test:flow passed. Regression tests cover final-trick Dragon donation, recipient identity, repeated snapshots, expiry, subsequent donations and initial historical state. Actual mobile animation not visually verified. No version bump or production deployment in this change; next release requires both Worker and Pages because the event marker is server-authoritative.
+
+## v0.8.23 release preparation
+
+- Includes confirmed Dragon recipient feedback plus score-button dialog showing each completed round's team deltas and cumulative totals. Engine persists scoreHistory on round completion; public snapshots explicitly allow it. Existing rooms without earlier records show a missing-history notice instead of fabricated scores. Records survive subsequent rounds and normal durable/practice persistence.
+- Score dialog supports close button, Escape, backdrop and trigger focus restoration; live updates preserve the open dialog. Responsive three-column table uses viewport-bounded modal and vertical scrolling. No actual phone visual verification.
+- Check,231 tests (155 unit +76 UI),format and build passed. Real local Worker test:flow passed. Engine tests verify final round score and next-round retention; UI tests cover signed scores, live update, repeated opening, Escape/close and focus. Both server and frontend deployment pending.

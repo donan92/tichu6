@@ -234,6 +234,7 @@ export function newGame(
     phase: 'lobby',
     round: 0,
     scores: [0, 0],
+    scoreHistory: [],
     revision: 0,
     log: [],
     hands: Array.from({ length: 6 }, () => []),
@@ -334,6 +335,12 @@ function finishRound(s) {
   }
   s.delta = delta;
   s.scores = s.scores.map((n, i) => n + delta[i]);
+  s.scoreHistory ||= [];
+  s.scoreHistory.push({
+    round: s.round,
+    delta: [...delta],
+    scores: [...s.scores],
+  });
   s.phase =
     Math.max(...s.scores) >= 1000 && s.scores[0] !== s.scores[1]
       ? 'matchEnd'

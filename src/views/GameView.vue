@@ -7,6 +7,7 @@ import type { RoundView } from '../types';
 import { combinationMessage, sortCombinationCards } from '../combinations';
 import ExchangeReview from '../components/ExchangeReview.vue';
 import PlayingCard from '../components/PlayingCard.vue';
+import ScoreHistory from '../components/ScoreHistory.vue';
 import HandCards from '../components/HandCards.vue';
 import PassAction from '../components/PassAction.vue';
 import DeclarationNotice from '../components/DeclarationNotice.vue';
@@ -68,16 +69,7 @@ const tableNote = computed(() =>
           <span>{{ t('play.target') }}</span>
         </h2>
       </div>
-      <div class="score">
-        <span class="team-a"
-          >{{ t('common.team', { team: 'A' }) }}
-          <b>{{ game.scores[0] }}</b></span
-        ><i>:</i
-        ><span class="team-b"
-          ><b>{{ game.scores[1] }}</b>
-          {{ t('common.team', { team: 'B' }) }}</span
-        >
-      </div>
+      <ScoreHistory :game="game" />
     </div>
     <div v-if="game.paused" class="warning" role="alert">
       {{ t('connection.restoring') }}

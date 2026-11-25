@@ -14,6 +14,7 @@ import DeclarationNotice from '../../src/components/DeclarationNotice.vue';
 import PassAction from '../../src/components/PassAction.vue';
 import RoomView from '../../src/views/RoomView.vue';
 import GameControls from '../../src/components/GameControls.vue';
+import ScoreHistory from '../../src/components/ScoreHistory.vue';
 import GameView from '../../src/views/GameView.vue';
 import HandCards from '../../src/components/HandCards.vue';
 import { VueDraggable } from 'vue-draggable-plus';
@@ -963,4 +964,39 @@ it('does not replay an old Dragon transfer when entering a game', () => {
   });
   wrappers.push(wrapper);
   expect(wrapper.find('.dragon-recipient').exists()).toBe(false);
+});
+
+it('opens round score history, keeps it open on updates, closes and restores focus', async () => {
+  const game = round();
+  game.scoreHistory = [{ round: 1, delta: [-100, 200], scores: [-100, 200] }];
+  const wrapper = mount(ScoreHistory, {
+    props: { game },
+    attachTo: document.body,
+    global: { plugins: plugins() },
+  });
+  wrappers.push(wrapper);
+  await wrapper.get('.score-trigger').trigger('click');
+  const dialog = document.querySelector('.score-dialog') as HTMLDialogElement;
+  expect(dialog.open).toBe(true);
+  expect(dialog.textContent).toContain('-100');
+  expect(dialog.textContent).toContain('+200');
+  await wrapper.setProps({
+    game: {
+      ...game,
+      scoreHistory: [
+        ...game.scoreHistory,
+        { round: 2, delta: [40, 60], scores: [-60, 260] },
+      ],
+    },
+  });
+  expect(dialog.open).toBe(true);
+  expect(dialog.querySelectorAll('tbody tr')).toHaveLength(2);
+  dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
+  await nextTick();
+  expect(dialog.open).toBe(false);
+  expect(document.activeElement).toBe(wrapper.get('.score-trigger').element);
+  await wrapper.get('.score-trigger').trigger('click');
+  (dialog.querySelector('.score-close') as HTMLButtonElement).click();
+  await nextTick();
+  expect(dialog.open).toBe(false);
 });

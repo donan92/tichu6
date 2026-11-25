@@ -36,6 +36,7 @@ export interface CallResult {
   delta: number;
 }
 export interface PublicBase {
+  scoreHistory?: { round: number; delta: number[]; scores: number[] }[];
   dragonTransfer?: { round: number; trick: number; recipient: number };
   trickHistory?: TrickHistory[];
   trickNumber?: number;
@@ -92,6 +93,7 @@ export interface RoundView extends PublicBase {
 }
 export type GameView = LobbyView | RoundView;
 export interface LobbyState {
+  scoreHistory?: PublicBase['scoreHistory'];
   phase: 'lobby';
   names: string[];
   round: number;

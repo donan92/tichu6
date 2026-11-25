@@ -17,6 +17,7 @@ export function publicView(s: GameState): GameView {
     phase: s.phase,
     round: s.round,
     scores: s.scores,
+    scoreHistory: s.scoreHistory || [],
     revision: s.revision,
     names: s.names,
     log: visibleLog(s),

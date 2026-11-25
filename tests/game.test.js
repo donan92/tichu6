@@ -305,6 +305,14 @@ test('last finishing dragon still needs donation before scoring', () => {
   });
   assert.deepEqual(view(s, 0).dragonTransfer, s.dragonTransfer);
   assert.deepEqual(s.delta, [30, 0]);
+  assert.deepEqual(s.scoreHistory.at(-1), {
+    round: s.round,
+    delta: [30, 0],
+    scores: [...s.scores],
+  });
+  const recorded = structuredClone(s.scoreHistory);
+  startRound(s);
+  assert.deepEqual(s.scoreHistory, recorded);
 });
 test('tichu allowed after passing but not after playing, no double declaration', () => {
   let s = playing([

@@ -367,5 +367,14 @@
   "play.dragHandHint": "Drag to reorder · hold on touch screens · Alt+Left/Right with keyboard",
   "play.currentTurn": "Current turn",
   "patches.handOrderAndTurn": "Reorder your hand by dragging, reset its order, and see the current turn more clearly in dark mode.",
-  "play.dragonReceived": "Received the Dragon"
+  "play.dragonReceived": "Received the Dragon",
+  "patches.dragonRecipient": "Added Dragon recipient highlighting and a round-by-round score dialog.",
+  "score.open": "View round scores",
+  "score.title": "Round scores",
+  "score.round": "Round",
+  "score.change": "Change",
+  "score.total": "Total",
+  "score.empty": "No completed rounds yet.",
+  "score.missing": "Detailed scores from rounds played on an older version are unavailable.",
+  "score.close": "Close"
 }
