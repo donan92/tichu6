@@ -1,10 +1,20 @@
 import { act, botAction, recipientSeats } from './game.js';
 import type { GameAction, LobbyState, RoundState } from './types';
+export const PREPARATION_MS = 180_000;
 export const TURN_MS = 30_000;
 export const TRICK_MS = 5_000;
 // Stable across reconnects, unrelated declarations and Durable Object hibernation.
 export function syncDeadline(state: LobbyState | RoundState, now = Date.now()) {
   if (state.phase === 'lobby') return;
+  if (state.phase === 'grand' || state.phase === 'exchange') {
+    const key = `${state.round}:preparation`;
+    if (state.deadlineKey !== key || !Number.isFinite(state.deadline)) {
+      state.deadlineKey = key;
+      state.deadline = now + PREPARATION_MS;
+      state.deadlineDuration = PREPARATION_MS;
+    }
+    return;
+  }
   if (state.phase !== 'play' && state.phase !== 'trick') {
     state.deadline = null;
     state.deadlineKey = null;
@@ -36,6 +46,20 @@ export function dueAction(
   now = Date.now(),
 ): { seat: number; action: GameAction } | null {
   if (state.deadline == null || now < state.deadline) return null;
+  if (state.phase === 'grand' || state.phase === 'exchange') {
+    const seat =
+      state.phase === 'grand'
+        ? state.ready.findIndex((ready) => !ready)
+        : state.exchanges.findIndex((cards) => !cards);
+    if (seat < 0) return null;
+    return {
+      seat,
+      action:
+        state.phase === 'grand'
+          ? { type: 'grand', call: false }
+          : botAction(state, seat),
+    };
+  }
   if (state.phase === 'trick' && state.last != null)
     return {
       seat: state.last,

@@ -66,5 +66,5 @@
 ## Lobby team selection
 
 - Host chooses balanced random teams or manual teams. Manual mode starts all participants waiting; at most six participants including waiting seats, excluding spectators. Occupied seats reject arrivals. All six online and seated starts a persisted ten-second countdown; losing readiness cancels it. Shuffle only within chosen teams at start.
-- Declaration confirmation adds ten seconds to an existing running clock once per player per round. Confirming Small Tichu preserves the two-minute turn allowance. Large Tichu preparation currently has no countdown.
+- Declaration confirmation adds ten seconds to an existing running clock once per player per round. Confirming Small Tichu preserves the two-minute turn allowance. Declarations and exchange share one persisted three-minute preparation deadline; confirmation cannot extend this cap. Expiry declines pending Large calls and bots complete pending exchanges.
 - If all opponents have finished, Dragon may be given to a finished opponent; do not automatically assign its points to a team.

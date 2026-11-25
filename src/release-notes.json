@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.16",
+    "summary": "patches.preparationAndBoard"
+  },
+  {
     "version": "0.8.15",
     "summary": "patches.lobbyStartCompatibility"
   },

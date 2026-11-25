@@ -105,3 +105,28 @@ test('Large Tichu confirmation does not declare or complete the initial decision
   s = act(s, 0, { type: 'grand', call: true });
   assert.equal(s.calls[0], 200);
 });
+
+test('preparation shares three minutes across declarations, exchange and restored state', () => {
+  let s = startRound(newGame(), deck());
+  const now = Date.now();
+  syncDeadline(s, now);
+  const deadline = s.deadline;
+  assert.equal(deadline, now + 180000);
+  s = act(s, 0, { type: 'prepareCall', call: 200 });
+  assert.equal(s.deadline, deadline);
+  assert.equal(dueAction(s, deadline - 1), null);
+  for (let seat = 0; seat < 6; seat++)
+    s = act(s, seat, { type: 'grand', call: false });
+  s = structuredClone(s);
+  syncDeadline(s, now + 120000);
+  assert.equal(s.deadline, deadline);
+  assert.equal(s.phase, 'exchange');
+  for (let i = 0; i < 6; i++) {
+    const due = dueAction(s, deadline);
+    assert.equal(due.action.type, 'exchange');
+    s = act(s, due.seat, due.action);
+    syncDeadline(s, deadline);
+  }
+  assert.equal(s.phase, 'play');
+  assert.equal(s.deadline, deadline + 30000);
+});

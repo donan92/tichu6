@@ -41,7 +41,7 @@ const seconds = computed(() =>
 </script>
 <template>
   <div
-    v-if="deadline && (phase === 'play' || phase === 'trick')"
+    v-if="deadline && ['grand', 'exchange', 'play', 'trick'].includes(phase)"
     class="turn-clock"
     :class="{ urgent: !waiting && seconds <= 5 }"
     role="timer"
@@ -51,9 +51,11 @@ const seconds = computed(() =>
       t(
         waiting
           ? 'play.reconnectWait'
-          : phase === 'trick'
-            ? 'play.autoCollect'
-            : 'play.turnDeadline',
+          : phase === 'grand' || phase === 'exchange'
+            ? 'play.preparationDeadline'
+            : phase === 'trick'
+              ? 'play.autoCollect'
+              : 'play.turnDeadline',
         {
           seconds,
         },

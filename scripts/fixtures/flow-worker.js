@@ -12,7 +12,16 @@ export class TestLounge extends Lounge {
         const r = Object.values(this.data.rooms)[0];
         if (!r) throw new Error('Create a test room first');
         if (path === '/__flow-age') r.state.deadline = Date.now() + 1500;
-        else {
+        else if (path === '/__flow-preparation') {
+          const s = startRound(
+            newGame(['Clock', 'Two', 'Three', 'Four', 'Five', 'Six']),
+          );
+          s.revision = r.state.revision + 1;
+          r.state = s;
+          for (let i = 1; i < 6; i++)
+            r.members[i] = { hash: `fixture-${i}`, offlineSince: Date.now() };
+          syncDeadline(s);
+        } else {
           const oldRevision = r.state.revision;
           const s = startRound(
             newGame(['Clock', 'Two', 'Three', 'Four', 'Five', 'Six']),

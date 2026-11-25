@@ -187,6 +187,30 @@ export class GameService {
         continue;
       }
       syncReconnectClock(r, this.connections.online(r), now);
+      // Resolve every unfinished preparation decision in this alarm, sharing
+      // one deadline across the first ten cards and the exchange phase.
+      for (
+        let step = 0;
+        step < 12 &&
+        (r.state.phase === 'grand' || r.state.phase === 'exchange');
+        step++
+      ) {
+        const pending = dueAction(r.state, now);
+        if (!pending) break;
+        const before = r.state;
+        r.state = act(before, pending.seat, pending.action);
+        this.record(
+          r,
+          before,
+          pending.seat,
+          pending.action,
+          'bot',
+          'preparation-timeout-v1',
+        );
+        syncReconnectClock(r, this.connections.online(r), now);
+        r.lastProgress = now;
+        changed = true;
+      }
       const due = dueAction(r.state, now);
       if (!due) continue;
       const before = r.state;

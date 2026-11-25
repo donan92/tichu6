@@ -433,7 +433,7 @@ export function act(state, seat, action) {
       fail('error.tichuPhase');
     s.callConfirmUsed ||= Array(6).fill(false);
     s.callConfirmUsed[seat] = true;
-    if (s.deadline > Date.now()) {
+    if (s.phase === 'play' && s.deadline > Date.now()) {
       s.deadline += 10000;
       s.deadlineDuration = (s.deadlineDuration ?? 30000) + 10000;
     }

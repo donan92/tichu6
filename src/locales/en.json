@@ -314,7 +314,7 @@
   "play.exchangeConfirm": "Confirm exchange {{count}}/2",
   "patches.gameFlow": "Clearer calls and passes, automatic turns and post-match trick review.",
   "rules.flowTitle": "Turn limits and history",
-  "rules.timers": "Turns last at most 30 seconds, then automatically pass. When passing is illegal, a legal move is made. Tricks collect automatically after 5 seconds. Disconnected players get up to 3 minutes to reconnect, then a 30-second turn. Reconnecting sooner starts the 30-second turn immediately.",
+  "rules.timers": "The first ten cards, remaining eight and exchange share a three-minute limit. On expiry, pending declarations are declined and bots finish exchanges. Ordinary turns auto-pass after 30 seconds, or play legal cards when passing is forbidden. Trick collection takes 5 seconds; Dragon transfer gets 30 seconds.",
   "rules.history": "Only current-trick history is visible during play. Review each trick after the 1,000-point match ends. Exchange choices can be changed and confirmed again until everyone has confirmed.",
   "combo.phoenixLead": "Phoenix single",
   "patches.mobileLabels": "Clearer exchange, pass and Phoenix labels, with up to 3 minutes to reconnect during play.",
@@ -352,5 +352,7 @@
   "room.manualHint": "Choose an empty seat on your preferred team. Once all six players are seated, the game starts in 10 seconds and seats shuffle within each team.",
   "patches.teamsAndTurnControls": "Added team selection, declaration confirmation and turn timers, with improved card layout and spectator privacy.",
   "room.startWithBots": "Fill empty seats with bots and start",
-  "patches.lobbyStartCompatibility": "Restored the room start button and clarified starting with bots in empty seats."
+  "patches.lobbyStartCompatibility": "Restored the room start button and clarified starting with bots in empty seats.",
+  "play.preparationDeadline": "{{seconds}}s left for declaration and exchange · bots finish pending choices when time expires.",
+  "patches.preparationAndBoard": "Limited declaration and exchange to three minutes total and enlarged the game board."
 }

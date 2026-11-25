@@ -117,6 +117,15 @@ try {
   owner.ws.send(JSON.stringify({ type: 'create', name: 'Clock' }));
   await until(() => owner.state?.phase === 'lobby');
   const roomId = owner.state.roomId;
+  await fetch(base + '/__flow-preparation');
+  await until(() => owner.state?.phase === 'grand');
+  assert.ok(owner.state.deadline - Date.now() > 178000);
+  await fetch(base + '/__flow-age');
+  await until(() => owner.state?.phase === 'play');
+  assert.ok(owner.state.exchangeReady.every(Boolean));
+  console.log(
+    'PASS real Worker: shared preparation timeout automatically completes declarations and exchange',
+  );
   await fetch(base + '/__flow-play');
   await until(() => owner.state?.phase === 'play');
   const deadline = owner.state.deadline;

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Lounge, nickname, publicView } from '../server/lounge.ts';
+import { syncDeadline } from '../src/game-clock.ts';
 import { newGame, startRound } from '../src/game.js';
 globalThis.WebSocketRequestResponsePair = class {};
 function socket() {
@@ -248,6 +249,7 @@ test('invalid actions and stale revisions never change game state', async () => 
   await msg(f.hub, a, { type: 'create', name: 'Check' });
   const r = Object.values(f.hub.data.rooms)[0];
   r.state = startRound(newGame());
+  syncDeadline(r.state);
   const before = structuredClone(r.state);
   for (const action of [
     { type: 'grand', call: 'yes' },
@@ -455,7 +457,6 @@ test('idle takeover survives hibernation, advances without grace and allows expl
   });
   let r = f.hub.data.rooms[roomId];
   const seat = r.members.findIndex((m) => m?.hash === ws.a.hash);
-  const hand = structuredClone(r.state.hands[seat]);
   // Bot progress midway through the user idle window keeps the room alive.
   now += IDLE / 2;
   r.lastProgress = now;
@@ -469,7 +470,9 @@ test('idle takeover survives hibernation, advances without grace and allows expl
   r = f.hub.data.rooms[roomId];
   assert.equal(ws.code, 4009);
   assert.equal(r.members[seat].idle, true);
-  assert.equal(r.state.phase, 'exchange');
+  assert.equal(r.state.phase, 'play');
+  const hand = structuredClone(r.state.hands[seat]);
+  assert.equal(hand.length, 18);
   assert.equal(f.hub.users().length, 0);
   const retry = await user(f, 1);
   assert.equal(retry.code, 4009);
@@ -886,4 +889,22 @@ test('manual lobby reserves six participants, serializes seat claims, cancels co
       entry.team,
     );
   assert.equal(r.members.filter(Boolean).length, 6);
+});
+
+test('preparation timeout resolves all pending humans in one persisted alarm', async () => {
+  const f = await setup();
+  const owner = await user(f, 5001, 'Prepare');
+  await msg(f.hub, owner, { type: 'create', name: 'Prepare' });
+  const r = Object.values(f.hub.data.rooms)[0];
+  await msg(f.hub, owner, {
+    type: 'action',
+    revision: r.state.revision,
+    action: { type: 'start' },
+  });
+  r.state.deadline = Date.now() - 1;
+  await f.hub.alarm();
+  assert.equal(r.state.phase, 'play');
+  assert.ok(r.state.calls.every((call) => call === 0));
+  assert.ok(r.state.exchanges.every(Boolean));
+  assert.equal(last(owner, 'state').value.phase, 'play');
 });

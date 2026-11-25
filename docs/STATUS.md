@@ -829,3 +829,11 @@ Release verification:
 - User reported five empty seats when alone. Bots are filled on explicit random-mode start, not on room entry; manual mode still requires six seated humans per the approved rule.
 - Observed an existing browser lobby missing teamMode/isHost fields: its coordinator had no start button. Reload restored a separate saved practice game, so the report's exact original transport cause is not proven. Added a narrow fallback to authenticated snapshot leader only when isHost is absent; explicit false and spectator remain denied. Server start authorization is unchanged.
 - Start button now explicitly says it fills empty seats with bots. Regression test covers missing field, emitted start action, and explicit non-host denial. Check,215 tests (152 unit +63 UI),format and build passed. Frontend-only release; Worker remains v0.8.14 implementation.
+
+## v0.8.16 preparation deadline and responsive board
+
+- User requested one three-minute budget covering initial ten cards, remaining eight and exchange. Added persisted round preparation clock shared by grand/exchange, unchanged on phase transition/reconnect. Old saves initialize a three-minute grace on their next clock sync. Preparation confirmation cannot extend this total cap; ordinary-play confirmation still adds10s.
+- At expiry, pending Large declarations default to no call and bots complete pending exchanges, including connected humans. Server resolves all pending preparation decisions in one alarm, persists before broadcast; practice also uses the shared due-action logic. UI shows remaining preparation time/progress. No new declaration is automatically made.
+- Increased mobile center minimum104→125px (short screens78→94px), scaling with viewport width; desktop board390→minimum468px and up to600px on wide displays. Browser375px measured center125.25px;1440px measured table547.2px. Neither document overflowed horizontally. Actual phone hardware not tested.
+- User explicitly retained happy/garden/057 after public directory showed one player and one spectator; did not delete or mutate it. Latest public state at inspection was exchange round1.
+- Check,217 tests (154 unit +63 UI),format and build passed. Real Worker flow passed new shared preparation timeout plus existing reconnect/turn/Dragon checks. Version0.8.16 with bilingual release note. Deployment verification pending.
