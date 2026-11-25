@@ -880,3 +880,8 @@ Release verification:
 - Current-turn player retains orange outline and gains an explicit localized label. Dark-mode media styling uses warm light amber with dark navy text rather than white inversion. Actual iPhone/Samsung dark-mode behavior remains unverified.
 - Added regression coverage for reorder/reset, snapshot reconciliation, round reset, keyboard movement and accidental click suppression after dragging. Browser drag and reset verified; reset button disabled after restoring automatic order. Final checks and frontend deployment pending. Backend unchanged.
 - Final check,228 tests (155 unit +73 UI),format and production build passed. No protocol/backend change, so existing Worker remains in place. Desktop browser verified drag without selecting cards and reset to automatic order; phone hardware remains a QA limitation.
+
+## v0.8.22 deployment verified
+
+- Main7a5cfb9 deployed. Pages45640736374 and Verify45640738743 succeeded, including local Worker integration, idle and flow checks. Live Pages HTML/JS/CSS matched the local0.8.22 build byte-for-byte; existing Worker health returned ok/protocol6. Frontend-only release; Worker version remains f109ff69-c7e0-491d-bb93-00f69bab28f8 from0.8.18.
+- Preceding0.8.21 Verify45638874626 and Pages45638874179 also succeeded;0.8.22 includes Phoenix role ordering and direct bomb submission. Local preview stopped and temporary browser tab closed. No production room state modified for this release.
