@@ -857,3 +857,8 @@ Release verification:
 - Mainbf8b47e deployed; CI45636111714 and Pages45636110454 succeeded. Cloudflare Pagesfa273f59-d78f-4bf4-b605-ae8e7161bfea serves assets byte-identical to localv0.8.18 build.
 - Workerf109ff69-c7e0-491d-bb93-00f69bab28f8 deployed at100% with immediate strategy; healthok/version6. Production bot addition/removal was verified after forcing the preceding identical action implementation to update immediately; test room left afterwards. No live room reset or deletion.
 - Supersedes pending deployment note above. Temporary local font-preview server stopped. Real iPhone/Samsung confirmation behavior remains a device QA limitation; cloned-snapshot regressions pass in component tests.
+
+## v0.8.19 active player contrast
+
+- Current-turn player keeps orange border and gains off-white background/dark-blue name, readable secondary text and dark own-player badge. Team badge colors remain unchanged; existing active-turn condition controls highlighting.
+- Check,218 tests,format and build passed. Browser preview verified computed active colors and visible contrast; viewport override did not apply (observed1280px), so no narrow-device verification claim. Temporary fixture removed. Frontend-only release; Worker implementation unchanged. Deployment pending.

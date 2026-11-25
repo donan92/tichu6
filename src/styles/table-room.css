@@ -82,8 +82,17 @@ select {
   border-color: #587086;
 }
 .player.active {
+  background: #f6f7f9;
+  color: #182d45;
   border-color: var(--lime);
   box-shadow: 0 0 0 1px var(--lime);
+}
+.player.active small {
+  color: #344d65;
+}
+.player.active .you {
+  color: #182d45;
+  background: #182d4514;
 }
 .avatar {
   border-radius: 5px;
