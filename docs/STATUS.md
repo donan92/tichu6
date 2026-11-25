@@ -791,3 +791,9 @@ Release verification:
 - Removed pre-play Dog/Mahjong selectors and the separate Dragon recipient selector. Play opens a button-choice confirmation for Dog/Mahjong; Give trick opens opponent choice for Dragon. No default is silently submitted: choose a button then confirm, or cancel without submitting. Dragon play retains its confirmation; recipient choice occurs when awarding its won trick.
 - Modal choice and submission now occur in one dialog; no intermediate dragonTarget request. Selection/revision/phase/turn changes dismiss stale pending actions. Existing game clocks and server rules are unchanged.
 - Required check, all201 tests (144 unit/57 UI), format and build passed. Tests cover all three choice flows, no pre-action controls, disabled confirmation before choosing, cancellation/focus restoration, repeated opening and stale revision dismissal. Real phone visual verification not performed for this follow-up. Not deployed.
+
+## v0.8.13 deployment verified — 2026-11-25
+
+- Main `f756ab9` includes play-first special choices (`8d53742`) and localized release notes. Check, 201 tests, formatting and build passed; CI45596595168 succeeded including local Worker, idle and flow integration.
+- Pages45596594227 succeeded. Production HTML, JavaScript and CSS match the local v0.8.13 build byte-for-byte. Existing Worker remains at100% version `e70a926b-1c57-4a1b-b741-3bdab26ff471`, healthok/version6; no backend change or redeploy required.
+- Earlier not-deployed note for this follow-up is superseded. Original research workspace remains untouched. Real iPhone/Samsung verification remains pending.
