@@ -130,3 +130,28 @@ test('preparation shares three minutes across declarations, exchange and restore
   assert.equal(s.phase, 'play');
   assert.equal(s.deadline, deadline + 30000);
 });
+
+test('cancel Dog restores the original turn and allows Mahjong without renewing either clock', () => {
+  let s = state();
+  const dog = deck().find((c) => c.special === 'dog');
+  const bird = deck().find((c) => c.special === 'mahjong');
+  s.hands[0] = [dog, bird];
+  syncDeadline(s, 1000);
+  const originalDeadline = s.deadline;
+  s = act(s, 0, { type: 'prepareDog' });
+  syncDeadline(s, 10000);
+  const choiceDeadline = s.deadline;
+  assert.throws(() => act(s, 1, { type: 'cancelDog' }));
+  s = act(s, 0, { type: 'cancelDog' });
+  syncDeadline(s, 15000);
+  assert.equal(s.dogPending, null);
+  assert.equal(s.deadline, originalDeadline);
+  s = act(s, 0, { type: 'prepareDog' });
+  syncDeadline(s, 20000);
+  assert.equal(s.deadline, choiceDeadline);
+  s = act(s, 0, { type: 'cancelDog' });
+  syncDeadline(s, 21000);
+  s = act(s, 0, { type: 'play', ids: [bird.id], wish: 7 });
+  assert.equal(s.top.cards[0].special, 'mahjong');
+  assert.ok(s.hands[0].some((card) => card.special === 'dog'));
+});

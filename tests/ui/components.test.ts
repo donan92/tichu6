@@ -827,7 +827,10 @@ describe('Vue interaction regressions', () => {
         .querySelector('.action-confirm')!
         .dispatchEvent(new Event('cancel'));
       await nextTick();
-      expect(submit).not.toHaveBeenCalled();
+      if (special === 'dog') {
+        expect(submit).toHaveBeenCalledWith({ type: 'cancelDog' });
+        submit.mockClear();
+      } else expect(submit).not.toHaveBeenCalled();
       expect(document.activeElement).toBe(
         wrapper.get('button.primary').element,
       );
@@ -1021,4 +1024,40 @@ it('blocks native hand text selection and context menu while retaining ordinary 
   expect(card.attributes('title')).toBeUndefined();
   await card.trigger('click');
   expect(select).toHaveBeenCalledExactlyOnceWith('touch-card');
+});
+
+it('cancels server Dog selection before opening the Mahjong wish dialog', async () => {
+  const session = useSessionStore();
+  const game = round();
+  game.phase = 'play';
+  game.turn = 0;
+  game.top = null;
+  game.dogPending = 0;
+  game.hand = [
+    { id: 'dog', special: 'dog', rank: 0, suit: -1 },
+    { id: 'mahjong', special: 'mahjong', rank: 1, suit: -1 },
+  ];
+  session.game = game;
+  session.selected = ['dog'];
+  const submit = vi.spyOn(session, 'submit').mockImplementation(() => {});
+  const wrapper = mount(GameControls, {
+    props: { game },
+    attachTo: document.body,
+    global: { plugins: plugins() },
+  });
+  wrappers.push(wrapper);
+  await nextTick();
+  document
+    .querySelector<HTMLButtonElement>('.action-confirm button[autofocus]')!
+    .click();
+  await nextTick();
+  expect(submit).toHaveBeenCalledWith({ type: 'cancelDog' });
+  const cancelled = { ...game, dogPending: null, revision: game.revision + 1 };
+  session.game = cancelled;
+  await wrapper.setProps({ game: cancelled });
+  session.selected = ['mahjong'];
+  await nextTick();
+  await wrapper.get('button.primary').trigger('click');
+  expect(document.querySelector('.special-choices.ranks')).not.toBeNull();
+  expect(submit).not.toHaveBeenCalledWith({ type: 'play', ids: ['dog'] });
 });

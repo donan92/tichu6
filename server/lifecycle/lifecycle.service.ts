@@ -1,3 +1,5 @@
+import { botDelay } from '../../src/game-clock.ts';
+import { botAction } from '../../src/game.js';
 import { syncLobby } from '../room/lobby-policy.ts';
 import { syncReconnectClock } from '../game/reconnect-clock.ts';
 import { TRAINING_RETENTION_MS } from '../training/records.ts';
@@ -127,8 +129,15 @@ export class LifecycleService {
           ((online.some(Boolean) || r.members.some((member) => member?.idle)) &&
             ((s.phase === 'grand' && !s.ready[i]) ||
               (s.phase === 'exchange' && !s.exchanges[i]) ||
-              (s.phase === 'play' && s.turn === i && (m.bot || m.idle))));
-        if (needs)
+              (s.phase === 'play' && s.turn === i && (m.bot || m.idle)) ||
+              (s.phase === 'trick' && s.last === i && (m.bot || m.idle))));
+        if (
+          needs &&
+          (m.bot || m.idle) &&
+          (s.phase === 'play' || s.phase === 'trick')
+        ) {
+          at = Math.min(at, now + botDelay(s, botAction(s, i), now));
+        } else if (needs)
           at = Math.min(
             at,
             Math.max(

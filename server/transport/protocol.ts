@@ -22,6 +22,7 @@ export function gameAction(input: unknown): GameAction {
     ![
       'prepareCall',
       'prepareDog',
+      'cancelDog',
       'extendTime',
       'teamMode',
       'chooseSeat',
@@ -93,6 +94,7 @@ export function gameAction(input: unknown): GameAction {
   // Return only validated protocol fields; seat/identity never come from input.
   switch (input.type) {
     case 'prepareDog':
+    case 'cancelDog':
     case 'extendTime':
     case 'start':
     case 'next':

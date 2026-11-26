@@ -1021,3 +1021,19 @@ Release verification:
 
 - Main698c1b8 deployed. Pages45777613746 and Verify45777614556 succeeded, including local Worker, idle and full game-flow integrations. Production HTML/JS/CSS matched the local v0.8.30 build byte-for-byte.
 - Worker57948b7b-94fd-45c1-a4df-358ea25aaf4e is deployed at100% (deployment f0f03699-2927-4b1a-b62e-c0c7bb4f61b1); health ok/protocol6. Existing immediate Durable Object update strategy retained. No production room reset or load testing. Supersedes pending implementation/deployment notes above.
+
+## Bot pass and Dragon timing (not deployed)
+
+- Bot pass waits until five seconds after the current turn begins. A persisted deadlineStartedAt anchors thinking time independently of human deadline extensions and repeated broadcasts. Existing ordinary-play pacing remains unchanged.
+- Bot/idle takeover now handles trick collection directly after five seconds, including choosing a valid Dragon recipient, instead of waiting for the human thirty-second selection deadline. Human Dragon selection retains thirty seconds. Shared delay helper also applies to local practice.
+- Check,253 tests (161 unit +92 UI),format and build passed. Regressions verify no pass/Dragon collection before five seconds, collection at five seconds, and pass timing unaffected by deadline extension. Real local Worker test:flow passed (preparation, disconnect/reconnect, ordinary timeout and human Dragon selection). No version bump or production deployment.
+
+## Cancel Dog selection before playing another card (not deployed)
+
+- Root cause: modal cancel only cleared UI while authoritative dogPending continued to lock every non-Dog play. Added authenticated cancelDog action and wired dialog cancel/Escape/backdrop through it. Cancelling restores the original turn clock, allowing Mahjong wish selection or another legal play.
+- Preserve the first Dog-selection expiry across cancellation/reopening to prevent repeated thirty-second grants. New turns clear saved Dog clock metadata; server-owned timing is never accepted from request fields. Earlier bot timing work remains included and uncommitted.
+- Check,255 tests (162 unit +93 UI),format and build passed. UI regression covers Dog modal cancel then Mahjong wish dialog; engine covers unauthorized cancellation, original clock restoration, no repeated extension and Mahjong submission with Dog retained. Real local Worker test:flow passed including new cancelDog wire action followed by Mahjong wish. No version bump or deployment; next release must deploy Worker and Pages together.
+
+## v0.8.31 release preparation
+
+- Packages and bilingual release note updated for Dog cancellation and five-second bot pass/Dragon handling. Check,255 tests,format and production build passed with release metadata. Local Worker flow integration previously passed for this implementation including cancelDog then Mahjong. Worker and Pages deployment verification pending.

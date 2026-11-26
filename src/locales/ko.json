@@ -402,5 +402,6 @@
   "patches.clearTurnChime": "내 차례가 오면 맑은 알림음이 울립니다.",
   "patches.diamondContrast": "다이아 숫자와 문양을 밝은 골드 오렌지로 바꿔 하트와 더 쉽게 구분할 수 있습니다.",
   "error.nicknameTaken": "이미 사용 중인 닉네임입니다. 다른 이름을 입력해 주세요.",
-  "patches.uniqueMembership": "닉네임 중복을 방지하고, 다른 방에 들어가려면 진행 중인 게임을 먼저 포기하도록 개선했습니다."
+  "patches.uniqueMembership": "닉네임 중복을 방지하고, 다른 방에 들어가려면 진행 중인 게임을 먼저 포기하도록 개선했습니다.",
+  "patches.dogCancelBotTiming": "개 선택 취소 후 다른 카드를 낼 수 있도록 수정하고, 봇의 패스와 용 전달을 5초 후 처리하도록 개선했습니다."
 }

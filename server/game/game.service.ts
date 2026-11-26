@@ -1,6 +1,6 @@
 import { hostSeat, syncLobby } from '../room/lobby-policy.ts';
 import { syncReconnectClock } from './reconnect-clock.ts';
-import { syncDeadline, dueAction } from '../../src/game-clock.ts';
+import { syncDeadline, dueAction, botDelay } from '../../src/game-clock.ts';
 import {
   prepareTrainingDecision,
   appendTrainingDecision,
@@ -291,7 +291,9 @@ export class GameService {
               ? s.exchanges.findIndex((x, i) => !x && eligible(i))
               : s.phase === 'play'
                 ? s.turn
-                : -1;
+                : s.phase === 'trick'
+                  ? s.last
+                  : -1;
         if (
           seat != null &&
           seat >= 0 &&
@@ -299,6 +301,7 @@ export class GameService {
           (s.phase !== 'play' || r.members[seat]?.bot || r.members[seat]?.idle)
         ) {
           const action = botAction(s, seat);
+          if (botDelay(s, action, now, 0) > 0) continue;
           r.state = act(s, seat, action);
           this.record(r, s, seat, action, 'bot');
           syncReconnectClock(r, this.connections.online(r), now);

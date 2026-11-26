@@ -422,6 +422,7 @@ export function act(state, seat, action) {
   if (
     s.dogPending != null &&
     action.type !== 'tichu' &&
+    !(action.type === 'cancelDog' && seat === s.dogPending) &&
     !(
       seat === s.dogPending &&
       action.type === 'play' &&
@@ -461,6 +462,12 @@ export function act(state, seat, action) {
     s.deadline += 30000;
     s.deadlineDuration = (s.deadlineDuration ?? 30000) + 30000;
     s.extensionUsed = true;
+  } else if (action.type === 'cancelDog') {
+    if (s.phase !== 'play' || s.turn !== seat || s.dogPending !== seat)
+      fail('error.dogTarget');
+    s.dogPending = null;
+    if (s.dogPreviousClock) Object.assign(s, s.dogPreviousClock);
+    delete s.dogPreviousClock;
   } else if (action.type === 'prepareDog') {
     if (
       s.phase !== 'play' ||
@@ -470,6 +477,13 @@ export function act(state, seat, action) {
     )
       fail('error.dogTarget');
     if (s.wish && legalPlays(h, s.top, s.wish).length) fail('error.wishPass');
+    s.dogPreviousClock = {
+      deadline: s.deadline,
+      deadlineKey: s.deadlineKey,
+      deadlineDuration: s.deadlineDuration,
+      deadlineStartedAt: s.deadlineStartedAt,
+      extensionUsed: s.extensionUsed,
+    };
     s.dogPending = seat;
   } else if (action.type === 'grand') {
     if (

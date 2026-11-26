@@ -215,6 +215,14 @@ watch(
   },
   { flush: 'post' },
 );
+function cancelConfirmation() {
+  if (
+    confirmation.value?.kind === 'dog' &&
+    props.game.dogPending === session.seat
+  )
+    session.submit({ type: 'cancelDog' });
+  confirmation.value = null;
+}
 function confirmAction() {
   const pending = confirmation.value;
   if (!pending || locked.value || (pending.kind && pending.choice === null))
@@ -308,7 +316,7 @@ watch(
     v-if="confirmation"
     :description="confirmationText"
     :disabled="locked || (!!confirmation.kind && confirmation.choice === null)"
-    @cancel="confirmation = null"
+    @cancel="cancelConfirmation"
     @confirm="confirmAction"
   >
     <TurnClock

@@ -113,13 +113,32 @@ export interface RoundState extends Omit<
   pile: Card[];
   exchangeReviewClosed?: boolean;
   deadlineKey?: string | null;
+  deadlineStartedAt?: number;
+  dogSelectionExpiresAt?: number;
+  dogPreviousClock?: Pick<
+    RoundState,
+    | 'deadline'
+    | 'deadlineKey'
+    | 'deadlineDuration'
+    | 'deadlineStartedAt'
+    | 'extensionUsed'
+  >;
 }
 export type GameAction =
   | { type: 'prepareCall'; call: 100 | 200 }
   | { type: 'teamMode'; mode: 'random' | 'manual' }
   | { type: 'chooseSeat'; target: number }
   | { type: 'setBot'; target: number; enabled: boolean }
-  | { type: 'start' | 'next' | 'tichu' | 'pass' | 'prepareDog' | 'extendTime' }
+  | {
+      type:
+        | 'start'
+        | 'next'
+        | 'tichu'
+        | 'pass'
+        | 'prepareDog'
+        | 'cancelDog'
+        | 'extendTime';
+    }
   | { type: 'grand'; call: boolean }
   | { type: 'exchange'; ids: string[] }
   | { type: 'dragonTarget'; target: number }

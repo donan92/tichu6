@@ -31,6 +31,7 @@ export function syncDeadline(state: LobbyState | RoundState, now = Date.now()) {
   ].join(':');
   if (state.deadlineKey !== key || !Number.isFinite(state.deadline)) {
     state.deadlineKey = key;
+    state.deadlineStartedAt = now;
     state.deadlineDuration =
       state.phase === 'trick'
         ? state.top?.cards[0]?.special === 'dragon'
@@ -38,6 +39,13 @@ export function syncDeadline(state: LobbyState | RoundState, now = Date.now()) {
           : TRICK_MS
         : TURN_MS;
     state.deadline = now + state.deadlineDuration;
+    if (state.dogPending != null) {
+      state.dogSelectionExpiresAt ??= state.deadline;
+      state.deadline = state.dogSelectionExpiresAt;
+    } else {
+      delete state.dogSelectionExpiresAt;
+      delete state.dogPreviousClock;
+    }
     state.extensionUsed = false;
   }
 }
@@ -81,4 +89,21 @@ export function dueAction(
     // A lead or an enforceable wish cannot be passed under the game rules.
     return { seat, action: botAction(state, seat) };
   }
+}
+
+// Bot thinking time is independent of human deadline extensions.
+export function botDelay(
+  state: RoundState,
+  action: GameAction,
+  now: number,
+  ordinary = 2000,
+) {
+  if (action.type !== 'pass' && state.phase !== 'trick') return ordinary;
+  const started =
+    state.deadlineStartedAt ??
+    (state.deadline ?? now) - (state.deadlineDuration ?? TURN_MS);
+  return Math.max(
+    0,
+    started + (action.type === 'pass' ? 5000 : TRICK_MS) - now,
+  );
 }

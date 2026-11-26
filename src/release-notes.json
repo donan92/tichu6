@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.31",
+    "summary": "patches.dogCancelBotTiming"
+  },
+  {
     "version": "0.8.30",
     "summary": "patches.uniqueMembership"
   },

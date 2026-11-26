@@ -1047,3 +1047,52 @@ test('active membership blocks other rooms including spectators and leave until 
     1,
   );
 });
+
+test('bot passes wait five seconds from the turn start even after a deadline extension', async () => {
+  const f = await setup();
+  const owner = await user(f, 901, 'Owner');
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const r = f.hub.data.rooms[owner.a.room];
+  r.members[1] = { bot: true };
+  r.state = startRound(newGame(['Owner', 'Bot', 'C', 'D', 'E', 'F']));
+  const s = r.state;
+  s.phase = 'play';
+  s.turn = 1;
+  s.last = 0;
+  s.top = {
+    type: 'single',
+    power: 14,
+    cards: [{ id: 'ace', rank: 14, suit: 0 }],
+  };
+  s.hands[1] = [{ id: 'two', rank: 2, suit: 0 }];
+  s.passed = [];
+  syncDeadline(s, 10000);
+  s.deadline += 120000;
+  f.hub.game.advanceBots(14999);
+  assert.equal(r.state.turn, 1);
+  f.hub.game.advanceBots(15000);
+  assert.ok(r.state.passed.includes(1));
+});
+
+test('bot Dragon winner collects after five seconds instead of waiting thirty', async () => {
+  const f = await setup();
+  const owner = await user(f, 901, 'Owner');
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const r = f.hub.data.rooms[owner.a.room];
+  r.members[1] = { bot: true };
+  r.state = startRound(newGame(['Owner', 'Bot', 'C', 'D', 'E', 'F']));
+  const s = r.state;
+  s.phase = 'trick';
+  s.turn = null;
+  s.last = 1;
+  const dragon = { id: 'dragon', special: 'dragon' };
+  s.top = { type: 'single', power: 15, cards: [dragon] };
+  s.pile = [dragon];
+  syncDeadline(s, 10000);
+  assert.equal(s.deadline, 40000);
+  f.hub.game.advanceBots(14999);
+  assert.equal(r.state.phase, 'trick');
+  f.hub.game.advanceBots(15000);
+  assert.equal(r.state.phase, 'play');
+  assert.equal(r.state.dragonTransfer.recipient % 2, 0);
+});

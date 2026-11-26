@@ -234,6 +234,31 @@ try {
   console.log(
     'PASS real Worker: persistent 30s deadline, reconnect unchanged, alarm auto-pass, thirty-second dragon collection, authenticated target, no previous-trick disclosure',
   );
+  const dogPlayer = await connect('Clock', owner.token, { roomId });
+  await fetch(base + '/__flow-dog');
+  await until(() =>
+    dogPlayer.state?.hand.some((card) => card.special === 'dog'),
+  );
+  const originalDogDeadline = dogPlayer.state.deadline;
+  const sendDogAction = (action) =>
+    dogPlayer.ws.send(
+      JSON.stringify({
+        type: 'action',
+        revision: dogPlayer.state.revision,
+        action,
+      }),
+    );
+  sendDogAction({ type: 'prepareDog' });
+  await until(() => dogPlayer.state.dogPending === 0);
+  sendDogAction({ type: 'cancelDog' });
+  await until(() => dogPlayer.state.dogPending == null);
+  assert.equal(dogPlayer.state.deadline, originalDogDeadline);
+  sendDogAction({ type: 'play', ids: ['mahjong'], wish: 7 });
+  await until(() => dogPlayer.state.top?.cards[0]?.special === 'mahjong');
+  assert.ok(dogPlayer.state.hand.some((card) => card.special === 'dog'));
+  console.log(
+    'PASS real Worker: cancel Dog restores clock and allows Mahjong wish',
+  );
 } catch (error) {
   console.error(logs);
   throw error;

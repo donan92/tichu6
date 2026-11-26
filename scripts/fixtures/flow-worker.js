@@ -64,6 +64,14 @@ export class TestLounge extends Lounge {
               entries: [{ code: 'previous-trick-marker' }],
             },
           ];
+          if (path === '/__flow-dog') {
+            s.top = null;
+            s.pile = [];
+            s.last = null;
+            s.hands[0] = cards.filter((c) =>
+              ['dog', 'mahjong'].includes(c.special),
+            );
+          }
           s.revision = oldRevision + 1;
           r.state = s;
           for (let i = 1; i < 6; i++)

@@ -1,4 +1,4 @@
-import { syncDeadline, dueAction } from '../game-clock';
+import { syncDeadline, dueAction, botDelay } from '../game-clock';
 import { computed, onScopeDispose, ref, shallowRef } from 'vue';
 import { defineStore } from 'pinia';
 import { act, botAction, newGame, startRound, view, shuffle } from '../game.js';
@@ -216,10 +216,15 @@ export const useSessionStore = defineStore('session', () => {
         (ready, index) => index > 0 && !ready,
       );
     else if (practice.phase === 'play') next = practice.turn ?? -1;
+    else if (practice.phase === 'trick') next = practice.last ?? -1;
+    const action = next > 0 ? botAction(practice, next) : null;
+    const thinking = action
+      ? botDelay(practice, action, Date.now(), 800)
+      : Infinity;
 
     const timed = practice.deadline;
     const delay = timed == null ? Infinity : Math.max(0, timed - Date.now());
-    if (delay <= (next > 0 ? 800 : Infinity) && Number.isFinite(delay)) {
+    if (delay <= thinking && Number.isFinite(delay)) {
       botTimer = setTimeout(() => {
         if (!practice || mode.value !== 'demo') return;
         const due = dueAction(practice);
@@ -237,7 +242,7 @@ export const useSessionStore = defineStore('session', () => {
         } catch (error) {
           notify(error);
         }
-      }, 800);
+      }, thinking);
   }
   function stopPractice() {
     clearTimeout(botTimer);

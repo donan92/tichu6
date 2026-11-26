@@ -402,5 +402,6 @@
   "patches.clearTurnChime": "A clear chime announces your turn.",
   "patches.diamondContrast": "Brighter golden-orange diamond ranks and symbols are easier to distinguish from hearts.",
   "error.nicknameTaken": "This nickname is already in use. Please choose another name.",
-  "patches.uniqueMembership": "Nicknames must be unique, and joining another room requires forfeiting your active game first."
+  "patches.uniqueMembership": "Nicknames must be unique, and joining another room requires forfeiting your active game first.",
+  "patches.dogCancelBotTiming": "Cancelling Dog selection allows another card to be played, and bots pass or give away Dragon tricks after five seconds."
 }
