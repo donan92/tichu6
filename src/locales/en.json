@@ -432,5 +432,6 @@
   "patches.audioOutputRecovery": "Improved sound recovery after returning to the app and made Resume sound always available in sound settings.",
   "patches.guideTypography": "Unified guide typography and centered the Dragon and Phoenix artwork.",
   "patches.emptyRoomExpiry": "Rooms close after ten minutes without any connected players.",
-  "patches.handTopActions": "Pass and Play now appear above your hand according to your card selection."
+  "patches.handTopActions": "Pass and Play now appear above your hand according to your card selection.",
+  "patches.tabletHandActions": "Moved Small Tichu below your hand and widened tablet Pass and Play buttons."
 }

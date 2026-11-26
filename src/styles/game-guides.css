@@ -75,6 +75,10 @@
 
 /* Keep the primary decision directly above the hand, with equal-width actions. */
 .game .hand-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  min-width: 0;
   border-top: 0;
   padding-top: 0;
 }
@@ -94,4 +98,23 @@
   margin: 0;
   font-size: 18px;
   font-weight: 700;
+}
+
+/* The action row owns the hand width, even above the mobile breakpoint. */
+.game .hand-controls > * {
+  min-width: 0;
+  max-width: 100%;
+}
+.game .hand-controls .action-buttons {
+  width: 100%;
+}
+.game .hand-play-row > button {
+  white-space: nowrap;
+}
+@media (min-width: 601px) {
+  .game .hand-play-row > button,
+  .game .small-call-actions > button {
+    min-height: 56px;
+    font-size: 20px;
+  }
 }

@@ -432,5 +432,6 @@
   "patches.audioOutputRecovery": "앱 복귀 후 소리 복구를 개선하고, 소리 설정에서 언제든 다시 재생할 수 있도록 했습니다.",
   "patches.guideTypography": "안내 글자 크기를 통일하고 용·봉황 그림을 중앙에 맞췄습니다.",
   "patches.emptyRoomExpiry": "접속한 플레이어가 없는 방은 10분 뒤 자동으로 닫힙니다.",
-  "patches.handTopActions": "패스·내기 버튼을 손패 위로 옮기고 카드 선택에 맞춰 표시합니다."
+  "patches.handTopActions": "패스·내기 버튼을 손패 위로 옮기고 카드 선택에 맞춰 표시합니다.",
+  "patches.tabletHandActions": "스몰 티츄를 손패 아래로 옮기고 태블릿의 패스·내기 버튼을 넓혔습니다."
 }

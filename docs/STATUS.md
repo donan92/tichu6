@@ -1,5 +1,28 @@
 # Project status / resume point
 
+## v0.8.40 tablet action width — release pending
+
+- Root cause: desktop horizontal .controls flex layout let the message consume
+  width while the nested action row shrank. Hand controls now stack and stretch
+  at every breakpoint; action labels cannot wrap. Tablet primary actions have
+  56px minimum height and 20px text. Small Tichu remains below the hand.
+- check, 266 tests, format and build passed. Local Chrome fixtures at widths
+  390/768/820/1024/1180/1366 have full-row Pass and no horizontal overflow.
+  At 1024px: Pass 960x56; selected-card Pass/Play 476x56 each. Inspected
+  screenshot /tmp/tablet-pass-fixed.png. Not physical tablet verification.
+- User approved release, including Small Tichu placement correction below.
+  v0.8.40 check, 266 tests, format and build passed; deployment pending.
+
+## Small Tichu below hand — local, not deployed
+
+- Keep primary actions above the cards; move only Small Tichu below HandCards
+  for exchange/play/trick. One declaration control uses the existing confirmation
+  handler via a DOM target; eligibility and pending lock remain unchanged.
+- check, 165 unit + 101 UI tests, format and build passed. Regression checks
+  exchange/play placement and disappearance after first play. Local Chrome at
+  320px confirms button below the hand with no horizontal overflow. No real
+  iPhone verification; version remains 0.8.39, not deployed.
+
 ## v0.8.39 hand-top actions — deployed
 
 - Removed the redundant hand-count heading and moved GameControls above HandCards.

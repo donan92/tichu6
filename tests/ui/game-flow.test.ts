@@ -185,3 +185,30 @@ it('keeps pass/play above cards and shows only play for a selected bomb', async 
   await w.vm.$nextTick();
   expect(w.find('.hand-play-row button').exists()).toBe(false);
 });
+
+it('places Small Tichu below the hand in exchange and play, hiding it after a first play', async () => {
+  const session = useSessionStore();
+  const game = view(startRound(newGame()), 0);
+  game.phase = 'exchange';
+  session.game = game;
+  const w = mount(GameView, { props: { game }, global: global() });
+  mounted.push(w);
+  await w.vm.$nextTick();
+  expect(w.find('.hand-controls .small-call').exists()).toBe(false);
+  expect(w.find('.hand-secondary-actions .small-call').exists()).toBe(true);
+  const panel = w.get('.hand-panel').element;
+  expect(
+    panel.lastElementChild?.classList.contains('hand-secondary-actions'),
+  ).toBe(true);
+  await w.setProps({ game: { ...game, phase: 'play', turn: 0 } });
+  expect(w.find('.hand-secondary-actions .small-call').exists()).toBe(true);
+  expect(w.find('.hand-controls .hand-pass').exists()).toBe(true);
+  await w.setProps({
+    game: {
+      ...game,
+      phase: 'play',
+      played: [true, false, false, false, false, false],
+    },
+  });
+  expect(w.find('.small-call').exists()).toBe(false);
+});

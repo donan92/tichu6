@@ -10,7 +10,10 @@ import { useSessionStore } from '../stores/session';
 import { combinationMessage } from '../combinations';
 import { useText } from '../composables/useText';
 import type { GameAction, RoundView } from '../types';
-const props = defineProps<{ game: RoundView }>();
+const props = defineProps<{
+  game: RoundView;
+  smallCallTarget?: HTMLElement | null;
+}>();
 const session = useSessionStore();
 const { t } = useTranslation();
 const { message } = useText();
@@ -417,12 +420,6 @@ watch(
           {{ t('play.exchangeReselect') }}
         </button>
         <button
-          v-if="canDeclareSmall"
-          class="small-call"
-          :disabled="locked"
-          @click="requestCall(100, $event)"
-        >
-          {{ t('play.tichu') }}</button><button
           class="primary"
           :disabled="locked || session.selected.length !== 2"
           @click="
@@ -448,14 +445,6 @@ watch(
           </option>
         </select></label
       >
-      <button
-        v-if="canDeclareSmall"
-        class="small-call"
-        :disabled="locked"
-        @click="requestCall(100, $event)"
-      >
-        {{ t('play.tichuShort') }}
-      </button>
       <div v-if="game.phase === 'play'" class="hand-play-row">
         <PassAction
           v-if="game.turn === session.seat && !combo?.bomb"
@@ -472,6 +461,17 @@ watch(
       </div>
     </div>
   </template>
+  <Teleport :to="smallCallTarget ?? 'body'" :disabled="!smallCallTarget">
+    <div v-if="canDeclareSmall" class="action-buttons small-call-actions">
+      <button
+        class="small-call"
+        :disabled="locked"
+        @click="requestCall(100, $event)"
+      >
+        {{ t(game.phase === 'exchange' ? 'play.tichu' : 'play.tichuShort') }}
+      </button>
+    </div>
+  </Teleport>
 </template>
 
 <style scoped>

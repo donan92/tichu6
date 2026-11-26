@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.40",
+    "summary": "patches.tabletHandActions"
+  },
+  {
     "version": "0.8.39",
     "summary": "patches.handTopActions"
   },

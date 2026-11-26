@@ -15,6 +15,7 @@ import TurnClock from '../components/TurnClock.vue';
 import TrickHistory from '../components/TrickHistory.vue';
 import GameRules from '../components/GameRules.vue';
 import ScoringGuide from '../components/ScoringGuide.vue';
+const smallCallTarget = ref<HTMLElement | null>(null);
 const props = defineProps<{ game: RoundView }>();
 const session = useSessionStore();
 const { t, message, title } = useText();
@@ -215,12 +216,15 @@ const tableNote = computed(() =>
       </div>
     </section>
     <section class="hand-panel">
-      <div class="controls hand-controls"><GameControls :game="game" /></div>
+      <div class="controls hand-controls">
+        <GameControls :game="game" :small-call-target="smallCallTarget" />
+      </div>
       <HandCards
         :hand="game.hand"
         :spectator="game.spectator"
         :round-key="`${game.roomId ?? 'practice'}:${game.round}`"
       />
+      <div ref="smallCallTarget" class="hand-secondary-actions" />
     </section>
     <ExchangeReview
       v-if="!game.spectator && game.exchangeReview?.length"
