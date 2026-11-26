@@ -1016,3 +1016,8 @@ Release verification:
 ## v0.8.30 release preparation
 
 - Includes server-enforced unique nicknames and single active room, automatic membership recovery, localized errors and release notes. Check,251 tests,format and build passed again with release metadata; prior fresh local Worker integration passed for this implementation. Worker/Pages deployment verification pending.
+
+## v0.8.30 deployment verified
+
+- Main698c1b8 deployed. Pages45777613746 and Verify45777614556 succeeded, including local Worker, idle and full game-flow integrations. Production HTML/JS/CSS matched the local v0.8.30 build byte-for-byte.
+- Worker57948b7b-94fd-45c1-a4df-358ea25aaf4e is deployed at100% (deployment f0f03699-2927-4b1a-b62e-c0c7bb4f61b1); health ok/protocol6. Existing immediate Durable Object update strategy retained. No production room reset or load testing. Supersedes pending implementation/deployment notes above.
