@@ -1058,3 +1058,8 @@ Release verification:
 
 - User confirmed audio issue occurs when returning from another app/tab to the existing game. Release includes revised fifth/sixth scoring and audio suspend-race recovery. Existing finished round scores are not rewritten. Physical phone recovery remains unverified.
 - Version and bilingual release note updated. Check,258 tests,format and build passed again. Local Worker flow previously passed for the scoring implementation. Worker/Pages deployment verification pending.
+
+## v0.8.32 deployment verified
+
+- Main4444b66 deployed; Verify45781657286 succeeded including local Worker, idle and flow checks. Pages run45781656884 succeeded (its GitHub metadata references preceding docs commit); importantly live production HTML/JS/CSS matched the actual local v0.8.32 build byte-for-byte, independently confirming deployed frontend content.
+- Worker6587f7b6-8c1f-4d65-a643-7afc7deaa276 is at100%; health ok/protocol6. New round completions use the revised fifth/sixth scoring; historical completed records remain unchanged. No production room reset or load tests. Audio return race fixes are live; physical iPhone/Samsung return behavior remains unverified.
