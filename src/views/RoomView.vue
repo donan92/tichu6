@@ -51,7 +51,7 @@ onUnmounted(() => clearInterval(timer));
     <p v-if="session.connectionError" class="warning" role="alert">
       {{ message(session.connectionError) }}
     </p>
-    <section class="panel">
+    <section class="panel room-setup">
       <h2>{{ t('room.teamMode') }}</h2>
       <div class="mode-buttons">
         <button

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import GuidePanel from './GuidePanel.vue';
 import { useTranslation } from 'i18next-vue';
 const { t } = useTranslation();
 const sections = [
@@ -15,8 +16,7 @@ const sections = [
 ];
 </script>
 <template>
-  <details class="scoring-guide guide-panel">
-    <summary>{{ t('scoringGuide.title') }}</summary>
+  <GuidePanel :title="t('scoringGuide.title')">
     <section v-for="section in sections" :key="section.title">
       <h3>{{ t(`scoringGuide.${section.title}`) }}</h3>
       <ul>
@@ -25,18 +25,9 @@ const sections = [
         </li>
       </ul>
     </section>
-  </details>
+  </GuidePanel>
 </template>
 <style scoped>
-.scoring-guide {
-  margin-top: 24px;
-  padding: 16px 0;
-  border-top: 1px solid var(--line);
-  overflow-wrap: anywhere;
-}
-summary {
-  font-size: 18px;
-}
 h3 {
   margin: 20px 0 8px;
   font-size: 16px;

@@ -427,5 +427,6 @@
   "scoringGuide.matchTitle": "Winning the match",
   "scoringGuide.matchEnd": "After a round, if either team has at least 1,000 points, the team with the higher total wins. A tie requires another round.",
   "patches.scoringGuide": "Added a collapsible scoring guide at the bottom of the game screen.",
-  "patches.guideSmallCall": "Unified collapsible guides and highlighted Small Tichu with a full-width button shown only when eligible."
+  "patches.guideSmallCall": "Unified collapsible guides and highlighted Small Tichu with a full-width button shown only when eligible.",
+  "patches.crossScreenStyles": "Unified guides across home, lounge and gameplay, with consistent entry buttons and spacing."
 }

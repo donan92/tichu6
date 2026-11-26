@@ -1093,3 +1093,14 @@ Release verification:
 
 - Mainc91b8e4 deployed. Pages45787399989 and Verify45787401623 succeeded including local Worker, idle and game-flow checks. Live production HTML/JS/CSS matched local v0.8.34 byte-for-byte. Unified disclosure panels and eligible-only green Small Tichu button are live.
 - Frontend-only; existing Worker v0.8.32 implementation retained and health ok/protocol6. No production room state changes. Physical mobile interaction remains unverified; isolated mobile/desktop style previews and eligibility regression passed.
+
+## Cross-screen UI consistency audit (not deployed)
+
+- Reproduced home/hall/room guide mismatch: prior shared styles were scoped to .game and layered over old component/global rules. Added GuidePanel.vue with its own scoped disclosure layout and used it for combinations,rules,history and scoring; removed obsolete .rules/.activity/.combination-guide CSS. Native details/summary retained.
+- Matched home entry/practice actions at48px and equal responsive widths; grouped footer version/caption. Added16px adjacent lounge panel gap and24px room subsection spacing. Gameplay Small Tichu styling retained. No game rules/protocol changes.
+- Actual local-app screenshots inspected for home,language/sound dialogs,practice game and fixture-driven hall/manual room at390px, plus320px English home and1280px home/game. Guide headings all56px and home buttons both320×48px at390px viewport; checked no horizontal overflow. Native Space toggle/repeated click and language-dialog close/focus restoration verified. Full live multiplayer/all modals/device-specific accessibility not claimed.
+- Check,260 tests (163 unit +97 UI),format and build passed. Added shared-guide regression for structure and open-state/node preservation across language changes. Evidence/report at /tmp/tichu-ui-style-audit.md and /tmp/audit-*.png. No version bump or deployment.
+
+## v0.8.35 release preparation
+
+- Version and bilingual note updated for shared GuidePanel across routes, home action/footer layout and lounge/room spacing. Check,260 tests,format and build passed again. Frontend-only; existing Worker implementation retained. Deployment verification pending.

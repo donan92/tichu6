@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.35",
+    "summary": "patches.crossScreenStyles"
+  },
+  {
     "version": "0.8.34",
     "summary": "patches.guideSmallCall"
   },

@@ -47,6 +47,9 @@ const samples: Card[] = [
       </form>
     </section>
     <GameRules />
-    <footer>6T · <VersionNotes /> · {{ t('app.footer') }}</footer>
+    <footer class="home-footer">
+      <div class="footer-brand">6T · <VersionNotes /></div>
+      <p>{{ t('app.footer') }}</p>
+    </footer>
   </main>
 </template>

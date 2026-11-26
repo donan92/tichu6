@@ -1091,3 +1091,34 @@ it('shows Small Tichu only before first play and before either declaration', asy
   await wrapper.setProps({ game: { ...game, spectator: true } });
   expect(wrapper.find('button.small-call').exists()).toBe(false);
 });
+
+it('uses the same disclosure component outside and inside gameplay and preserves open state', async () => {
+  const { default: GameRules } =
+    await import('../../src/components/GameRules.vue');
+  const { default: ScoringGuide } =
+    await import('../../src/components/ScoringGuide.vue');
+  const rules = mount(GameRules, {
+    attachTo: document.body,
+    global: { plugins: plugins() },
+  });
+  const score = mount(ScoringGuide, {
+    attachTo: document.body,
+    global: { plugins: plugins() },
+  });
+  wrappers.push(rules, score);
+  const panels = [...rules.findAll('details'), ...score.findAll('details')];
+  expect(panels).toHaveLength(3);
+  for (const panel of panels) {
+    expect(panel.classes()).toContain('guide-panel');
+    expect(panel.find('.guide-content').exists()).toBe(true);
+    expect((panel.element as HTMLDetailsElement).open).toBe(false);
+  }
+  const first = panels[0].element as HTMLDetailsElement;
+  first.open = true;
+  await i18next.changeLanguage('en');
+  await nextTick();
+  expect(rules.find('details').element).toBe(first);
+  expect(first.open).toBe(true);
+  expect(rules.find('summary').text()).toBe(i18next.t('combinations.title'));
+  await i18next.changeLanguage('ko');
+});

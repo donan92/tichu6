@@ -125,13 +125,6 @@ select {
 .controls {
   border-top-color: var(--line);
 }
-.rules,
-.combination-guide {
-  color: var(--muted);
-}
-.combination-guide h2 {
-  color: var(--ink);
-}
 @media (max-width: 850px) {
   .game .table {
     height: 351px;
@@ -316,15 +309,6 @@ select {
 .hand-heading > button:disabled {
   visibility: hidden;
 }
-.combination-guide {
-  border: 1px solid #52677b;
-  border-radius: 8px;
-  padding: 12px;
-}
-.combination-guide summary {
-  cursor: pointer;
-  font-weight: 600;
-}
 .card-corner {
   font-size: 22px;
 }
@@ -345,9 +329,6 @@ select {
     padding: 5px 16px;
     border: 1px solid #647b91;
     border-radius: 6px;
-  }
-  .combination-guide {
-    margin: 16px 0;
   }
 }
 
@@ -372,9 +353,6 @@ select {
   }
   .hand-heading b span {
     font-size: 15px;
-  }
-  .activity:not([open]) summary span {
-    display: none;
   }
 }
 

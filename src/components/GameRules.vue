@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import GuidePanel from './GuidePanel.vue';
 import { useTranslation } from 'i18next-vue';
 const { t } = useTranslation();
 const sections = [
@@ -9,8 +10,7 @@ const sections = [
 ];
 </script>
 <template>
-  <details class="combination-guide guide-panel">
-    <summary>{{ t('combinations.title') }}</summary>
+  <GuidePanel :title="t('combinations.title')">
     <ul>
       <li
         v-for="kind in [
@@ -28,9 +28,8 @@ const sections = [
       </li>
     </ul>
     <p>{{ t('combinations.compare') }}</p>
-  </details>
-  <details class="rules guide-panel">
-    <summary>{{ t('rules.title') }}</summary>
+  </GuidePanel>
+  <GuidePanel :title="t('rules.title')">
     <div class="rule-grid">
       <section v-for="[heading, first, second] in sections" :key="heading">
         <h3>{{ t(`rules.${heading}`) }}</h3>
@@ -38,23 +37,5 @@ const sections = [
         <p>{{ t(`rules.${second}`) }}</p>
       </section>
     </div>
-  </details>
+  </GuidePanel>
 </template>
-
-<style scoped>
-.combination-guide {
-  margin: 24px 0;
-  padding-top: 16px;
-  border-top: 1px solid var(--line);
-}
-.combination-guide summary {
-  font-size: 18px;
-}
-.combination-guide ul {
-  padding-left: 20px;
-  line-height: 1.8;
-}
-.combination-guide p {
-  line-height: 1.6;
-}
-</style>
