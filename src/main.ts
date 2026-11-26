@@ -4,6 +4,7 @@ import I18NextVue from 'i18next-vue';
 import App from './App.vue';
 import { i18next, initializeLanguage } from './localization';
 import './style.css';
+import './styles/typography.css';
 import './styles/cards.css';
 import './styles/table-room.css';
 import './styles/game-guides.css';

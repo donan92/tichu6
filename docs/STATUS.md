@@ -1,5 +1,20 @@
 # Project status / resume point
 
+## v0.8.37 guide typography and special-card centering — release pending
+
+- Shared semantic typography tokens: guide summary 18px, subsection 16px bold,
+  body/list 16px with 1.7 line-height, caption 14px. Removed rule-only 14px
+  paragraphs and scoring-only spacing; all guides inherit GuidePanel rhythm.
+- Dragon/Phoenix keep their existing scale. CSS compensates asymmetric
+  transparent sprite padding using alpha bounds measured in each 384px cell:
+  Dragon x76..333/y33..355, Phoenix x65..313/y38..360.
+- check, 163 unit + 99 UI tests, format:check and build passed.
+  Actual local Chrome at 320/390/1280px confirmed guide body/list 16px,
+  no horizontal page overflow at 320/1280; inspected mobile guide screenshot
+  and a CSS card fixture. No physical iPhone test or production deployment.
+- User approved deployment. v0.8.37 release:check/check, 262 tests,
+  format:check and build passed; Pages verification pending. Backend unchanged.
+
 ## v0.8.28 clear turn chime — deployed
 
 - Uses the exact approved MP3 sample. The local turn alert takes priority over

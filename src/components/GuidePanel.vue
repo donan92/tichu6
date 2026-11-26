@@ -23,7 +23,7 @@ summary {
   min-height: 56px;
   padding: 14px 16px;
   list-style: none;
-  font-size: 16px;
+  font-size: var(--text-section);
   font-weight: 600;
   line-height: 1.5;
   border-radius: inherit;
@@ -53,10 +53,38 @@ summary:focus-visible {
 }
 .guide-content {
   padding: 16px;
-  line-height: 1.7;
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+.guide-content :deep(h3) {
+  margin: 0 0 12px;
+  font-size: var(--text-subheading);
+  font-weight: 700;
+  line-height: 1.5;
+}
+.guide-content :deep(p),
+.guide-content :deep(li) {
+  font-size: var(--text-body);
+  line-height: var(--leading-body);
+}
+.guide-content :deep(p) {
+  margin: 0 0 16px;
+}
+.guide-content :deep(section + section) {
+  margin-top: 24px;
+}
+.guide-content :deep(.rule-grid > section) {
+  margin: 0;
+}
+.guide-content :deep(li + li) {
+  margin-top: 6px;
+}
+.guide-content :deep(small) {
+  font-size: var(--text-caption);
 }
 .guide-content :deep(ul),
 .guide-content :deep(ol) {
+  margin: 0 0 16px;
   padding-left: 20px;
 }
 .guide-content :deep(> :first-child) {

@@ -1,0 +1,8 @@
+/* Semantic text roles shared across guides; card indices scale independently. */
+:root {
+  --text-section: 1.125rem;
+  --text-subheading: 1rem;
+  --text-body: 1rem;
+  --text-caption: 0.875rem;
+  --leading-body: 1.7;
+}

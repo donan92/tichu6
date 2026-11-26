@@ -27,17 +27,3 @@ const sections = [
     </section>
   </GuidePanel>
 </template>
-<style scoped>
-h3 {
-  margin: 20px 0 8px;
-  font-size: 16px;
-}
-ul {
-  margin: 0;
-  padding-left: 20px;
-  line-height: 1.7;
-}
-li + li {
-  margin-top: 6px;
-}
-</style>

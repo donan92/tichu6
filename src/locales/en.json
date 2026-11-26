@@ -429,5 +429,6 @@
   "patches.scoringGuide": "Added a collapsible scoring guide at the bottom of the game screen.",
   "patches.guideSmallCall": "Unified collapsible guides and highlighted Small Tichu with a full-width button shown only when eligible.",
   "patches.crossScreenStyles": "Unified guides across home, lounge and gameplay, with consistent entry buttons and spacing.",
-  "patches.audioOutputRecovery": "Improved sound recovery after returning to the app and made Resume sound always available in sound settings."
+  "patches.audioOutputRecovery": "Improved sound recovery after returning to the app and made Resume sound always available in sound settings.",
+  "patches.guideTypography": "Unified guide typography and centered the Dragon and Phoenix artwork."
 }

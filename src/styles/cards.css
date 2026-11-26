@@ -70,9 +70,14 @@
   transform: translateY(-40%);
 }
 .special-dragon .special-art {
+  /* Center the visible alpha bounds, not the asymmetric sprite-cell padding. */
+  left: 50%;
+  transform: translate(-53.26%, -50.65%);
   background-position: 0 0;
 }
 .special-phoenix .special-art {
+  left: 50%;
+  transform: translate(-49.35%, -51.95%);
   background-position: 100% 0;
 }
 .special-dog .special-art {
