@@ -165,7 +165,7 @@
   "rules.reconnect": "플레이 중 연결이 끊기면 최대 3분 뒤 30초 제한을 적용합니다. 재접속하면 직접 플레이합니다. 대기실·선언·교환 단계는 기존 45초 유예를 적용합니다. 브라우저 데이터를 지우면 참가 키도 사라집니다.",
   "error.invalidNickname": "닉네임은 영문 대소문자와 숫자로 1~8자 입력하세요.",
   "error.roomClosed": "방이 종료되었습니다.",
-  "error.activeGameWatch": "진행 중인 내 게임에 먼저 복귀해 주세요. 다른 방은 관전할 수 있습니다.",
+  "error.activeGameWatch": "다른 방에 들어가려면 먼저 현재 게임을 포기해 주세요.",
   "error.watchOnly": "진행 중인 방은 관전만 가능합니다.",
   "error.seatsFull": "플레이어 6명이 모두 찼습니다. 관전으로 입장해 주세요.",
   "error.payload": "요청 크기를 초과했습니다.",
@@ -176,7 +176,7 @@
   "error.loungeFull": "전체 접속자 30명이 모두 찼습니다. 잠시 후 다시 입장해 주세요.",
   "error.enterFirst": "먼저 대기실에 입장하세요.",
   "error.replaced": "연결이 교체되었습니다.",
-  "error.activeGame": "진행 중인 내 게임에 먼저 복귀해 주세요.",
+  "error.activeGame": "다른 방에 들어가려면 먼저 현재 게임을 포기해 주세요.",
   "error.roomsFull": "방은 최대 5개까지 만들 수 있습니다.",
   "error.invalidRoom": "방과 입장 방식을 확인하세요.",
   "error.spectator": "관전자는 게임에 행동할 수 없습니다.",
@@ -400,5 +400,7 @@
   "audio.resume": "소리 다시 재생",
   "patches.audioResumeAndPass": "패스에 짧은 스침 소리를 추가하고 앱 복귀 시 소리 재생을 개선했습니다.",
   "patches.clearTurnChime": "내 차례가 오면 맑은 알림음이 울립니다.",
-  "patches.diamondContrast": "다이아 숫자와 문양을 밝은 골드 오렌지로 바꿔 하트와 더 쉽게 구분할 수 있습니다."
+  "patches.diamondContrast": "다이아 숫자와 문양을 밝은 골드 오렌지로 바꿔 하트와 더 쉽게 구분할 수 있습니다.",
+  "error.nicknameTaken": "이미 사용 중인 닉네임입니다. 다른 이름을 입력해 주세요.",
+  "patches.uniqueMembership": "닉네임 중복을 방지하고, 다른 방에 들어가려면 진행 중인 게임을 먼저 포기하도록 개선했습니다."
 }

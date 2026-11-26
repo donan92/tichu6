@@ -55,7 +55,7 @@ async function setup() {
   await queue;
   return { hub, sockets, ctx, ready: () => queue };
 }
-async function user(f, i, name = 'Tester') {
+async function user(f, i, name = `User${i}`) {
   const ws = socket();
   f.sockets.push(ws);
   const token = i.toString(16).padStart(64, '0');
@@ -108,7 +108,7 @@ test('simultaneous room creation cannot exceed five and server supplies nonempty
     Array.from({ length: 6 }, (_, i) => user(f, i + 1)),
   );
   await Promise.all(
-    users.map((w) => msg(f.hub, w, { type: 'create', name: 'Star' })),
+    users.map((w, i) => msg(f.hub, w, { type: 'create', name: `Star${i}` })),
   );
   assert.equal(Object.keys(f.hub.data.rooms).length, 5);
   for (const r of Object.values(f.hub.data.rooms))
@@ -127,7 +127,7 @@ test('spectators never receive hands, cannot act or spoof a seat, and count glob
       type: 'join',
       roomId: id,
       watch: false,
-      name: 'Friend',
+      name: `Friend${i}`,
     });
   await msg(f.hub, users[6], {
     type: 'join',
@@ -955,4 +955,95 @@ test('manual lobby bots are host-controlled, bounded, replaceable in seat order 
   await f.hub.alarm();
   assert.equal(r.state.phase, 'grand');
   assert.equal(r.members.filter((m) => m?.bot).length, 4);
+});
+
+test('nickname admission is case-insensitive and serialized across concurrent arrivals', async () => {
+  const f = await setup();
+  const arrivals = await Promise.all([
+    user(f, 801, 'Alice'),
+    user(f, 802, 'aLICE'),
+  ]);
+  assert.equal(arrivals.filter((ws) => last(ws, 'welcome')).length, 1);
+  const rejected = arrivals.find((ws) => last(ws, 'error'));
+  assert.equal(last(rejected, 'error').code, 'error.nicknameTaken');
+});
+
+test('room nickname changes reject collisions before creating or mutating a room', async () => {
+  const f = await setup();
+  const a = await user(f, 801, 'Alice');
+  const b = await user(f, 802, 'Bob');
+  await msg(f.hub, a, { type: 'create', name: 'Alice' });
+  const id = a.a.room;
+  const before = structuredClone(f.hub.data.rooms);
+  await msg(f.hub, b, { type: 'create', name: 'ALICE' });
+  assert.equal(last(b, 'error').code, 'error.nicknameTaken');
+  assert.deepEqual(f.hub.data.rooms, before);
+  await msg(f.hub, b, { type: 'join', roomId: id, watch: true, name: 'alice' });
+  assert.equal(last(b, 'error').code, 'error.nicknameTaken');
+  assert.deepEqual(f.hub.data.rooms, before);
+  assert.equal(b.a.room, null);
+});
+
+test('disconnected members reserve nicknames and reconnect to their room without a room hint', async () => {
+  const f = await setup();
+  const a = await user(f, 801, 'Alice');
+  await msg(f.hub, a, { type: 'create', name: 'Alice' });
+  const id = a.a.room;
+  a.close(1000);
+  const duplicate = await user(f, 802, 'alice');
+  assert.equal(last(duplicate, 'error').code, 'error.nicknameTaken');
+  const restored = await user(f, 801, 'Alice');
+  assert.ok(last(restored, 'welcome'));
+  assert.equal(restored.a.room, id);
+});
+
+test('active membership blocks other rooms including spectators and leave until forfeit', async () => {
+  const f = await setup();
+  const a = await user(f, 801, 'Alice');
+  const b = await user(f, 802, 'Bob');
+  await msg(f.hub, a, { type: 'create', name: 'Alice' });
+  await msg(f.hub, b, { type: 'create', name: 'Bob' });
+  const first = a.a.room,
+    second = b.a.room;
+  await msg(f.hub, a, {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  for (const action of [
+    { type: 'join', roomId: second, watch: false, name: 'Alice' },
+    { type: 'join', roomId: second, watch: true, name: 'Alice' },
+    { type: 'create', name: 'Alice' },
+    { type: 'leave' },
+  ]) {
+    await msg(f.hub, a, action);
+    assert.equal(last(a, 'error').code, 'error.activeGame');
+    assert.equal(a.a.room, first);
+  }
+  a.close(1000);
+  const restored = socket();
+  f.sockets.push(restored);
+  await msg(f.hub, restored, {
+    type: 'hello',
+    token: (801).toString(16).padStart(64, '0'),
+    name: 'Alice',
+    roomId: second,
+    watch: true,
+  });
+  assert.equal(restored.a.room, first);
+  assert.equal(restored.a.watch, false);
+  await msg(f.hub, restored, { type: 'forfeit' });
+  await msg(f.hub, restored, {
+    type: 'join',
+    roomId: second,
+    watch: false,
+    name: 'Alice',
+  });
+  assert.equal(restored.a.room, second);
+  assert.equal(
+    Object.values(f.hub.data.rooms).filter((room) =>
+      room.members.some((m) => m?.hash === restored.a.hash),
+    ).length,
+    1,
+  );
 });

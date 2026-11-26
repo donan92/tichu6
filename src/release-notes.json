@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.30",
+    "summary": "patches.uniqueMembership"
+  },
+  {
     "version": "0.8.29",
     "summary": "patches.diamondContrast"
   },

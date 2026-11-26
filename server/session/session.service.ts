@@ -55,6 +55,7 @@ export class SessionService {
       .find((s) => this.connections.attachment(s).hash === hash);
     if (!existing && this.connections.users().length >= MAX_IDENTITIES)
       throw new AppError('error.loungeFull');
+    this.rooms.assertNameAvailable(hash, name);
     const old = existing ? this.connections.attachment(existing) : null;
     if (existing) {
       existing.serializeAttachment({ created: now });
@@ -70,7 +71,14 @@ export class SessionService {
       watch: false,
       trainingConsent: msg.trainingConsent === true,
     });
-    const resume = typeof msg.roomId === 'string' ? msg.roomId : old?.room;
+    const membership =
+      this.rooms.activeMembership(hash) ??
+      Object.values(this.repository.data.rooms).find((room) =>
+        room.members.some((member) => member?.hash === hash),
+      );
+    const resume =
+      membership?.id ??
+      (typeof msg.roomId === 'string' ? msg.roomId : old?.room);
     if (resume && this.repository.data.rooms[resume]) {
       const r = this.repository.data.rooms[resume];
       if (r.members.some((m) => m?.hash === hash) || msg.watch === true)

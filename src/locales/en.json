@@ -165,7 +165,7 @@
   "rules.reconnect": "During play, disconnected seats wait up to 3 minutes before the 30-second turn limit. Reconnect to play yourself. Lobby, declarations and exchange keep the 45-second grace. Clearing browser data removes your reconnection key.",
   "error.invalidNickname": "Use 1–8 letters (A–Z, a–z) or digits (0–9) for your nickname.",
   "error.roomClosed": "This room has closed.",
-  "error.activeGameWatch": "Rejoin your active game first. You can watch other rooms.",
+  "error.activeGameWatch": "Forfeit your current game before entering another room.",
   "error.watchOnly": "Games in progress are open to spectators only.",
   "error.seatsFull": "All six seats are taken. Join as a spectator.",
   "error.payload": "Request is too large.",
@@ -176,7 +176,7 @@
   "error.loungeFull": "All 30 places are taken. Please try again shortly.",
   "error.enterFirst": "Enter the lounge first.",
   "error.replaced": "This connection has been replaced.",
-  "error.activeGame": "Rejoin your active game first.",
+  "error.activeGame": "Forfeit your current game before entering another room.",
   "error.roomsFull": "Only five rooms can be open at once.",
   "error.invalidRoom": "Check the room and join mode.",
   "error.spectator": "Spectators cannot play.",
@@ -400,5 +400,7 @@
   "audio.resume": "Resume sound",
   "patches.audioResumeAndPass": "Added a soft pass swoosh and improved audio recovery after switching apps.",
   "patches.clearTurnChime": "A clear chime announces your turn.",
-  "patches.diamondContrast": "Brighter golden-orange diamond ranks and symbols are easier to distinguish from hearts."
+  "patches.diamondContrast": "Brighter golden-orange diamond ranks and symbols are easier to distinguish from hearts.",
+  "error.nicknameTaken": "This nickname is already in use. Please choose another name.",
+  "patches.uniqueMembership": "Nicknames must be unique, and joining another room requires forfeiting your active game first."
 }

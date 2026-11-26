@@ -1005,3 +1005,14 @@ Release verification:
 ## v0.8.29 deployment verified
 
 - Main9865290 deployed. Pages45767176849 and Verify45767177068 succeeded, including local Worker, idle and game-flow integration checks. Production HTML/JS/CSS match the local v0.8.29 build byte-for-byte; health ok/protocol6. This frontend-only release keeps the existing Worker implementation. Approved golden-orange diamond ink is live; actual phone hardware appearance remains unverified.
+
+## Unique nicknames and single active room (not deployed)
+
+- Server checks nickname uniqueness case-insensitively across connected identities and persisted human room members, excluding the same authenticated identity. Applies before hello replacement, create or join mutation, within the existing Durable Object gate. Offline members reserve their names while their membership exists; bots do not reserve user nicknames.
+- Active game membership now blocks joining or watching another room, creating a room and plain leave. Explicit forfeit remains the exit path. Hello restores authoritative membership even with missing/foreign room hints, preferring active games; same-token reconnect remains supported. Waiting-room moves still remove the previous waiting membership.
+- Added admission-race, rename/create atomicity, offline name reservation, reconnect and forfeit-before-switch regressions. Updated fixtures to distinct names and added real WebSocket nickname/other-room-watch rejection checks. Check,251 tests (159 unit +92 UI),format and build passed. Fresh local Worker integration passed including 30/31 identities, 5/6 room race, privacy, bots, reconnect and forfeit. One earlier run was interrupted by development server reload; final unchanged-code run passed. Local Worker stopped. No version bump, commit or production deployment yet; both Worker and frontend need release together for localized errors.
+- Identity is the existing browser token, not a verified account/person: a separate browser/profile with a different token and nickname cannot be identified as the same human by this change.
+
+## v0.8.30 release preparation
+
+- Includes server-enforced unique nicknames and single active room, automatic membership recovery, localized errors and release notes. Check,251 tests,format and build passed again with release metadata; prior fresh local Worker integration passed for this implementation. Worker/Pages deployment verification pending.

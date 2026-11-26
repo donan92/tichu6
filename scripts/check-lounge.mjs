@@ -5,6 +5,7 @@ const base = process.env.TEST_API || 'http://localhost:8787';
 if (!/^http:\/\/(localhost|127\.0\.0\.1):/.test(base))
   throw new Error('Capacity test is local-only.');
 const all = [];
+let nextName = 0;
 async function until(fn, ms = 10000) {
   const end = Date.now() + ms;
   while (!fn()) {
@@ -17,7 +18,8 @@ async function user(token = randomBytes(32).toString('hex'), extra = {}) {
     origin: 'http://localhost:5173',
   });
   all.push(ws);
-  const c = { ws, token, messages: [], state: null, directory: null };
+  const name = `Check${++nextName}`;
+  const c = { ws, token, name, messages: [], state: null, directory: null };
   ws.on('message', (raw) => {
     const m = JSON.parse(raw);
     c.messages.push(m);
@@ -28,7 +30,7 @@ async function user(token = randomBytes(32).toString('hex'), extra = {}) {
     ws.once('open', r);
     ws.once('error', j);
   });
-  ws.send(JSON.stringify({ type: 'hello', token, name: 'Check', ...extra }));
+  ws.send(JSON.stringify({ type: 'hello', token, name, ...extra }));
   await until(() =>
     c.messages.some((m) => ['welcome', 'error'].includes(m.type)),
   );
@@ -61,7 +63,7 @@ try {
     admitted
       .slice(0, 6)
       .map((c) =>
-        request(c, { type: 'create', name: 'Test' }, (messages) =>
+        request(c, { type: 'create', name: c.name }, (messages) =>
           messages.some(
             (message) =>
               message.type === 'error' ||
@@ -87,7 +89,7 @@ try {
         type: 'join',
         roomId: id,
         watch: false,
-        name: 'Player',
+        name: c.name,
       },
       () => c.state?.roomId === id && c.state.seat >= 0 && !c.state.spectator,
     );
@@ -131,6 +133,14 @@ try {
   );
   assert.ok(denied.some((m) => m.type === 'error'));
   assert.equal(owner.state.revision, 1);
+  const duplicateName = await request(
+    spectator,
+    { type: 'join', roomId: id, watch: true, name: owner.name.toLowerCase() },
+    (messages) => messages.some((message) => message.type === 'error'),
+  );
+  assert.ok(
+    duplicateName.some((message) => message.code === 'error.nicknameTaken'),
+  );
   const original = owner.state.hand;
   const originalSeat = owner.state.seat;
   owner.ws.close();
@@ -197,6 +207,20 @@ try {
     () => spectator.state?.roomId === solo.state.roomId,
   );
   assert.equal('exchangeReview' in spectator.state, false);
+  const blockedWatch = await request(
+    restored,
+    {
+      type: 'join',
+      roomId: solo.state.roomId,
+      watch: true,
+      name: restored.name,
+    },
+    (messages) => messages.some((message) => message.type === 'error'),
+  );
+  assert.ok(
+    blockedWatch.some((message) => message.code === 'error.activeGame'),
+  );
+  assert.equal(restored.state.roomId, id);
   await request(restored, { type: 'forfeit' }, (messages) =>
     messages.some((m) => m.type === 'hall'),
   );

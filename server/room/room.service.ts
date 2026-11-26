@@ -22,6 +22,22 @@ export class RoomService {
     this.repository = repository;
     this.connections = connections;
   }
+  assertNameAvailable(hash: string, name: string) {
+    const key = name.toLowerCase();
+    const connected = this.connections.users().some((ws) => {
+      const a = this.connections.attachment(ws);
+      return a.hash !== hash && a.name?.toLowerCase() === key;
+    });
+    const reserved = Object.values(this.repository.data.rooms).some((room) =>
+      room.members.some(
+        (member, seat) =>
+          member?.hash &&
+          member.hash !== hash &&
+          room.state.names[seat]?.toLowerCase() === key,
+      ),
+    );
+    if (connected || reserved) throw new AppError('error.nicknameTaken');
+  }
   activeMembership(hash: string) {
     return Object.values(this.repository.data.rooms).find(
       (r) =>
@@ -45,6 +61,9 @@ export class RoomService {
     const a = this.connections.authenticated(ws),
       r = this.repository.data.rooms[id];
     if (!r) throw new AppError('error.roomClosed');
+    this.assertNameAvailable(a.hash, name);
+    const active = this.activeMembership(a.hash);
+    if (active && active.id !== id) throw new AppError('error.activeGame');
     const own = r.members.findIndex((m) => m?.hash === a.hash);
     if (own >= 0) {
       watch = false;
@@ -53,9 +72,6 @@ export class RoomService {
       r.members[own]!.trainingConsent = a.trainingConsent === true;
     }
     if (!watch && own < 0) {
-      const active = this.activeMembership(a.hash);
-      if (active && active.id !== id)
-        throw new AppError('error.activeGameWatch');
       if (r.state.phase !== 'lobby') throw new AppError('error.watchOnly');
       // Human arrivals replace the first bot in displayed seat order.
       const bot =
@@ -84,6 +100,7 @@ export class RoomService {
   create(ws: WebSocket, input: unknown) {
     const a = this.connections.authenticated(ws);
     const name = nickname(input);
+    this.assertNameAvailable(a.hash, name);
     if (this.activeMembership(a.hash)) throw new AppError('error.activeGame');
     if (Object.keys(this.repository.data.rooms).length >= MAX_ROOMS)
       throw new AppError('error.roomsFull');
@@ -103,6 +120,7 @@ export class RoomService {
   }
   leave(ws: WebSocket) {
     const a = this.connections.authenticated(ws);
+    if (this.activeMembership(a.hash)) throw new AppError('error.activeGame');
     this.leaveWaiting(a.hash, null);
     a.room = null;
     a.watch = false;
