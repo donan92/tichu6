@@ -1120,3 +1120,8 @@ Release verification:
 ## v0.8.36 release preparation
 
 - Version and bilingual release note updated for one-time foreground gesture output rebuild and always-available Resume sound. Check,262 tests,format and build passed again. Frontend-only; existing Worker retained. Production deployment verification pending; physical iPhone listening still required.
+
+## v0.8.36 deployment verified
+
+- Main519c5da deployed. Pages45799759477 and Verify45799760274 succeeded including Worker, idle and game-flow integration. Live HTML/JS/CSS match local v0.8.36 byte-for-byte. Audio interruption recovery and always-available Resume sound are live.
+- Frontend-only; existing v0.8.32 Worker implementation retained; health ok/protocol6. No production room changes. Device listening remains unverified: user should confirm iPhone app/tab return and first-tap recovery, with explicit sound-settings restart available.
