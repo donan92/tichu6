@@ -1073,3 +1073,8 @@ Release verification:
 ## v0.8.33 release preparation
 
 - Version and bilingual note updated for the bottom-of-game scoring guide. Check,258 tests,format and build passed again. Frontend-only; existing v0.8.32 Worker implementation retained. Deployment verification pending.
+
+## v0.8.33 deployment verified
+
+- Mainaa7b572 deployed. Pages45784914592 and Verify45784914312 succeeded, including local Worker, idle and flow integration. Production HTML/JS/CSS match the local v0.8.33 build byte-for-byte. Scoring guide is live at the bottom of gameplay in both locales.
+- Frontend-only release; server remains v0.8.32 implementation (Worker6587f7b6-8c1f-4d65-a643-7afc7deaa276); production health ok/protocol6. No production room changes.
