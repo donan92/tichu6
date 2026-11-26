@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.37 guide typography and special-card centering — release pending
+## v0.8.37 guide typography and special-card centering — deployed
 
 - Shared semantic typography tokens: guide summary 18px, subsection 16px bold,
   body/list 16px with 1.7 line-height, caption 14px. Removed rule-only 14px
@@ -11,9 +11,12 @@
 - check, 163 unit + 99 UI tests, format:check and build passed.
   Actual local Chrome at 320/390/1280px confirmed guide body/list 16px,
   no horizontal page overflow at 320/1280; inspected mobile guide screenshot
-  and a CSS card fixture. No physical iPhone test or production deployment.
-- User approved deployment. v0.8.37 release:check/check, 262 tests,
-  format:check and build passed; Pages verification pending. Backend unchanged.
+  and a CSS card fixture. No physical iPhone test.
+- Commit 5ce88ae released to main. v0.8.37 release:check/check, 262 tests,
+  format:check and build passed. Pages 45806428324 and Verify 45806429264
+  succeeded, including local Worker/idle/flow integration. Production HTML,
+  JS and CSS byte-match the tested build. Worker health ok/protocol 6;
+  frontend-only release, backend unchanged.
 
 ## v0.8.28 clear turn chime — deployed
 
