@@ -1088,3 +1088,8 @@ Release verification:
 ## v0.8.34 release preparation
 
 - Updated version and bilingual release note for unified game disclosures and prominent eligible-only Small Tichu action. Check,259 tests,format and build passed again. Frontend-only; existing Worker implementation retained. Deployment verification pending.
+
+## v0.8.34 deployment verified
+
+- Mainc91b8e4 deployed. Pages45787399989 and Verify45787401623 succeeded including local Worker, idle and game-flow checks. Live production HTML/JS/CSS matched local v0.8.34 byte-for-byte. Unified disclosure panels and eligible-only green Small Tichu button are live.
+- Frontend-only; existing Worker v0.8.32 implementation retained and health ok/protocol6. No production room state changes. Physical mobile interaction remains unverified; isolated mobile/desktop style previews and eligibility regression passed.
