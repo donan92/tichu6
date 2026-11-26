@@ -1109,3 +1109,14 @@ Release verification:
 
 - Maind0420f9 deployed. Pages45790272023 and Verify45790272823 succeeded, including local Worker, idle and game-flow integration. Live production HTML/JS/CSS matched local v0.8.35 byte-for-byte. Shared cross-screen guide panels and entry/spacing fixes are live.
 - Frontend-only; existing v0.8.32 Worker implementation retained; production health ok/protocol6. No production room changes. Prior local actual-app screenshots cover320/390/1280px; physical phone validation remains outstanding.
+
+## iPhone silent output after return (not deployed)
+
+- User confirmed both music/effects silent on iPhone after app/tab return; toggling settings restores them. Previous recovery trusted running state and could retain a silent context. Exact device root cause remains unconfirmed.
+- Mark interruption/background transitions and rebuild output once on next trusted gesture even if automatic resume reports running. Normal subsequent taps reuse context; automatic recovery reapplies saved gain settings. Always expose explicit Resume sound for supported browsers and force context reconstruction without changing preferences.
+- Added regression for successful-looking automatic resume followed by one-time gesture recreation and both music/effects start, repeated taps avoiding more recreations, and explicit restart preserving disabled preferences. Updated modal test to require retry even when needsResume is false.
+- Check,262 tests (163 unit +99 UI),format and build passed. No physical iPhone listening test and no production deployment/version bump. Server unchanged.
+
+## v0.8.36 release preparation
+
+- Version and bilingual release note updated for one-time foreground gesture output rebuild and always-available Resume sound. Check,262 tests,format and build passed again. Frontend-only; existing Worker retained. Production deployment verification pending; physical iPhone listening still required.

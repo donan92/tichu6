@@ -64,6 +64,9 @@ export const useAudioStore = defineStore('audio', () => {
   let resumeEpoch = 0;
   let suspending: Promise<void> = Promise.resolve();
   let pendingSuspend: AudioContext | undefined;
+  // Safari may report running after interruption while the output is still silent.
+  // Rebuild once on the next trusted gesture, not on every ordinary game tap.
+  let refreshAfterInterruption = false;
   const musicCache = new Map<MusicTrack, Promise<AudioBuffer>>();
   const effectCache = new Map<Effect, Promise<AudioBuffer>>();
   const audible = () =>
@@ -169,12 +172,12 @@ export const useAudioStore = defineStore('audio', () => {
     if (!available.value || disposed || document.hidden) return;
     const attempt = ++resumeEpoch;
     try {
-      // A fresh context created by a real tap can recover Safari's stuck
-      // interrupted context. Never discard a healthy, already-running context.
+      // State alone cannot prove that Safari's output recovered after app switching.
       if (
         ctx &&
         userGesture &&
-        (pendingSuspend === ctx ||
+        (refreshAfterInterruption ||
+          pendingSuspend === ctx ||
           (ctx.state !== 'running' && (needsResume.value || failed.value)))
       ) {
         const old = ctx;
@@ -188,6 +191,7 @@ export const useAudioStore = defineStore('audio', () => {
       }
       if (!ctx) {
         ctx = new AudioContext({ latencyHint: 'playback' });
+        refreshAfterInterruption = false;
         musicGain = ctx.createGain();
         effectGain = ctx.createGain();
         musicGain.connect(ctx.destination);
@@ -196,6 +200,7 @@ export const useAudioStore = defineStore('audio', () => {
         owned.onstatechange = () => {
           if (disposed || ctx !== owned) return;
           if (owned.state !== 'running') {
+            refreshAfterInterruption = unlocked.value;
             stopMusic();
             stopEffect();
             needsResume.value = unlocked.value;
@@ -219,9 +224,17 @@ export const useAudioStore = defineStore('audio', () => {
         return;
       if (owned.state !== 'running')
         throw new Error('Audio remains interrupted');
+      const restoring = needsResume.value || !userGesture;
       unlocked.value = true;
       needsResume.value = false;
       failed.value = false;
+      // Reapply both channel gains just as toggling settings does, but preserve
+      // preferences. Do not disturb normal ducking on every unrelated tap.
+      if (restoring) {
+        musicGain?.gain.cancelScheduledValues(owned.currentTime);
+        effectGain?.gain.cancelScheduledValues(owned.currentTime);
+        gains();
+      }
       if (!music) void syncMusic();
     } catch {
       if (attempt === resumeEpoch && !disposed) {
@@ -229,6 +242,10 @@ export const useAudioStore = defineStore('audio', () => {
         needsResume.value = true;
       }
     }
+  }
+  function restart() {
+    refreshAfterInterruption = true;
+    return unlock(true);
   }
   async function playEffect(key: Effect) {
     if (!audible() || !settings.effects || settings.effectsVolume === 0) return;
@@ -264,6 +281,7 @@ export const useAudioStore = defineStore('audio', () => {
     }
   }
   function suspend() {
+    if (ctx && unlocked.value) refreshAfterInterruption = true;
     resumeEpoch++;
     needsResume.value = unlocked.value;
     stopMusic();
@@ -318,6 +336,7 @@ export const useAudioStore = defineStore('audio', () => {
     needsResume,
     track,
     unlock,
+    restart,
     playEffect,
     suspend,
     recover,

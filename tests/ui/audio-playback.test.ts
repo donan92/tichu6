@@ -265,3 +265,51 @@ it('a stuck suspend times out and can recover with a tap without changing saved 
     17,
   );
 });
+
+it('rebuilds once on the first tap after returning even if resume reports running', async () => {
+  vi.mocked(loadAudioFile).mockResolvedValue({} as AudioBuffer);
+  const audio = useAudioStore();
+  audio.settings.musicVolume = 17;
+  audio.settings.effectsVolume = 31;
+  await audio.unlock();
+  await flushPromises();
+  const previous = Context.instances[0];
+  audio.suspend();
+  await flushPromises();
+  audio.recover();
+  await flushPromises();
+  expect(previous.state).toBe('running');
+  expect(audio.needsResume).toBe(false);
+  const oldSource = sources.at(-1)!;
+  await audio.unlock();
+  await flushPromises();
+  expect(Context.instances).toHaveLength(2);
+  expect(previous.state).toBe('closed');
+  expect(oldSource.stop).toHaveBeenCalled();
+  expect(sources.at(-1)!.start).toHaveBeenCalled();
+  await audio.playEffect('card');
+  expect(sources.at(-1)!.start).toHaveBeenCalled();
+  await audio.unlock();
+  await audio.unlock();
+  expect(Context.instances).toHaveLength(2);
+  expect(audio.settings.musicVolume).toBe(17);
+  expect(audio.settings.effectsVolume).toBe(31);
+});
+
+it('explicit restart replaces a running context and respects disabled sound preferences', async () => {
+  vi.mocked(loadAudioFile).mockResolvedValue({} as AudioBuffer);
+  const audio = useAudioStore();
+  audio.settings.music = false;
+  audio.settings.effects = false;
+  await nextTick();
+  await audio.unlock();
+  const first = Context.instances[0];
+  await audio.restart();
+  await flushPromises();
+  expect(Context.instances).toHaveLength(2);
+  expect(first.state).toBe('closed');
+  expect(audio.settings.music).toBe(false);
+  expect(audio.settings.effects).toBe(false);
+  await audio.playEffect('card');
+  expect(sources).toHaveLength(0);
+});

@@ -192,11 +192,12 @@ it('prioritizes our turn after a pass, retaining the swoosh for other players an
   expect(effectForTransition(null, after)).toBeNull();
 });
 
-it('offers an explicit retry after Safari interrupts playback', async () => {
+it('offers explicit output restart even when the browser reports no interruption', async () => {
   const audio = useAudioStore();
   audio.available = true;
   audio.needsResume = true;
   const unlock = vi.spyOn(audio, 'unlock').mockResolvedValue();
+  const restart = vi.spyOn(audio, 'restart').mockResolvedValue();
   wrapper = mount(SoundSettings, {
     attachTo: document.body,
     global: { plugins: [pinia, [I18NextVue, { i18next }]] },
@@ -207,10 +208,11 @@ it('offers an explicit retry after Safari interrupts playback', async () => {
   ].find((b) => b.textContent === 'Resume sound')!;
   expect(retry).toBeTruthy();
   retry.click();
-  expect(unlock).toHaveBeenCalledTimes(2);
+  expect(unlock).toHaveBeenCalledTimes(1);
+  expect(restart).toHaveBeenCalledTimes(1);
   audio.needsResume = false;
   await nextTick();
-  expect(document.querySelector('.sound-dialog')?.textContent).not.toContain(
+  expect(document.querySelector('.sound-dialog')?.textContent).toContain(
     'Resume sound',
   );
 });

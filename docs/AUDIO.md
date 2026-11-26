@@ -64,3 +64,19 @@ Automatic recovery is attempted but cannot bypass Safari autoplay policy.
 Pass cues use a short paper swoosh and take priority over the next-turn chime.
 
 Foreground recovery tracks unfinished background suspension. A trusted tap can replace that context before a late suspend silences playback again; stale callbacks cannot affect the replacement. Automatic suspension/resume waits are bounded, and recovery preserves saved preferences. Mobile hardware verification is still required for browser-specific interruptions.
+
+## Silent running context follow-up
+
+The user reported iPhone music and effects stayed silent after app/tab return,
+but toggling sound settings restored them. This is a diagnostic clue, not proof
+of a specific iOS defect. A historical WebKit report documents a running context
+with stalled output after visibility recovery:
+https://bugs.webkit.org/show_bug.cgi?id=202846 .
+
+After background suspension or a reported interruption, automatic recovery still
+attempts resume and reapplies both saved gain levels. The next trusted gesture
+rebuilds the audio context once even if it reports running, avoiding reliance on
+state alone. Further normal taps reuse that context. Explicit Resume sound is
+always available when Web Audio is supported and forces reconstruction; muted
+preferences and stored volumes remain unchanged. Device listening verification
+is still required; mocks establish control flow, not speaker output.

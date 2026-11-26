@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.36",
+    "summary": "patches.audioOutputRecovery"
+  },
+  {
     "version": "0.8.35",
     "summary": "patches.crossScreenStyles"
   },
