@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.38 empty room expiry — release pending
+## v0.8.38 empty room expiry — deployed
 
 - Persist emptySince when the last human player disconnects. Bots and spectators
   do not count; progress does not extend the ten-minute empty-room deadline.
@@ -9,8 +9,13 @@
   and returns spectators to the lounge; existing 30-minute stalled-room cap remains.
   Older stored rooms get a baseline on first presence refresh, not immediate deletion.
 - 165 unit + 99 UI tests passed, including exact expiry boundary, spectator/bot
-  exclusion, restored persistence and reconnect/reset. Local Worker checks and
-  deployment verification pending.
+  exclusion, restored persistence and reconnect/reset. check, format and build
+  passed; local Worker idle/flow passed.
+- Main a7cd951 released. Worker ec461e0c-536c-4b5f-bd76-470ad8566407
+  deployed successfully; health ok/protocol6. Pages 45808945068 and Verify
+  45808945181 succeeded. Live HTML/JS/CSS match v0.8.38 build.
+  No production clock manipulation or forced deletion; ten-minute expiry was
+  verified locally, not by waiting on an occupied production room.
 
 ## v0.8.37 guide typography and special-card centering — deployed
 
