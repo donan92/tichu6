@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.41 music and opening-turn changes — release pending
+## v0.8.41 music and opening-turn changes — deployed
 
 - User approved wall-clock modulo playback. Independent sessionStorage anchors
   for lobby/game survive reloads. Music starts at elapsed seconds modulo decoded
@@ -10,7 +10,12 @@
   wrap, mute/unmute, independent tracks, explicit output restart, store recreation
   (reload), future timestamps and blocked storage. Actual iPhone listening not
   verified. Includes pending opening-minute and timer placement changes below;
-  v0.8.41 release checks passed; user approved deployment.
+  v0.8.41 release checks passed; user-approved deployment completed.
+- Main d432d0f released. Worker 25af2250-82f2-4f27-8e51-0c48641aada9
+  deployed; health ok/protocol6. Pages 45841362726 and Verify 45841364414
+  succeeded including local Worker/idle/flow integration. Production HTML, JS
+  and CSS byte-match the tested v0.8.41 build. Actual iPhone listening remains
+  unverified. No live-room mutation for testing.
 
 ## Turn clock placement and opening minute — included in v0.8.41
 
@@ -23,7 +28,7 @@
 - check, 166 unit + 102 UI tests, format and build passed; local Worker flow
   passed. Tests cover initial minute, restore stability, later ordinary turns
   and DOM clock placement. Chrome fixtures at 390/1024px show the clock above
-  the turn message without overflow. No physical-phone test or deployment.
+  the turn message without overflow. No physical-phone test; deployed in v0.8.41.
 
 ## v0.8.40 tablet action width — deployed
 
