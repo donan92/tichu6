@@ -5,10 +5,9 @@ defineProps<{ game: RoundView }>();
 const { t, message } = useText();
 </script>
 <template>
-  <details class="activity">
+  <details class="activity guide-panel">
     <summary>
       {{ t('play.currentTrick') }}
-      <span>{{ message(game.log.at(-1) ?? '') }}</span>
     </summary>
     <ol>
       <li v-for="(entry, index) in game.log" :key="index">
@@ -25,7 +24,7 @@ const { t, message } = useText();
     <details
       v-for="trick in game.trickHistory"
       :key="`${trick.round}-${trick.trick}`"
-      class="activity"
+      class="activity guide-panel"
     >
       <summary>
         {{ t('play.trickLabel', { round: trick.round, trick: trick.trick }) }}

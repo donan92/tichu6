@@ -1078,3 +1078,13 @@ Release verification:
 
 - Mainaa7b572 deployed. Pages45784914592 and Verify45784914312 succeeded, including local Worker, idle and flow integration. Production HTML/JS/CSS match the local v0.8.33 build byte-for-byte. Scoring guide is live at the bottom of gameplay in both locales.
 - Frontend-only release; server remains v0.8.32 implementation (Worker6587f7b6-8c1f-4d65-a643-7afc7deaa276); production health ok/protocol6. No production room changes.
+
+## Unified guide panels and Small Tichu action (not deployed)
+
+- Added shared game-guides.css treatment to combinations, rules, current/match trick history and scoring disclosures: same border/background/radius,16px heading,56px minimum row,spacing,chevron and keyboard focus styling. Removed last-log summary preview so collapsed history matches other panels.
+- Small Tichu uses a full-width52px green action matching Play dimensions; positioned below primary action. Both exchange/play controls hide it after first play or any existing declaration; spectators have no action. Temporary request locks still disable rather than flicker the eligible action away.
+- Check,259 tests (163 unit +96 UI),format and build passed. Added eligibility regression covering first play,both declaration values,exchange and spectator. Isolated shared-CSS Korean previews inspected at390px and1000px content widths; not full live-game or physical phone validation. No version bump or deployment.
+
+## v0.8.34 release preparation
+
+- Updated version and bilingual release note for unified game disclosures and prominent eligible-only Small Tichu action. Check,259 tests,format and build passed again. Frontend-only; existing Worker implementation retained. Deployment verification pending.

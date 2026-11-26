@@ -30,6 +30,14 @@ const combo = computed(() =>
   classify(chosen.value, props.game.top, Number(phoenixRank.value) || null),
 );
 const locked = computed(() => session.pending || props.game.paused === true);
+const canDeclareSmall = computed(
+  () =>
+    !props.game.spectator &&
+    session.seat >= 0 &&
+    ['exchange', 'play', 'trick'].includes(props.game.phase) &&
+    !props.game.played[session.seat] &&
+    !props.game.calls[session.seat],
+);
 const dragon = computed(() => props.game.top?.cards[0]?.special === 'dragon');
 const collecting = computed(
   () => props.game.phase === 'trick' && props.game.last === session.seat,
@@ -408,8 +416,9 @@ watch(
           {{ t('play.exchangeReselect') }}
         </button>
         <button
-          class="quiet"
-          :disabled="locked || !!game.calls[session.seat]"
+          v-if="canDeclareSmall"
+          class="small-call"
+          :disabled="locked"
           @click="requestCall(100, $event)"
         >
           {{ t('play.tichu') }}</button><button
@@ -439,10 +448,9 @@ watch(
         </select></label
       >
       <button
-        class="quiet"
-        :disabled="
-          locked || game.played[session.seat] || !!game.calls[session.seat]
-        "
+        v-if="canDeclareSmall"
+        class="small-call"
+        :disabled="locked"
         @click="requestCall(100, $event)"
       >
         {{ t('play.tichuShort') }}

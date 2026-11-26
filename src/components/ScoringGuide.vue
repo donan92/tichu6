@@ -15,7 +15,7 @@ const sections = [
 ];
 </script>
 <template>
-  <details class="scoring-guide">
+  <details class="scoring-guide guide-panel">
     <summary>{{ t('scoringGuide.title') }}</summary>
     <section v-for="section in sections" :key="section.title">
       <h3>{{ t(`scoringGuide.${section.title}`) }}</h3>

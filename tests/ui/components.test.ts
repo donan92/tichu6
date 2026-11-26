@@ -1061,3 +1061,33 @@ it('cancels server Dog selection before opening the Mahjong wish dialog', async 
   expect(document.querySelector('.special-choices.ranks')).not.toBeNull();
   expect(submit).not.toHaveBeenCalledWith({ type: 'play', ids: ['dog'] });
 });
+
+it('shows Small Tichu only before first play and before either declaration', async () => {
+  const session = useSessionStore();
+  const game = round();
+  game.phase = 'play';
+  game.turn = 1;
+  game.played[0] = false;
+  game.calls[0] = 0;
+  session.game = game;
+  const wrapper = mount(GameControls, {
+    props: { game },
+    global: { plugins: plugins() },
+  });
+  wrappers.push(wrapper);
+  expect(wrapper.find('button.small-call').exists()).toBe(true);
+  await wrapper.setProps({
+    game: { ...game, played: [true, ...game.played.slice(1)] },
+  });
+  expect(wrapper.find('button.small-call').exists()).toBe(false);
+  for (const call of [100, 200]) {
+    await wrapper.setProps({
+      game: { ...game, calls: [call, ...game.calls.slice(1)] },
+    });
+    expect(wrapper.find('button.small-call').exists()).toBe(false);
+  }
+  await wrapper.setProps({ game: { ...game, phase: 'exchange' } });
+  expect(wrapper.find('button.small-call').exists()).toBe(true);
+  await wrapper.setProps({ game: { ...game, spectator: true } });
+  expect(wrapper.find('button.small-call').exists()).toBe(false);
+});

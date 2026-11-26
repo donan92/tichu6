@@ -1,0 +1,70 @@
+/* One disclosure treatment across combinations, rules, history and scoring. */
+.game details.guide-panel {
+  margin: 12px 0;
+  padding: 0 16px;
+  border: 1px solid #52677b;
+  border-radius: 10px;
+  background: var(--panel);
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+.game details.guide-panel > summary {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 14px 0;
+  list-style: none;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.game details.guide-panel > summary::-webkit-details-marker {
+  display: none;
+}
+.game details.guide-panel > summary::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  flex: 0 0 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(-45deg);
+}
+.game details.guide-panel[open] > summary::before {
+  transform: rotate(45deg);
+}
+.game details.guide-panel[open] {
+  padding-bottom: 16px;
+}
+.game details.guide-panel[open] > summary {
+  border-bottom: 1px solid var(--line);
+}
+.game details.guide-panel > summary:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: 4px;
+}
+.game .action-buttons > button.small-call,
+.game .play-actions > button.primary {
+  width: 100%;
+  flex: 1 1 100%;
+  min-height: 52px;
+  margin: 0;
+  padding: 12px 16px;
+  font-size: 18px;
+  font-weight: 700;
+  border-radius: 10px;
+}
+.game .action-buttons > button.small-call {
+  order: 2;
+  background: #17664d;
+  color: #ffffff;
+  border: 2px solid #71d6ac;
+}
+.game .action-buttons > button.small-call:hover:not(:disabled) {
+  background: #1d795c;
+}
+.game .action-buttons > button.small-call:focus-visible {
+  outline: 3px solid #b8f5db;
+  outline-offset: 3px;
+}

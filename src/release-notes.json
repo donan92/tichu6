@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.34",
+    "summary": "patches.guideSmallCall"
+  },
+  {
     "version": "0.8.33",
     "summary": "patches.scoringGuide"
   },

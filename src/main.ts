@@ -6,5 +6,6 @@ import { i18next, initializeLanguage } from './localization';
 import './style.css';
 import './styles/cards.css';
 import './styles/table-room.css';
+import './styles/game-guides.css';
 await initializeLanguage();
 createApp(App).use(createPinia()).use(I18NextVue, { i18next }).mount('#app');

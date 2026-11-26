@@ -9,7 +9,7 @@ const sections = [
 ];
 </script>
 <template>
-  <details class="combination-guide">
+  <details class="combination-guide guide-panel">
     <summary>{{ t('combinations.title') }}</summary>
     <ul>
       <li
@@ -29,7 +29,7 @@ const sections = [
     </ul>
     <p>{{ t('combinations.compare') }}</p>
   </details>
-  <details class="rules">
+  <details class="rules guide-panel">
     <summary>{{ t('rules.title') }}</summary>
     <div class="rule-grid">
       <section v-for="[heading, first, second] in sections" :key="heading">
