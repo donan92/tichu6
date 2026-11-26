@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.40 tablet action width — release pending
+## v0.8.40 tablet action width — deployed
 
 - Root cause: desktop horizontal .controls flex layout let the message consume
   width while the nested action row shrank. Hand controls now stack and stretch
@@ -11,9 +11,12 @@
   At 1024px: Pass 960x56; selected-card Pass/Play 476x56 each. Inspected
   screenshot /tmp/tablet-pass-fixed.png. Not physical tablet verification.
 - User approved release, including Small Tichu placement correction below.
-  v0.8.40 check, 266 tests, format and build passed; deployment pending.
+  v0.8.40 check, 266 tests, format and build passed.
+- Main f747f1f deployed. Pages 45838938830 and Verify 45838939281 succeeded,
+  including local Worker/idle/flow CI. Production HTML/JS/CSS byte-match the build.
+  Frontend only; Worker unchanged, health ok/protocol6.
 
-## Small Tichu below hand — local, not deployed
+## Small Tichu below hand — included in v0.8.40
 
 - Keep primary actions above the cards; move only Small Tichu below HandCards
   for exchange/play/trick. One declaration control uses the existing confirmation
@@ -21,7 +24,7 @@
 - check, 165 unit + 101 UI tests, format and build passed. Regression checks
   exchange/play placement and disappearance after first play. Local Chrome at
   320px confirms button below the hand with no horizontal overflow. No real
-  iPhone verification; version remains 0.8.39, not deployed.
+  iPhone verification; released with v0.8.40 above.
 
 ## v0.8.39 hand-top actions — deployed
 
