@@ -1001,3 +1001,7 @@ Release verification:
 ## v0.8.29 diamond color release
 
 - Rebased the approved golden-orange diamond ink onto latest main v0.8.28, preserving audio features. Version/locale release notes updated. Check,247 tests (155 unit +92 UI),format check and build passed. Frontend-only; Worker implementation unchanged. Deployment verification pending.
+
+## v0.8.29 deployment verified
+
+- Main9865290 deployed. Pages45767176849 and Verify45767177068 succeeded, including local Worker, idle and game-flow integration checks. Production HTML/JS/CSS match the local v0.8.29 build byte-for-byte; health ok/protocol6. This frontend-only release keeps the existing Worker implementation. Approved golden-orange diamond ink is live; actual phone hardware appearance remains unverified.
