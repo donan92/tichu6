@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.33",
+    "summary": "patches.scoringGuide"
+  },
+  {
     "version": "0.8.32",
     "summary": "patches.scoringAudioReturn"
   },

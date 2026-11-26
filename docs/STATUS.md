@@ -1063,3 +1063,13 @@ Release verification:
 
 - Main4444b66 deployed; Verify45781657286 succeeded including local Worker, idle and flow checks. Pages run45781656884 succeeded (its GitHub metadata references preceding docs commit); importantly live production HTML/JS/CSS matched the actual local v0.8.32 build byte-for-byte, independently confirming deployed frontend content.
 - Worker6587f7b6-8c1f-4d65-a643-7afc7deaa276 is at100%; health ok/protocol6. New round completions use the revised fifth/sixth scoring; historical completed records remain unchanged. No production room reset or load tests. Audio return race fixes are live; physical iPhone/Samsung return behavior remains unverified.
+
+## Collapsible scoring guide (not deployed)
+
+- Added ScoringGuide after trick history at the very bottom of GameView, collapsed by default using native details/summary like the combination guide. Covers card values/200 total, ordinary rank transfers and Dragon ownership, triple victory, personal Small/Large declarations and match-end/tie rules.
+- All content uses semantic scoringGuide keys in both Korean/English packs; no inline translated strings. Scoped wrapping and single-column lists keep long text readable. Isolated HTML rendering of the component structure/styles/English locale inspected at320px content width (headless Chrome's minimum viewport required explicit preview body width); not a real phone test.
+- Check,258 tests,format and build passed. No engine/server change, version bump or production deployment.
+
+## v0.8.33 release preparation
+
+- Version and bilingual note updated for the bottom-of-game scoring guide. Check,258 tests,format and build passed again. Frontend-only; existing v0.8.32 Worker implementation retained. Deployment verification pending.

@@ -15,6 +15,7 @@ import GameControls from '../components/GameControls.vue';
 import TurnClock from '../components/TurnClock.vue';
 import TrickHistory from '../components/TrickHistory.vue';
 import GameRules from '../components/GameRules.vue';
+import ScoringGuide from '../components/ScoringGuide.vue';
 const props = defineProps<{ game: RoundView }>();
 const session = useSessionStore();
 const { t, message, title } = useText();
@@ -257,5 +258,6 @@ const tableNote = computed(() =>
       </p>
     </section>
     <TrickHistory :game="game" />
+    <ScoringGuide />
   </main>
 </template>
