@@ -1104,3 +1104,8 @@ Release verification:
 ## v0.8.35 release preparation
 
 - Version and bilingual note updated for shared GuidePanel across routes, home action/footer layout and lounge/room spacing. Check,260 tests,format and build passed again. Frontend-only; existing Worker implementation retained. Deployment verification pending.
+
+## v0.8.35 deployment verified
+
+- Maind0420f9 deployed. Pages45790272023 and Verify45790272823 succeeded, including local Worker, idle and game-flow integration. Live production HTML/JS/CSS matched local v0.8.35 byte-for-byte. Shared cross-screen guide panels and entry/spacing fixes are live.
+- Frontend-only; existing v0.8.32 Worker implementation retained; production health ok/protocol6. No production room changes. Prior local actual-app screenshots cover320/390/1280px; physical phone validation remains outstanding.
