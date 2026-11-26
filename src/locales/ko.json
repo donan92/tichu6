@@ -430,5 +430,6 @@
   "patches.guideSmallCall": "접이식 안내 디자인을 통일하고, 스몰 티츄 버튼을 강조해 선언할 수 있을 때만 표시합니다.",
   "patches.crossScreenStyles": "첫 화면·대기실·게임의 안내 디자인을 통일하고 버튼 크기와 화면 간격을 정리했습니다.",
   "patches.audioOutputRecovery": "앱 복귀 후 소리 복구를 개선하고, 소리 설정에서 언제든 다시 재생할 수 있도록 했습니다.",
-  "patches.guideTypography": "안내 글자 크기를 통일하고 용·봉황 그림을 중앙에 맞췄습니다."
+  "patches.guideTypography": "안내 글자 크기를 통일하고 용·봉황 그림을 중앙에 맞췄습니다.",
+  "patches.emptyRoomExpiry": "접속한 플레이어가 없는 방은 10분 뒤 자동으로 닫힙니다."
 }

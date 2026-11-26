@@ -20,6 +20,7 @@ export interface Room {
   members: (Member | null)[];
   lastActive: number;
   lastProgress: number;
+  emptySince?: number | null;
   trainingSession?: string;
   trainingMatch?: string;
 }

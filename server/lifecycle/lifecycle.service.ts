@@ -3,7 +3,7 @@ import { botAction } from '../../src/game.js';
 import { syncLobby } from '../room/lobby-policy.ts';
 import { syncReconnectClock } from '../game/reconnect-clock.ts';
 import { TRAINING_RETENTION_MS } from '../training/records.ts';
-import { GRACE, TTL, IDLE, ROOM_IDLE } from '../policy.ts';
+import { GRACE, TTL, IDLE, ROOM_IDLE, ROOM_EMPTY } from '../policy.ts';
 import type { RoomRepository } from '../persistence/room.repository.ts';
 import type { Connections } from '../transport/connections.ts';
 import type { RoomService } from '../room/room.service.ts';
@@ -32,7 +32,10 @@ export class LifecycleService {
       });
       syncReconnectClock(r, online, now);
       syncLobby(r, online, now);
-      if (online.some(Boolean)) r.lastActive = now;
+      if (online.some(Boolean)) {
+        r.lastActive = now;
+        r.emptySince = null;
+      } else r.emptySince ??= now;
     }
   }
   expireIdle(now: number) {
@@ -54,7 +57,11 @@ export class LifecycleService {
   expireStalledRooms(now: number) {
     let changed = false;
     for (const [id, r] of Object.entries(this.repository.data.rooms)) {
-      if (now - (r.lastProgress ??= now) < ROOM_IDLE) continue;
+      const emptyExpired =
+        r.emptySince != null &&
+        !this.connections.online(r).some(Boolean) &&
+        now - r.emptySince >= ROOM_EMPTY;
+      if (!emptyExpired && now - (r.lastProgress ??= now) < ROOM_IDLE) continue;
       delete this.repository.data.rooms[id];
       changed = true;
       for (const ws of this.connections.users()) {
@@ -116,6 +123,7 @@ export class LifecycleService {
         );
     for (const r of Object.values(this.repository.data.rooms)) {
       at = Math.min(at, r.lastProgress + ROOM_IDLE);
+      if (r.emptySince != null) at = Math.min(at, r.emptySince + ROOM_EMPTY);
       if (r.state.phase === 'lobby' && r.autoStartAt != null)
         at = Math.min(at, r.autoStartAt);
       if (r.state.phase !== 'lobby' && r.state.deadline != null)

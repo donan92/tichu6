@@ -1,5 +1,17 @@
 # Project status / resume point
 
+## v0.8.38 empty room expiry — release pending
+
+- Persist emptySince when the last human player disconnects. Bots and spectators
+  do not count; progress does not extend the ten-minute empty-room deadline.
+  A player reconnect clears it, and a later disconnect starts a new interval.
+- Alarm scheduling includes emptySince + 10 minutes. Expiry removes the room
+  and returns spectators to the lounge; existing 30-minute stalled-room cap remains.
+  Older stored rooms get a baseline on first presence refresh, not immediate deletion.
+- 165 unit + 99 UI tests passed, including exact expiry boundary, spectator/bot
+  exclusion, restored persistence and reconnect/reset. Local Worker checks and
+  deployment verification pending.
+
 ## v0.8.37 guide typography and special-card centering — deployed
 
 - Shared semantic typography tokens: guide summary 18px, subsection 16px bold,

@@ -1096,3 +1096,52 @@ test('bot Dragon winner collects after five seconds instead of waiting thirty', 
   assert.equal(r.state.phase, 'play');
   assert.equal(r.state.dragonTransfer.recipient % 2, 0);
 });
+
+test('empty room expires after ten minutes despite bots and spectators, across reload', async () => {
+  const f = await setup();
+  const owner = await user(f, 2101);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const id = owner.a.room;
+  await msg(f.hub, owner, { type: 'action', action: { type: 'start' } });
+  const watcher = await user(f, 2102);
+  await msg(f.hub, watcher, {
+    type: 'join',
+    roomId: id,
+    watch: true,
+    name: 'Watch',
+  });
+  owner.close();
+  f.hub.refreshPresence();
+  const room = f.hub.data.rooms[id];
+  const baseline = room.emptySince;
+  assert.equal(typeof baseline, 'number');
+  f.hub.refreshPresence();
+  assert.equal(room.emptySince, baseline);
+  await f.hub.persist();
+  const restored = new Lounge(f.ctx);
+  await f.ready();
+  assert.equal(restored.data.rooms[id].emptySince, baseline);
+  restored.data.rooms[id].lastProgress = baseline + 599999;
+  assert.equal(restored.expireStalledRooms(baseline + 599999), false);
+  assert.equal(restored.expireStalledRooms(baseline + 600000), true);
+  assert.equal(watcher.a.room, null);
+  assert.equal(restored.data.rooms[id], undefined);
+});
+
+test('player reconnect cancels empty expiry and next disconnect starts a new interval', async () => {
+  const f = await setup();
+  const owner = await user(f, 2103);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner' });
+  const id = owner.a.room;
+  await msg(f.hub, owner, { type: 'action', action: { type: 'start' } });
+  owner.close();
+  f.hub.refreshPresence();
+  f.hub.data.rooms[id].emptySince = Date.now() - 500000;
+  const returning = await user(f, 2103, 'Owner');
+  f.hub.refreshPresence();
+  assert.equal(f.hub.data.rooms[id].emptySince, null);
+  returning.close();
+  const before = Date.now();
+  f.hub.refreshPresence();
+  assert.ok(f.hub.data.rooms[id].emptySince >= before);
+});

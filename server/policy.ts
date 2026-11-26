@@ -2,6 +2,7 @@
 export const GRACE = 45_000;
 export const TTL = 86_400_000;
 export const IDLE = 30 * 60 * 1000;
+export const ROOM_EMPTY = 10 * 60 * 1000;
 export const ROOM_IDLE = 30 * 60 * 1000;
 export const MAX_IDENTITIES = 30;
 export const MAX_ROOMS = 5;
