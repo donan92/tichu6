@@ -52,6 +52,26 @@ export const useAudioStore = defineStore('audio', () => {
   const failed = ref(false);
   const needsResume = ref(false);
   const track = ref<MusicTrack>('lobby');
+  // Per-tab session timeline survives reloads without tying playback to AudioContext.
+  const trackStarts = new Map<MusicTrack, number>();
+  function trackStart(selected: MusicTrack) {
+    const now = Date.now();
+    const cached = trackStarts.get(selected);
+    if (cached != null && cached <= now) return cached;
+    let start = now;
+    const key = 'tichu6-music-start-v1:' + selected;
+    try {
+      const raw = sessionStorage.getItem(key);
+      const value = raw == null ? NaN : Number(raw);
+      if (Number.isFinite(value) && value > 0 && value <= now) start = value;
+      sessionStorage.setItem(key, String(start));
+    } catch {
+      // Storage restrictions must not prevent playback within this page.
+    }
+    trackStarts.set(selected, start);
+    return start;
+  }
+  trackStart('lobby');
   let ctx: AudioContext | undefined,
     musicGain: GainNode | undefined,
     effectGain: GainNode | undefined;
@@ -125,6 +145,7 @@ export const useAudioStore = defineStore('audio', () => {
     );
   }
   async function syncMusic() {
+    const startedAt = trackStart(track.value);
     stopMusic();
     if (!audible() || !settings.music || settings.musicVolume === 0) return;
     const epoch = musicEpoch,
@@ -145,7 +166,12 @@ export const useAudioStore = defineStore('audio', () => {
       music.buffer = buffer;
       music.loop = true;
       musicFade = fadeIn(music, musicGain);
-      music.start();
+      const elapsed = Math.max(0, (Date.now() - startedAt) / 1000);
+      const offset =
+        Number.isFinite(buffer.duration) && buffer.duration > 0
+          ? elapsed % buffer.duration
+          : 0;
+      music.start(0, offset);
       failed.value = false;
     } catch {
       musicCache.delete(selected);

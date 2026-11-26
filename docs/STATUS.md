@@ -1,5 +1,30 @@
 # Project status / resume point
 
+## v0.8.41 music and opening-turn changes — release pending
+
+- User approved wall-clock modulo playback. Independent sessionStorage anchors
+  for lobby/game survive reloads. Music starts at elapsed seconds modulo decoded
+  duration after loading; effects unchanged. Storage denial and invalid/future
+  anchors fall back safely. Existing interruption/gesture recovery remains.
+- check, 166 unit + 104 UI tests, format and build passed. Tests verify modulo
+  wrap, mute/unmute, independent tracks, explicit output restart, store recreation
+  (reload), future timestamps and blocked storage. Actual iPhone listening not
+  verified. Includes pending opening-minute and timer placement changes below;
+  v0.8.41 release checks passed; user approved deployment.
+
+## Turn clock placement and opening minute — included in v0.8.41
+
+- Moved the main TurnClock into GameControls immediately before the turn message;
+  retained extension, warning, reconnect display and modal timers.
+- Shared clock gives the post-exchange Mahjong holder 60 seconds while nobody
+  has played; ordinary subsequent turns remain 30 seconds. Pending Dog selection
+  keeps its own 30 seconds, declaration/reconnect rules remain unchanged.
+  Existing persisted deadlines are not restarted. Updated bilingual rules.
+- check, 166 unit + 102 UI tests, format and build passed; local Worker flow
+  passed. Tests cover initial minute, restore stability, later ordinary turns
+  and DOM clock placement. Chrome fixtures at 390/1024px show the clock above
+  the turn message without overflow. No physical-phone test or deployment.
+
 ## v0.8.40 tablet action width — deployed
 
 - Root cause: desktop horizontal .controls flex layout let the message consume

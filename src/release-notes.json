@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.41",
+    "summary": "patches.musicTimelineOpeningTurn"
+  },
+  {
     "version": "0.8.40",
     "summary": "patches.tabletHandActions"
   },

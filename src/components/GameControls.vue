@@ -353,6 +353,21 @@ watch(
       </button>
     </div>
   </ActionConfirm>
+  <TurnClock
+    :deadline="game.deadline"
+    :phase="game.phase"
+    :reconnect-until="game.reconnectUntil"
+    :duration="game.deadlineDuration"
+    :can-extend="
+      !game.spectator &&
+      game.turn === session.seat &&
+      !game.extensionUsed &&
+      game.dogPending == null &&
+      !session.pending &&
+      !game.paused
+    "
+    @extend="session.submit({ type: 'extendTime' })"
+  />
   <div class="action-message">
     <h3>{{ heading }}</h3>
     <p>{{ help }}</p>

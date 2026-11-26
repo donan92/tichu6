@@ -11,7 +11,6 @@ import ScoreHistory from '../components/ScoreHistory.vue';
 import HandCards from '../components/HandCards.vue';
 import DeclarationNotice from '../components/DeclarationNotice.vue';
 import GameControls from '../components/GameControls.vue';
-import TurnClock from '../components/TurnClock.vue';
 import TrickHistory from '../components/TrickHistory.vue';
 import GameRules from '../components/GameRules.vue';
 import ScoringGuide from '../components/ScoringGuide.vue';
@@ -90,21 +89,6 @@ const tableNote = computed(() =>
         </strong>
       </span>
     </div>
-    <TurnClock
-      :deadline="game.deadline"
-      :phase="game.phase"
-      :reconnect-until="game.reconnectUntil"
-      :duration="game.deadlineDuration"
-      :can-extend="
-        !game.spectator &&
-        game.turn === session.seat &&
-        !game.extensionUsed &&
-        game.dogPending == null &&
-        !session.pending &&
-        !game.paused
-      "
-      @extend="session.submit({ type: 'extendTime' })"
-    />
     <section class="table" :aria-label="t('play.tableLabel')">
       <div
         v-for="(name, index) in game.names"

@@ -2,6 +2,7 @@ import { act, botAction, recipientSeats } from './game.js';
 import type { GameAction, LobbyState, RoundState } from './types';
 export const PREPARATION_MS = 180_000;
 export const TURN_MS = 30_000;
+export const OPENING_TURN_MS = 60_000;
 export const TRICK_MS = 5_000;
 // Stable across reconnects, unrelated declarations and Durable Object hibernation.
 export function syncDeadline(state: LobbyState | RoundState, now = Date.now()) {
@@ -37,7 +38,12 @@ export function syncDeadline(state: LobbyState | RoundState, now = Date.now()) {
         ? state.top?.cards[0]?.special === 'dragon'
           ? TURN_MS
           : TRICK_MS
-        : TURN_MS;
+        : state.dogPending == null &&
+            !state.played.some(Boolean) &&
+            state.turn != null &&
+            state.hands[state.turn].some((card) => card.special === 'mahjong')
+          ? OPENING_TURN_MS
+          : TURN_MS;
     state.deadline = now + state.deadlineDuration;
     if (state.dogPending != null) {
       state.dogSelectionExpiresAt ??= state.deadline;

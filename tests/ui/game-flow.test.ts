@@ -212,3 +212,19 @@ it('places Small Tichu below the hand in exchange and play, hiding it after a fi
   });
   expect(w.find('.small-call').exists()).toBe(false);
 });
+
+it('places the remaining-time bar immediately above the turn message', () => {
+  const session = useSessionStore();
+  const game = view(startRound(newGame()), 0);
+  game.phase = 'play';
+  game.deadline = Date.now() + 60000;
+  game.deadlineDuration = 60000;
+  session.game = game;
+  const w = mount(GameView, { props: { game }, global: global() });
+  mounted.push(w);
+  const clock = w.get('.hand-controls > .turn-clock').element;
+  expect(clock.nextElementSibling?.classList.contains('action-message')).toBe(
+    true,
+  );
+  expect(w.find('.game > .turn-clock').exists()).toBe(false);
+});

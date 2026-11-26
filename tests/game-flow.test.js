@@ -147,3 +147,25 @@ test('dragon tricks allow thirty seconds and only the collector can choose a dra
   s = act(s, due.seat, due.action);
   assert.equal(s.captured[5][0].special, 'dragon');
 });
+
+test('Mahjong opening turn gets sixty seconds only once, including restored clocks', () => {
+  const s = startRound(newGame());
+  s.phase = 'play';
+  s.turn = 0;
+  s.hands[0] = [{ id: 'mahjong', special: 'mahjong', rank: 1, suit: -1 }];
+  s.played = Array(6).fill(false);
+  syncDeadline(s, 1000);
+  assert.equal(s.deadline, 61000);
+  assert.equal(s.deadlineDuration, 60000);
+  const restored = structuredClone(s);
+  syncDeadline(restored, 20000);
+  assert.equal(restored.deadline, 61000);
+  assert.equal(dueAction(s, 31000), null);
+  s.played[1] = true;
+  s.turn = 1;
+  syncDeadline(s, 62000);
+  assert.equal(s.deadline, 92000);
+  s.turn = 0;
+  syncDeadline(s, 93000);
+  assert.equal(s.deadlineDuration, 30000);
+});

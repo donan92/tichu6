@@ -128,7 +128,7 @@ test('preparation shares three minutes across declarations, exchange and restore
     syncDeadline(s, deadline);
   }
   assert.equal(s.phase, 'play');
-  assert.equal(s.deadline, deadline + 30000);
+  assert.equal(s.deadline, deadline + 60000);
 });
 
 test('cancel Dog restores the original turn and allows Mahjong without renewing either clock', () => {

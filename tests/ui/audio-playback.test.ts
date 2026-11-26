@@ -58,6 +58,7 @@ let pinia: ReturnType<typeof createPinia>;
 beforeEach(() => {
   Context.instances = [];
   localStorage.clear();
+  sessionStorage.clear();
   sources.length = 0;
   pinia = createPinia();
   setActivePinia(pinia);
@@ -312,4 +313,64 @@ it('explicit restart replaces a running context and respects disabled sound pref
   expect(audio.settings.effects).toBe(false);
   await audio.playEffect('card');
   expect(sources).toHaveLength(0);
+});
+
+it('uses independent session timelines across mute, track changes and reload', async () => {
+  let now = 1000000;
+  vi.spyOn(Date, 'now').mockImplementation(() => now);
+  vi.mocked(loadAudioFile).mockResolvedValue({ duration: 60 } as AudioBuffer);
+  const audio = useAudioStore();
+  now += 65000;
+  await audio.unlock();
+  await flushPromises();
+  expect(sources.at(-1)!.start).toHaveBeenLastCalledWith(0, 5);
+  audio.settings.music = false;
+  await nextTick();
+  now += 10000;
+  audio.settings.music = true;
+  await nextTick();
+  await flushPromises();
+  expect(sources.at(-1)!.start).toHaveBeenLastCalledWith(0, 15);
+  audio.track = 'game';
+  await nextTick();
+  await flushPromises();
+  expect(sources.at(-1)!.start).toHaveBeenLastCalledWith(0, 0);
+  now += 7000;
+  await audio.restart();
+  await flushPromises();
+  expect(sources.at(-1)!.start).toHaveBeenLastCalledWith(0, 7);
+  disposePinia(pinia);
+  pinia = createPinia();
+  setActivePinia(pinia);
+  const restored = useAudioStore();
+  await restored.unlock();
+  await flushPromises();
+  expect(sources.at(-1)!.start).toHaveBeenLastCalledWith(0, 22);
+  restored.track = 'game';
+  await nextTick();
+  await flushPromises();
+  expect(sources.at(-1)!.start).toHaveBeenLastCalledWith(0, 7);
+});
+
+it('resets invalid or future session anchors and tolerates blocked storage', async () => {
+  sessionStorage.setItem(
+    'tichu6-music-start-v1:lobby',
+    String(Date.now() + 999999),
+  );
+  vi.mocked(loadAudioFile).mockResolvedValue({ duration: 60 } as AudioBuffer);
+  const audio = useAudioStore();
+  await audio.unlock();
+  await flushPromises();
+  expect(sources.at(-1)!.start.mock.calls[0][1]).toBeLessThan(1);
+  vi.spyOn(Storage.prototype, 'getItem').mockImplementation(() => {
+    throw new Error('blocked');
+  });
+  vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+    throw new Error('blocked');
+  });
+  audio.track = 'game';
+  await nextTick();
+  await flushPromises();
+  expect(audio.failed).toBe(false);
+  expect(sources.at(-1)!.start.mock.calls[0][1]).toBeLessThan(1);
 });

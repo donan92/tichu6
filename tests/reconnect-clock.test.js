@@ -47,6 +47,7 @@ test('idle seats, bots, expired offline grace and trick collection do not acquir
   ]) {
     const r = room();
     r.members[0] = member;
+    r.state.played[1] = true; // Exercise ordinary turns independently of the opening deal.
     syncReconnectClock(r, [false], 2000);
     assert.equal(r.state.deadline, 32000);
     assert.equal(r.reconnectTurn, undefined);

@@ -80,3 +80,17 @@ state alone. Further normal taps reuse that context. Explicit Resume sound is
 always available when Web Audio is supported and forces reconstruction; muted
 preferences and stored volumes remain unchanged. Device listening verification
 is still required; mocks establish control flow, not speaker output.
+
+## Session-relative music position
+
+Background tracks use an independent wall-clock anchor per track stored in
+sessionStorage under tichu6-music-start-v1:<track>. Lobby initializes when the
+audio store is created; game initializes on its first selection, even if muted.
+Every new music source starts at elapsed seconds modulo the decoded duration,
+computed after decoding. Effects still start normally and never seek.
+
+Reloading the same tab preserves anchors. Mute/unmute, output reconstruction
+and track switches do not reset them. Invalid/future anchors reset safely;
+blocked storage falls back to an in-memory timeline. This corrects the position
+after playback resumes, not iOS background suspension or autoplay restrictions.
+Real-device listening remains unverified.
