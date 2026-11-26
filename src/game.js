@@ -301,13 +301,19 @@ function finishRound(s) {
     s.finish.slice(0, 3).every((i) => team(i) === team(s.finish[0]));
   if (triple) delta[team(s.finish[0])] = 300;
   else {
-    const loser = s.hands.findIndex((h) => h.length);
-    if (loser >= 0) {
-      s.captured[s.finish[0]].push(...s.captured[loser]);
-      s.captured[loser] = [];
-      delta[1 - team(loser)] += points(s.hands[loser]);
-    }
-    s.captured.forEach((p, i) => (delta[team(i)] += points(p)));
+    const fifth = s.finish[4];
+    const sixth = s.hands.findIndex((h) => h.length);
+    // Rank, not seat order, determines where the final two players' points go.
+    s.captured.forEach((cards, seat) => {
+      const recipientTeam =
+        seat === fifth
+          ? team(s.finish[0])
+          : seat === sixth
+            ? 1 - team(sixth)
+            : team(seat);
+      delta[recipientTeam] += points(cards);
+    });
+    if (sixth >= 0) delta[1 - team(sixth)] += points(s.hands[sixth]);
   }
   // Each caller must personally finish first, even on a team triple victory.
   s.callResults = s.calls.flatMap((call, seat) =>

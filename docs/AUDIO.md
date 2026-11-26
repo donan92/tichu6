@@ -62,3 +62,5 @@ pending longer than1.5seconds exposes a retry. A trusted touch/click recreates
 an interrupted context when needed. The sound modal offers Resume sound.
 Automatic recovery is attempted but cannot bypass Safari autoplay policy.
 Pass cues use a short paper swoosh and take priority over the next-turn chime.
+
+Foreground recovery tracks unfinished background suspension. A trusted tap can replace that context before a late suspend silences playback again; stale callbacks cannot affect the replacement. Automatic suspension/resume waits are bounded, and recovery preserves saved preferences. Mobile hardware verification is still required for browser-specific interruptions.

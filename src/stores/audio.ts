@@ -63,6 +63,7 @@ export const useAudioStore = defineStore('audio', () => {
     disposed = false;
   let resumeEpoch = 0;
   let suspending: Promise<void> = Promise.resolve();
+  let pendingSuspend: AudioContext | undefined;
   const musicCache = new Map<MusicTrack, Promise<AudioBuffer>>();
   const effectCache = new Map<Effect, Promise<AudioBuffer>>();
   const audible = () =>
@@ -148,6 +149,22 @@ export const useAudioStore = defineStore('audio', () => {
       failed.value = true;
     }
   }
+  async function withResumeTimeout(operation: Promise<void>) {
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    try {
+      await Promise.race([
+        operation,
+        new Promise<never>((_resolve, reject) => {
+          timer = setTimeout(
+            () => reject(new Error('Audio resume timed out')),
+            1500,
+          );
+        }),
+      ]);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
   async function unlock(userGesture = true) {
     if (!available.value || disposed || document.hidden) return;
     const attempt = ++resumeEpoch;
@@ -156,9 +173,9 @@ export const useAudioStore = defineStore('audio', () => {
       // interrupted context. Never discard a healthy, already-running context.
       if (
         ctx &&
-        ctx.state !== 'running' &&
         userGesture &&
-        (needsResume.value || failed.value)
+        (pendingSuspend === ctx ||
+          (ctx.state !== 'running' && (needsResume.value || failed.value)))
       ) {
         const old = ctx;
         stopMusic();
@@ -167,6 +184,7 @@ export const useAudioStore = defineStore('audio', () => {
         ctx = undefined;
         void old.close().catch(() => {});
         suspending = Promise.resolve();
+        pendingSuspend = undefined;
       }
       if (!ctx) {
         ctx = new AudioContext({ latencyHint: 'playback' });
@@ -189,23 +207,9 @@ export const useAudioStore = defineStore('audio', () => {
         gains();
       }
       const owned = ctx;
-      if (!userGesture) await suspending;
+      if (!userGesture) await withResumeTimeout(suspending);
       if (attempt !== resumeEpoch || disposed || document.hidden) return;
-      let timeout: ReturnType<typeof setTimeout> | undefined;
-      try {
-        if (owned.state !== 'running')
-          await Promise.race([
-            owned.resume(),
-            new Promise<never>((_resolve, reject) => {
-              timeout = setTimeout(
-                () => reject(new Error('Audio resume timed out')),
-                1500,
-              );
-            }),
-          ]);
-      } finally {
-        clearTimeout(timeout);
-      }
+      if (owned.state !== 'running') await withResumeTimeout(owned.resume());
       if (
         disposed ||
         ctx !== owned ||
@@ -264,7 +268,16 @@ export const useAudioStore = defineStore('audio', () => {
     needsResume.value = unlocked.value;
     stopMusic();
     stopEffect();
-    if (ctx?.state === 'running') suspending = ctx.suspend().catch(() => {});
+    if (ctx?.state === 'running' && pendingSuspend !== ctx) {
+      const owned = ctx;
+      pendingSuspend = owned;
+      suspending = owned
+        .suspend()
+        .catch(() => {})
+        .finally(() => {
+          if (pendingSuspend === owned) pendingSuspend = undefined;
+        });
+    }
   }
   function recover() {
     if (!unlocked.value || document.hidden || disposed) return;

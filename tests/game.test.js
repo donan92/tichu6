@@ -281,7 +281,7 @@ test('triple victory immediately scores 300 plus individual declarations', () =>
   assert.equal(s.phase, 'roundEnd');
   assert.deepEqual(s.delta, [200, 0]);
 });
-test('last player transfers hand points to opponents and captures to first finisher', () => {
+test('sixth player transfers both hand and captured points to opponents', () => {
   let s = playing([[], [], [], [], pick(8), pick(5)], 4);
   s.finish = [0, 1, 2, 3];
   s.captured[5] = pick(13);
@@ -478,4 +478,49 @@ test('bomb interruption stays legal when current player cannot beat with the wis
   s = act(s, 2, { type: 'play', ids: pick(12, 4).map((c) => c.id) });
   assert.equal(s.last, 2);
   assert.equal(s.wish, 8);
+});
+
+test('fifth captures go to first team and sixth captures plus hand go to opponents in every seat order', () => {
+  const permutations = (items) =>
+    items.length
+      ? items.flatMap((item) =>
+          permutations(items.filter((other) => other !== item)).map((rest) => [
+            item,
+            ...rest,
+          ]),
+        )
+      : [[]];
+  for (const order of permutations([0, 1, 2, 3, 4, 5])) {
+    const [first, second, third, fourth, fifth, sixth] = order;
+    if ([second, third].every((seat) => seat % 2 === first % 2)) continue;
+    const hands = Array.from({ length: 6 }, () => []);
+    hands[fifth] = pick(8);
+    hands[sixth] = pick(5);
+    let s = playing(hands, fifth);
+    s.finish = order.slice(0, 4);
+    const captures = [
+      pick(5),
+      pick(10),
+      pick(13),
+      [special('dragon')],
+      [special('phoenix')],
+      pick(10),
+    ];
+    order.forEach((seat, rank) => {
+      s.captured[seat] = captures[rank];
+    });
+    const expected = [0, 0];
+    expected[first % 2] += 5 - 25;
+    expected[second % 2] += 10;
+    expected[third % 2] += 10;
+    expected[fourth % 2] += 25;
+    expected[1 - (sixth % 2)] += 10 + 5;
+    s = act(s, fifth, { type: 'play', ids: [hands[fifth][0].id] });
+    s = act(s, fifth, { type: 'collect' });
+    assert.equal(s.phase, 'roundEnd');
+    assert.deepEqual(s.delta, expected, `finish order ${order}`);
+    assert.deepEqual(s.scores, expected);
+    assert.deepEqual(s.scoreHistory.at(-1).delta, expected);
+    assert.equal(s.delta[0] + s.delta[1], 40);
+  }
 });

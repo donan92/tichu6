@@ -207,3 +207,61 @@ it('cancels pending effects when muted or suspended and never queues them before
   await next;
   expect(sources).toHaveLength(0);
 });
+
+it('a foreground tap cannot be silenced by a late background suspend', async () => {
+  vi.mocked(loadAudioFile).mockResolvedValue({} as AudioBuffer);
+  const audio = useAudioStore();
+  await audio.unlock();
+  await flushPromises();
+  const old = Context.instances[0];
+  let finish!: () => void;
+  vi.spyOn(old, 'suspend').mockImplementation(
+    () =>
+      new Promise<void>((resolve) => {
+        finish = () => {
+          old.state = 'suspended';
+          resolve();
+        };
+      }),
+  );
+  audio.suspend();
+  await audio.unlock();
+  await flushPromises();
+  expect(Context.instances).toHaveLength(2);
+  const replacement = Context.instances[1];
+  const resumed = sources.at(-1)!;
+  finish();
+  await flushPromises();
+  expect(replacement.state).toBe('running');
+  expect(audio.needsResume).toBe(false);
+  expect(resumed.stop).not.toHaveBeenCalled();
+  expect(audio.settings.music).toBe(true);
+});
+
+it('a stuck suspend times out and can recover with a tap without changing saved preferences', async () => {
+  vi.mocked(loadAudioFile).mockResolvedValue({} as AudioBuffer);
+  const audio = useAudioStore();
+  audio.settings.effects = false;
+  audio.settings.musicVolume = 17;
+  await nextTick();
+  await audio.unlock();
+  await flushPromises();
+  vi.spyOn(Context.instances[0], 'suspend').mockImplementation(
+    () => new Promise<void>(() => {}),
+  );
+  vi.useFakeTimers();
+  audio.suspend();
+  audio.recover();
+  await vi.advanceTimersByTimeAsync(1600);
+  expect(audio.needsResume).toBe(true);
+  expect(audio.failed).toBe(true);
+  await audio.unlock();
+  await vi.advanceTimersByTimeAsync(0);
+  expect(Context.instances).toHaveLength(2);
+  expect(audio.failed).toBe(false);
+  expect(audio.settings.musicVolume).toBe(17);
+  expect(audio.settings.effects).toBe(false);
+  expect(JSON.parse(localStorage.getItem('tichu6-audio-v1')!).musicVolume).toBe(
+    17,
+  );
+});

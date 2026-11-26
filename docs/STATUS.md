@@ -1042,3 +1042,19 @@ Release verification:
 
 - Maine47fca9 deployed. Pages45779988512 and Verify45779989286 succeeded including local Worker, idle and flow integration. Production HTML/JS/CSS matched local v0.8.31 byte-for-byte. Worker315f65c4-1816-48b1-9a9b-5f8988d352d8 is at100%; health ok/protocol6. No room reset or production load tests.
 - During deployment the user asked about fifth/sixth scoring. Verified current finishRound: fifth finisher keeps captures for own team; sixth player's captures go to first finisher, remaining hand points to sixth player's opposing team (triple victory separate). This differs from the user's described fifth-to-first/sixth-to-opponent rule. No scoring change authorized or included; reported discrepancy for clarification.
+
+## Revised fifth/sixth scoring (not deployed)
+
+- User explicitly changed ordinary round scoring: fifth finisher's captured points go to the first finisher's team; sixth player's captured points and remaining hand go to the sixth player's opposing team. First through fourth retain captures for their team. Triple victory and declaration scoring remain unchanged. Captured piles preserve ownership; allocation happens in the team delta calculation, then cumulative score/history.
+- Added all648 non-triple finish-order permutations, including negative Phoenix captures, and checked allocation, total conservation, scores and history. Existing scoring/Dragon/triple/call regressions pass. Shared engine applies to server and practice. Historical completed round scores are not recalculated. README updated.
+- Check,256 tests,format and build passed before audio follow-up; real local Worker test:flow passed, including reconnect/timers and Dog cancellation. No version bump or deployment.
+
+## Audio return suspend race (not deployed)
+
+- Found a reproducible race: a trusted foreground tap could accept a still-running context while its background suspend was pending, then the late suspend silenced it. Track the pending context; a trusted tap replaces it and detaches stale callbacks. Bound automatic waiting for background suspension to1.5s instead of hanging forever; next trusted tap can recover a stalled context. Preserve saved music/effects/volume choices.
+- Added pending-suspend/tap/late-completion and never-resolving-suspend tests. Combined check,258 tests (163 unit +95 UI),format and build passed. Physical iPhone/Samsung verification remains unavailable. Asked whether report involves foreground return or complete browser restart; no response yet. Exact device cause is not established. No production deployment.
+
+## v0.8.32 release preparation
+
+- User confirmed audio issue occurs when returning from another app/tab to the existing game. Release includes revised fifth/sixth scoring and audio suspend-race recovery. Existing finished round scores are not rewritten. Physical phone recovery remains unverified.
+- Version and bilingual release note updated. Check,258 tests,format and build passed again. Local Worker flow previously passed for the scoring implementation. Worker/Pages deployment verification pending.
