@@ -147,3 +147,41 @@ it('shows reconnection grace before switching to the normal thirty-second countd
   await w.setProps({ reconnectUntil: null, deadline: 211000 });
   expect(w.text()).toBe('30s remaining');
 });
+
+it('keeps pass/play above cards and shows only play for a selected bomb', async () => {
+  const session = useSessionStore();
+  const game = view(startRound(newGame()), 0);
+  game.phase = 'play';
+  game.turn = 1;
+  game.hand = [0, 1, 2, 3].map((suit) => ({
+    id: 'bomb' + suit,
+    rank: 8,
+    suit,
+  }));
+  game.played[0] = true;
+  session.game = game;
+  const w = mount(GameView, { props: { game }, global: global() });
+  mounted.push(w);
+  expect(w.find('.hand-heading').exists()).toBe(false);
+  expect(w.find('.hand-play-row button').exists()).toBe(false);
+  await w.setProps({ game: { ...game, turn: 0 } });
+  expect(w.findAll('.hand-play-row button')).toHaveLength(1);
+  expect(w.find('.hand-pass').exists()).toBe(true);
+  session.selected = ['bomb0'];
+  await w.vm.$nextTick();
+  expect(w.findAll('.hand-play-row button')).toHaveLength(2);
+  expect(
+    w
+      .get('.hand-panel')
+      .element.firstElementChild?.classList.contains('hand-controls'),
+  ).toBe(true);
+  session.selected = game.hand.map((card) => card.id);
+  await w.vm.$nextTick();
+  expect(w.find('.hand-pass').exists()).toBe(false);
+  expect(w.findAll('.hand-play-row button')).toHaveLength(1);
+  await w.setProps({ game: { ...game, turn: 1 } });
+  expect(w.findAll('.hand-play-row button')).toHaveLength(1);
+  session.selected = [];
+  await w.vm.$nextTick();
+  expect(w.find('.hand-play-row button').exists()).toBe(false);
+});

@@ -9,7 +9,6 @@ import ExchangeReview from '../components/ExchangeReview.vue';
 import PlayingCard from '../components/PlayingCard.vue';
 import ScoreHistory from '../components/ScoreHistory.vue';
 import HandCards from '../components/HandCards.vue';
-import PassAction from '../components/PassAction.vue';
 import DeclarationNotice from '../components/DeclarationNotice.vue';
 import GameControls from '../components/GameControls.vue';
 import TurnClock from '../components/TurnClock.vue';
@@ -216,31 +215,12 @@ const tableNote = computed(() =>
       </div>
     </section>
     <section class="hand-panel">
-      <PassAction
-        v-if="
-          !game.spectator && game.phase === 'play' && game.turn === session.seat
-        "
-        :game="game"
-      />
-      <div v-else class="hand-heading">
-        <div>
-          <b
-            >{{ t(game.spectator ? 'play.spectatorView' : 'play.hand') }}
-            <span
-              >{{ t('play.cardCount', { count: game.hand.length })
-              }}<template v-if="game.phase === 'grand'">
-                / {{ t('play.initialHand') }}</template
-              ></span
-            ></b
-          >
-        </div>
-      </div>
+      <div class="controls hand-controls"><GameControls :game="game" /></div>
       <HandCards
         :hand="game.hand"
         :spectator="game.spectator"
         :round-key="`${game.roomId ?? 'practice'}:${game.round}`"
       />
-      <div class="controls"><GameControls :game="game" /></div>
     </section>
     <ExchangeReview
       v-if="!game.spectator && game.exchangeReview?.length"

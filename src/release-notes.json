@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.39",
+    "summary": "patches.handTopActions"
+  },
+  {
     "version": "0.8.38",
     "summary": "patches.emptyRoomExpiry"
   },

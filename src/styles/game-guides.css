@@ -72,3 +72,26 @@
     text-align: center;
   }
 }
+
+/* Keep the primary decision directly above the hand, with equal-width actions. */
+.game .hand-controls {
+  border-top: 0;
+  padding-top: 0;
+}
+.hand-play-row {
+  display: flex;
+  width: 100%;
+  gap: 8px;
+}
+.hand-play-row:empty {
+  display: none;
+}
+.game .hand-play-row > button {
+  flex: 1 1 0;
+  width: 0;
+  min-width: 0;
+  min-height: 52px;
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}

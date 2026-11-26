@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue';
 import TurnClock from './TurnClock.vue';
+import PassAction from './PassAction.vue';
 import ActionConfirm from './ActionConfirm.vue';
 import PlayingCard from './PlayingCard.vue';
 import { useTranslation } from 'i18next-vue';
@@ -455,13 +456,20 @@ watch(
       >
         {{ t('play.tichuShort') }}
       </button>
-      <button
-        class="primary"
-        :disabled="cannotPlay && game.dogPending !== session.seat"
-        @click="play"
-      >
-        {{ t(combo?.bomb ? 'play.bomb' : 'play.cards') }}
-      </button>
+      <div v-if="game.phase === 'play'" class="hand-play-row">
+        <PassAction
+          v-if="game.turn === session.seat && !combo?.bomb"
+          :game="game"
+        />
+        <button
+          v-if="chosen.length && (game.turn === session.seat || combo?.bomb)"
+          class="primary"
+          :disabled="cannotPlay && game.dogPending !== session.seat"
+          @click="play"
+        >
+          {{ t(combo?.bomb ? 'play.bomb' : 'play.cards') }}
+        </button>
+      </div>
     </div>
   </template>
 </template>

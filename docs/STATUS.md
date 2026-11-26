@@ -1,5 +1,18 @@
 # Project status / resume point
 
+## v0.8.39 hand-top actions — release pending
+
+- Removed the redundant hand-count heading and moved GameControls above HandCards.
+  Own turn with no selection shows full-width Pass; ordinary selection shows
+  equal-width Pass/Play. Selected bombs show only full-width Play, including
+  out-of-turn bombs. No normal Play button while waiting on another player.
+- Existing confirmation, special-card dialogs and Small Tichu remain available.
+- check, 165 unit + 100 UI tests, format:check and build passed. Regression covers
+  selection/clear/turn/bomb transitions and controls-before-hand ordering.
+  Local Chrome fixture: 390px ordinary action widths 181px each, 320px bomb
+  action 300px with no Pass, 320/1280px no horizontal overflow. No real-phone
+  test. User approved deployment; v0.8.39 release checks passed, deployment pending.
+
 ## v0.8.38 empty room expiry — deployed
 
 - Persist emptySince when the last human player disconnects. Bots and spectators
