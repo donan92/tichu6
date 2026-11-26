@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.39 hand-top actions — release pending
+## v0.8.39 hand-top actions — deployed
 
 - Removed the redundant hand-count heading and moved GameControls above HandCards.
   Own turn with no selection shows full-width Pass; ordinary selection shows
@@ -11,7 +11,10 @@
   selection/clear/turn/bomb transitions and controls-before-hand ordering.
   Local Chrome fixture: 390px ordinary action widths 181px each, 320px bomb
   action 300px with no Pass, 320/1280px no horizontal overflow. No real-phone
-  test. User approved deployment; v0.8.39 release checks passed, deployment pending.
+  test. User-approved v0.8.39 released in 79cd4e3.
+- Pages 45836651334 and Verify 45836651785 succeeded, including Worker/idle/flow
+  CI. Live HTML/JS/CSS byte-match the tested build. Backend unchanged at
+  ec461e0c-536c-4b5f-bd76-470ad8566407; health ok/protocol6.
 
 ## v0.8.38 empty room expiry — deployed
 
