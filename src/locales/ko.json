@@ -399,5 +399,6 @@
   "patches.audioFiles": "배경음과 효과음을 음원 파일로 교체하고 소리 전환을 부드럽게 했습니다.",
   "audio.resume": "소리 다시 재생",
   "patches.audioResumeAndPass": "패스에 짧은 스침 소리를 추가하고 앱 복귀 시 소리 재생을 개선했습니다.",
-  "patches.clearTurnChime": "내 차례가 오면 맑은 알림음이 울립니다."
+  "patches.clearTurnChime": "내 차례가 오면 맑은 알림음이 울립니다.",
+  "patches.diamondContrast": "다이아 숫자와 문양을 밝은 골드 오렌지로 바꿔 하트와 더 쉽게 구분할 수 있습니다."
 }

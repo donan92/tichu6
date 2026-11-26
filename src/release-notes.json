@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.29",
+    "summary": "patches.diamondContrast"
+  },
+  {
     "version": "0.8.28",
     "summary": "patches.clearTurnChime"
   },

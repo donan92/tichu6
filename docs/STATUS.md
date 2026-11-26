@@ -992,3 +992,12 @@ Release verification:
 
 - Main54a3226 deployed. Pages45643749191 and Verify45643749435 succeeded, including local Worker, idle and full-flow integrations. Production HTML/JS/CSS matched local0.8.24 build. Backend remains verified2d2f7696-95b4-4c8f-8f67-1b2a12a52933 (v0.8.23 score history and Dragon transfer marker).
 - Supersedes pending release notes above. No production room reset or deletion. Actual mobile long-press magnifier behavior still requires iPhone/Samsung hardware confirmation.
+
+## Diamond ink distinction (not deployed)
+
+- Changed diamond rank/suit ink from burnt orange #ba5114 to brighter golden orange #c18108, including the base stylesheet fallback. Heart ink and portrait artwork remain unchanged. Shared card styling applies to hands and played cards at every viewport size.
+- Check,232 tests (155 unit +77 UI),format check and production build passed. No version bump or deployment; actual phone color appearance not verified.
+
+## v0.8.29 diamond color release
+
+- Rebased the approved golden-orange diamond ink onto latest main v0.8.28, preserving audio features. Version/locale release notes updated. Check,247 tests (155 unit +92 UI),format check and build passed. Frontend-only; Worker implementation unchanged. Deployment verification pending.

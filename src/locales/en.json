@@ -399,5 +399,6 @@
   "patches.audioFiles": "Switched music and effects to audio files with smoother transitions.",
   "audio.resume": "Resume sound",
   "patches.audioResumeAndPass": "Added a soft pass swoosh and improved audio recovery after switching apps.",
-  "patches.clearTurnChime": "A clear chime announces your turn."
+  "patches.clearTurnChime": "A clear chime announces your turn.",
+  "patches.diamondContrast": "Brighter golden-orange diamond ranks and symbols are easier to distinguish from hearts."
 }
