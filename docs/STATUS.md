@@ -1037,3 +1037,8 @@ Release verification:
 ## v0.8.31 release preparation
 
 - Packages and bilingual release note updated for Dog cancellation and five-second bot pass/Dragon handling. Check,255 tests,format and production build passed with release metadata. Local Worker flow integration previously passed for this implementation including cancelDog then Mahjong. Worker and Pages deployment verification pending.
+
+## v0.8.31 deployment verified
+
+- Maine47fca9 deployed. Pages45779988512 and Verify45779989286 succeeded including local Worker, idle and flow integration. Production HTML/JS/CSS matched local v0.8.31 byte-for-byte. Worker315f65c4-1816-48b1-9a9b-5f8988d352d8 is at100%; health ok/protocol6. No room reset or production load tests.
+- During deployment the user asked about fifth/sixth scoring. Verified current finishRound: fifth finisher keeps captures for own team; sixth player's captures go to first finisher, remaining hand points to sixth player's opposing team (triple victory separate). This differs from the user's described fifth-to-first/sixth-to-opponent rule. No scoring change authorized or included; reported discrepancy for clarification.
