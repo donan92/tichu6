@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.42 Phoenix sound and Dog recipient feedback — release pending
+## v0.8.42 Phoenix sound and Dog recipient feedback — deployed
 
 - Phoenix in a new played combination uses the existing Dragon effect; own-turn
   and round-end cue priority stays unchanged. No new audio assets.
@@ -10,8 +10,11 @@
   do not trigger it; cloned snapshots do not restart it.
 - check, 167 unit + 106 UI tests, format and build passed. Added accepted marker,
   public privacy, Phoenix single/combination, and Dog animation regression coverage.
-  Real local Worker flow suite passed. No physical-device verification or deployment.
-  User approved both backend and frontend deployment; v0.8.42 release checks passed.
+  Real local Worker flow suite passed. No physical-device verification.
+  User-approved release 4a74198 is on main. v0.8.42 release checks passed.
+- Worker 28ce83c9-17a4-49de-9cdc-83aa6f40c419 deployed; health ok/protocol6.
+  Pages 45936580422 and Verify 45936580628 succeeded including Worker/idle/flow
+  CI. Production HTML/JS/CSS byte-match the tested build.
 
 ## v0.8.41 music and opening-turn changes — deployed
 
