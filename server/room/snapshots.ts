@@ -56,13 +56,23 @@ export function publicView(s: GameState): GameView {
     : { ...base, ...fields, phase: s.phase };
 }
 export class Snapshots {
+  // Per-socket caches are deliberately not durable: wake/reconnect sends full state.
+  private readonly delivered = new WeakMap<
+    WebSocket,
+    {
+      directory?: string;
+      state?: string;
+      roomKey?: string;
+      recipientKey?: string;
+    }
+  >();
   readonly repository: RoomRepository;
   readonly connections: Connections;
   constructor(repository: RoomRepository, connections: Connections) {
     this.repository = repository;
     this.connections = connections;
   }
-  directory(hash: string) {
+  directory(hash: string, presence?: Map<string, boolean[]>) {
     const users = this.connections
       .users()
       .map((ws) => this.connections.attachment(ws));
@@ -77,7 +87,9 @@ export class Snapshots {
       canJoin:
         r.state.phase === 'lobby' &&
         r.members.filter((m) => m && !m.bot).length < 6,
-      online: this.connections.online(r).filter(Boolean).length,
+      online: (presence?.get(r.id) ?? this.connections.online(r)).filter(
+        Boolean,
+      ).length,
       spectators: users.filter((a) => a.room === r.id && a.watch).length,
       mine: r.members.some((m) => m?.hash === hash),
     }));
@@ -146,36 +158,71 @@ export class Snapshots {
   broadcast() {
     const users = this.connections.users();
     // Compute shared directory/presence once per broadcast, never cache private hands.
-    const directory = this.directory('');
+    const online = this.connections.presence(
+      Object.values(this.repository.data.rooms),
+    );
+    const directory = this.directory('', online);
     const members = new Map(
       Object.values(this.repository.data.rooms).map((r) => [
         r.id,
         new Set(r.members.flatMap((m) => (m ? [m.hash] : []))),
       ]),
     );
-    const online = new Map(
+    const roomKeys = new Map(
       Object.values(this.repository.data.rooms).map((r) => [
         r.id,
-        this.connections.online(r),
+        JSON.stringify([
+          r.state,
+          r.members,
+          r.title,
+          r.inviteCode,
+          r.teamMode,
+          r.seatMap,
+          r.autoStartAt,
+          r.hostHash,
+          r.reconnectTurn,
+          online.get(r.id),
+        ]),
       ]),
     );
+    const commonDirectory = JSON.stringify([directory, users.length]);
     for (const ws of users) {
       const a = this.connections.authenticated(ws);
       const room = a.room ? this.repository.data.rooms[a.room] : undefined;
-      this.connections.send(ws, {
-        type: 'directory',
-        rooms: directory.map((r) => ({
-          ...r,
-          mine: members.get(r.id)!.has(a.hash),
-        })),
-        count: users.length,
-      });
-      this.connections.send(
-        ws,
-        room
-          ? this.state(room, a.hash, !!a.watch, online.get(room.id))
-          : { type: 'hall' },
-      );
+      let delivered = this.delivered.get(ws);
+      if (!delivered) {
+        delivered = {};
+        this.delivered.set(ws, delivered);
+      }
+      const owned = directory.map((r) => members.get(r.id)!.has(a.hash));
+      const directoryKey = commonDirectory + JSON.stringify(owned);
+      if (
+        delivered.directory !== directoryKey &&
+        this.connections.send(ws, {
+          type: 'directory',
+          rooms: directory.map((r, i) => ({ ...r, mine: owned[i] })),
+          count: users.length,
+        })
+      )
+        delivered.directory = directoryKey;
+      // Include recipient authorization: a membership/watch transition cannot reuse
+      // another recipient's private state even if the room revision is unchanged.
+      const roomKey = room ? roomKeys.get(room.id)! : 'hall';
+      const recipientKey = JSON.stringify([a.hash, a.watch, a.room]);
+      if (
+        delivered.roomKey === roomKey &&
+        delivered.recipientKey === recipientKey
+      )
+        continue;
+      const state = room
+        ? this.state(room, a.hash, !!a.watch, online.get(room.id))
+        : { type: 'hall' };
+      const encoded = JSON.stringify(state);
+      if (delivered.state === encoded || this.connections.send(ws, state)) {
+        delivered.state = encoded;
+        delivered.roomKey = roomKey;
+        delivered.recipientKey = recipientKey;
+      }
     }
   }
 }

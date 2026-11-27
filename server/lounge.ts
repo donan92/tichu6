@@ -51,6 +51,7 @@ export class Lounge {
       this.repository,
       this.connections,
       this.rooms,
+      this.game.executor,
     );
     ctx.blockConcurrencyWhile(async () => {
       await this.repository.load();
@@ -128,7 +129,7 @@ export class Lounge {
       window: Date.now(),
       requests: 0,
     });
-    await this.schedule();
+    await this.exclusive(() => this.schedule());
     return new Response(null, { status: 101, webSocket: pair[0] });
   }
   private async dispatch(ws: WebSocket, msg: JsonObject) {
@@ -265,7 +266,7 @@ export class Lounge {
           this.broadcast();
         });
       }
-      await this.schedule();
+      await this.exclusive(() => this.schedule());
     } catch (error) {
       this.connections.send(ws, { type: 'error', ...errorEvent(error) });
       if (!this.attachment(ws).hash && !this.attachment(ws).idle)
@@ -280,7 +281,7 @@ export class Lounge {
       await this.persist();
       this.broadcast();
     });
-    await this.schedule();
+    await this.exclusive(() => this.schedule());
   }
   async webSocketClose(ws: WebSocket, code: number) {
     try {
@@ -300,6 +301,7 @@ export class Lounge {
   }
   async alarm() {
     await this.exclusive(async () => {
+      this.repository.alarm.fired();
       const now = Date.now();
       for (const ws of this.connections.sockets())
         if (
@@ -316,6 +318,6 @@ export class Lounge {
       await this.persist();
       this.broadcast();
     });
-    await this.schedule();
+    await this.exclusive(() => this.schedule());
   }
 }

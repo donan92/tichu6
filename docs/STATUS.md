@@ -1,5 +1,43 @@
 # Project status / resume point
 
+## Server performance optimization — review candidate, not deployed (2026-11-28)
+
+- Isolated worktree `/private/tmp/tichu6-performance`, branch
+  `codex/server-performance`, based on latest main `c4c43d5` (rechecked before PR).
+  Original research checkout and unrelated uncommitted changes preserved.
+- Implemented changed-key atomic persistence and separate training dirty tracking,
+  deduplicated alarms with restart/failure handling, persisted engine expiry and
+  ambiguous-commit retry repair, per-socket changed-only snapshots, shared weak bot
+  decision caching and per-pass presence indexing. Rules/privacy/timers unchanged.
+- Fresh local baseline and candidate: 20/50/100 identities, 120 seconds each, twice
+  per variant. Separate consent-enabled 100-person and 20-person/100-bot cases
+  passed before/after. Each case includes 20 simultaneous identity reconnects.
+- Paired 100-person results per accepted human move: WS sends -88.9%, setAlarm
+  -68.1%, bot calculations -97.1%, data-key writes -29.5% (40% target missed).
+  Combined key/alarm proxy -45.2%; consent-enabled proxy -28.1% (also misses40%).
+  P95 66.4–66.8ms → 42.1ms. These are local API measurements, not billed SQL rows.
+- Candidate 100-person/20-room soak passed 1,800.94 seconds, 10,681 human moves,
+  minimum466/room, all100 connections and20 simultaneous reconnects. P95 63.31ms.
+  Process RSS increased811.9→890.3MiB, peak900.3MiB. This includes instrumentation
+  and runtime overhead; heap profiling/history bounds remain P1, not proven fixed.
+- Final `npm run check`, `npm test` (178 unit +110 UI), `npm run format:check`,
+  `npm run build` passed. Audit found0 vulnerabilities. Real local Worker server,
+  flow, idle and process-restart suites passed: capacity races, privacy, bots,
+  reconnect/grace, special cards, expiry and SQLite state restoration.
+- `docs/PERFORMANCE_OPTIMIZATION.md` records architecture, quantified results,
+  official-pricing assumptions, Free/Paid scenarios, missed goals, risks and rollback.
+  Sanitized machine results: `docs/performance-results.json`. Reproducible scripts:
+  `scripts/performance/`. Raw synthetic logs remain `/tmp/tichu-perf-results`.
+  Initial counter-eviction pilot and a setup stale-revision failure were excluded;
+  setup retry verifies effect; gameplay errors remain fatal. All tests are local.
+- The default UI enables training consent; consent-off forecasts are explicitly
+  separated. At the measured 100-person consent-on workload, even2h/day exceeds
+  the estimated Free write allowance. Duration assumptions are not measurements.
+- Review-only commit uses `[CF-Pages-Skip]` to suppress Pages preview deployment;
+  GitHub Verify contains no deploy step. No version bump, main merge, production
+  access/data/config change, deployment or paid-plan upgrade. Task-owned servers
+  stopped. Next: review Draft PR; obtain separate approval before any release.
+
 ## v0.8.44 100-person production capacity — deployed
 
 - User requested a new domain and an initial 100-person production capacity.

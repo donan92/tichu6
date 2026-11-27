@@ -1,5 +1,5 @@
 import { botDelay } from '../../src/game-clock.ts';
-import { botAction } from '../../src/game.js';
+import { GameExecutor } from '../game/executor.ts';
 import { syncLobby } from '../room/lobby-policy.ts';
 import { syncReconnectClock } from '../game/reconnect-clock.ts';
 import { TRAINING_RETENTION_MS } from '../training/records.ts';
@@ -8,6 +8,7 @@ import type { RoomRepository } from '../persistence/room.repository.ts';
 import type { Connections } from '../transport/connections.ts';
 import type { RoomService } from '../room/room.service.ts';
 export class LifecycleService {
+  readonly executor: GameExecutor;
   readonly repository: RoomRepository;
   readonly connections: Connections;
   readonly rooms: RoomService;
@@ -15,15 +16,19 @@ export class LifecycleService {
     repository: RoomRepository,
     connections: Connections,
     rooms: RoomService,
+    executor = new GameExecutor(),
   ) {
+    this.executor = executor;
     this.repository = repository;
     this.connections = connections;
     this.rooms = rooms;
   }
   refreshPresence() {
     const now = Date.now();
-    for (const r of Object.values(this.repository.data.rooms)) {
-      const online = this.connections.online(r);
+    const rooms = Object.values(this.repository.data.rooms);
+    const presence = this.connections.presence(rooms);
+    for (const r of rooms) {
+      const online = presence.get(r.id)!;
       r.members.forEach((m, i) => {
         if (m) {
           if (online[i]) m.offlineSince = null;
@@ -121,17 +126,19 @@ export class LifecycleService {
             this.connections.authenticated(ws).hash
           ] ?? now) + IDLE,
         );
-    for (const r of Object.values(this.repository.data.rooms)) {
+    const rooms = Object.values(this.repository.data.rooms);
+    const presence = this.connections.presence(rooms);
+    for (const r of rooms) {
       at = Math.min(at, r.lastProgress + ROOM_IDLE);
       if (r.emptySince != null) at = Math.min(at, r.emptySince + ROOM_EMPTY);
       if (r.state.phase === 'lobby' && r.autoStartAt != null)
         at = Math.min(at, r.autoStartAt);
       if (r.state.phase !== 'lobby' && r.state.deadline != null)
         at = Math.min(at, r.state.deadline);
-      const online = this.connections.online(r),
+      const online = presence.get(r.id)!,
         s = r.state;
-      r.members.forEach((m, i) => {
-        if (!m || online[i]) return;
+      for (const [i, m] of r.members.entries()) {
+        if (!m || online[i]) continue;
         const needs =
           s.phase === 'lobby' ||
           ((online.some(Boolean) || r.members.some((member) => member?.idle)) &&
@@ -144,7 +151,10 @@ export class LifecycleService {
           (m.bot || m.idle) &&
           (s.phase === 'play' || s.phase === 'trick')
         ) {
-          at = Math.min(at, now + botDelay(s, botAction(s, i), now));
+          at = Math.min(
+            at,
+            now + botDelay(s, await this.executor.bot(r.id, s, i), now),
+          );
         } else if (needs)
           at = Math.min(
             at,
@@ -153,10 +163,10 @@ export class LifecycleService {
               m.bot || m.idle ? now + 2000 : (m.offlineSince ?? now) + GRACE,
             ),
           );
-      });
+      }
     }
-    if (Number.isFinite(at))
-      await this.repository.storage.setAlarm(Math.max(now + 1000, at));
-    else await this.repository.storage.deleteAlarm();
+    await this.repository.alarm.update(
+      Number.isFinite(at) ? Math.max(now + 1000, at) : null,
+    );
   }
 }

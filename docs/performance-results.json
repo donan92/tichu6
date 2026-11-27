@@ -1,0 +1,1675 @@
+{
+  "baselineCommit": "c4c43d5",
+  "localOnly": true,
+  "measurementDate": "2026-11-28",
+  "runs": [
+    {
+      "group": "after-1",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.390122416,
+      "counters": {
+        "storage.get": 0,
+        "storage.put": 2055,
+        "write.training-v1": 0,
+        "writeBytes.training-v1": 0,
+        "storage.getAlarm": 0,
+        "storage.setAlarm": 631,
+        "ws.incoming": 789,
+        "write.lounge": 855,
+        "writeBytes.lounge": 148282811,
+        "ws.messages": 19440,
+        "ws.bytes": 78596310,
+        "broadcast": 855,
+        "engine.requests": 1200,
+        "alarm.fired": 17,
+        "write.last": 1200,
+        "writeBytes.last": 7558854,
+        "bot.compute": 171,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.deleteAlarm": 0
+      },
+      "received": {
+        "messages": 19440,
+        "bytes": 78596310
+      },
+      "consent": false,
+      "throughput": 6.553693809477686,
+      "acceptedHumanMoves": 789,
+      "minMovesPerRoom": 35,
+      "responseMs": {
+        "p50": 21.204209000003175,
+        "p95": 42.09066599999642,
+        "p99": 65.2088330000006,
+        "max": 103.39166699999987
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 2055,
+      "modeledWrittenRows": 2686,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 37617280,
+        "storedValueBytes": 351986,
+        "storedKeys": 22
+      },
+      "resources": {
+        "samples": 25,
+        "meanProcessCpuPercent": 12.128,
+        "peakProcessRssMiB": 822.75,
+        "firstProcessRssMiB": 816.875,
+        "lastProcessRssMiB": 786.484375
+      }
+    },
+    {
+      "group": "after-1",
+      "result": "PASS",
+      "identities": 20,
+      "activeRooms": 4,
+      "durationSeconds": 120.407946,
+      "counters": {
+        "storage.get": 0,
+        "storage.put": 538,
+        "write.training-v1": 0,
+        "writeBytes.training-v1": 0,
+        "storage.getAlarm": 0,
+        "storage.setAlarm": 138,
+        "ws.incoming": 194,
+        "write.lounge": 240,
+        "writeBytes.lounge": 8702212,
+        "ws.messages": 2230,
+        "ws.bytes": 3591450,
+        "broadcast": 240,
+        "engine.requests": 298,
+        "alarm.fired": 34,
+        "write.last": 298,
+        "writeBytes.last": 1962025,
+        "bot.compute": 43,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.deleteAlarm": 0
+      },
+      "received": {
+        "messages": 2230,
+        "bytes": 3591450
+      },
+      "consent": false,
+      "throughput": 1.611189347918949,
+      "acceptedHumanMoves": 194,
+      "minMovesPerRoom": 44,
+      "responseMs": {
+        "p50": 21.947707999992417,
+        "p95": 22.780916999996407,
+        "p99": 22.93108299999585,
+        "max": 23.172582999999577
+      },
+      "note": "Local machine only; includes polling delay, not production latency or a long soak test.",
+      "logicalKeyWrites": 538,
+      "modeledWrittenRows": 676,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 12370544,
+        "storedValueBytes": 50367,
+        "storedKeys": 6
+      },
+      "resources": {
+        "samples": 25,
+        "meanProcessCpuPercent": 7.076000000000001,
+        "peakProcessRssMiB": 613.90625,
+        "firstProcessRssMiB": 593.125,
+        "lastProcessRssMiB": 580.5625
+      }
+    },
+    {
+      "group": "after-1",
+      "result": "PASS",
+      "identities": 50,
+      "activeRooms": 10,
+      "durationSeconds": 120.902406625,
+      "counters": {
+        "storage.get": 0,
+        "storage.put": 1024,
+        "write.training-v1": 0,
+        "writeBytes.training-v1": 0,
+        "storage.getAlarm": 0,
+        "storage.setAlarm": 321,
+        "ws.incoming": 387,
+        "write.lounge": 435,
+        "writeBytes.lounge": 37610066,
+        "ws.messages": 6385,
+        "ws.bytes": 14647786,
+        "broadcast": 435,
+        "engine.requests": 589,
+        "alarm.fired": 20,
+        "write.last": 589,
+        "writeBytes.last": 3721980,
+        "bot.compute": 82,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.deleteAlarm": 0
+      },
+      "received": {
+        "messages": 6385,
+        "bytes": 14647786
+      },
+      "consent": false,
+      "throughput": 3.200928838417157,
+      "acceptedHumanMoves": 387,
+      "minMovesPerRoom": 30,
+      "responseMs": {
+        "p50": 21.784333999999944,
+        "p95": 42.38545800000429,
+        "p99": 43.29916700000467,
+        "max": 44.037665999996534
+      },
+      "note": "Local machine only; includes polling delay, not production latency or a long soak test.",
+      "logicalKeyWrites": 1024,
+      "modeledWrittenRows": 1345,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 20843632,
+        "storedValueBytes": 174836,
+        "storedKeys": 12
+      },
+      "resources": {
+        "samples": 25,
+        "meanProcessCpuPercent": 8.532000000000002,
+        "peakProcessRssMiB": 674.25,
+        "firstProcessRssMiB": 655.765625,
+        "lastProcessRssMiB": 667.84375
+      }
+    },
+    {
+      "group": "after-2",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.613906625,
+      "counters": {
+        "storage.get": 0,
+        "storage.put": 2222,
+        "write.training-v1": 0,
+        "writeBytes.training-v1": 0,
+        "storage.getAlarm": 0,
+        "storage.setAlarm": 700,
+        "ws.incoming": 852,
+        "write.lounge": 923,
+        "writeBytes.lounge": 162975506,
+        "ws.messages": 20345,
+        "ws.bytes": 81613353,
+        "broadcast": 923,
+        "engine.requests": 1299,
+        "alarm.fired": 17,
+        "write.last": 1299,
+        "writeBytes.last": 8375293,
+        "bot.compute": 189,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.deleteAlarm": 0
+      },
+      "received": {
+        "messages": 20345,
+        "bytes": 81613353
+      },
+      "consent": false,
+      "throughput": 7.0638620689813845,
+      "acceptedHumanMoves": 852,
+      "minMovesPerRoom": 32,
+      "responseMs": {
+        "p50": 21.36199999999735,
+        "p95": 42.064375000001746,
+        "p99": 61.045790999999554,
+        "max": 83.06862499999988
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 2222,
+      "modeledWrittenRows": 2922,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 40097472,
+        "storedValueBytes": 350735,
+        "storedKeys": 22
+      },
+      "resources": {
+        "samples": 25,
+        "meanProcessCpuPercent": 12.228000000000002,
+        "peakProcessRssMiB": 815.96875,
+        "firstProcessRssMiB": 809.375,
+        "lastProcessRssMiB": 793.25
+      }
+    },
+    {
+      "group": "after-2",
+      "result": "PASS",
+      "identities": 20,
+      "activeRooms": 4,
+      "durationSeconds": 120.117942666,
+      "counters": {
+        "storage.get": 0,
+        "storage.put": 427,
+        "write.training-v1": 0,
+        "writeBytes.training-v1": 0,
+        "storage.getAlarm": 0,
+        "storage.setAlarm": 119,
+        "ws.incoming": 154,
+        "write.lounge": 190,
+        "writeBytes.lounge": 6613858,
+        "ws.messages": 1680,
+        "ws.bytes": 2947755,
+        "broadcast": 190,
+        "engine.requests": 237,
+        "alarm.fired": 28,
+        "write.last": 237,
+        "writeBytes.last": 1484143,
+        "bot.compute": 35,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.deleteAlarm": 0
+      },
+      "received": {
+        "messages": 1680,
+        "bytes": 2947755
+      },
+      "consent": false,
+      "throughput": 1.2820732405333686,
+      "acceptedHumanMoves": 154,
+      "minMovesPerRoom": 36,
+      "responseMs": {
+        "p50": 21.936540999995486,
+        "p95": 22.889208999999028,
+        "p99": 23.132375000001048,
+        "max": 23.180749999999534
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 427,
+      "modeledWrittenRows": 546,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 10829640,
+        "storedValueBytes": 74206,
+        "storedKeys": 6
+      },
+      "resources": {
+        "samples": 24,
+        "meanProcessCpuPercent": 6.4125000000000005,
+        "peakProcessRssMiB": 593.734375,
+        "firstProcessRssMiB": 591.5,
+        "lastProcessRssMiB": 563.828125
+      }
+    },
+    {
+      "group": "after-2",
+      "result": "PASS",
+      "identities": 50,
+      "activeRooms": 10,
+      "durationSeconds": 120.43298179199999,
+      "counters": {
+        "storage.get": 0,
+        "storage.put": 1116,
+        "write.training-v1": 0,
+        "writeBytes.training-v1": 0,
+        "storage.getAlarm": 0,
+        "storage.setAlarm": 342,
+        "ws.incoming": 422,
+        "write.lounge": 472,
+        "writeBytes.lounge": 41595591,
+        "ws.messages": 6840,
+        "ws.bytes": 15720321,
+        "broadcast": 472,
+        "engine.requests": 644,
+        "alarm.fired": 21,
+        "write.last": 644,
+        "writeBytes.last": 4114474,
+        "bot.compute": 96,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.deleteAlarm": 0
+      },
+      "received": {
+        "messages": 6840,
+        "bytes": 15720321
+      },
+      "consent": false,
+      "throughput": 3.504023513499291,
+      "acceptedHumanMoves": 422,
+      "minMovesPerRoom": 36,
+      "responseMs": {
+        "p50": 21.645084000003408,
+        "p95": 40.67262500000652,
+        "p99": 42.794624999994994,
+        "max": 43.9329579999976
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 1116,
+      "modeledWrittenRows": 1458,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 22096064,
+        "storedValueBytes": 172912,
+        "storedKeys": 12
+      },
+      "resources": {
+        "samples": 25,
+        "meanProcessCpuPercent": 9.316000000000003,
+        "peakProcessRssMiB": 676.921875,
+        "firstProcessRssMiB": 662.1875,
+        "lastProcessRssMiB": 670.265625
+      }
+    },
+    {
+      "group": "before-1",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.930206083,
+      "counters": {
+        "storage.get": 1286,
+        "storage.put": 2098,
+        "write.lounge": 877,
+        "writeBytes.lounge": 153081611,
+        "write.training-v1": 877,
+        "writeBytes.training-v1": 13155,
+        "storage.deleteAlarm": 0,
+        "storage.setAlarm": 2048,
+        "ws.incoming": 812,
+        "ws.messages": 175400,
+        "ws.bytes": 614342567,
+        "broadcast": 877,
+        "engine.requests": 1286,
+        "alarm.fired": 15,
+        "bot.compute": 5618,
+        "write.last": 1221,
+        "writeBytes.last": 7748441,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.getAlarm": 0
+      },
+      "received": {
+        "messages": 175400,
+        "bytes": 614342567
+      },
+      "consent": false,
+      "throughput": 6.7146168546399965,
+      "acceptedHumanMoves": 812,
+      "minMovesPerRoom": 34,
+      "responseMs": {
+        "p50": 42.09020799999416,
+        "p95": 66.77733299999818,
+        "p99": 181.93354100000033,
+        "max": 304.99012500000026
+      },
+      "note": "Local machine only; includes polling delay, not production latency or a long soak test.",
+      "logicalKeyWrites": 2975,
+      "modeledWrittenRows": 5023,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 47888416,
+        "storedValueBytes": 363306,
+        "storedKeys": 22
+      },
+      "resources": {
+        "samples": 26,
+        "meanProcessCpuPercent": 22.065384615384616,
+        "peakProcessRssMiB": 824.546875,
+        "firstProcessRssMiB": 789.625,
+        "lastProcessRssMiB": 824.546875
+      }
+    },
+    {
+      "group": "before-1",
+      "result": "PASS",
+      "identities": 20,
+      "activeRooms": 4,
+      "durationSeconds": 120.42306270899999,
+      "counters": {
+        "storage.get": 322,
+        "storage.put": 531,
+        "write.lounge": 233,
+        "writeBytes.lounge": 8369188,
+        "write.training-v1": 233,
+        "writeBytes.training-v1": 3495,
+        "storage.deleteAlarm": 0,
+        "storage.setAlarm": 521,
+        "ws.incoming": 193,
+        "ws.messages": 9320,
+        "ws.bytes": 14665214,
+        "broadcast": 233,
+        "engine.requests": 322,
+        "alarm.fired": 30,
+        "bot.compute": 367,
+        "write.last": 298,
+        "writeBytes.last": 1943852,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.getAlarm": 0
+      },
+      "received": {
+        "messages": 9320,
+        "bytes": 14665214
+      },
+      "consent": false,
+      "throughput": 1.6026830381019355,
+      "acceptedHumanMoves": 193,
+      "minMovesPerRoom": 44,
+      "responseMs": {
+        "p50": 21.691917000000103,
+        "p95": 22.73791699999856,
+        "p99": 41.605499999999665,
+        "max": 42.20283299998846
+      },
+      "note": "Local machine only; includes polling delay, not production latency or a long soak test.",
+      "logicalKeyWrites": 764,
+      "modeledWrittenRows": 1285,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 15262760,
+        "storedValueBytes": 69721,
+        "storedKeys": 6
+      },
+      "resources": {
+        "samples": 25,
+        "meanProcessCpuPercent": 7.5,
+        "peakProcessRssMiB": 594.734375,
+        "firstProcessRssMiB": 591.109375,
+        "lastProcessRssMiB": 561.140625
+      }
+    },
+    {
+      "group": "before-1",
+      "result": "PASS",
+      "identities": 50,
+      "activeRooms": 10,
+      "durationSeconds": 120.60699416700001,
+      "counters": {
+        "storage.get": 696,
+        "storage.put": 1113,
+        "write.lounge": 471,
+        "writeBytes.lounge": 41266032,
+        "write.training-v1": 471,
+        "writeBytes.training-v1": 7065,
+        "storage.deleteAlarm": 0,
+        "storage.setAlarm": 1078,
+        "ws.incoming": 416,
+        "ws.messages": 47100,
+        "ws.bytes": 107736975,
+        "broadcast": 471,
+        "engine.requests": 696,
+        "alarm.fired": 20,
+        "bot.compute": 1779,
+        "write.last": 642,
+        "writeBytes.last": 4050680,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.getAlarm": 0
+      },
+      "received": {
+        "messages": 47100,
+        "bytes": 107736975
+      },
+      "consent": false,
+      "throughput": 3.4492195321937986,
+      "acceptedHumanMoves": 416,
+      "minMovesPerRoom": 31,
+      "responseMs": {
+        "p50": 22.35679100001289,
+        "p95": 43.31708399999479,
+        "p99": 62.23520800001279,
+        "max": 81.53125
+      },
+      "note": "Local machine only; includes polling delay, not production latency or a long soak test.",
+      "logicalKeyWrites": 1584,
+      "modeledWrittenRows": 2662,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 28321384,
+        "storedValueBytes": 161186,
+        "storedKeys": 12
+      },
+      "resources": {
+        "samples": 25,
+        "meanProcessCpuPercent": 9.411999999999999,
+        "peakProcessRssMiB": 668.515625,
+        "firstProcessRssMiB": 649.390625,
+        "lastProcessRssMiB": 661.109375
+      }
+    },
+    {
+      "group": "before-2",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.980646666,
+      "counters": {
+        "storage.get": 1262,
+        "storage.put": 2021,
+        "write.lounge": 842,
+        "writeBytes.lounge": 145544441,
+        "write.training-v1": 842,
+        "writeBytes.training-v1": 12630,
+        "storage.deleteAlarm": 0,
+        "storage.setAlarm": 1962,
+        "ws.incoming": 767,
+        "ws.messages": 168400,
+        "ws.bytes": 585068240,
+        "broadcast": 842,
+        "engine.requests": 1262,
+        "alarm.fired": 16,
+        "bot.compute": 6313,
+        "write.last": 1179,
+        "writeBytes.last": 7371487,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.getAlarm": 0
+      },
+      "received": {
+        "messages": 168400,
+        "bytes": 585068240
+      },
+      "consent": false,
+      "throughput": 6.339857003058615,
+      "acceptedHumanMoves": 767,
+      "minMovesPerRoom": 29,
+      "responseMs": {
+        "p50": 42.3002919999999,
+        "p95": 66.38691699999617,
+        "p99": 203.40562499999942,
+        "max": 328.3418750000001
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 2863,
+      "modeledWrittenRows": 4825,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 47286944,
+        "storedValueBytes": 319501,
+        "storedKeys": 22
+      },
+      "resources": {
+        "samples": 26,
+        "meanProcessCpuPercent": 21.719230769230766,
+        "peakProcessRssMiB": 818.296875,
+        "firstProcessRssMiB": 790.703125,
+        "lastProcessRssMiB": 818.296875
+      }
+    },
+    {
+      "group": "before-2",
+      "result": "PASS",
+      "identities": 20,
+      "activeRooms": 4,
+      "durationSeconds": 120.23590841599999,
+      "counters": {
+        "storage.get": 300,
+        "storage.put": 476,
+        "write.lounge": 211,
+        "writeBytes.lounge": 7467160,
+        "write.training-v1": 211,
+        "writeBytes.training-v1": 3165,
+        "storage.deleteAlarm": 0,
+        "storage.setAlarm": 470,
+        "ws.incoming": 173,
+        "ws.messages": 8440,
+        "ws.bytes": 13168436,
+        "broadcast": 211,
+        "engine.requests": 300,
+        "alarm.fired": 32,
+        "bot.compute": 311,
+        "write.last": 265,
+        "writeBytes.last": 1705467,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.getAlarm": 0
+      },
+      "received": {
+        "messages": 8440,
+        "bytes": 13168436
+      },
+      "consent": false,
+      "throughput": 1.4388380499562858,
+      "acceptedHumanMoves": 173,
+      "minMovesPerRoom": 40,
+      "responseMs": {
+        "p50": 21.66304100000707,
+        "p95": 22.739417000000685,
+        "p99": 42.286957999999686,
+        "max": 42.36783399999695
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 687,
+      "modeledWrittenRows": 1157,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 14059720,
+        "storedValueBytes": 75258,
+        "storedKeys": 6
+      },
+      "resources": {
+        "samples": 24,
+        "meanProcessCpuPercent": 7.400000000000001,
+        "peakProcessRssMiB": 591.6875,
+        "firstProcessRssMiB": 588.921875,
+        "lastProcessRssMiB": 557.359375
+      }
+    },
+    {
+      "group": "before-2",
+      "result": "PASS",
+      "identities": 50,
+      "activeRooms": 10,
+      "durationSeconds": 120.60633020899999,
+      "counters": {
+        "storage.get": 711,
+        "storage.put": 1124,
+        "write.lounge": 477,
+        "writeBytes.lounge": 41946080,
+        "write.training-v1": 477,
+        "writeBytes.training-v1": 7155,
+        "storage.deleteAlarm": 0,
+        "storage.setAlarm": 1088,
+        "ws.incoming": 419,
+        "ws.messages": 47700,
+        "ws.bytes": 110591231,
+        "broadcast": 477,
+        "engine.requests": 711,
+        "alarm.fired": 22,
+        "bot.compute": 1816,
+        "write.last": 647,
+        "writeBytes.last": 4096639,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.getAlarm": 0
+      },
+      "received": {
+        "messages": 47700,
+        "bytes": 110591231
+      },
+      "consent": false,
+      "throughput": 3.4741128369788754,
+      "acceptedHumanMoves": 419,
+      "minMovesPerRoom": 32,
+      "responseMs": {
+        "p50": 39.204625000000306,
+        "p95": 43.09620800000266,
+        "p99": 61.55058299999655,
+        "max": 63.01620799999364
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 1601,
+      "modeledWrittenRows": 2689,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 28461464,
+        "storedValueBytes": 180237,
+        "storedKeys": 12
+      },
+      "resources": {
+        "samples": 25,
+        "meanProcessCpuPercent": 9.084,
+        "peakProcessRssMiB": 673.46875,
+        "firstProcessRssMiB": 653.171875,
+        "lastProcessRssMiB": 646.84375
+      }
+    },
+    {
+      "group": "bots-after",
+      "result": "PASS",
+      "identities": 20,
+      "activeRooms": 20,
+      "durationSeconds": 120.423481292,
+      "counters": {
+        "storage.get": 0,
+        "storage.put": 1413,
+        "write.training-v1": 0,
+        "writeBytes.training-v1": 0,
+        "storage.getAlarm": 0,
+        "storage.setAlarm": 159,
+        "ws.incoming": 102,
+        "write.lounge": 176,
+        "writeBytes.lounge": 26464324,
+        "ws.messages": 1690,
+        "ws.bytes": 6427697,
+        "broadcast": 176,
+        "engine.requests": 1237,
+        "alarm.fired": 68,
+        "write.last": 1237,
+        "writeBytes.last": 4668475,
+        "bot.compute": 560,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.deleteAlarm": 0
+      },
+      "received": {
+        "messages": 1690,
+        "bytes": 6427697
+      },
+      "consent": false,
+      "throughput": 0.8470108894516412,
+      "acceptedHumanMoves": 102,
+      "minMovesPerRoom": 4,
+      "responseMs": {
+        "p50": 21.507999999997992,
+        "p95": 42.13420800000313,
+        "p99": 60.19408300000214,
+        "max": 61.67725000000064
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 1413,
+      "modeledWrittenRows": 1572,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 35170384,
+        "storedValueBytes": 192440,
+        "storedKeys": 22
+      },
+      "resources": {
+        "samples": 28,
+        "meanProcessCpuPercent": 6.924999999999999,
+        "peakProcessRssMiB": 657.890625,
+        "firstProcessRssMiB": 600.546875,
+        "lastProcessRssMiB": 657.890625
+      }
+    },
+    {
+      "group": "bots-before",
+      "result": "PASS",
+      "identities": 20,
+      "activeRooms": 20,
+      "durationSeconds": 120.474197125,
+      "counters": {
+        "storage.get": 2020,
+        "storage.put": 1462,
+        "write.lounge": 180,
+        "writeBytes.lounge": 27162589,
+        "write.training-v1": 180,
+        "writeBytes.training-v1": 2700,
+        "storage.deleteAlarm": 0,
+        "storage.setAlarm": 1456,
+        "ws.incoming": 106,
+        "ws.messages": 7200,
+        "ws.bytes": 25619834,
+        "broadcast": 180,
+        "engine.requests": 2020,
+        "alarm.fired": 68,
+        "bot.compute": 3782,
+        "write.last": 1282,
+        "writeBytes.last": 4770930,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.getAlarm": 0
+      },
+      "received": {
+        "messages": 7200,
+        "bytes": 25619834
+      },
+      "consent": false,
+      "throughput": 0.8798564549885975,
+      "acceptedHumanMoves": 106,
+      "minMovesPerRoom": 4,
+      "responseMs": {
+        "p50": 41.424041999998735,
+        "p95": 61.77324999999837,
+        "p99": 62.58195800000249,
+        "max": 82.06950000000143
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 1642,
+      "modeledWrittenRows": 3098,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 45849400,
+        "storedValueBytes": 216899,
+        "storedKeys": 22
+      },
+      "resources": {
+        "samples": 28,
+        "meanProcessCpuPercent": 6.94642857142857,
+        "peakProcessRssMiB": 625.953125,
+        "firstProcessRssMiB": 599.75,
+        "lastProcessRssMiB": 625.953125
+      }
+    },
+    {
+      "group": "consent-after",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.517060625,
+      "counters": {
+        "storage.get": 0,
+        "storage.put": 2097,
+        "write.training-v1": 843,
+        "writeBytes.training-v1": 65691499,
+        "storage.getAlarm": 0,
+        "storage.setAlarm": 672,
+        "ws.incoming": 797,
+        "write.lounge": 872,
+        "writeBytes.lounge": 151873828,
+        "ws.messages": 19730,
+        "ws.bytes": 79496208,
+        "broadcast": 872,
+        "engine.requests": 1225,
+        "alarm.fired": 16,
+        "write.last": 1225,
+        "writeBytes.last": 7739727,
+        "bot.compute": 178,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.deleteAlarm": 0
+      },
+      "received": {
+        "messages": 19730,
+        "bytes": 79496208
+      },
+      "consent": true,
+      "throughput": 6.613171578088345,
+      "acceptedHumanMoves": 797,
+      "minMovesPerRoom": 33,
+      "responseMs": {
+        "p50": 21.8804999999993,
+        "p95": 43.28024999999616,
+        "p99": 80.98062500000015,
+        "max": 122.4935000000005
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 2940,
+      "modeledWrittenRows": 3612,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 38407864,
+        "storedValueBytes": 435140,
+        "storedKeys": 22
+      },
+      "resources": {
+        "samples": 25,
+        "meanProcessCpuPercent": 11.76,
+        "peakProcessRssMiB": 809.828125,
+        "firstProcessRssMiB": 803.71875,
+        "lastProcessRssMiB": 797
+      }
+    },
+    {
+      "group": "consent-before",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.99528912500001,
+      "counters": {
+        "storage.get": 1294,
+        "storage.put": 2068,
+        "write.lounge": 863,
+        "writeBytes.lounge": 149721474,
+        "write.training-v1": 863,
+        "writeBytes.training-v1": 67228311,
+        "storage.deleteAlarm": 0,
+        "storage.setAlarm": 2006,
+        "ws.incoming": 783,
+        "ws.messages": 172600,
+        "ws.bytes": 600980352,
+        "broadcast": 863,
+        "engine.requests": 1294,
+        "alarm.fired": 18,
+        "bot.compute": 6490,
+        "write.last": 1205,
+        "writeBytes.last": 7535865,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.getAlarm": 0
+      },
+      "received": {
+        "messages": 172600,
+        "bytes": 600980352
+      },
+      "consent": true,
+      "throughput": 6.471326327350515,
+      "acceptedHumanMoves": 783,
+      "minMovesPerRoom": 29,
+      "responseMs": {
+        "p50": 42.578040999986115,
+        "p95": 80.26004099998681,
+        "p99": 205.75229199999922,
+        "max": 328.0302499999998
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 2931,
+      "modeledWrittenRows": 4937,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 47990984,
+        "storedValueBytes": 405059,
+        "storedKeys": 22
+      },
+      "resources": {
+        "samples": 26,
+        "meanProcessCpuPercent": 22.646153846153844,
+        "peakProcessRssMiB": 814.84375,
+        "firstProcessRssMiB": 791.65625,
+        "lastProcessRssMiB": 814.84375
+      }
+    },
+    {
+      "group": "soak-after",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 1800.9354068339999,
+      "counters": {
+        "storage.get": 0,
+        "storage.put": 30474,
+        "write.training-v1": 0,
+        "writeBytes.training-v1": 0,
+        "storage.getAlarm": 0,
+        "storage.setAlarm": 10373,
+        "ws.incoming": 11545,
+        "write.lounge": 12838,
+        "writeBytes.lounge": 8344839615,
+        "ws.messages": 343340,
+        "ws.bytes": 1432911241,
+        "broadcast": 12838,
+        "engine.requests": 17636,
+        "alarm.fired": 184,
+        "write.last": 17636,
+        "writeBytes.last": 474432849,
+        "bot.compute": 2446,
+        "storage.delete": 0,
+        "storage.deleteAll": 0,
+        "storage.deleteAlarm": 0
+      },
+      "received": {
+        "messages": 343340,
+        "bytes": 1432911241
+      },
+      "consent": false,
+      "throughput": 5.930806823758846,
+      "acceptedHumanMoves": 10681,
+      "minMovesPerRoom": 466,
+      "responseMs": {
+        "p50": 40.75812499993481,
+        "p95": 63.31479199999012,
+        "p99": 66.41741700004786,
+        "max": 106.27491699997336
+      },
+      "note": "Local machine only; includes polling delay, not production latency or Cloudflare billing measurements.",
+      "logicalKeyWrites": 30474,
+      "modeledWrittenRows": 40847,
+      "localStorageAfterRun": {
+        "sqliteFileBytes": 98135984,
+        "storedValueBytes": 1968360,
+        "storedKeys": 22
+      },
+      "resources": {
+        "samples": 361,
+        "meanProcessCpuPercent": 16.052908587257622,
+        "peakProcessRssMiB": 900.28125,
+        "firstProcessRssMiB": 811.875,
+        "lastProcessRssMiB": 890.328125
+      }
+    }
+  ],
+  "costs": [
+    {
+      "label": "before",
+      "trainingEnabledUpper": {
+        "rowsWritten": 73059.39985452517,
+        "freeHoursToWrittenRowLimit": 2.7374985340454088,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 5,
+          "0.01": 5,
+          "0.1": 5
+        }
+      },
+      "users": 20,
+      "hours": 2,
+      "rowsRead": 18608.905286451536,
+      "rowsWritten": 73059.39985452517,
+      "requests": 21051.308975361597,
+      "durationGBsAtDuty": {
+        "1": 4608,
+        "0.01": 46.08,
+        "0.1": 460.8
+      },
+      "freeHoursToWrittenRowLimit": 2.7374985340454088,
+      "freeHoursToRequestLimit": 9.518683497278783,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 0,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 0,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 5,
+          "0.01": 5,
+          "0.1": 5
+        }
+      }
+    },
+    {
+      "label": "before",
+      "trainingEnabledUpper": {
+        "rowsWritten": 876712.798254302,
+        "freeHoursToWrittenRowLimit": 2.7374985340454088,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 31.05,
+          "0.01": 6.05,
+          "0.1": 6.05
+        }
+      },
+      "users": 20,
+      "hours": 24,
+      "rowsRead": 223306.86343741842,
+      "rowsWritten": 876712.798254302,
+      "requests": 252175.70770433918,
+      "durationGBsAtDuty": {
+        "1": 55296,
+        "0.01": 552.96,
+        "0.1": 5529.6
+      },
+      "freeHoursToWrittenRowLimit": 2.7374985340454088,
+      "freeHoursToRequestLimit": 9.518683497278783,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 1.05,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 25,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 31.05,
+          "0.01": 6.05,
+          "0.1": 6.05
+        }
+      }
+    },
+    {
+      "label": "before",
+      "trainingEnabledUpper": {
+        "rowsWritten": 159722.5198884301,
+        "freeHoursToWrittenRowLimit": 1.252171579434789,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 5.15,
+          "0.01": 5.15,
+          "0.1": 5.15
+        }
+      },
+      "users": 50,
+      "hours": 2,
+      "rowsRead": 41997.679963188406,
+      "rowsWritten": 159722.5198884301,
+      "requests": 44567.54186575914,
+      "durationGBsAtDuty": {
+        "1": 10137.599999999999,
+        "0.01": 101.37599999999999,
+        "0.1": 1013.7599999999999
+      },
+      "freeHoursToWrittenRowLimit": 1.252171579434789,
+      "freeHoursToRequestLimit": 4.494630301227943,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 0.15,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 0,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 5.15,
+          "0.01": 5.15,
+          "0.1": 5.15
+        }
+      }
+    },
+    {
+      "label": "before",
+      "trainingEnabledUpper": {
+        "rowsWritten": 1916670.2386611612,
+        "freeHoursToWrittenRowLimit": 1.252171579434789,
+        "monthlyWriteUSD": 8,
+        "monthlyTotalAtDuty": {
+          "1": 65.4,
+          "0.01": 15.4,
+          "0.1": 15.4
+        }
+      },
+      "users": 50,
+      "hours": 24,
+      "rowsRead": 503972.1595582609,
+      "rowsWritten": 1916670.2386611612,
+      "requests": 534040.5023891097,
+      "durationGBsAtDuty": {
+        "1": 121651.2,
+        "0.01": 1216.512,
+        "0.1": 12165.12
+      },
+      "freeHoursToWrittenRowLimit": 1.252171579434789,
+      "freeHoursToRequestLimit": 4.494630301227943,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 2.4,
+        "reads": 0,
+        "writes": 8,
+        "storage": 0,
+        "duration": {
+          "1": 50,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 65.4,
+          "0.01": 15.4,
+          "0.1": 15.4
+        }
+      }
+    },
+    {
+      "label": "before",
+      "trainingEnabledUpper": {
+        "rowsWritten": 293106.32075514895,
+        "freeHoursToWrittenRowLimit": 0.6823462540307113,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 17.8,
+          "0.01": 5.3,
+          "0.1": 5.3
+        }
+      },
+      "users": 100,
+      "hours": 2,
+      "rowsRead": 75836.20078027209,
+      "rowsWritten": 293106.32075514895,
+      "requests": 79228.64594345533,
+      "durationGBsAtDuty": {
+        "1": 19353.600000000002,
+        "0.01": 193.53600000000003,
+        "0.1": 1935.3600000000004
+      },
+      "freeHoursToWrittenRowLimit": 0.6823462540307113,
+      "freeHoursToRequestLimit": 2.5281686674672,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 0.3,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 12.5,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 17.8,
+          "0.01": 5.3,
+          "0.1": 5.3
+        }
+      }
+    },
+    {
+      "label": "before",
+      "trainingEnabledUpper": {
+        "rowsWritten": 3517275.849061787,
+        "freeHoursToWrittenRowLimit": 0.6823462540307113,
+        "monthlyWriteUSD": 56,
+        "monthlyTotalAtDuty": {
+          "1": 152.7,
+          "0.01": 65.2,
+          "0.1": 77.7
+        }
+      },
+      "users": 100,
+      "hours": 24,
+      "rowsRead": 910034.409363265,
+      "rowsWritten": 3517275.849061787,
+      "requests": 949423.751321464,
+      "durationGBsAtDuty": {
+        "1": 232243.2,
+        "0.01": 2322.4320000000002,
+        "0.1": 23224.320000000003
+      },
+      "freeHoursToWrittenRowLimit": 0.6823462540307113,
+      "freeHoursToRequestLimit": 2.5281686674672,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 4.2,
+        "reads": 0,
+        "writes": 56,
+        "storage": 0,
+        "duration": {
+          "1": 87.5,
+          "0.01": 0,
+          "0.1": 12.5
+        },
+        "totalAtDuty": {
+          "1": 152.7,
+          "0.01": 65.2,
+          "0.1": 77.7
+        }
+      }
+    },
+    {
+      "label": "after",
+      "trainingEnabledUpper": {
+        "rowsWritten": 49451.64142607887,
+        "freeHoursToWrittenRowLimit": 4.044355136299435,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 5,
+          "0.01": 5,
+          "0.1": 5
+        }
+      },
+      "users": 20,
+      "hours": 2,
+      "rowsRead": 0,
+      "rowsWritten": 36579.84613962977,
+      "requests": 18431.70005580076,
+      "durationGBsAtDuty": {
+        "1": 4608,
+        "0.01": 46.08,
+        "0.1": 460.8
+      },
+      "freeHoursToWrittenRowLimit": 5.467491559056191,
+      "freeHoursToRequestLimit": 10.87447051622179,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 0,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 0,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 5,
+          "0.01": 5,
+          "0.1": 5
+        }
+      }
+    },
+    {
+      "label": "after",
+      "trainingEnabledUpper": {
+        "rowsWritten": 593419.6971129464,
+        "freeHoursToWrittenRowLimit": 4.044355136299435,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 30.9,
+          "0.01": 5.9,
+          "0.1": 5.9
+        }
+      },
+      "users": 20,
+      "hours": 24,
+      "rowsRead": 0,
+      "rowsWritten": 438958.15367555723,
+      "requests": 220740.4006696091,
+      "durationGBsAtDuty": {
+        "1": 55296,
+        "0.01": 552.96,
+        "0.1": 5529.6
+      },
+      "freeHoursToWrittenRowLimit": 5.467491559056191,
+      "freeHoursToRequestLimit": 10.87447051622179,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 0.8999999999999999,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 25,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 30.9,
+          "0.01": 5.9,
+          "0.1": 5.9
+        }
+      }
+    },
+    {
+      "label": "after",
+      "trainingEnabledUpper": {
+        "rowsWritten": 110684.14033769765,
+        "freeHoursToWrittenRowLimit": 1.806943608992213,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 5.15,
+          "0.01": 5.15,
+          "0.1": 5.15
+        }
+      },
+      "users": 50,
+      "hours": 2,
+      "rowsRead": 0,
+      "rowsWritten": 83624.70225513923,
+      "requests": 39285.301419646006,
+      "durationGBsAtDuty": {
+        "1": 10137.599999999999,
+        "0.01": 101.37599999999999,
+        "0.1": 1013.7599999999999
+      },
+      "freeHoursToWrittenRowLimit": 2.3916378128295084,
+      "freeHoursToRequestLimit": 5.100050050866225,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 0.15,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 0,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 5.15,
+          "0.01": 5.15,
+          "0.1": 5.15
+        }
+      }
+    },
+    {
+      "label": "after",
+      "trainingEnabledUpper": {
+        "rowsWritten": 1328209.684052372,
+        "freeHoursToWrittenRowLimit": 1.806943608992213,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 57.1,
+          "0.01": 7.1,
+          "0.1": 7.1
+        }
+      },
+      "users": 50,
+      "hours": 24,
+      "rowsRead": 0,
+      "rowsWritten": 1003496.4270616707,
+      "requests": 470653.61703575205,
+      "durationGBsAtDuty": {
+        "1": 121651.2,
+        "0.01": 1216.512,
+        "0.1": 12165.12
+      },
+      "freeHoursToWrittenRowLimit": 2.3916378128295084,
+      "freeHoursToRequestLimit": 5.100050050866225,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 2.1,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 50,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 57.1,
+          "0.01": 7.1,
+          "0.1": 7.1
+        }
+      }
+    },
+    {
+      "label": "after",
+      "trainingEnabledUpper": {
+        "rowsWritten": 220656.89196819637,
+        "freeHoursToWrittenRowLimit": 0.9063845602829679,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 17.8,
+          "0.01": 5.3,
+          "0.1": 5.3
+        }
+      },
+      "users": 100,
+      "hours": 2,
+      "rowsRead": 0,
+      "rowsWritten": 167539.10779280332,
+      "requests": 78244.66901454536,
+      "durationGBsAtDuty": {
+        "1": 19353.600000000002,
+        "0.01": 193.53600000000003,
+        "0.1": 1935.3600000000004
+      },
+      "freeHoursToWrittenRowLimit": 1.1937511344953637,
+      "freeHoursToRequestLimit": 2.560010845777327,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 0.3,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 12.5,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 17.8,
+          "0.01": 5.3,
+          "0.1": 5.3
+        }
+      }
+    },
+    {
+      "label": "after",
+      "trainingEnabledUpper": {
+        "rowsWritten": 2647882.7036183565,
+        "freeHoursToWrittenRowLimit": 0.9063845602829679,
+        "monthlyWriteUSD": 30,
+        "monthlyTotalAtDuty": {
+          "1": 126.7,
+          "0.01": 39.2,
+          "0.1": 51.7
+        }
+      },
+      "users": 100,
+      "hours": 24,
+      "rowsRead": 0,
+      "rowsWritten": 2010469.2935136398,
+      "requests": 937616.0281745442,
+      "durationGBsAtDuty": {
+        "1": 232243.2,
+        "0.01": 2322.4320000000002,
+        "0.1": 23224.320000000003
+      },
+      "freeHoursToWrittenRowLimit": 1.1937511344953637,
+      "freeHoursToRequestLimit": 2.560010845777327,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 4.2,
+        "reads": 0,
+        "writes": 11,
+        "storage": 0,
+        "duration": {
+          "1": 87.5,
+          "0.01": 0,
+          "0.1": 12.5
+        },
+        "totalAtDuty": {
+          "1": 107.7,
+          "0.01": 20.2,
+          "0.1": 32.7
+        }
+      }
+    },
+    {
+      "label": "consent-before",
+      "trainingEnabledUpper": {
+        "rowsWritten": 293783.33864946663,
+        "freeHoursToWrittenRowLimit": 0.6807738005817748,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 17.8,
+          "0.01": 5.3,
+          "0.1": 5.3
+        }
+      },
+      "users": 100,
+      "hours": 2,
+      "rowsRead": 77001.34498934774,
+      "rowsWritten": 293783.33864946663,
+      "requests": 80522.13854896228,
+      "durationGBsAtDuty": {
+        "1": 19353.600000000002,
+        "0.01": 193.53600000000003,
+        "0.1": 1935.3600000000004
+      },
+      "freeHoursToWrittenRowLimit": 0.6807738005817748,
+      "freeHoursToRequestLimit": 2.4874960244770916,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 0.3,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 12.5,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 17.8,
+          "0.01": 5.3,
+          "0.1": 5.3
+        }
+      }
+    },
+    {
+      "label": "consent-before",
+      "trainingEnabledUpper": {
+        "rowsWritten": 3525400.063793599,
+        "freeHoursToWrittenRowLimit": 0.6807738005817748,
+        "monthlyWriteUSD": 56,
+        "monthlyTotalAtDuty": {
+          "1": 152.7,
+          "0.01": 65.2,
+          "0.1": 77.7
+        }
+      },
+      "users": 100,
+      "hours": 24,
+      "rowsRead": 924016.1398721728,
+      "rowsWritten": 3525400.063793599,
+      "requests": 964945.6625875474,
+      "durationGBsAtDuty": {
+        "1": 232243.2,
+        "0.01": 2322.4320000000002,
+        "0.1": 23224.320000000003
+      },
+      "freeHoursToWrittenRowLimit": 0.6807738005817748,
+      "freeHoursToRequestLimit": 2.4874960244770916,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 4.2,
+        "reads": 0,
+        "writes": 56,
+        "storage": 0,
+        "duration": {
+          "1": 87.5,
+          "0.01": 0,
+          "0.1": 12.5
+        },
+        "totalAtDuty": {
+          "1": 152.7,
+          "0.01": 65.2,
+          "0.1": 77.7
+        }
+      }
+    },
+    {
+      "label": "consent-after",
+      "trainingEnabledUpper": {
+        "rowsWritten": 217522.72967867198,
+        "freeHoursToWrittenRowLimit": 0.9194441440462022,
+        "monthlyWriteUSD": 0,
+        "monthlyTotalAtDuty": {
+          "1": 17.8,
+          "0.01": 5.3,
+          "0.1": 5.3
+        }
+      },
+      "users": 100,
+      "hours": 2,
+      "rowsRead": 0,
+      "rowsWritten": 215790.19489133844,
+      "requests": 76641.28215021342,
+      "durationGBsAtDuty": {
+        "1": 19353.600000000002,
+        "0.01": 193.53600000000003,
+        "0.1": 1935.3600000000004
+      },
+      "freeHoursToWrittenRowLimit": 0.9268261706733727,
+      "freeHoursToRequestLimit": 2.6136519721061964,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 0.3,
+        "reads": 0,
+        "writes": 0,
+        "storage": 0,
+        "duration": {
+          "1": 12.5,
+          "0.01": 0,
+          "0.1": 0
+        },
+        "totalAtDuty": {
+          "1": 17.8,
+          "0.01": 5.3,
+          "0.1": 5.3
+        }
+      }
+    },
+    {
+      "label": "consent-after",
+      "trainingEnabledUpper": {
+        "rowsWritten": 2610272.756144064,
+        "freeHoursToWrittenRowLimit": 0.9194441440462022,
+        "monthlyWriteUSD": 29,
+        "monthlyTotalAtDuty": {
+          "1": 125.55,
+          "0.01": 38.05,
+          "0.1": 50.55
+        }
+      },
+      "users": 100,
+      "hours": 24,
+      "rowsRead": 0,
+      "rowsWritten": 2589482.338696061,
+      "requests": 918375.3858025611,
+      "durationGBsAtDuty": {
+        "1": 232243.2,
+        "0.01": 2322.4320000000002,
+        "0.1": 23224.320000000003
+      },
+      "freeHoursToWrittenRowLimit": 0.9268261706733727,
+      "freeHoursToRequestLimit": 2.6136519721061964,
+      "monthlyUSD": {
+        "base": 5,
+        "requests": 4.05,
+        "reads": 0,
+        "writes": 28,
+        "storage": 0,
+        "duration": {
+          "1": 87.5,
+          "0.01": 0,
+          "0.1": 12.5
+        },
+        "totalAtDuty": {
+          "1": 124.55,
+          "0.01": 37.05,
+          "0.1": 49.55
+        }
+      }
+    }
+  ],
+  "costAssumptions": [
+    "30-day month; one initial connection per user and 20 reconnects per day",
+    "before/after use consent-off repeated runs; consent-before/after use observed 100-person consent-on runs; trainingEnabledUpper is a code-derived extra-write bound at each measured workload rate",
+    "Constant sampled workload during active hours; no workload outside that window",
+    "Logical storage calls/keys model rows, not Cloudflare billing measurements; metadata/retention cleanup and churn excluded",
+    "Duration is an assumed 1%, 10%, or 100% active duty across Lounge + rooms, not measured local elapsed time",
+    "Storage assumed below 5 GB-month; Workers upgrade requests assumed within included quotas; other account traffic, taxes and exchange rates excluded"
+  ]
+}
