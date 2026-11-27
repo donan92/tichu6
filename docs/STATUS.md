@@ -1,5 +1,37 @@
 # Project status / resume point
 
+## v0.8.44 100-person production capacity — release candidate
+
+- User requested a new domain and an initial 100-person production capacity.
+  Isolated worktree `/private/tmp/tichu6-production-100` preserves research/UI WIP.
+  Rebased onto deployed278ac07; retains v0.8.43 private invites and room engines.
+- Server admits100 identities including spectators/hall,20 rooms,120 transport
+  sockets including handshake/reconnect headroom. Existing throttles, deadlines,
+  storage schema and credential handling preserved. Bilingual UI/error text,
+  room-creation button, README and policy updated together.
+- Broadcast computes directory once and room presence once for recipient reuse;
+  private hands/membership remain personalized. Regression checks cover private
+  data, per-recipient mine flags, spectator counts and disconnect presence.
+- Final check,171 unit+110 UI tests,format and build pass. Real local Worker
+  100/101 admission,20/21 room race,full-capacity reconnect,bots,privacy,forfeit,
+  private invite,clock/idle and internal engine route tests pass.
+- Final v0.8.44 local load:100 sockets,20 active rooms,one bot per room,120seconds,
+  807 accepted human moves,min34/room,20 concurrent reconnects,all100 remained
+  connected. Response p50 43.34ms,p95 307.72ms,max332.24ms includes client polling.
+  This is not production latency or a long soak/free-quota guarantee.
+- Earlier test attempts caught test-client auto-collect/revision races and dev
+  reload socket loss. Fixed client to await server collection and assert continuous
+  socket presence; final test ran against unchanged source/fresh local storage.
+- Chrome375px preview showed capacity text fitting; header/footer notes open and
+  Escape dismisses. Existing favicon.ico404 observed; no app-runtime error seen.
+  Initial UI preview preceded rebase; merged UI/component checks pass. Physical
+  iPhone/Samsung verification not performed.
+- Domain candidate tichu6.com RDAP404; Cloudflare published com registration and
+  renewal$11.17/year,not a reserved domain/final checkout quote. Browser remains
+  signed out; login and owner purchase approval required. No purchase/paid upgrade.
+  docs/PRODUCTION.md records rollout,origin-bound guest credentials and rollback.
+- Deployment not yet completed; next verify Worker and Pages after release.
+
 ## v0.8.43 private rooms and per-room engine execution — deployed
 
 - Private creation, six-character cryptographic invites, code-entry native modal,
