@@ -37,6 +37,7 @@ export interface CallResult {
 }
 export interface PublicBase {
   scoreHistory?: { round: number; delta: number[]; scores: number[] }[];
+  dogTransfer?: { round: number; trick: number; recipient: number };
   dragonTransfer?: { round: number; trick: number; recipient: number };
   trickHistory?: TrickHistory[];
   trickNumber?: number;

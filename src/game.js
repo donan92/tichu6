@@ -609,6 +609,11 @@ export function act(state, seat, action) {
       s.wish = action.wish ?? null;
     if (cards.some((c) => !c.special && c.rank === s.wish)) s.wish = null;
     if (p.kind === 'dog') {
+      s.dogTransfer = {
+        round: s.round,
+        trick: s.trickNumber,
+        recipient: action.target,
+      };
       s.dogPending = null;
       s.captured[seat].push(...cards);
       s.turn = s.hands[action.target].length

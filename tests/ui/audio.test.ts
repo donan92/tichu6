@@ -241,3 +241,37 @@ it('announces turn after a play, exchange or collection but never repeats or ale
     ),
   ).toBe('card');
 });
+
+it('uses the Dragon sound for a Phoenix play, including combinations', () => {
+  const before = round();
+  before.phase = 'play';
+  before.turn = 1;
+  const after = {
+    ...before,
+    revision: before.revision + 1,
+    turn: 2,
+    top: {
+      kind: 'single',
+      power: 1.5,
+      bomb: 0,
+      size: 1,
+      cards: [
+        { id: 'phoenix', rank: 0, suit: -1, special: 'phoenix' as const },
+      ],
+    },
+  };
+  expect(effectForTransition(before, after)).toBe('dragon');
+  expect(
+    effectForTransition(before, {
+      ...after,
+      top: {
+        ...after.top,
+        kind: 'pair',
+        size: 2,
+        cards: [...after.top.cards, { id: 'eight', rank: 8, suit: 0 }],
+      },
+    }),
+  ).toBe('dragon');
+  expect(effectForTransition(after, after)).toBe(null);
+  expect(effectForTransition(null, after)).toBe(null);
+});

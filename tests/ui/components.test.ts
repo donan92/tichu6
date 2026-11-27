@@ -1122,3 +1122,35 @@ it('uses the same disclosure component outside and inside gameplay and preserves
   expect(rules.find('summary').text()).toBe(i18next.t('combinations.title'));
   await i18next.changeLanguage('ko');
 });
+
+it('highlights a new Dog recipient once, including cloned snapshots, then clears it', async () => {
+  vi.useFakeTimers();
+  const game = round();
+  const wrapper = mount(GameView, {
+    props: { game },
+    global: { plugins: plugins() },
+  });
+  wrappers.push(wrapper);
+  expect(wrapper.find('.dragon-recipient').exists()).toBe(false);
+  const received = {
+    ...game,
+    dogTransfer: { round: game.round, trick: 1, recipient: 3 },
+  };
+  await wrapper.setProps({ game: received });
+  expect(wrapper.get('.dragon-recipient').text()).toContain(game.names[3]);
+  await vi.advanceTimersByTimeAsync(3000);
+  await wrapper.setProps({ game: structuredClone(received) });
+  await vi.advanceTimersByTimeAsync(2000);
+  expect(wrapper.find('.dragon-recipient').exists()).toBe(false);
+  await wrapper.setProps({
+    game: {
+      ...received,
+      dogTransfer: { round: game.round, trick: 2, recipient: 1 },
+    },
+  });
+  expect(wrapper.get('.dragon-recipient').text()).toContain(game.names[1]);
+  await wrapper.setProps({ game: { ...received, round: game.round + 1 } });
+  expect(wrapper.find('.dragon-recipient').exists()).toBe(false);
+  wrapper.unmount();
+  vi.useRealTimers();
+});

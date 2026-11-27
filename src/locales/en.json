@@ -367,6 +367,7 @@
   "play.dragHandHint": "Drag to reorder · hold on touch screens · Alt+Left/Right with keyboard",
   "play.currentTurn": "Current turn",
   "patches.handOrderAndTurn": "Reorder your hand by dragging, reset its order, and see the current turn more clearly in dark mode.",
+  "play.dogReceived": "Received the Dog",
   "play.dragonReceived": "Received the Dragon",
   "patches.dragonRecipient": "Added Dragon recipient highlighting and a round-by-round score dialog.",
   "score.open": "View round scores",
@@ -434,5 +435,6 @@
   "patches.emptyRoomExpiry": "Rooms close after ten minutes without any connected players.",
   "patches.handTopActions": "Pass and Play now appear above your hand according to your card selection.",
   "patches.tabletHandActions": "Moved Small Tichu below your hand and widened tablet Pass and Play buttons.",
-  "patches.musicTimelineOpeningTurn": "Music keeps its timeline, the timer sits above turn guidance, and the opening turn lasts 60 seconds."
+  "patches.musicTimelineOpeningTurn": "Music keeps its timeline, the timer sits above turn guidance, and the opening turn lasts 60 seconds.",
+  "patches.specialCardFeedback": "Phoenix uses the Dragon sound, and the teammate receiving the Dog flashes."
 }

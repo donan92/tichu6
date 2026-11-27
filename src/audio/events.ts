@@ -85,7 +85,12 @@ export function effectForTransition(
     next.top.cards.map((c) => c.id).join('|') !==
       previous.top?.cards.map((c) => c.id).join('|');
   if (topChanged && next.top?.bomb) return 'bomb';
-  if (topChanged && next.top?.cards.some((c) => c.special === 'dragon'))
+  if (
+    topChanged &&
+    next.top?.cards.some(
+      (c) => c.special === 'dragon' || c.special === 'phoenix',
+    )
+  )
     return 'dragon';
   if (next.finish.length > previous.finish.length) return 'finish';
   if (topChanged) return 'card';

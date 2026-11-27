@@ -29,6 +29,7 @@ export function publicView(s: GameState): GameView {
     trickHistory: visibleHistory(s),
     trickNumber: round?.trickNumber,
     dragonTransfer: round?.dragonTransfer,
+    dogTransfer: round?.dogTransfer,
     callResults: round?.callResults || [],
     deadline: round?.deadline ?? null,
     deadlineDuration: round?.deadlineDuration ?? null,

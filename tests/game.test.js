@@ -211,6 +211,8 @@ test('dog transfers the lead to a chosen partner; no bombing on an empty table',
   ]);
   assert.throws(() => act(s, 0, { type: 'play', ids: ['dog'], target: 1 }));
   s = act(s, 0, { type: 'play', ids: ['dog'], target: 2 });
+  assert.equal(s.dogTransfer.recipient, 2);
+  assert.deepEqual(view(s, 0).dogTransfer, s.dogTransfer);
   assert.equal(s.turn, 2);
   assert.equal(s.top, null);
   assert.throws(() =>

@@ -1,5 +1,18 @@
 # Project status / resume point
 
+## v0.8.42 Phoenix sound and Dog recipient feedback — release pending
+
+- Phoenix in a new played combination uses the existing Dragon effect; own-turn
+  and round-end cue priority stays unchanged. No new audio assets.
+- Accepted Dog plays persist a public dogTransfer marker for the selected teammate,
+  even if their finished seat passes the next turn onward. Same five-second
+  recipient flash as Dragon, with bilingual Dog label. Initial/resumed snapshots
+  do not trigger it; cloned snapshots do not restart it.
+- check, 167 unit + 106 UI tests, format and build passed. Added accepted marker,
+  public privacy, Phoenix single/combination, and Dog animation regression coverage.
+  Real local Worker flow suite passed. No physical-device verification or deployment.
+  User approved both backend and frontend deployment; v0.8.42 release checks passed.
+
 ## v0.8.41 music and opening-turn changes — deployed
 
 - User approved wall-clock modulo playback. Independent sessionStorage anchors

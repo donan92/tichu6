@@ -169,3 +169,12 @@ test('Mahjong opening turn gets sixty seconds only once, including restored cloc
   syncDeadline(s, 93000);
   assert.equal(s.deadlineDuration, 30000);
 });
+
+test('Dog recipient marker is public without exposing private hands', () => {
+  const s = startRound(newGame());
+  s.dogTransfer = { round: s.round, trick: 1, recipient: 2 };
+  const snapshot = publicView(s);
+  assert.deepEqual(snapshot.dogTransfer, s.dogTransfer);
+  assert.deepEqual(snapshot.hand, []);
+  assert.equal('hands' in snapshot, false);
+});

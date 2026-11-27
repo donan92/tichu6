@@ -19,13 +19,21 @@ const props = defineProps<{ game: RoundView }>();
 const session = useSessionStore();
 const { t, message, title } = useText();
 const dragonRecipient = ref<number | null>(null);
+const receivedKind = ref<'dragon' | 'dog'>('dragon');
 let dragonTimer: ReturnType<typeof setTimeout> | undefined;
 watch(
-  () => JSON.stringify(props.game.dragonTransfer),
+  () => [
+    JSON.stringify(props.game.dragonTransfer),
+    JSON.stringify(props.game.dogTransfer),
+  ],
   (value, previous) => {
-    if (value === previous) return;
+    if (value[0] === previous[0] && value[1] === previous[1]) return;
     clearTimeout(dragonTimer);
-    const transfer = props.game.dragonTransfer;
+    receivedKind.value = value[1] !== previous[1] ? 'dog' : 'dragon';
+    const transfer =
+      receivedKind.value === 'dog'
+        ? props.game.dogTransfer
+        : props.game.dragonTransfer;
     dragonRecipient.value =
       transfer?.round === props.game.round ? transfer.recipient : null;
     dragonTimer = setTimeout(() => {
@@ -140,7 +148,13 @@ const tableNote = computed(() =>
             v-if="dragonRecipient === index"
             class="dragon-received"
             role="status"
-            >{{ t('play.dragonReceived') }}</span
+            >{{
+              t(
+                receivedKind === 'dog'
+                  ? 'play.dogReceived'
+                  : 'play.dragonReceived',
+              )
+            }}</span
           >
           <span
             v-if="game.phase === 'play' && game.turn === index"
