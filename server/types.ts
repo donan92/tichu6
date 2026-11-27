@@ -9,6 +9,7 @@ export interface Member {
   trainingConsent?: boolean;
 }
 export interface Room {
+  inviteCode?: string;
   teamMode?: 'random' | 'manual';
   seatMap?: (number | null)[];
   hostHash?: string;
@@ -25,6 +26,7 @@ export interface Room {
   trainingMatch?: string;
 }
 export interface LoungeData {
+  inviteAttempts?: Record<string, { window: number; count: number }>;
   rooms: Record<string, Room>;
   activity: Record<string, number>;
 }

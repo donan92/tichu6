@@ -436,5 +436,22 @@
   "patches.handTopActions": "패스·내기 버튼을 손패 위로 옮기고 카드 선택에 맞춰 표시합니다.",
   "patches.tabletHandActions": "스몰 티츄를 손패 아래로 옮기고 태블릿의 패스·내기 버튼을 넓혔습니다.",
   "patches.musicTimelineOpeningTurn": "음악 재생 위치를 유지하고 남은 시간을 차례 안내 위로 옮겼으며 첫 차례를 60초로 늘렸습니다.",
-  "patches.specialCardFeedback": "봉황에 용 효과음을 적용하고 개를 받은 팀원을 반짝임으로 표시합니다."
+  "patches.specialCardFeedback": "봉황에 용 효과음을 적용하고 개를 받은 팀원을 반짝임으로 표시합니다.",
+  "private.create": "비밀방 만들기",
+  "private.label": "비밀방",
+  "private.joinTitle": "참가 코드로 입장",
+  "private.joinHint": "공유받은 영문 대문자·숫자 6자리를 입력하세요.",
+  "private.joinAction": "입장",
+  "private.code": "참가 코드",
+  "private.shareTitle": "비밀방 초대",
+  "private.shareHint": "이 링크를 가진 사람은 참가할 수 있습니다. 비밀방은 관전할 수 없습니다.",
+  "private.link": "초대 링크",
+  "private.copyLink": "초대 링크 복사",
+  "private.copied": "초대 링크를 복사했습니다.",
+  "private.copyFailed": "링크를 길게 눌러 직접 복사해 주세요.",
+  "private.linkHint": "비밀방 초대입니다. 닉네임을 입력하면 입장합니다.",
+  "error.privateSpectator": "비밀방은 관전할 수 없습니다.",
+  "error.invalidInviteCode": "참가 코드를 확인해 주세요.",
+  "error.inviteRateLimit": "잠시 후 참가 코드를 다시 입력해 주세요.",
+  "patches.privateInvites": "관전할 수 없는 비밀방을 만들고 초대 링크나 6자리 코드로 참가할 수 있습니다."
 }

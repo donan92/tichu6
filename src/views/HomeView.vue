@@ -30,6 +30,7 @@ const samples: Card[] = [
         <h2>{{ t('home.seat') }}</h2>
       </div>
       <form class="entry-form" @submit.prevent="session.enterHall()">
+        <p v-if="session.pendingInvite">{{ t('private.linkHint') }}</p>
         <NicknameInput v-model="session.nickname" label="home.nickname" />
         <div class="entry-actions">
           <button class="primary" type="submit" :disabled="session.busy">

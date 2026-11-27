@@ -1,4 +1,8 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import PrivateInvite from '../components/PrivateInvite.vue';
+const joining = ref(false);
+const privateRoom = ref(false);
 import { useText } from '../composables/useText';
 import { useSessionStore } from '../stores/session';
 import NicknameInput from '../components/NicknameInput.vue';
@@ -21,14 +25,20 @@ const session = useSessionStore();
     <p v-if="session.connectionError" class="warning" role="alert">
       {{ message(session.connectionError) }}
     </p>
+    <PrivateInvite v-if="joining" joining @close="joining = false" />
     <section class="panel hall-tools">
+      <label
+        ><input v-model="privateRoom" type="checkbox" />
+        {{ t('private.create') }}</label
+      >
+      <button @click="joining = true">{{ t('private.joinTitle') }}</button>
       <NicknameInput
         v-model="session.nickname"
         label="lounge.nickname"
       /><button
         class="primary"
         :disabled="!session.connected || session.directory.rooms.length >= 5"
-        @click="session.createRoom"
+        @click="session.createRoom(privateRoom)"
       >
         {{ t('lounge.createRoom') }}</button
       ><span>{{
@@ -54,7 +64,10 @@ const session = useSessionStore();
           >{{ t(`phase.${room.phase}`) }} ·
           {{ t('common.round', { round: room.round }) }}</span
         >
-        <h2>{{ title(room.title) }}</h2>
+        <h2>
+          {{ title(room.title) }}
+          <small v-if="room.privateRoom">{{ t('private.label') }}</small>
+        </h2>
         <p>
           {{
             t('lounge.roomMembers', {
@@ -76,9 +89,14 @@ const session = useSessionStore();
               (!room.mine &&
                 !(room.canJoin ?? (room.phase === 'lobby' && room.players < 6)))
             "
-            @click="session.joinRoom(room.id)"
+            @click="
+              room.privateRoom && !room.mine
+                ? (joining = true)
+                : session.joinRoom(room.id)
+            "
           >
             {{ t(room.mine ? 'lounge.rejoin' : 'lounge.join') }}</button><button
+            v-if="!room.privateRoom"
             :disabled="!session.connected"
             @click="session.joinRoom(room.id, true)"
           >

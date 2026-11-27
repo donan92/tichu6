@@ -1,3 +1,4 @@
+import { GameExecutor } from './executor.ts';
 import { hostSeat, syncLobby } from '../room/lobby-policy.ts';
 import { syncReconnectClock } from './reconnect-clock.ts';
 import { syncDeadline, dueAction, botDelay } from '../../src/game-clock.ts';
@@ -9,13 +10,7 @@ import {
 import type { RoundState, GameAction } from '../../src/types.ts';
 import type { Room } from '../types.ts';
 import { AppError } from '../../src/messages.js';
-import {
-  startRound,
-  act,
-  botAction,
-  shuffle,
-  BOT_POLICY_VERSION,
-} from '../../src/game.js';
+import { shuffle, BOT_POLICY_VERSION } from '../../src/game.js';
 import { gameAction } from '../transport/protocol.ts';
 import { GRACE } from '../policy.ts';
 import type { Member, JsonObject } from '../types.ts';
@@ -25,11 +20,17 @@ import type { Connections } from '../transport/connections.ts';
 export class GameService {
   readonly repository: RoomRepository;
   readonly connections: Connections;
-  constructor(repository: RoomRepository, connections: Connections) {
+  readonly executor: GameExecutor;
+  constructor(
+    repository: RoomRepository,
+    connections: Connections,
+    executor = new GameExecutor(),
+  ) {
+    this.executor = executor;
     this.repository = repository;
     this.connections = connections;
   }
-  apply(ws: WebSocket, msg: JsonObject) {
+  async apply(ws: WebSocket, msg: JsonObject) {
     const a = this.connections.authenticated(ws);
     const r = a.room ? this.repository.data.rooms[a.room] : undefined;
     const seat = r?.members.findIndex((m) => m?.hash === a.hash) ?? -1;
@@ -101,20 +102,20 @@ export class GameService {
         throw new AppError('error.coordinator');
       if (r.state.phase === 'lobby' && r.teamMode === 'manual')
         throw new AppError('error.fillSeats');
-      this.start(r);
+      await this.start(r);
     } else {
       if (r.state.phase === 'lobby') throw new AppError('error.invalidAction');
       const before = r.state;
-      r.state = act(before, seat, action);
+      r.state = await this.executor.act(r.id, before, seat, action);
       this.record(r, before, seat, action, 'human');
     }
     syncDeadline(r.state);
     r.lastActive = Date.now();
     r.lastProgress = Date.now();
   }
-  private start(r: Room) {
+  private async start(r: Room) {
     // Deal/validate before changing membership; rejected starts stay atomic.
-    const next = startRound(structuredClone(r.state));
+    const next = await this.executor.start(r.id, structuredClone(r.state));
     if (r.state.phase === 'lobby') {
       if (r.teamMode === 'manual') {
         if (!r.seatMap?.every((i) => i != null && r.members[i]))
@@ -206,13 +207,13 @@ export class GameService {
       });
     }
   }
-  advanceTimed(now: number) {
+  async advanceTimed(now: number) {
     let changed = false;
     for (const r of Object.values(this.repository.data.rooms)) {
       if (r.state.phase === 'lobby') {
         syncLobby(r, this.connections.online(r), now);
         if (r.autoStartAt != null && now >= r.autoStartAt) {
-          this.start(r);
+          await this.start(r);
           changed = true;
         }
         continue;
@@ -229,7 +230,12 @@ export class GameService {
         const pending = dueAction(r.state, now);
         if (!pending) break;
         const before = r.state;
-        r.state = act(before, pending.seat, pending.action);
+        r.state = await this.executor.act(
+          r.id,
+          before,
+          pending.seat,
+          pending.action,
+        );
         this.record(
           r,
           before,
@@ -245,7 +251,7 @@ export class GameService {
       const due = dueAction(r.state, now);
       if (!due) continue;
       const before = r.state;
-      r.state = act(before, due.seat, due.action);
+      r.state = await this.executor.act(r.id, before, due.seat, due.action);
       // Automatic moves are never labelled as human training decisions.
       this.record(
         r,
@@ -261,7 +267,7 @@ export class GameService {
     }
     return changed;
   }
-  advanceBots(now: number) {
+  async advanceBots(now: number) {
     for (const r of Object.values(this.repository.data.rooms)) {
       const s = r.state,
         online = this.connections.online(r);
@@ -300,9 +306,9 @@ export class GameService {
           eligible(seat) &&
           (s.phase !== 'play' || r.members[seat]?.bot || r.members[seat]?.idle)
         ) {
-          const action = botAction(s, seat);
+          const action = await this.executor.bot(r.id, s, seat);
           if (botDelay(s, action, now, 0) > 0) continue;
-          r.state = act(s, seat, action);
+          r.state = await this.executor.act(r.id, s, seat, action);
           this.record(r, s, seat, action, 'bot');
           syncReconnectClock(r, this.connections.online(r), now);
           r.lastProgress = now;

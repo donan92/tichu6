@@ -21,11 +21,17 @@ await writeFile(
     compatibility_date: '2026-11-01',
     durable_objects: {
       bindings: [
+        { name: 'ROOM_ENGINES', class_name: 'RoomEngine' },
         { name: 'LOUNGE', class_name: 'TestLounge' },
         { name: 'ROOMS', class_name: 'GameRoom' },
       ],
     },
-    migrations: [{ tag: 'v1', new_sqlite_classes: ['TestLounge', 'GameRoom'] }],
+    migrations: [
+      {
+        tag: 'v1',
+        new_sqlite_classes: ['TestLounge', 'GameRoom', 'RoomEngine'],
+      },
+    ],
   }),
 );
 const process = spawn(

@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.43",
+    "summary": "patches.privateInvites"
+  },
+  {
     "version": "0.8.42",
     "summary": "patches.specialCardFeedback"
   },

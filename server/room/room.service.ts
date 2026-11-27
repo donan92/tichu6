@@ -57,10 +57,21 @@ export class RoomService {
         });
       }
   }
-  enter(ws: WebSocket, id: string, watch: boolean, name: string) {
+  enter(
+    ws: WebSocket,
+    id: string,
+    watch: boolean,
+    name: string,
+    code?: unknown,
+  ) {
     const a = this.connections.authenticated(ws),
       r = this.repository.data.rooms[id];
     if (!r) throw new AppError('error.roomClosed');
+    if (r.inviteCode) {
+      if (watch) throw new AppError('error.privateSpectator');
+      if (!r.members.some((m) => m?.hash === a.hash) && code !== r.inviteCode)
+        throw new AppError('error.invalidInviteCode');
+    }
     this.assertNameAvailable(a.hash, name);
     const active = this.activeMembership(a.hash);
     if (active && active.id !== id) throw new AppError('error.activeGame');
@@ -97,16 +108,32 @@ export class RoomService {
     r.lastActive = Date.now();
   }
 
-  create(ws: WebSocket, input: unknown) {
+  create(ws: WebSocket, input: unknown, privateRoom = false) {
     const a = this.connections.authenticated(ws);
     const name = nickname(input);
     this.assertNameAvailable(a.hash, name);
     if (this.activeMembership(a.hash)) throw new AppError('error.activeGame');
     if (Object.keys(this.repository.data.rooms).length >= MAX_ROOMS)
       throw new AppError('error.roomsFull');
+    let inviteCode: string | undefined;
+    if (privateRoom) {
+      const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+      do {
+        inviteCode = '';
+        while (inviteCode.length < 6) {
+          const byte = crypto.getRandomValues(new Uint8Array(1))[0];
+          if (byte < 252) inviteCode += alphabet[byte % 36];
+        }
+      } while (
+        Object.values(this.repository.data.rooms).some(
+          (r) => r.inviteCode === inviteCode,
+        )
+      );
+    }
     const id = crypto.randomUUID();
     this.repository.data.rooms[id] = {
       id,
+      inviteCode,
       hostHash: a.hash,
       teamMode: 'random',
       seatMap: Array(6).fill(null),
@@ -116,7 +143,7 @@ export class RoomService {
       lastActive: Date.now(),
       lastProgress: Date.now(),
     };
-    this.enter(ws, id, false, name);
+    this.enter(ws, id, false, name, inviteCode);
   }
   leave(ws: WebSocket) {
     const a = this.connections.authenticated(ws);

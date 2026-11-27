@@ -14,6 +14,17 @@ import type {
   ServerMessage,
 } from '../types';
 export const useSessionStore = defineStore('session', () => {
+  const pendingInvite = ref<string | null>(null);
+  const fragment = new URLSearchParams(location.hash.slice(1));
+  const invite = fragment.get('join');
+  if (invite && /^[A-Z0-9]{6}$/.test(invite)) {
+    pendingInvite.value = invite;
+    history.replaceState(
+      history.state,
+      '',
+      location.pathname + location.search,
+    );
+  }
   const mode = ref<'home' | 'hall' | 'room' | 'demo'>('home');
   const savedSession = savedRoom();
   const nickname = ref(savedSession?.name ?? '');
@@ -163,6 +174,10 @@ export const useSessionStore = defineStore('session', () => {
       connected.value = false;
       try {
         await active.open(name, manual);
+        if (pendingInvite.value) {
+          joinCode(pendingInvite.value);
+          pendingInvite.value = null;
+        }
       } catch (error) {
         if (room === active) {
           connectionError.value ??= errorEvent(error);
@@ -316,10 +331,18 @@ export const useSessionStore = defineStore('session', () => {
       notify(error);
     }
   }
-  function createRoom() {
+  function createRoom(privateRoom = false) {
     try {
       if (!room) throw new AppError('error.notConnected');
-      room.request({ type: 'create', name: validName() });
+      room.request({ type: 'create', name: validName(), privateRoom });
+    } catch (error) {
+      notify(error);
+    }
+  }
+  function joinCode(code: string) {
+    try {
+      if (!room) throw new AppError('error.notConnected');
+      room.request({ type: 'joinCode', code, name: validName() });
     } catch (error) {
       notify(error);
     }
@@ -404,7 +427,9 @@ export const useSessionStore = defineStore('session', () => {
     startPractice,
     restorePractice,
     submit,
+    pendingInvite,
     createRoom,
+    joinCode,
     joinRoom,
     toggleCard,
     confirmLeave,

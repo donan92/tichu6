@@ -1,9 +1,9 @@
 // Test-only endpoints. Never imported by production wrangler.jsonc.
-import worker, { GameRoom } from '../../server/worker.ts';
+import worker, { GameRoom, RoomEngine } from '../../server/worker.ts';
 import { Lounge } from '../../server/lounge.ts';
 import { deck, newGame, startRound } from '../../src/game.js';
 import { syncDeadline } from '../../src/game-clock.ts';
-export { GameRoom };
+export { GameRoom, RoomEngine };
 export class TestLounge extends Lounge {
   async fetch(request) {
     const path = new URL(request.url).pathname;

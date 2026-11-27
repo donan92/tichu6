@@ -436,5 +436,22 @@
   "patches.handTopActions": "Pass and Play now appear above your hand according to your card selection.",
   "patches.tabletHandActions": "Moved Small Tichu below your hand and widened tablet Pass and Play buttons.",
   "patches.musicTimelineOpeningTurn": "Music keeps its timeline, the timer sits above turn guidance, and the opening turn lasts 60 seconds.",
-  "patches.specialCardFeedback": "Phoenix uses the Dragon sound, and the teammate receiving the Dog flashes."
+  "patches.specialCardFeedback": "Phoenix uses the Dragon sound, and the teammate receiving the Dog flashes.",
+  "private.create": "Create a private room",
+  "private.label": "Private",
+  "private.joinTitle": "Join with a code",
+  "private.joinHint": "Enter the shared six-letter/digit code.",
+  "private.joinAction": "Join",
+  "private.code": "Join code",
+  "private.shareTitle": "Invite to private room",
+  "private.shareHint": "Anyone with this link can join. Spectating is disabled.",
+  "private.link": "Invite link",
+  "private.copyLink": "Copy invite link",
+  "private.copied": "Invite link copied.",
+  "private.copyFailed": "Select the link and copy it manually.",
+  "private.linkHint": "Private room invitation. Enter your nickname to join.",
+  "error.privateSpectator": "Private rooms cannot be spectated.",
+  "error.invalidInviteCode": "Check your join code.",
+  "error.inviteRateLimit": "Wait a minute before trying another code.",
+  "patches.privateInvites": "Create private rooms without spectators and join through an invite link or six-character code."
 }

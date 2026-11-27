@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, watchEffect } from 'vue';
+import { onMounted, watchEffect, ref } from 'vue';
 import { useTranslation } from 'i18next-vue';
 import { useSessionStore } from './stores/session';
 import { savedRoom } from './server-room';
@@ -13,6 +13,8 @@ import GameView from './views/GameView.vue';
 import ConnectionLoading from './components/ConnectionLoading.vue';
 import TrainingConsent from './components/TrainingConsent.vue';
 import { useGameAudio } from './composables/useGameAudio';
+import PrivateInvite from './components/PrivateInvite.vue';
+const sharing = ref(false);
 useGameAudio();
 const session = useSessionStore();
 const { t, i18next } = useTranslation();
@@ -22,7 +24,7 @@ watchEffect(() => {
   document.documentElement.lang = i18next.resolvedLanguage ?? 'en';
 });
 onMounted(() => {
-  if (session.restorePractice()) return;
+  if (!session.pendingInvite && session.restorePractice()) return;
   const saved = savedRoom();
   if (saved && !saved.idle && session.nickname) void session.enterHall(false);
 });
@@ -31,6 +33,17 @@ onMounted(() => {
   <ConnectionLoading v-if="session.restoring" />
   <template v-else>
     <AppHeader />
+    <div
+      v-if="session.game?.inviteCode && !session.game.spectator"
+      class="private-share"
+    >
+      <button @click="sharing = true">{{ t('private.copyLink') }}</button>
+      <PrivateInvite
+        v-if="sharing"
+        :code="session.game.inviteCode"
+        @close="sharing = false"
+      />
+    </div>
     <TrainingConsent v-if="session.mode === 'hall'" />
     <HomeView v-if="session.mode === 'home'" />
     <HallView v-else-if="session.mode === 'hall'" />

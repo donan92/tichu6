@@ -21,11 +21,17 @@ await writeFile(
     compatibility_date: '2026-11-01',
     durable_objects: {
       bindings: [
+        { name: 'ROOM_ENGINES', class_name: 'RoomEngine' },
         { name: 'LOUNGE', class_name: 'TestLounge' },
         { name: 'ROOMS', class_name: 'GameRoom' },
       ],
     },
-    migrations: [{ tag: 'v1', new_sqlite_classes: ['TestLounge', 'GameRoom'] }],
+    migrations: [
+      {
+        tag: 'v1',
+        new_sqlite_classes: ['TestLounge', 'GameRoom', 'RoomEngine'],
+      },
+    ],
   }),
 );
 const process = spawn(
@@ -258,6 +264,51 @@ try {
   assert.ok(dogPlayer.state.hand.some((card) => card.special === 'dog'));
   console.log(
     'PASS real Worker: cancel Dog restores clock and allows Mahjong wish',
+  );
+  const privateOwner = await connect('Private');
+  privateOwner.ws.send(
+    JSON.stringify({ type: 'create', name: 'Private', privateRoom: true }),
+  );
+  await until(() => privateOwner.state?.inviteCode);
+  const privateId = privateOwner.state.roomId;
+  const code = privateOwner.state.inviteCode;
+  assert.match(code, /^[A-Z0-9]{6}$/);
+  const guest = await connect('Guest');
+  const directory = guest.messages.find((m) => m.type === 'directory');
+  assert.equal(JSON.stringify(directory).includes(code), false);
+  guest.ws.send(
+    JSON.stringify({
+      type: 'join',
+      name: 'Guest',
+      roomId: privateId,
+      watch: true,
+    }),
+  );
+  await until(() =>
+    guest.messages.some((m) => m.code === 'error.privateSpectator'),
+  );
+  assert.equal(guest.state, null);
+  guest.ws.send(
+    JSON.stringify({
+      type: 'join',
+      name: 'Guest',
+      roomId: privateId,
+      watch: false,
+    }),
+  );
+  await until(() =>
+    guest.messages.some((m) => m.code === 'error.invalidInviteCode'),
+  );
+  guest.ws.send(JSON.stringify({ type: 'joinCode', name: 'Guest', code }));
+  await until(() => guest.state?.roomId === privateId);
+  assert.equal(guest.state.inviteCode, code);
+  guest.ws.close();
+  const privateReturn = await connect('Guest', guest.token);
+  await until(() => privateReturn.state?.roomId === privateId);
+  assert.equal(privateReturn.state.inviteCode, code);
+  assert.equal((await fetch(base + '/room-engine')).status, 410);
+  console.log(
+    'PASS real Worker: private invite admission, no watcher/direct-ID bypass, code privacy, reconnect and internal engine route isolation',
   );
 } catch (error) {
   console.error(logs);

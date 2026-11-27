@@ -65,6 +65,7 @@ export class Snapshots {
   directory(hash: string) {
     return Object.values(this.repository.data.rooms).map((r) => ({
       id: r.id,
+      privateRoom: !!r.inviteCode,
       title: r.title,
       phase: r.state.phase,
       round: r.state.round,
@@ -118,6 +119,8 @@ export class Snapshots {
             ? r.reconnectTurn?.until
             : null,
         roomId: r.id,
+        privateRoom: !!r.inviteCode,
+        ...(seat >= 0 && r.inviteCode ? { inviteCode: r.inviteCode } : {}),
         title: r.title,
         spectator: seat < 0,
         leader: manual ? map.indexOf(leader) : leader,

@@ -1068,9 +1068,9 @@ test('bot passes wait five seconds from the turn start even after a deadline ext
   s.passed = [];
   syncDeadline(s, 10000);
   s.deadline += 120000;
-  f.hub.game.advanceBots(14999);
+  await f.hub.game.advanceBots(14999);
   assert.equal(r.state.turn, 1);
-  f.hub.game.advanceBots(15000);
+  await f.hub.game.advanceBots(15000);
   assert.ok(r.state.passed.includes(1));
 });
 
@@ -1090,9 +1090,9 @@ test('bot Dragon winner collects after five seconds instead of waiting thirty', 
   s.pile = [dragon];
   syncDeadline(s, 10000);
   assert.equal(s.deadline, 40000);
-  f.hub.game.advanceBots(14999);
+  await f.hub.game.advanceBots(14999);
   assert.equal(r.state.phase, 'trick');
-  f.hub.game.advanceBots(15000);
+  await f.hub.game.advanceBots(15000);
   assert.equal(r.state.phase, 'play');
   assert.equal(r.state.dragonTransfer.recipient % 2, 0);
 });
@@ -1144,4 +1144,90 @@ test('player reconnect cancels empty expiry and next disconnect starts a new int
   const before = Date.now();
   f.hub.refreshPresence();
   assert.ok(f.hub.data.rooms[id].emptySince >= before);
+});
+
+test('private rooms require codes, forbid watching and expose invites to members only', async () => {
+  const f = await setup();
+  const owner = await user(f, 3001);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner', privateRoom: true });
+  const id = owner.a.room;
+  const code = last(owner, 'state').value.inviteCode;
+  assert.match(code, /^[A-Z0-9]{6}$/);
+  const outsider = await user(f, 3002);
+  assert.equal(last(outsider, 'directory').rooms[0].privateRoom, true);
+  assert.equal(
+    JSON.stringify(last(outsider, 'directory')).includes(code),
+    false,
+  );
+  await msg(f.hub, outsider, {
+    type: 'join',
+    roomId: id,
+    name: 'Guest',
+    watch: false,
+  });
+  assert.equal(last(outsider, 'error').code, 'error.invalidInviteCode');
+  await msg(f.hub, outsider, {
+    type: 'join',
+    roomId: id,
+    name: 'Guest',
+    watch: true,
+  });
+  assert.equal(last(outsider, 'error').code, 'error.privateSpectator');
+  await msg(f.hub, outsider, { type: 'joinCode', code, name: 'Guest' });
+  assert.equal(outsider.a.room, id);
+  assert.equal(last(outsider, 'state').value.inviteCode, code);
+  await msg(f.hub, outsider, {
+    type: 'join',
+    roomId: id,
+    name: 'Guest',
+    watch: true,
+  });
+  assert.equal(last(outsider, 'error').code, 'error.privateSpectator');
+  outsider.close();
+  const returned = await user(f, 3002, 'Guest');
+  assert.equal(returned.a.room, id);
+  const spy = await user(f, 3003);
+  await msg(f.hub, spy, { type: 'joinCode', code: '!!!!!!', name: 'Spy' });
+  assert.equal(last(spy, 'error').code, 'error.invalidInviteCode');
+  assert.equal(spy.a.room, null);
+  assert.equal(f.hub.data.rooms[id].members.filter(Boolean).length, 2);
+});
+
+test('private room code attempts are bounded and hello cannot bypass spectator rejection', async () => {
+  const f = await setup();
+  const owner = await user(f, 3011);
+  await msg(f.hub, owner, { type: 'create', name: 'Owner', privateRoom: true });
+  const id = owner.a.room;
+  const stranger = await user(f, 3012);
+  for (let i = 0; i < 6; i++)
+    await msg(f.hub, stranger, {
+      type: 'joinCode',
+      code: '!!!!!!',
+      name: 'Guest',
+    });
+  assert.equal(last(stranger, 'error').code, 'error.inviteRateLimit');
+  stranger.close();
+  const retry = await user(f, 3012);
+  await msg(f.hub, retry, {
+    type: 'joinCode',
+    code: f.hub.data.rooms[id].inviteCode,
+    name: 'Guest',
+  });
+  assert.equal(last(retry, 'error').code, 'error.inviteRateLimit');
+
+  const ws = socket();
+  f.sockets.push(ws);
+  await msg(f.hub, ws, {
+    type: 'hello',
+    name: 'Spy',
+    token: 'c'.repeat(64),
+    roomId: id,
+    watch: true,
+  });
+  assert.equal(last(ws, 'error').code, 'error.privateSpectator');
+  assert.equal(ws.a.room, null);
+  assert.equal(
+    ws.messages.some((m) => m.type === 'state'),
+    false,
+  );
 });

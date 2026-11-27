@@ -59,6 +59,8 @@ export interface PublicBase {
   seat: number;
   hand: Card[];
   roomId?: string;
+  privateRoom?: boolean;
+  inviteCode?: string;
   title?: RoomTitle;
   spectator?: boolean;
   leader?: number;
@@ -152,6 +154,7 @@ export type GameAction =
       phoenixRank?: number | null;
     };
 export interface RoomSummary {
+  privateRoom?: boolean;
   id: string;
   title: RoomTitle;
   phase: Phase;
@@ -170,7 +173,8 @@ export type ServerMessage =
   | { type: 'state'; value: GameView; online: boolean[] }
   | ({ type: 'error' } & Message);
 export type ClientRequest =
-  | { type: 'create'; name: string }
+  | { type: 'create'; name: string; privateRoom?: boolean }
+  | { type: 'joinCode'; name: string; code: string }
   | { type: 'join'; roomId: string; watch: boolean; name: string }
   | { type: 'leave' | 'forfeit' }
   | { type: 'action'; revision: number; action: GameAction };

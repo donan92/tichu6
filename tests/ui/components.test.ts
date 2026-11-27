@@ -17,6 +17,7 @@ import GameControls from '../../src/components/GameControls.vue';
 import ScoreHistory from '../../src/components/ScoreHistory.vue';
 import GameView from '../../src/views/GameView.vue';
 import HandCards from '../../src/components/HandCards.vue';
+import PrivateInvite from '../../src/components/PrivateInvite.vue';
 import { VueDraggable } from 'vue-draggable-plus';
 import HallView from '../../src/views/HallView.vue';
 import NicknameInput from '../../src/components/NicknameInput.vue';
@@ -1153,4 +1154,59 @@ it('highlights a new Dog recipient once, including cloned snapshots, then clears
   expect(wrapper.find('.dragon-recipient').exists()).toBe(false);
   wrapper.unmount();
   vi.useRealTimers();
+});
+
+it('normalizes six-character invite input and restores focus when dismissed', async () => {
+  const session = useSessionStore();
+  session.connected = true;
+  const join = vi.spyOn(session, 'joinCode').mockImplementation(() => {});
+  const trigger = document.createElement('button');
+  document.body.append(trigger);
+  trigger.focus();
+  const wrapper = mount(PrivateInvite, {
+    props: { joining: true },
+    global: { plugins: plugins() },
+  });
+  wrappers.push(wrapper);
+  const input = document.querySelector('dialog input') as HTMLInputElement;
+  input.value = 'ab12cd';
+  input.dispatchEvent(new Event('input', { bubbles: true }));
+  await nextTick();
+  expect(input.value).toBe('AB12CD');
+  document
+    .querySelector('dialog form')!
+    .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  await nextTick();
+  expect(join).toHaveBeenCalledWith('AB12CD');
+  wrapper.unmount();
+  expect(document.activeElement).toBe(trigger);
+  trigger.remove();
+});
+
+it('copies an invite link with a fragment rather than a query parameter', async () => {
+  const writeText = vi.fn().mockResolvedValue(undefined);
+  Object.defineProperty(navigator, 'clipboard', {
+    configurable: true,
+    value: { writeText },
+  });
+  const wrapper = mount(PrivateInvite, {
+    props: { code: 'AB12CD' },
+    global: { plugins: plugins() },
+  });
+  wrappers.push(wrapper);
+  document
+    .querySelector('dialog form')!
+    .dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+  await flushPromises();
+  const url = new URL(writeText.mock.calls[0][0]);
+  expect(url.hash).toBe('#join=AB12CD');
+  expect(url.search).toBe('');
+  expect(document.querySelector('dialog')!.textContent).toContain('copied');
+});
+
+it('consumes invitation fragments without retaining the code in the address bar', () => {
+  history.replaceState(null, '', '/#join=AB12CD');
+  const session = useSessionStore();
+  expect(session.pendingInvite).toBe('AB12CD');
+  expect(location.hash).toBe('');
 });

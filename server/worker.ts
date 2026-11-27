@@ -1,5 +1,6 @@
 import { Hono } from 'hono';
 import { ORIGINS } from './policy.ts';
+export { RoomEngine } from './game/room-engine.ts';
 export { Lounge } from './lounge.ts';
 export { GameRoom } from './legacy-game-room.js';
 

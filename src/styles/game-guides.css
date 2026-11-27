@@ -118,3 +118,10 @@
     font-size: 20px;
   }
 }
+
+.private-share {
+  max-width: 1300px;
+  margin: 12px auto;
+  padding: 0 16px;
+  text-align: right;
+}

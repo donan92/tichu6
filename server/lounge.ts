@@ -1,3 +1,4 @@
+import { GameExecutor } from './game/executor.ts';
 import { exportTrainingArchive } from './training/records.ts';
 import { AppError, event, errorEvent } from '../src/messages.js';
 import { MAX_SOCKETS } from './policy.ts';
@@ -27,7 +28,10 @@ export class Lounge {
   readonly snapshots: Snapshots;
   readonly game: GameService;
   readonly lifecycle: LifecycleService;
-  constructor(ctx: DurableObjectState) {
+  constructor(
+    ctx: DurableObjectState,
+    env?: { ROOM_ENGINES?: DurableObjectNamespace },
+  ) {
     this.ctx = ctx;
     this.repository = new RoomRepository(ctx.storage);
     this.connections = new Connections(ctx);
@@ -38,7 +42,11 @@ export class Lounge {
       this.rooms,
     );
     this.snapshots = new Snapshots(this.repository, this.connections);
-    this.game = new GameService(this.repository, this.connections);
+    this.game = new GameService(
+      this.repository,
+      this.connections,
+      new GameExecutor(env?.ROOM_ENGINES),
+    );
     this.lifecycle = new LifecycleService(
       this.repository,
       this.connections,
@@ -123,7 +131,7 @@ export class Lounge {
     await this.schedule();
     return new Response(null, { status: 101, webSocket: pair[0] });
   }
-  private dispatch(ws: WebSocket, msg: JsonObject) {
+  private async dispatch(ws: WebSocket, msg: JsonObject) {
     switch (msg.type) {
       case 'trainingConsent': {
         if (typeof msg.enabled !== 'boolean')
@@ -138,8 +146,29 @@ export class Lounge {
         break;
       }
       case 'create':
-        this.rooms.create(ws, msg.name);
+        if (msg.privateRoom != null && typeof msg.privateRoom !== 'boolean')
+          throw new AppError('error.invalidRequest');
+        this.rooms.create(ws, msg.name, msg.privateRoom === true);
         break;
+      case 'joinCode': {
+        const a = this.connections.authenticated(ws);
+        const now = Date.now();
+        const attempts = (this.data.inviteAttempts ??= {});
+        for (const [hash, attempt] of Object.entries(attempts))
+          if (now - attempt.window >= 60000) delete attempts[hash];
+        const attempt = (attempts[a.hash] ??= { window: now, count: 0 });
+        attempt.count++;
+        await this.persist();
+        if (attempt.count > 5) throw new AppError('error.inviteRateLimit');
+        if (typeof msg.code !== 'string' || !/^[A-Z0-9]{6}$/.test(msg.code))
+          throw new AppError('error.invalidInviteCode');
+        const room = Object.values(this.data.rooms).find(
+          (r) => r.inviteCode === msg.code,
+        );
+        if (!room) throw new AppError('error.invalidInviteCode');
+        this.rooms.enter(ws, room.id, false, nickname(msg.name), msg.code);
+        break;
+      }
       case 'join':
         if (
           typeof msg.roomId !== 'string' ||
@@ -156,7 +185,7 @@ export class Lounge {
         this.rooms.leave(ws);
         break;
       case 'action':
-        this.game.apply(ws, msg);
+        await this.game.apply(ws, msg);
         break;
       default:
         throw new AppError('error.unsupported');
@@ -168,7 +197,7 @@ export class Lounge {
       this.broadcast();
     }
     this.lifecycle.expireIdle(now);
-    if (this.game.advanceTimed(now)) {
+    if (await this.game.advanceTimed(now)) {
       await this.persist();
       this.broadcast();
     }
@@ -228,7 +257,7 @@ export class Lounge {
             return;
           }
           if (!current.hash) throw new AppError('error.replaced');
-          this.dispatch(ws, msg);
+          await this.dispatch(ws, msg);
           this.data.activity[current.hash] = now;
           this.refreshPresence();
           this.lifecycle.cleanup();
@@ -281,8 +310,8 @@ export class Lounge {
       this.expireStalledRooms(now);
       this.lifecycle.expireIdle(now);
       this.refreshPresence();
-      this.game.advanceTimed(now);
-      this.game.advanceBots(now);
+      await this.game.advanceTimed(now);
+      await this.game.advanceBots(now);
       this.lifecycle.cleanup();
       await this.persist();
       this.broadcast();

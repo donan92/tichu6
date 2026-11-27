@@ -6,6 +6,7 @@
   "durable_objects": {
     "code_update_strategy": { "mode": "immediate" },
     "bindings": [
+      { "name": "ROOM_ENGINES", "class_name": "RoomEngine" },
       {
         "name": "ROOMS",
         "class_name": "GameRoom",
@@ -25,6 +26,7 @@
       "tag": "v2",
       "new_sqlite_classes": ["Lounge"],
     },
+    { "tag": "v3", "new_sqlite_classes": ["RoomEngine"] },
   ],
   "ratelimits": [
     {

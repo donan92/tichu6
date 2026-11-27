@@ -1,5 +1,24 @@
 # Project status / resume point
 
+## v0.8.43 private rooms and per-room engine execution — release pending
+
+- Private creation, six-character cryptographic invites, code-entry native modal,
+  and fragment-based invitation link copy/consume implemented. All room members
+  may copy; outsiders/directory never receive codes. Server blocks private
+  spectating and direct-ID bypass, retains global limits and identity-based resume.
+  Durable per-identity code attempts prevent reconnect resetting the throttle.
+- ROOM_ENGINES/v3 introduces one internal engine DO per room UUID for deal/action/
+  bot execution and persisted idempotent results. Existing rooms are preserved.
+  IMPORTANT: Lounge still owns sockets, clocks and authoritative snapshots; this
+  is compute isolation, not full room-ownership sharding or a capacity increase.
+  See docs/PRIVATE_ROOMS.md for remaining full-sharding requirements.
+- 170 unit + 109 UI tests pass. Real local Worker capacity, idle and flow suites
+  pass with the new binding; flow includes invite/privacy/reconnect/no-public-
+  engine-route checks. Local Chrome 320/820px modal checked, no page overflow;
+  native focus/clipboard/fragment tests pass. Physical phones unverified.
+- User approved v0.8.43 release. check, 279 tests, format and build passed.
+  Deploy Worker migration/binding before frontend; verification pending.
+
 ## v0.8.42 Phoenix sound and Dog recipient feedback — deployed
 
 - Phoenix in a new played combination uses the existing Dragon effect; own-turn

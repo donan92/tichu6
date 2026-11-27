@@ -1,7 +1,7 @@
 // Local integration fixture only. Production wrangler.jsonc never imports this.
-import worker, { GameRoom } from '../../server/worker.ts';
+import worker, { GameRoom, RoomEngine } from '../../server/worker.ts';
 import { Lounge } from '../../server/lounge.ts';
-export { GameRoom };
+export { GameRoom, RoomEngine };
 export class TestLounge extends Lounge {
   async fetch(request) {
     if (new URL(request.url).pathname === '/__age-room') {
