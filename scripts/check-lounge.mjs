@@ -44,16 +44,16 @@ async function request(c, m, verify) {
   return c.messages.slice(count);
 }
 try {
-  const users = await Promise.all(Array.from({ length: 31 }, () => user()));
+  const users = await Promise.all(Array.from({ length: 101 }, () => user()));
   const admitted = users.filter((c) =>
     c.messages.some((m) => m.type === 'welcome'),
   );
-  assert.equal(admitted.length, 30);
+  assert.equal(admitted.length, 100);
   assert.equal(
     users.filter((c) => c.messages.some((m) => m.type === 'error')).length,
     1,
   );
-  await until(() => admitted.every((c) => c.directory?.count === 30));
+  await until(() => admitted.every((c) => c.directory?.count === 100));
   assert.equal(
     admitted[0].directory.rooms.length,
     0,
@@ -61,7 +61,7 @@ try {
   );
   await Promise.all(
     admitted
-      .slice(0, 6)
+      .slice(0, 21)
       .map((c) =>
         request(c, { type: 'create', name: c.name }, (messages) =>
           messages.some(
@@ -72,10 +72,10 @@ try {
         ),
       ),
   );
-  await until(() => admitted[0].directory.rooms.length === 5);
+  await until(() => admitted[0].directory.rooms.length === 20);
   assert.equal(
     admitted
-      .slice(0, 6)
+      .slice(0, 21)
       .filter((c) => c.messages.some((m) => m.type === 'error')).length,
     1,
   );
@@ -144,14 +144,14 @@ try {
   const original = owner.state.hand;
   const originalSeat = owner.state.seat;
   owner.ws.close();
-  await until(() => spectator.directory.count === 29);
+  await until(() => spectator.directory.count === 99);
   const restored = await user(owner.token, { roomId: id });
   await until(() => restored.state?.phase === 'grand');
   assert.equal(restored.state.seat, originalSeat);
   assert.deepEqual(restored.state.hand, original);
-  assert.equal(restored.directory.count, 30);
+  assert.equal(restored.directory.count, 100);
   console.log(
-    'PASS real Worker: 30/31 identities, 5/6 room race, six seats, spectators counted, spectator hand privacy, player hand isolation, spectator action spoof rejected, reconnect at full capacity',
+    'PASS real Worker: 100/101 identities, 20/21 room race, six seats, spectators counted, spectator hand privacy, player hand isolation, spectator action spoof rejected, reconnect at full capacity',
   );
   const solo = admitted.find((c) => !players.includes(c) && c !== spectator);
   await request(
@@ -181,7 +181,7 @@ try {
     () => solo.state?.phase === 'exchange',
   );
   assert.equal(solo.state.hand.length, 18);
-  assert.equal(solo.directory.count, 30);
+  assert.equal(solo.directory.count, 100);
   console.log(
     'PASS real Worker: one human plus five bots, alarm-driven decisions, 10 then 18 cards, no extra identity slots',
   );

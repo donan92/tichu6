@@ -22,14 +22,12 @@ export class Connections {
     return { ...a, hash: a.hash };
   }
   online(room: Room) {
+    const users = this.users().map((ws) => this.attachment(ws));
     return room.members.map(
       (m) =>
         !!m &&
         !m.bot &&
-        this.users().some((ws) => {
-          const a = this.attachment(ws);
-          return a.hash === m.hash && a.room === room.id && !a.watch;
-        }),
+        users.some((a) => a.hash === m.hash && a.room === room.id && !a.watch),
     );
   }
   send(ws: WebSocket, message: unknown) {

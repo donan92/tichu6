@@ -1,6 +1,6 @@
 {
   "name": "tichu6",
-  "version": "0.8.43",
+  "version": "0.8.44",
   "private": true,
   "type": "module",
   "scripts": {
@@ -26,7 +26,8 @@
     "predeploy:server": "npm run release:check && npm run typecheck:server",
     "typecheck:server": "npm run types:server && tsc -p tsconfig.server.json",
     "types:server": "wrangler types",
-    "test:flow": "node scripts/check-flow.mjs"
+    "test:flow": "node scripts/check-flow.mjs",
+    "test:capacity": "node scripts/check-capacity.mjs"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

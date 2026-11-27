@@ -63,6 +63,9 @@ export class Snapshots {
     this.connections = connections;
   }
   directory(hash: string) {
+    const users = this.connections
+      .users()
+      .map((ws) => this.connections.attachment(ws));
     return Object.values(this.repository.data.rooms).map((r) => ({
       id: r.id,
       privateRoom: !!r.inviteCode,
@@ -75,16 +78,17 @@ export class Snapshots {
         r.state.phase === 'lobby' &&
         r.members.filter((m) => m && !m.bot).length < 6,
       online: this.connections.online(r).filter(Boolean).length,
-      spectators: this.connections.users().filter((ws) => {
-        const a = this.connections.attachment(ws);
-        return a.room === r.id && a.watch;
-      }).length,
+      spectators: users.filter((a) => a.room === r.id && a.watch).length,
       mine: r.members.some((m) => m?.hash === hash),
     }));
   }
-  state(r: Room, hash: string, watch: boolean) {
+  state(
+    r: Room,
+    hash: string,
+    watch: boolean,
+    online = this.connections.online(r),
+  ) {
     const seat = watch ? -1 : r.members.findIndex((m) => m?.hash === hash);
-    const online = this.connections.online(r);
     const snapshot = publicView(r.state);
     snapshot.names = r.members.map((m, i) => (m ? r.state.names[i] : ''));
     if (seat >= 0) {
@@ -141,17 +145,36 @@ export class Snapshots {
   }
   broadcast() {
     const users = this.connections.users();
+    // Compute shared directory/presence once per broadcast, never cache private hands.
+    const directory = this.directory('');
+    const members = new Map(
+      Object.values(this.repository.data.rooms).map((r) => [
+        r.id,
+        new Set(r.members.flatMap((m) => (m ? [m.hash] : []))),
+      ]),
+    );
+    const online = new Map(
+      Object.values(this.repository.data.rooms).map((r) => [
+        r.id,
+        this.connections.online(r),
+      ]),
+    );
     for (const ws of users) {
       const a = this.connections.authenticated(ws);
       const room = a.room ? this.repository.data.rooms[a.room] : undefined;
       this.connections.send(ws, {
         type: 'directory',
-        rooms: this.directory(a.hash),
+        rooms: directory.map((r) => ({
+          ...r,
+          mine: members.get(r.id)!.has(a.hash),
+        })),
         count: users.length,
       });
       this.connections.send(
         ws,
-        room ? this.state(room, a.hash, !!a.watch) : { type: 'hall' },
+        room
+          ? this.state(room, a.hash, !!a.watch, online.get(room.id))
+          : { type: 'hall' },
       );
     }
   }

@@ -609,6 +609,45 @@ describe('Vue interaction regressions', () => {
       expect(wrapper.find('.card-bottom').exists()).toBe(false);
     }
   });
+  it('shows 100-person capacity and allows room creation until the twentieth room', async () => {
+    const session = useSessionStore();
+    session.mode = 'hall';
+    session.connected = true;
+    session.directory = { count: 100, rooms: [] };
+    const wrapper = mount(HallView, { global: { plugins: plugins() } });
+    wrappers.push(wrapper);
+    expect(wrapper.get('.counter').text()).toContain('100 / 100');
+    const makeRoom = (i: number) => ({
+      id: String(i),
+      title: { adjective: 'moon', noun: 'garden', number: '001' },
+      phase: 'lobby' as const,
+      round: 0,
+      scores: [0, 0] as [number, number],
+      players: 1,
+      online: 1,
+      spectators: 0,
+      mine: false,
+    });
+    session.directory.rooms = Array.from({ length: 19 }, (_, i) => makeRoom(i));
+    await nextTick();
+    const button = wrapper.get('.hall-tools button.primary');
+    expect(button.attributes('disabled')).toBeUndefined();
+    session.directory = {
+      ...session.directory,
+      rooms: [...session.directory.rooms, makeRoom(19)],
+    };
+    await nextTick();
+    expect(button.attributes('disabled')).toBeDefined();
+    session.directory = {
+      ...session.directory,
+      rooms: session.directory.rooms.slice(0, 19),
+    };
+    await nextTick();
+    expect(button.attributes('disabled')).toBeUndefined();
+    expect(wrapper.get('.hall-tools button.primary').element).toBe(
+      button.element,
+    );
+  });
   it('starts five-bot practice from the lounge even while disconnected', async () => {
     vi.useFakeTimers();
     const session = useSessionStore();

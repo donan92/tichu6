@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.44",
+    "summary": "patches.capacity100"
+  },
+  {
     "version": "0.8.43",
     "summary": "patches.privateInvites"
   },

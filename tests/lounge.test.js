@@ -90,30 +90,77 @@ test('nicknames accept only 1 to 8 ASCII letters and digits, preserving case', (
   ])
     assert.throws(() => nickname(s));
 });
-test('31 simultaneous identities yield exactly 30 admissions; reconnect takes no extra slot', async () => {
+test('101 simultaneous identities yield exactly 100 admissions; reconnect takes no extra slot', async () => {
   const f = await setup();
   const users = await Promise.all(
-    Array.from({ length: 31 }, (_, i) => user(f, i + 1)),
+    Array.from({ length: 101 }, (_, i) => user(f, i + 1)),
   );
-  assert.equal(f.hub.users().length, 30);
-  assert.equal(users.filter((w) => last(w, 'welcome')).length, 30);
+  assert.equal(f.hub.users().length, 100);
+  assert.equal(users.filter((w) => last(w, 'welcome')).length, 100);
   const replacement = await user(f, 1);
   assert.ok(last(replacement, 'welcome'));
-  assert.equal(f.hub.users().length, 30);
+  assert.equal(f.hub.users().length, 100);
   assert.equal(users[0].code, 4001);
 });
-test('simultaneous room creation cannot exceed five and server supplies nonempty titles', async () => {
+test('simultaneous room creation cannot exceed twenty and server supplies nonempty titles', async () => {
   const f = await setup();
   const users = await Promise.all(
-    Array.from({ length: 6 }, (_, i) => user(f, i + 1)),
+    Array.from({ length: 21 }, (_, i) => user(f, i + 1)),
   );
   await Promise.all(
     users.map((w, i) => msg(f.hub, w, { type: 'create', name: `Star${i}` })),
   );
-  assert.equal(Object.keys(f.hub.data.rooms).length, 5);
+  assert.equal(Object.keys(f.hub.data.rooms).length, 20);
   for (const r of Object.values(f.hub.data.rooms))
     assert.ok(r.title.adjective && r.title.noun && r.title.number);
-  assert.equal(last(users[5], 'error').code, 'error.roomsFull');
+  assert.equal(last(users[20], 'error').code, 'error.roomsFull');
+});
+test('broadcast reuses directory calculation but preserves per-user membership and private hands', async () => {
+  const f = await setup();
+  const first = await user(f, 1);
+  const second = await user(f, 2);
+  const watcher = await user(f, 3);
+  await msg(f.hub, first, { type: 'create', name: 'First' });
+  await msg(f.hub, second, { type: 'create', name: 'Second' });
+  const roomId = last(first, 'state').value.roomId;
+  await msg(f.hub, watcher, {
+    type: 'join',
+    name: 'Watch',
+    roomId,
+    watch: true,
+  });
+  await msg(f.hub, first, {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  let calls = 0;
+  const directory = f.hub.snapshots.directory.bind(f.hub.snapshots);
+  f.hub.snapshots.directory = (...args) => {
+    calls++;
+    return directory(...args);
+  };
+  f.hub.broadcast();
+  assert.equal(calls, 1);
+  for (const ws of [first, second]) {
+    const rooms = last(ws, 'directory').rooms;
+    assert.equal(rooms.filter((r) => r.mine).length, 1);
+    assert.equal(rooms.find((r) => r.mine).id, last(ws, 'state').value.roomId);
+    assert.equal(JSON.stringify(rooms).includes('hash'), false);
+  }
+  assert.ok(last(watcher, 'directory').rooms.every((r) => !r.mine));
+  assert.equal(
+    last(watcher, 'directory').rooms.find((r) => r.id === roomId).spectators,
+    1,
+  );
+  assert.equal(last(first, 'state').value.hand.length, 10);
+  assert.deepEqual(last(watcher, 'state').value.hand, []);
+  first.close(1000);
+  f.hub.broadcast();
+  assert.equal(
+    last(watcher, 'directory').rooms.find((r) => r.id === roomId).online,
+    0,
+  );
 });
 test('spectators never receive hands, cannot act or spoof a seat, and count globally', async () => {
   const f = await setup();

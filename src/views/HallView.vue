@@ -19,7 +19,7 @@ const session = useSessionStore();
         <p>{{ t('lounge.capacity') }}</p>
       </div>
       <span class="counter"
-        >{{ session.directory.count }}<small> / 30</small></span
+        >{{ session.directory.count }}<small> / 100</small></span
       >
     </div>
     <p v-if="session.connectionError" class="warning" role="alert">
@@ -37,7 +37,7 @@ const session = useSessionStore();
         label="lounge.nickname"
       /><button
         class="primary"
-        :disabled="!session.connected || session.directory.rooms.length >= 5"
+        :disabled="!session.connected || session.directory.rooms.length >= 20"
         @click="session.createRoom(privateRoom)"
       >
         {{ t('lounge.createRoom') }}</button
