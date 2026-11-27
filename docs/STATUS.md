@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.43 private rooms and per-room engine execution — release pending
+## v0.8.43 private rooms and per-room engine execution — deployed
 
 - Private creation, six-character cryptographic invites, code-entry native modal,
   and fragment-based invitation link copy/consume implemented. All room members
@@ -17,7 +17,11 @@
   engine-route checks. Local Chrome 320/820px modal checked, no page overflow;
   native focus/clipboard/fragment tests pass. Physical phones unverified.
 - User approved v0.8.43 release. check, 279 tests, format and build passed.
-  Deploy Worker migration/binding before frontend; verification pending.
+  Worker 2fc4369c-1159-49f8-b936-62ec265d2023 deployed with v3/ROOM_ENGINES;
+  health ok/protocol6. Main a699769 released; Pages 45992494526 and Verify
+  45992495188 succeeded including capacity/idle/private-flow integration.
+  Production HTML/JS/CSS byte-match the tested v0.8.43 build. No production
+  room deletion/migration or live capacity tests performed.
 
 ## v0.8.42 Phoenix sound and Dog recipient feedback — deployed
 
