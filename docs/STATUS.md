@@ -1,6 +1,6 @@
 # Project status / resume point
 
-## v0.8.44 100-person production capacity — release candidate
+## v0.8.44 100-person production capacity — deployed
 
 - User requested a new domain and an initial 100-person production capacity.
   Isolated worktree `/private/tmp/tichu6-production-100` preserves research/UI WIP.
@@ -9,7 +9,7 @@
   sockets including handshake/reconnect headroom. Existing throttles, deadlines,
   storage schema and credential handling preserved. Bilingual UI/error text,
   room-creation button, README and policy updated together.
-- Broadcast computes directory once and room presence once for recipient reuse;
+- Broadcast computes directory once and reuses room presence across recipients;
   private hands/membership remain personalized. Regression checks cover private
   data, per-recipient mine flags, spectator counts and disconnect presence.
 - Final check,171 unit+110 UI tests,format and build pass. Real local Worker
@@ -30,7 +30,14 @@
   renewal$11.17/year,not a reserved domain/final checkout quote. Browser remains
   signed out; login and owner purchase approval required. No purchase/paid upgrade.
   docs/PRODUCTION.md records rollout,origin-bound guest credentials and rollback.
-- Deployment not yet completed; next verify Worker and Pages after release.
+- Released34da3ae to main. Worker09f0a1d0-4f13-4e5e-9550-0505f52ddf62
+  deployed; health ok/protocol6. Pages45994488567 and Verify45994489558
+  passed, including latest private-flow/idle suites. Production HTML/JS/CSS match
+  local tested bytes. Single live WebSocket admission verified; no live load test.
+  Task-owned local servers stopped. Existing research/UI checkout left intact.
+- Remaining blocker is domain ownership/login/purchase approval only. No custom
+  origin enabled for an unowned domain; no paid-plan change.100-person admission
+  is live on the existing Pages URL; sustained quota/real-device limits above remain.
 
 ## v0.8.43 private rooms and per-room engine execution — deployed
 
