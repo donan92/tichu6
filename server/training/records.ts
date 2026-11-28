@@ -550,9 +550,15 @@ export function pruneTrainingArchive(
   archive: TrainingArchive,
   now = Date.now(),
 ) {
-  archive.sessions = archive.sessions.filter(
-    (session) => now - session.createdAt <= TRAINING_RETENTION_MS,
-  );
+  if (
+    archive.sessions.some(
+      (session) => now - session.createdAt > TRAINING_RETENTION_MS,
+    )
+  ) {
+    archive.sessions = archive.sessions.filter(
+      (session) => now - session.createdAt <= TRAINING_RETENTION_MS,
+    );
+  }
   return archive;
 }
 
@@ -567,7 +573,12 @@ export function appendTrainingDecision(
   if (groupId !== undefined && groupId !== null && !validGroupId(groupId))
     return false;
   pruneTrainingArchive(archive, now);
-  const before = structuredClone(archive);
+  // Rollback needs copies of the containers we mutate, not copies of every
+  // immutable card/public-state object in every previously accepted decision.
+  const before = archive.sessions.map((session) => ({
+    ...session,
+    events: [...session.events],
+  }));
   let session = archive.sessions.find((entry) => entry.id === sessionId);
   if (!session) {
     if (archive.sessions.length >= TRAINING_MAX_SESSIONS) return false;
@@ -593,7 +604,7 @@ export function appendTrainingDecision(
   session.updatedAt = now;
   enforceByteCap(archive);
   if (archive.sessions.some((entry) => entry.id === sessionId)) return true;
-  archive.sessions = before.sessions;
+  archive.sessions = before;
   return false;
 }
 

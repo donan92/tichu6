@@ -19,6 +19,7 @@ jobs:
       - run: npm run check
       - run: npm run format:check
       - run: npm test
+      - run: node --expose-gc scripts/performance/retention.mjs
       - run: npm run build
       - run: npm audit --audit-level=moderate
       - name: Local Worker integration

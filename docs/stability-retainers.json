@@ -1,0 +1,4090 @@
+[
+  {
+    "case": "baseline-off-v2",
+    "file": "heap-120.heapsnapshot",
+    "nodeCount": 94004,
+    "edgeCount": 398425,
+    "reachableNodes": 93617,
+    "shallowBytesTotal": 5952463,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 20,
+        "shallowBytes": 640,
+        "dominatedBytesSum": 529628
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1160324
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1146428
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 2396
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 3508
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 21,
+        "shallowBytes": 504,
+        "dominatedBytesSum": 1260
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 44,
+        "shallowBytes": 1048,
+        "dominatedBytesSum": 1948
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 4872
+      },
+      "Map": {
+        "count": 14,
+        "shallowBytes": 232,
+        "dominatedBytesSum": 9064
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 528776
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 7940
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 383852
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3700
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 616400,
+        "dominatedBytesSum": 616400
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "engine.last": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 524748
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-off-v2",
+    "file": "heap-30.heapsnapshot",
+    "nodeCount": 101032,
+    "edgeCount": 425078,
+    "reachableNodes": 100596,
+    "shallowBytesTotal": 6036627,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 19,
+        "shallowBytes": 608,
+        "dominatedBytesSum": 662296
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1211636
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1200868
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1372
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 2536
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 1200
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 40,
+        "shallowBytes": 952,
+        "dominatedBytesSum": 1988
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 11,
+        "shallowBytes": 184,
+        "dominatedBytesSum": 8768
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 552744
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 5440
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 410416
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3976
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 646872,
+        "dominatedBytesSum": 646872
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 19,
+        "shallowBytes": 456,
+        "dominatedBytesSum": 657660
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-off-v2",
+    "file": "heap-60.heapsnapshot",
+    "nodeCount": 86745,
+    "edgeCount": 373132,
+    "reachableNodes": 86325,
+    "shallowBytesTotal": 5765055,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 18,
+        "shallowBytes": 576,
+        "dominatedBytesSum": 366300
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1160600
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1146272
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 2396
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 3508
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 19,
+        "shallowBytes": 456,
+        "dominatedBytesSum": 1140
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 44,
+        "shallowBytes": 1048,
+        "dominatedBytesSum": 2020
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 4872
+      },
+      "Map": {
+        "count": 16,
+        "shallowBytes": 264,
+        "dominatedBytesSum": 9424
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 529328
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 6232
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 384892
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3608
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 615692,
+        "dominatedBytesSum": 615692
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "engine.last": {
+        "count": 18,
+        "shallowBytes": 432,
+        "dominatedBytesSum": 361908
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-off-v2",
+    "file": "heap-90.heapsnapshot",
+    "nodeCount": 87848,
+    "edgeCount": 375927,
+    "reachableNodes": 87382,
+    "shallowBytesTotal": 5773843,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 16,
+        "shallowBytes": 512,
+        "dominatedBytesSum": 375760
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1184276
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1169668
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 2396
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 3508
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 17,
+        "shallowBytes": 408,
+        "dominatedBytesSum": 1020
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 43,
+        "shallowBytes": 1024,
+        "dominatedBytesSum": 2060
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 4872
+      },
+      "Map": {
+        "count": 17,
+        "shallowBytes": 280,
+        "dominatedBytesSum": 9632
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 538336
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 5740
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 396460
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3792
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 630080,
+        "dominatedBytesSum": 630080
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "engine.last": {
+        "count": 16,
+        "shallowBytes": 384,
+        "dominatedBytesSum": 371856
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-off-v2",
+    "file": "heap-closed.heapsnapshot",
+    "nodeCount": 67256,
+    "edgeCount": 273359,
+    "reachableNodes": 67110,
+    "shallowBytesTotal": 3199493,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 20,
+        "shallowBytes": 640,
+        "dominatedBytesSum": 491292
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 34192
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 22380
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 2396
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 3508
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 21,
+        "shallowBytes": 504,
+        "dominatedBytesSum": 1260
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 34,
+        "shallowBytes": 808,
+        "dominatedBytesSum": 1544
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 4872
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 9360
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 12988
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 11916
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 8140,
+        "dominatedBytesSum": 8140
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "engine.last": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 486412
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-off-v2",
+    "file": "heap-cold.heapsnapshot",
+    "nodeCount": 36246,
+    "edgeCount": 149950,
+    "reachableNodes": 36215,
+    "shallowBytesTotal": 1593005,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 3548
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1080
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 304
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 244
+      },
+      "WebSocket": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 528
+      },
+      "WebSocketPair": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 192
+      },
+      "Alarm": {
+        "count": 1,
+        "shallowBytes": 60,
+        "dominatedBytesSum": 256
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 14,
+        "shallowBytes": 328,
+        "dominatedBytesSum": 956
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 840
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 9620
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 196
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 100
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 40,
+        "dominatedBytesSum": 40
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "engine.last": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-off-v2",
+    "file": "heap-settled.heapsnapshot",
+    "nodeCount": 44430,
+    "edgeCount": 189936,
+    "reachableNodes": 44398,
+    "shallowBytesTotal": 2540465,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 35632
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 25504
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 628
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 380
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 3508
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 1,
+        "shallowBytes": 24,
+        "dominatedBytesSum": 556
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 14,
+        "shallowBytes": 328,
+        "dominatedBytesSum": 1064
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 840
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 9540
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 15616
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 15440
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 8140,
+        "dominatedBytesSum": 8140
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "engine.last": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-on-v2",
+    "file": "heap-120.heapsnapshot",
+    "nodeCount": 106547,
+    "edgeCount": 450292,
+    "reachableNodes": 106196,
+    "shallowBytesTotal": 5868295,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 18,
+        "shallowBytes": 576,
+        "dominatedBytesSum": 678740
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1375120
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1364484
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1452
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 2536
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 19,
+        "shallowBytes": 456,
+        "dominatedBytesSum": 1140
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 37,
+        "shallowBytes": 880,
+        "dominatedBytesSum": 1756
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 9,
+        "shallowBytes": 152,
+        "dominatedBytesSum": 8320
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 537640
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 7816
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 395964
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3700
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 114508
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 630960,
+        "dominatedBytesSum": 630960
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 80280,
+        "dominatedBytesSum": 80280
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 18,
+        "shallowBytes": 432,
+        "dominatedBytesSum": 674348
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-on-v2",
+    "file": "heap-30.heapsnapshot",
+    "nodeCount": 111566,
+    "edgeCount": 467536,
+    "reachableNodes": 111115,
+    "shallowBytesTotal": 6468511,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 19,
+        "shallowBytes": 608,
+        "dominatedBytesSum": 775328
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1393980
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1384856
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1392
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 1200
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 38,
+        "shallowBytes": 904,
+        "dominatedBytesSum": 1724
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 9,
+        "shallowBytes": 152,
+        "dominatedBytesSum": 8264
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 559020
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 7968
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 410872
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3884
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 103608
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 649908,
+        "dominatedBytesSum": 649908
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 71260,
+        "dominatedBytesSum": 71260
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 19,
+        "shallowBytes": 456,
+        "dominatedBytesSum": 770692
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-on-v2",
+    "file": "heap-60.heapsnapshot",
+    "nodeCount": 81099,
+    "edgeCount": 358753,
+    "reachableNodes": 80854,
+    "shallowBytesTotal": 5838303,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 16,
+        "shallowBytes": 512,
+        "dominatedBytesSum": 131700
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1385724
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1373888
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1452
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 17,
+        "shallowBytes": 408,
+        "dominatedBytesSum": 1020
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 46,
+        "shallowBytes": 1096,
+        "dominatedBytesSum": 2416
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 20,
+        "shallowBytes": 328,
+        "dominatedBytesSum": 10348
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 548388
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 6444
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 405288
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3976
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 101496
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 641160,
+        "dominatedBytesSum": 641160
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 80904,
+        "dominatedBytesSum": 80904
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 16,
+        "shallowBytes": 384,
+        "dominatedBytesSum": 127796
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-on-v2",
+    "file": "heap-90.heapsnapshot",
+    "nodeCount": 99761,
+    "edgeCount": 426001,
+    "reachableNodes": 99484,
+    "shallowBytesTotal": 6248191,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 19,
+        "shallowBytes": 608,
+        "dominatedBytesSum": 545964
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1371148
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1360800
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1452
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 1200
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 42,
+        "shallowBytes": 1000,
+        "dominatedBytesSum": 2152
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 13,
+        "shallowBytes": 216,
+        "dominatedBytesSum": 9172
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 542608
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 6200
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 401364
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3976
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 103100
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 634872,
+        "dominatedBytesSum": 634872
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 78932,
+        "dominatedBytesSum": 78932
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 19,
+        "shallowBytes": 456,
+        "dominatedBytesSum": 541328
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-on-v2",
+    "file": "heap-closed.heapsnapshot",
+    "nodeCount": 57683,
+    "edgeCount": 242987,
+    "reachableNodes": 57531,
+    "shallowBytesTotal": 3165713,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 20,
+        "shallowBytes": 640,
+        "dominatedBytesSum": 167680
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 208524
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 198988
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1452
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 2536
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 21,
+        "shallowBytes": 504,
+        "dominatedBytesSum": 1260
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 34,
+        "shallowBytes": 808,
+        "dominatedBytesSum": 1544
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 7980
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 13028
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 11916
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 103076
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 8140,
+        "dominatedBytesSum": 8140
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 73648,
+        "dominatedBytesSum": 73648
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 162800
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-on-v2",
+    "file": "heap-cold.heapsnapshot",
+    "nodeCount": 36246,
+    "edgeCount": 149949,
+    "reachableNodes": 36215,
+    "shallowBytesTotal": 1593009,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 3548
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1080
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 304
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 244
+      },
+      "WebSocket": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 528
+      },
+      "WebSocketPair": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 192
+      },
+      "Alarm": {
+        "count": 1,
+        "shallowBytes": 60,
+        "dominatedBytesSum": 256
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 14,
+        "shallowBytes": 328,
+        "dominatedBytesSum": 956
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 840
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 9620
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 196
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 100
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 40,
+        "dominatedBytesSum": 40
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "engine.last": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "baseline-on-v2",
+    "file": "heap-settled.heapsnapshot",
+    "nodeCount": 48938,
+    "edgeCount": 211790,
+    "reachableNodes": 48906,
+    "shallowBytesTotal": 2940877,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 190736
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 181860
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 628
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 460
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 2536
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 1,
+        "shallowBytes": 24,
+        "dominatedBytesSum": 556
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 14,
+        "shallowBytes": 328,
+        "dominatedBytesSum": 1064
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 840
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 7480
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 15616
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 15440
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 82864
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 8140,
+        "dominatedBytesSum": 8140
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 73648,
+        "dominatedBytesSum": 73648
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "engine.last": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-off",
+    "file": "heap-120.heapsnapshot",
+    "nodeCount": 109532,
+    "edgeCount": 456549,
+    "reachableNodes": 109224,
+    "shallowBytesTotal": 6295743,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 16,
+        "shallowBytes": 576,
+        "dominatedBytesSum": 867272
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1190872
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1179680
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1372
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 17,
+        "shallowBytes": 408,
+        "dominatedBytesSum": 1020
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 44,
+        "shallowBytes": 1048,
+        "dominatedBytesSum": 2164
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 18,
+        "shallowBytes": 296,
+        "dominatedBytesSum": 9856
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 544184
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 5980
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 401636
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3976
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 633840,
+        "dominatedBytesSum": 633840
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 16,
+        "shallowBytes": 384,
+        "dominatedBytesSum": 861008
+      },
+      "engine.decision": {
+        "count": 16,
+        "shallowBytes": 280,
+        "dominatedBytesSum": 2296
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-off",
+    "file": "heap-30.heapsnapshot",
+    "nodeCount": 114367,
+    "edgeCount": 473601,
+    "reachableNodes": 114040,
+    "shallowBytesTotal": 6404947,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 18,
+        "shallowBytes": 648,
+        "dominatedBytesSum": 977040
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1187148
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1176436
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1372
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 19,
+        "shallowBytes": 456,
+        "dominatedBytesSum": 1140
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 44,
+        "shallowBytes": 1048,
+        "dominatedBytesSum": 2112
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 16,
+        "shallowBytes": 264,
+        "dominatedBytesSum": 9516
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 540952
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 7944
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 397412
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3792
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 634232,
+        "dominatedBytesSum": 634232
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 18,
+        "shallowBytes": 432,
+        "dominatedBytesSum": 969628
+      },
+      "engine.decision": {
+        "count": 18,
+        "shallowBytes": 360,
+        "dominatedBytesSum": 2948
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-off",
+    "file": "heap-60.heapsnapshot",
+    "nodeCount": 119071,
+    "edgeCount": 491860,
+    "reachableNodes": 118813,
+    "shallowBytesTotal": 6035403,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 20,
+        "shallowBytes": 720,
+        "dominatedBytesSum": 1084388
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1188620
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1179664
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1372
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 21,
+        "shallowBytes": 504,
+        "dominatedBytesSum": 1260
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 38,
+        "shallowBytes": 904,
+        "dominatedBytesSum": 1704
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 8,
+        "shallowBytes": 136,
+        "dominatedBytesSum": 8100
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 543828
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 6156
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 400172
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3976
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 634584,
+        "dominatedBytesSum": 634584
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 1076436
+      },
+      "engine.decision": {
+        "count": 20,
+        "shallowBytes": 360,
+        "dominatedBytesSum": 2992
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-off",
+    "file": "heap-90.heapsnapshot",
+    "nodeCount": 116873,
+    "edgeCount": 482640,
+    "reachableNodes": 116463,
+    "shallowBytesTotal": 6497359,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 19,
+        "shallowBytes": 684,
+        "dominatedBytesSum": 1024152
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1183944
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1173008
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1372
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 1200
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 46,
+        "shallowBytes": 1096,
+        "dominatedBytesSum": 2148
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 17,
+        "shallowBytes": 280,
+        "dominatedBytesSum": 9648
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 539716
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 6572
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 397036
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3976
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 631636,
+        "dominatedBytesSum": 631636
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 19,
+        "shallowBytes": 456,
+        "dominatedBytesSum": 1016452
+      },
+      "engine.decision": {
+        "count": 19,
+        "shallowBytes": 380,
+        "dominatedBytesSum": 2988
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-off",
+    "file": "heap-closed.heapsnapshot",
+    "nodeCount": 94479,
+    "edgeCount": 372078,
+    "reachableNodes": 94324,
+    "shallowBytesTotal": 3832437,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 20,
+        "shallowBytes": 720,
+        "dominatedBytesSum": 1093968
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 30908
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 22784
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1372
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 21,
+        "shallowBytes": 504,
+        "dominatedBytesSum": 1260
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 34,
+        "shallowBytes": 808,
+        "dominatedBytesSum": 1544
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 9200
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 12988
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 11916
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 8140,
+        "dominatedBytesSum": 8140
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 1085960
+      },
+      "engine.decision": {
+        "count": 20,
+        "shallowBytes": 360,
+        "dominatedBytesSum": 3048
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-off",
+    "file": "heap-cold.heapsnapshot",
+    "nodeCount": 36261,
+    "edgeCount": 149986,
+    "reachableNodes": 36230,
+    "shallowBytesTotal": 1593989,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 3548
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1080
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 304
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 244
+      },
+      "WebSocket": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 528
+      },
+      "WebSocketPair": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 192
+      },
+      "Alarm": {
+        "count": 1,
+        "shallowBytes": 60,
+        "dominatedBytesSum": 256
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 14,
+        "shallowBytes": 328,
+        "dominatedBytesSum": 956
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 840
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 9620
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 196
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 100
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 40,
+        "dominatedBytesSum": 40
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "engine.last": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-off",
+    "file": "heap-settled.heapsnapshot",
+    "nodeCount": 44451,
+    "edgeCount": 189846,
+    "reachableNodes": 44419,
+    "shallowBytesTotal": 2525317,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 33372
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 25908
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 628
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 380
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 1,
+        "shallowBytes": 24,
+        "dominatedBytesSum": 556
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 14,
+        "shallowBytes": 328,
+        "dominatedBytesSum": 1064
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 840
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 9540
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 15616
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 15440
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 208
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 8140,
+        "dominatedBytesSum": 8140
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "engine.last": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-on",
+    "file": "heap-120.heapsnapshot",
+    "nodeCount": 111362,
+    "edgeCount": 466897,
+    "reachableNodes": 111107,
+    "shallowBytesTotal": 6472491,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 16,
+        "shallowBytes": 576,
+        "dominatedBytesSum": 844792
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1319056
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1305820
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 2396
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 17,
+        "shallowBytes": 408,
+        "dominatedBytesSum": 1020
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 47,
+        "shallowBytes": 1120,
+        "dominatedBytesSum": 2332
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 4872
+      },
+      "Map": {
+        "count": 21,
+        "shallowBytes": 344,
+        "dominatedBytesSum": 10384
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 530920
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 7152
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 385968
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3792
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 77516
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 619036,
+        "dominatedBytesSum": 619036
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 75620,
+        "dominatedBytesSum": 75620
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "engine.last": {
+        "count": 16,
+        "shallowBytes": 384,
+        "dominatedBytesSum": 838212
+      },
+      "engine.decision": {
+        "count": 16,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 2612
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-on",
+    "file": "heap-30.heapsnapshot",
+    "nodeCount": 124444,
+    "edgeCount": 513769,
+    "reachableNodes": 124208,
+    "shallowBytesTotal": 6686635,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 20,
+        "shallowBytes": 720,
+        "dominatedBytesSum": 1113484
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1368648
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1358392
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1372
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 21,
+        "shallowBytes": 504,
+        "dominatedBytesSum": 1260
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 43,
+        "shallowBytes": 1024,
+        "dominatedBytesSum": 1920
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 13,
+        "shallowBytes": 216,
+        "dominatedBytesSum": 8916
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 554792
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 7188
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 411900
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3884
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 76700
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 650692,
+        "dominatedBytesSum": 650692
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 73576,
+        "dominatedBytesSum": 73576
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 1105824
+      },
+      "engine.decision": {
+        "count": 20,
+        "shallowBytes": 340,
+        "dominatedBytesSum": 2700
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-on",
+    "file": "heap-60.heapsnapshot",
+    "nodeCount": 123488,
+    "edgeCount": 509226,
+    "reachableNodes": 123027,
+    "shallowBytesTotal": 6690947,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 20,
+        "shallowBytes": 720,
+        "dominatedBytesSum": 1079268
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1343048
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1333160
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1372
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 21,
+        "shallowBytes": 504,
+        "dominatedBytesSum": 1260
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 41,
+        "shallowBytes": 976,
+        "dominatedBytesSum": 1844
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 11,
+        "shallowBytes": 184,
+        "dominatedBytesSum": 8600
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 540288
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 6200
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 399148
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3884
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 80176
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 631408,
+        "dominatedBytesSum": 631408
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 78464,
+        "dominatedBytesSum": 78464
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 20,
+        "shallowBytes": 480,
+        "dominatedBytesSum": 1072076
+      },
+      "engine.decision": {
+        "count": 20,
+        "shallowBytes": 280,
+        "dominatedBytesSum": 2232
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-on",
+    "file": "heap-90.heapsnapshot",
+    "nodeCount": 105967,
+    "edgeCount": 445052,
+    "reachableNodes": 105703,
+    "shallowBytesTotal": 6243583,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 100,
+        "shallowBytes": 32000,
+        "dominatedBytesSum": 73590
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 14,
+        "shallowBytes": 504,
+        "dominatedBytesSum": 722832
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 1312064
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1300724
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 1372
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 15,
+        "shallowBytes": 360,
+        "dominatedBytesSum": 900
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 41,
+        "shallowBytes": 976,
+        "dominatedBytesSum": 2120
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 3848
+      },
+      "Map": {
+        "count": 17,
+        "shallowBytes": 280,
+        "dominatedBytesSum": 9740
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 524384
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 4316
+      },
+      "game.log": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 6560
+      },
+      "game.trickHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 383788
+      },
+      "game.scoreHistory": {
+        "count": 20,
+        "shallowBytes": 320,
+        "dominatedBytesSum": 3608
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 82040
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 613760,
+        "dominatedBytesSum": 613760
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 77920,
+        "dominatedBytesSum": 77920
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 1060
+      },
+      "engine.last": {
+        "count": 14,
+        "shallowBytes": 336,
+        "dominatedBytesSum": 717036
+      },
+      "engine.decision": {
+        "count": 14,
+        "shallowBytes": 280,
+        "dominatedBytesSum": 2324
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-on",
+    "file": "heap-closed.heapsnapshot",
+    "nodeCount": 92081,
+    "edgeCount": 367075,
+    "reachableNodes": 91926,
+    "shallowBytesTotal": 3929945,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 20,
+        "shallowBytes": 720,
+        "dominatedBytesSum": 952592
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 196052
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 186556
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 2644
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 2396
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 21,
+        "shallowBytes": 504,
+        "dominatedBytesSum": 1236
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 34,
+        "shallowBytes": 808,
+        "dominatedBytesSum": 1544
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 4872
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 7460
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 12988
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 12,
+        "dominatedBytesSum": 11916
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 84240
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 8140,
+        "dominatedBytesSum": 8140
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 80008,
+        "dominatedBytesSum": 80008
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 2084
+      },
+      "engine.last": {
+        "count": 20,
+        "shallowBytes": 432,
+        "dominatedBytesSum": 944288
+      },
+      "engine.decision": {
+        "count": 20,
+        "shallowBytes": 400,
+        "dominatedBytesSum": 3368
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-on",
+    "file": "heap-cold.heapsnapshot",
+    "nodeCount": 36260,
+    "edgeCount": 149973,
+    "reachableNodes": 36229,
+    "shallowBytesTotal": 1593953,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 3548
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 1080
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 304
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 244
+      },
+      "WebSocket": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 528
+      },
+      "WebSocketPair": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 192
+      },
+      "Alarm": {
+        "count": 1,
+        "shallowBytes": 60,
+        "dominatedBytesSum": 256
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 14,
+        "shallowBytes": 328,
+        "dominatedBytesSum": 956
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 840
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 9620
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 20,
+        "dominatedBytesSum": 196
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 100
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 40,
+        "dominatedBytesSum": 40
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 28
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "engine.last": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  },
+  {
+    "case": "candidate-on",
+    "file": "heap-settled.heapsnapshot",
+    "nodeCount": 49180,
+    "edgeCount": 213090,
+    "reachableNodes": 49148,
+    "shallowBytesTotal": 2918665,
+    "groups": {
+      "workerd / WebSocket": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "workerd / TimersUtil": {
+        "count": 1,
+        "shallowBytes": 96,
+        "dominatedBytesSum": 144
+      },
+      "MeasuredRoomEngine": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "MeasuredLounge": {
+        "count": 1,
+        "shallowBytes": 124,
+        "dominatedBytesSum": 201748
+      },
+      "RoomRepository": {
+        "count": 1,
+        "shallowBytes": 80,
+        "dominatedBytesSum": 193936
+      },
+      "Snapshots": {
+        "count": 1,
+        "shallowBytes": 64,
+        "dominatedBytesSum": 628
+      },
+      "GameExecutor": {
+        "count": 1,
+        "shallowBytes": 56,
+        "dominatedBytesSum": 380
+      },
+      "WebSocket": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 844
+      },
+      "WebSocketPair": {
+        "count": 2,
+        "shallowBytes": 52,
+        "dominatedBytesSum": 472
+      },
+      "Alarm": {
+        "count": 1,
+        "shallowBytes": 24,
+        "dominatedBytesSum": 556
+      },
+      "Timeout": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "Promise": {
+        "count": 14,
+        "shallowBytes": 328,
+        "dominatedBytesSum": 1064
+      },
+      "WeakMap": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 840
+      },
+      "Map": {
+        "count": 4,
+        "shallowBytes": 72,
+        "dominatedBytesSum": 7460
+      },
+      "ArrayBuffer": {
+        "count": 3,
+        "shallowBytes": 172,
+        "dominatedBytesSum": 580
+      },
+      "repository.data": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 15616
+      },
+      "repository.activity": {
+        "count": 1,
+        "shallowBytes": 28,
+        "dominatedBytesSum": 15440
+      },
+      "game.log": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.trickHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "game.scoreHistory": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "repository.training": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 88496
+      },
+      "repository.savedLounge": {
+        "count": 1,
+        "shallowBytes": 8140,
+        "dominatedBytesSum": 8140
+      },
+      "repository.savedTraining": {
+        "count": 1,
+        "shallowBytes": 80008,
+        "dominatedBytesSum": 80008
+      },
+      "snapshotCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "botDecisionCache": {
+        "count": 1,
+        "shallowBytes": 16,
+        "dominatedBytesSum": 68
+      },
+      "engine.last": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      },
+      "engine.decision": {
+        "count": 0,
+        "shallowBytes": 0,
+        "dominatedBytesSum": 0
+      }
+    },
+    "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+  }
+]

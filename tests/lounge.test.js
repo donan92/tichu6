@@ -1379,3 +1379,26 @@ test('failed persistence never acknowledges a move and retains pending state for
   const stored = await f.ctx.storage.get('lounge');
   assert.equal(Object.values(stored.rooms)[0].state.phase, 'grand');
 });
+
+test('disconnected activity expires after 24 hours and stays removed after reconstruction', async (t) => {
+  let now = Date.now();
+  t.mock.method(Date, 'now', () => now);
+  const f = await setup();
+  const ws = await user(f, 1);
+  const hash = ws.a.hash;
+  const at = f.hub.data.activity[hash];
+  ws.close(1000);
+  await f.hub.webSocketClose(ws, 1000);
+  now = at + 86_400_000 - 1;
+  await f.hub.alarm();
+  assert.equal(f.hub.data.activity[hash], at);
+  f.hub = new Lounge(f.ctx);
+  await f.ready();
+  now++;
+  await f.hub.alarm();
+  assert.equal(f.hub.data.activity[hash], undefined);
+  f.hub = new Lounge(f.ctx);
+  await f.ready();
+  assert.equal(f.hub.data.activity[hash], undefined);
+  assert.equal(f.hub.users().length, 0);
+});

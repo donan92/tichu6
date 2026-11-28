@@ -1,5 +1,37 @@
 # Project status / resume point
 
+## Long-run stability follow-up — locally validated, awaiting review (2026-11-28)
+
+- Branch `codex/long-run-stability`, based on latest main `3245b51`; PR #5 and
+  prior report reviewed. Original research checkout/work remains untouched.
+- No production requests, data/config changes, main merge, deployment or version
+  bump. Review commits use `[CF-Pages-Skip]`; Worker deployment remains separate.
+- Four real local cases (baseline/candidate × recording off/on), each 100 users,
+  20 rooms, 7,201 seconds: 42,022–42,284 accepted play/pass actions, 140 room
+  replacements, 220 periodic +20 final simultaneous reconnects per case. No
+  protocol/runtime/sampling errors; all identity and final cleanup checks passed.
+  One planned reconnect sample briefly had 101 sockets for 100 identities.
+- Corrected measurement-only actor-retaining timers/room-ID registry. In the
+  old/new pilot, 40 vs zero engines remained after teardown. All four long cases
+  finished with zero RoomEngine/native WebSocket objects after 45 seconds.
+- Server: deterministic bot queries use a bounded volatile entry instead of a
+  durable policy write; actual state/deal persistence and retry safety remain.
+  Training rollback copies mutable containers, preserving exact archive content.
+- Additional logical data-key writes/action reduction: 7.55% recording off,
+  5.71% on. P95 remains ~63–64 ms; no further large alarm reduction claimed.
+  Retry-value storage grows to ~4.9 MB across 162 keys (24h retention); this is
+  an explicit tradeoff, not erased data. Rules/privacy/protocol are unchanged.
+- 1h unprofiled 100-user control, 1,000 distinct identity churn/accelerated 24h
+  expiry, 300-object-per-kind GC regression, and deterministic archive benchmark
+  passed. 186 unit +112 UI tests; lint/types/format/build; real Worker admission,
+  privacy/bots, idle/flow and SQLite restart checks passed.
+- Report, graphs, normalized cost/free-limit scenarios, raw-measurement limits,
+  rollback and prioritized follow-ups: [LONG_RUNNING_STABILITY.md](LONG_RUNNING_STABILITY.md).
+  Raw heaps/SQLite stay in `/tmp/tichu-stability-results`; Git includes sanitized
+  numeric evidence only. Workerd `external` is unavailable, not zero. Native RSS
+  and 6h+/multi-day operation remain follow-up validation, not proven leak-free.
+- Next: review this branch/Draft PR. Do not merge or deploy without user approval.
+
 ## v0.8.47 deployed — active-player label cleanup (2026-11-28)
 
 - Removed the visible current-turn caption from player tiles and its unused CSS
