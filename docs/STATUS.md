@@ -1,13 +1,25 @@
 # Project status / resume point
 
-## v0.8.46 release preparation (2026-11-28)
+## v0.8.46 deployed (2026-11-28)
 
 - User authorized deployment of player Hand/Won totals and current-trick starter.
 - Release metadata and bilingual player-facing note updated together.
 - Final release check, lint, frontend/server types, 182 unit +112 UI tests,
   formatting and production build pass. Local Worker integration/flow and
   four responsive viewport checks are recorded below.
-- Backend-first deployment pending; no live release claimed yet.
+- PR #6 merged as `5ff8b809e6216735740abaf88282e5526e3b084e` after CI passed
+  (including real local Worker integration, idle and full game-flow suites).
+- Backend deployed first: Worker `911edd78-017d-474a-bff4-05454b81d4e4`,
+  confirmed at 100% traffic; public health returned ok (version 6 is protocol).
+- Cloudflare Git build remained Idle; verified dist deployed explicitly to Pages
+  production `a9b75083-c3d5-469b-89ea-d77364cbf994` from the merge commit.
+- Live tichu6.pages.dev HTML, JS `index-DWsSrC5w.js` and CSS
+  `index-XyXl1Ql4.css` match local build bytes; JS includes v0.8.46.
+- Production checks were read-only health/static requests, not live game or load
+  tests. Stored rooms, capacity, game rules and privacy unchanged.
+- Rollback: previous Worker `cc232b67-fc3b-4001-8a92-d1889513ad57` and Pages
+  `a0e2dc69-fe61-411c-b422-3c73445f1d57` (v0.8.45). New optional state metadata
+  remains backward-compatible; do not delete room storage.
 
 ## Player card counts and trick starter — implemented locally, not deployed (2026-11-28)
 
