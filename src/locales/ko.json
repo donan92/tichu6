@@ -454,5 +454,6 @@
   "error.invalidInviteCode": "참가 코드를 확인해 주세요.",
   "error.inviteRateLimit": "잠시 후 참가 코드를 다시 입력해 주세요.",
   "patches.privateInvites": "관전할 수 없는 비밀방을 만들고 초대 링크나 6자리 코드로 참가할 수 있습니다.",
-  "patches.capacity100": "최대 100명이 20개 방에서 함께 플레이하거나 관전할 수 있습니다."
+  "patches.capacity100": "최대 100명이 20개 방에서 함께 플레이하거나 관전할 수 있습니다.",
+  "patches.serverEfficiency": "버그 수정"
 }

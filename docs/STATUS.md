@@ -1,5 +1,13 @@
 # Project status / resume point
 
+## v0.8.45 server optimization — release authorized, preparing
+
+- User approved deployment of PR #5 on 2026-11-28. Original worktree remains untouched.
+- Release metadata and bilingual maintenance note updated together. No rule,
+  schema, capacity or paid-plan changes. Previous benchmark results remain local-only.
+- Next: validate release metadata, merge approved PR, deploy Worker, verify Pages
+  and Worker separately, then record deployment IDs and checks. Not yet deployed.
+
 ## Server performance optimization — review candidate, not deployed (2026-11-28)
 
 - Isolated worktree `/private/tmp/tichu6-performance`, branch
