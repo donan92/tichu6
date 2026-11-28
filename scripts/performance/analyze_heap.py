@@ -1,10 +1,6 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = ["networkx==3.7"]
-# ///
 """Export numeric retention summaries, never raw heap strings/credentials.
 
-Run with `uv run scripts/performance/analyze_heap.py /tmp/.../*.heapsnapshot`.
+Run with `uv run --project scripts/performance --locked scripts/performance/analyze_heap.py /tmp/.../*.heapsnapshot`.
 Snapshots are trusted local test artifacts; output does not contain user values.
 """
 

@@ -1,5 +1,11 @@
 # Project status / resume point
 
+## v0.8.48 release — authorized, preparing (2026-11-28)
+
+- User approved merge/deployment of PR #8. Release metadata and bilingual bug-fix note updated.
+- Python analysis dependencies now have uv manifest/lock, daily Dependabot and CI checks. Server implementation remains the tested two-hour candidate.
+- Pending: final checks, PR merge, Worker + Pages deployment and read-only live verification.
+
 ## Long-run stability follow-up — locally validated, awaiting review (2026-11-28)
 
 - Branch `codex/long-run-stability`, based on latest main `3245b51`; PR #5 and

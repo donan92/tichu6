@@ -444,11 +444,11 @@ compatibility field is treated as a real measurement. Numeric postprocessing:
 
 ```sh
 node scripts/performance/stability-summary.mjs /tmp/tichu-stability-results docs/stability-results.json
-uv run scripts/performance/analyze_heap.py /tmp/tichu-stability-results/{baseline-off-v2,baseline-on-v2,candidate-off,candidate-on}/heap-*.heapsnapshot > docs/stability-retainers.json
-uv run scripts/performance/plot_stability.py docs/stability-results.json docs/stability-memory.png
+uv run --project scripts/performance --locked python scripts/performance/analyze_heap.py /tmp/tichu-stability-results/{baseline-off-v2,baseline-on-v2,candidate-off,candidate-on}/heap-*.heapsnapshot > docs/stability-retainers.json
+uv run --project scripts/performance --locked python scripts/performance/plot_stability.py docs/stability-results.json docs/stability-memory.png
 ```
 
-The Python analysis scripts use isolated, pinned inline dependencies. Dominator
+The Python analysis scripts use the managed `scripts/performance/pyproject.toml`/`uv.lock` environment. Dominator
 summaries exclude weak edges and may overlap between groups; native/ephemeron
 reachability differs from Chrome DevTools' exact retained-size accounting.
 Raw heap snapshots, SQLite files and synthetic credentials must stay out of Git.

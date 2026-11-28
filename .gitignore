@@ -14,3 +14,6 @@ worker-configuration.d.ts
 # Private human gameplay exports (store outside the repository where possible).
 training-export*.json
 training-dataset/
+
+.venv/
+__pycache__/

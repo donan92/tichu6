@@ -1,7 +1,3 @@
-# /// script
-# requires-python = ">=3.12"
-# dependencies = ["matplotlib==3.11.2"]
-# ///
 """Plot numeric local-only samples exported by stability-summary.mjs."""
 
 import json

@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.48",
+    "summary": "patches.longRunStability"
+  },
+  {
     "version": "0.8.47",
     "summary": "patches.clearerPlayerStatus"
   },

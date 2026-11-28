@@ -12,3 +12,9 @@ updates:
     schedule:
       interval: daily
       timezone: Asia/Seoul
+  - package-ecosystem: uv
+    directory: /scripts/performance
+    schedule:
+      interval: daily
+      timezone: Asia/Seoul
+    versioning-strategy: increase

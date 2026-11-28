@@ -463,5 +463,6 @@
   "play.trickStarter": "Led",
   "play.trickStarterDescription": "Player who played the first cards of this trick",
   "patches.playerCardStatus": "See each player’s hand and captured card totals, plus who led the current trick.",
-  "patches.clearerPlayerStatus": "Player tiles are cleaner without the redundant current-turn label."
+  "patches.clearerPlayerStatus": "Player tiles are cleaner without the redundant current-turn label.",
+  "patches.longRunStability": "Bug fixes."
 }
