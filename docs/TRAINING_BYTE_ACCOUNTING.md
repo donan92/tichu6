@@ -1,7 +1,7 @@
 # Training byte accounting — Phase 1
 
 Implemented on `codex/training-byte-accounting`, based on main
-`f9a228988fe4d90713552086545fb89ef27dec05` (v0.8.48). Not merged or deployed.
+`f9a228988fe4d90713552086545fb89ef27dec05` (v0.8.48). Released in v0.8.49 via PR #13; deployment details are in STATUS.md.
 
 ## Scope
 

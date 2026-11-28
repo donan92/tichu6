@@ -1,5 +1,12 @@
 # Project status / resume point
 
+## v0.8.49 — deployed (2026-11-28)
+
+- User authorized release and follow-up verification. PR #13 merged as `57eb157`; CI `46149769344` passed, including 301 tests and local Worker integration.
+- Worker `aa003614-068d-4260-9f97-659b050043ae` verified at 100% traffic; health returned ok. Pages direct deployment `b154a372` after Git build remained Idle. Live HTML, `index-BAxWlWX-.js`, `index-BwQ0sL1W.css` matched dist; v0.8.49 verified.
+- Rollback: Worker `f82051d7-efa7-4386-90b3-e27db90bd981`, Pages `9cd73910-ec80-4627-994f-f263a99a41c8` (v0.8.48). No storage migration.
+- Follow-up localhost-only 100-user benchmark and test-runner readiness improvements remain separate from this production release.
+
 ## Training byte accounting — Phase 1 (2026-11-28)
 
 - Branch `codex/training-byte-accounting`, base `f9a2289` / v0.8.48. Original research checkout untouched. No merge, push, deployment or version bump.
