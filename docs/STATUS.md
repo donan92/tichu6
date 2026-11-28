@@ -1,12 +1,18 @@
 # Project status / resume point
 
-## Active-player label cleanup — local, not deployed (2026-11-28)
+## v0.8.47 deployed — active-player label cleanup (2026-11-28)
 
 - Removed the visible current-turn caption from player tiles and its unused CSS
   and locale keys. Active colors/border, aria-current and central turn guidance
   remain intact; no game behavior changes.
-- Branch `codex/simplify-active-player`; check, 182 unit +112 UI tests, format
-  and build pass. No version bump, merge or deployment performed.
+- Release check, lint/types, 182 unit +112 UI tests, format and build pass.
+  PR #7 CI also passed Worker integration, idle and flow suites.
+- Merged as `99a6066`; Pages production `c3264939-56ab-4dd8-98a8-47698597a56c`
+  deployed from verified dist. Live HTML/JS/CSS match local build bytes and
+  bundled version is v0.8.47. Assets: index-CytTi0a8.js, index-BwQ0sL1W.css.
+- Frontend-only release: Worker remains `911edd78-017d-474a-bff4-05454b81d4e4`;
+  health returned ok. No production game mutations or load tests performed.
+- Rollback frontend to Pages `a9b75083-c3d5-469b-89ea-d77364cbf994` (v0.8.46).
 
 ## v0.8.46 deployed (2026-11-28)
 
