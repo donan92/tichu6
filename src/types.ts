@@ -41,6 +41,7 @@ export interface PublicBase {
   dragonTransfer?: { round: number; trick: number; recipient: number };
   trickHistory?: TrickHistory[];
   trickNumber?: number;
+  trickStarter?: number | null;
   callResults?: CallResult[];
   deadline?: number | null;
   deadlineDuration?: number | null;
@@ -93,6 +94,7 @@ export interface RoundView extends PublicBase {
   counts: number[];
   exchangeReady: boolean[];
   capturedPoints: number[];
+  capturedCounts?: number[];
 }
 export type GameView = LobbyView | RoundView;
 export interface LobbyState {
@@ -107,7 +109,12 @@ export interface LobbyState {
 }
 export interface RoundState extends Omit<
   RoundView,
-  'seat' | 'hand' | 'counts' | 'exchangeReady' | 'capturedPoints'
+  | 'seat'
+  | 'hand'
+  | 'counts'
+  | 'exchangeReady'
+  | 'capturedPoints'
+  | 'capturedCounts'
 > {
   hands: Card[][];
   first: string[][];

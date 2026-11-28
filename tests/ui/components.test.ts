@@ -1249,3 +1249,73 @@ it('consumes invitation fragments without retaining the code in the address bar'
   expect(session.pendingInvite).toBe('AB12CD');
   expect(location.hash).toBe('');
 });
+
+it('shows hand/captured counts separately and pass beside the name across snapshot and locale updates', async () => {
+  const game = { ...round(), passed: [1], capturedCounts: [0, 3, 0, 0, 0, 0] };
+  game.names[1] = 'WWWWWWWW';
+  game.capturedPoints[1] = 0;
+  const wrapper = mount(GameView, {
+    props: { game },
+    global: { plugins: plugins() },
+  });
+  wrappers.push(wrapper);
+  const player = wrapper.findAll('.player')[1]!;
+  expect(player.get('.player-identity .pass-badge').text()).toBe('Passed');
+  expect(player.get('.player-identity b').attributes('title')).toBe('WWWWWWWW');
+  expect(player.get('.player-hand-count strong').text()).toBe(
+    String(game.counts[1]),
+  );
+  expect(player.get('.player-captured-count strong').text()).toBe('3');
+  expect(player.get('.player-captured-count').attributes('title')).toContain(
+    'not points',
+  );
+  await wrapper.setProps({
+    game: { ...game, passed: [], capturedCounts: [0, 8, 0, 0, 0, 0] },
+  });
+  expect(player.find('.pass-badge').exists()).toBe(false);
+  expect(player.get('.player-captured-count strong').text()).toBe('8');
+  await i18next.changeLanguage('ko');
+  await nextTick();
+  expect(player.get('.player-hand-count').text()).toContain('손패');
+  expect(player.get('.player-captured-count').text()).toContain('획득');
+  await wrapper.setProps({ game: { ...game, capturedCounts: undefined } });
+  expect(player.get('.player-captured-count strong').text()).toBe('—');
+});
+
+it('keeps Led below counts alongside a name-adjacent Pass and clears it between tricks', async () => {
+  const game: RoundView = {
+    ...round(),
+    phase: 'play',
+    turn: 2,
+    last: 1,
+    passed: [0],
+    trickStarter: 0,
+    top: {
+      kind: 'single',
+      power: 4,
+      size: 1,
+      bomb: 0,
+      cards: [{ id: 'top', rank: 4, suit: 0 }],
+    },
+  };
+  const wrapper = mount(GameView, {
+    props: { game },
+    global: { plugins: plugins() },
+  });
+  wrappers.push(wrapper);
+  const first = wrapper.findAll('.player')[0]!;
+  expect(first.get('.player-identity .pass-badge').text()).toBe('Passed');
+  expect(first.get('.player-meta .trick-starter-badge').text()).toBe('Led');
+  expect(wrapper.findAll('.trick-starter-badge')).toHaveLength(1);
+  await i18next.changeLanguage('ko');
+  await nextTick();
+  expect(first.get('.trick-starter-badge').text()).toBe('선공');
+  await wrapper.setProps({ game: { ...game, top: null, trickStarter: null } });
+  expect(wrapper.find('.trick-starter-badge').exists()).toBe(false);
+  await wrapper.setProps({ game: { ...game, trickStarter: 2 } });
+  expect(
+    wrapper.findAll('.player')[2]!.find('.trick-starter-badge').exists(),
+  ).toBe(true);
+  await wrapper.setProps({ game: { ...game, phase: 'roundEnd' } });
+  expect(wrapper.find('.trick-starter-badge').exists()).toBe(false);
+});

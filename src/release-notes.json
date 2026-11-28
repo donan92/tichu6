@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.46",
+    "summary": "patches.playerCardStatus"
+  },
+  {
     "version": "0.8.45",
     "summary": "patches.serverEfficiency"
   },

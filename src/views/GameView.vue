@@ -50,6 +50,11 @@ watch(
 );
 onBeforeUnmount(() => clearTimeout(dragonTimer));
 const seat = computed(() => Math.max(0, session.seat));
+const trickStarter = computed(() =>
+  props.game.top && ['play', 'trick'].includes(props.game.phase)
+    ? props.game.trickStarter
+    : null,
+);
 const tableNote = computed(() =>
   props.game.phase === 'grand'
     ? 'play.goodLuck'
@@ -110,7 +115,11 @@ const tableNote = computed(() =>
           { active: game.phase === 'play' && game.turn === index },
         ]"
       >
-        <div class="avatar" :class="`team-${team(index)}`">
+        <div
+          class="avatar"
+          :class="`team-${team(index)}`"
+          :aria-label="t('common.team', { team: team(index) ? 'B' : 'A' })"
+        >
           {{
             game.finish.includes(index)
               ? t('play.finish', { place: game.finish.indexOf(index) + 1 })
@@ -119,49 +128,74 @@ const tableNote = computed(() =>
                 : 'A'
           }}
         </div>
-        <div>
-          <b :class="{ 'dragon-recipient': dragonRecipient === index }"
-            >{{ name || t('common.empty') }}
+        <div class="player-identity">
+          <b
+            :title="name || t('common.empty')"
+            :class="{ 'dragon-recipient': dragonRecipient === index }"
+          >
+            {{ name || t('common.empty') }}
             <span v-if="!game.spectator && index === seat" class="you">{{
               t('common.you')
-            }}</span><template v-if="game.bots?.[index]">
-              · {{ t('common.bot') }}</template
-            ><template v-else-if="game.offline?.[index]">
-              · {{ t('play.offline') }}</template
-            ></b
-          ><small
-            >{{ t('common.team', { team: team(index) ? 'B' : 'A' }) }}
-            <span class="pass-slot"
-              ><span v-if="game.passed.includes(index)" class="pass-badge">{{
-                t('play.passed')
-              }}</span></span
-            >
-            · {{ t('play.cardCount', { count: game.counts[index] })
-            }}<template v-if="game.calls[index]">
-              ·
-              {{
-                t(game.calls[index] === 200 ? 'play.grand' : 'play.tichuShort')
-              }}</template
-            ></small
-          >
-          <span
-            v-if="dragonRecipient === index"
-            class="dragon-received"
-            role="status"
-            >{{
-              t(
-                receivedKind === 'dog'
-                  ? 'play.dogReceived'
-                  : 'play.dragonReceived',
-              )
-            }}</span
-          >
-          <span
-            v-if="game.phase === 'play' && game.turn === index"
-            class="turn-indicator"
-            >{{ t('play.currentTurn') }}</span
-          >
+            }}</span>
+          </b>
+          <span v-if="game.passed.includes(index)" class="pass-badge">{{
+            t('play.passed')
+          }}</span>
         </div>
+        <div class="player-counts">
+          <span class="player-hand-count" :title="t('play.handCountLabel')">
+            <span>{{ t('play.handCountShort') }}</span><strong>{{
+              game.counts[index]
+            }}</strong>
+          </span>
+          <span
+            class="player-captured-count"
+            :title="t('play.capturedCountLabel')"
+          >
+            <span>{{ t('play.capturedCountShort') }}</span><strong>{{
+              game.capturedCounts?.[index] ?? t('play.countUnavailable')
+            }}</strong>
+          </span>
+        </div>
+        <small
+          v-if="
+            game.bots?.[index] ||
+            game.offline?.[index] ||
+            game.calls[index] ||
+            trickStarter === index
+          "
+          class="player-meta"
+        >
+          <span v-if="game.bots?.[index]">{{ t('common.bot') }}</span>
+          <span v-else-if="game.offline?.[index]">{{ t('play.offline') }}</span>
+          <span
+            v-if="trickStarter === index"
+            class="trick-starter-badge"
+            :title="t('play.trickStarterDescription')"
+            >{{ t('play.trickStarter') }}</span
+          >
+          <span v-if="game.calls[index]">{{
+            t(game.calls[index] === 200 ? 'play.grand' : 'play.tichuShort')
+          }}</span>
+        </small>
+        <span
+          v-if="dragonRecipient === index"
+          class="dragon-received"
+          role="status"
+        >
+          {{
+            t(
+              receivedKind === 'dog'
+                ? 'play.dogReceived'
+                : 'play.dragonReceived',
+            )
+          }}
+        </span>
+        <span
+          v-if="game.phase === 'play' && game.turn === index"
+          class="turn-indicator"
+          >{{ t('play.currentTurn') }}</span
+        >
       </div>
       <div class="table-center">
         <template v-if="game.top"

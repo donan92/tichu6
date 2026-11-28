@@ -1,5 +1,42 @@
 # Project status / resume point
 
+## v0.8.46 release preparation (2026-11-28)
+
+- User authorized deployment of player Hand/Won totals and current-trick starter.
+- Release metadata and bilingual player-facing note updated together.
+- Final release check, lint, frontend/server types, 182 unit +112 UI tests,
+  formatting and production build pass. Local Worker integration/flow and
+  four responsive viewport checks are recorded below.
+- Backend-first deployment pending; no live release claimed yet.
+
+## Player card counts and trick starter — implemented locally, not deployed (2026-11-28)
+
+- Approved visual: name-adjacent Pass badge, side-by-side Hand/Won totals.
+  Branch `codex/player-captured-counts` in `/private/tmp/tichu6-performance`.
+- Added optional public `capturedCounts` to shared and server views, containing
+  counts only, not card identities or scores. Unknown older-server counts show
+  a dash. Counts follow actual captured piles, including Dragon donation, and
+  reset each round. No rules, version or production changes.
+- Bilingual labels, active/dark colors, retained bot/offline/declaration status.
+  Real local Vue screenshots at390/1200/834/320px passed horizontal overflow checks,
+  including English dark mode and108-card totals. Long names truncate with title.
+  These are desktop browser viewport checks, not physical-phone verification.
+- Check, format, build and182 unit +112 UI tests pass; real local Worker admission,
+  privacy, counts, bots and reconnect integration passes.
+- Approved starter badge added below counts, alongside bot/offline/call metadata.
+  Pass remains beside the name. Persisted optional `trickStarter` records the first
+  actual play, survives overcalls/bombs/pass/finishing/reconnect and clears on
+  collection/round end. Dog transfer waits for the recipient's actual first play.
+  Older saved rooms recover from the first current-trick log entry only when its
+  player name resolves uniquely; unknown history is not guessed from current top.
+- Starter regression tests cover serialized restoration, older-state fallback,
+  passed/finished starters, bomb takeover, Dog, new tricks/rounds and bilingual UI.
+  Actual Vue screenshots with simultaneous Led/Passed badges passed the same
+  four viewport overflow checks, including dark mode. Source game rules unchanged;
+  only public display metadata added. Final real local Worker flow suite passed
+  (preparation, reconnect clocks, Dragon collection, Dog cancellation and privacy).
+- Future release needs backend before frontend for the added public fields.
+
 ## v0.8.45 server optimization — deployed (2026-11-28)
 
 - Owner approved release of PR #5; squash merged as `dba72ec`. Original research

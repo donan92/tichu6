@@ -1,0 +1,136 @@
+/* Keep identity, pass status and the two card totals readable as one unit. */
+.game .player {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr);
+  gap: 6px;
+  min-width: 180px;
+}
+.game .player .avatar {
+  width: 26px;
+  height: 26px;
+}
+.player-identity {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  min-width: 0;
+}
+.game .player .player-identity b {
+  flex: 1;
+  min-width: 0;
+  max-width: none;
+}
+.player-identity .pass-badge {
+  flex-shrink: 0;
+  font-weight: 700;
+  padding-inline: 3px;
+}
+.player-counts {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+}
+.player-counts > span {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+  white-space: nowrap;
+}
+.player-counts > span > span {
+  font-size: 12px;
+  color: #c5d2df;
+}
+.player-counts strong {
+  font-size: 18px;
+  line-height: 1.3;
+  font-weight: 750;
+}
+.player-captured-count {
+  justify-content: flex-end;
+  border-left: 1px solid #ffffff30;
+}
+.player-captured-count strong {
+  color: #a9d5f5;
+}
+.game .player.active .player-counts > span > span {
+  color: #344d65;
+}
+.game .player.active .player-hand-count strong {
+  color: #10253b;
+}
+.game .player.active .player-captured-count strong {
+  color: #236185;
+}
+.game .player.active .player-captured-count {
+  border-color: #182d4530;
+}
+.game .player .player-meta,
+.game .player > .turn-indicator,
+.game .player > .dragon-received {
+  grid-column: 1 / -1;
+  margin: 0;
+}
+.game .player .player-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 6px;
+  line-height: 1.3;
+}
+@media (max-width: 600px) {
+  .game .player {
+    grid-template-columns: 18px minmax(0, 1fr);
+    min-width: 0;
+    padding: 6px;
+    gap: 5px 4px;
+  }
+  .game .player .avatar {
+    width: 18px;
+    height: 22px;
+  }
+  .game .player .player-identity b {
+    font-size: 11px;
+  }
+  .player-identity .pass-badge {
+    font-size: 8px;
+    padding-inline: 2px;
+  }
+  .player-counts {
+    gap: 4px;
+  }
+  .player-counts > span {
+    gap: 3px;
+  }
+  .player-counts > span > span {
+    font-size: 9px;
+  }
+  .player-counts strong {
+    font-size: 15px;
+  }
+}
+@media (max-width: 360px) {
+  .player-counts > span {
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+}
+
+.trick-starter-badge {
+  display: inline-block;
+  border: 1px solid #d9a44d;
+  border-radius: 3px;
+  padding: 1px 4px;
+  color: #f2c775;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.game .player.active .trick-starter-badge {
+  color: #65430a;
+  border-color: #8e601a;
+}
+.game .player .player-meta {
+  align-items: center;
+}

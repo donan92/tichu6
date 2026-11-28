@@ -455,5 +455,13 @@
   "error.inviteRateLimit": "잠시 후 참가 코드를 다시 입력해 주세요.",
   "patches.privateInvites": "관전할 수 없는 비밀방을 만들고 초대 링크나 6자리 코드로 참가할 수 있습니다.",
   "patches.capacity100": "최대 100명이 20개 방에서 함께 플레이하거나 관전할 수 있습니다.",
-  "patches.serverEfficiency": "버그 수정"
+  "patches.serverEfficiency": "버그 수정",
+  "play.handCountShort": "손패",
+  "play.capturedCountShort": "획득",
+  "play.handCountLabel": "남은 손패 카드 수",
+  "play.capturedCountLabel": "획득한 카드 수 (점수가 아닙니다)",
+  "play.countUnavailable": "—",
+  "play.trickStarter": "선공",
+  "play.trickStarterDescription": "이번 트릭의 첫 카드를 낸 플레이어",
+  "patches.playerCardStatus": "플레이어별 손패·획득 카드 수와 현재 트릭의 선공을 표시합니다."
 }

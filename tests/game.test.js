@@ -258,6 +258,7 @@ test('dragon trick must be given to an opponent; winner keeps the next lead', ()
   assert.throws(() => act(s, 0, { type: 'collect', target: 2 }));
   s = act(s, 0, { type: 'collect', target: 3 });
   assert.equal(points(s.captured[3]), 25);
+  assert.deepEqual(view(s, 0).capturedCounts, [0, 0, 0, 1, 0, 0]);
   assert.equal(s.turn, 0);
 });
 test('bombed dragon is captured by the bomb winner, not donated', () => {

@@ -1,5 +1,6 @@
 import { hostSeat } from './lobby-policy.ts';
 import {
+  currentTrickStarter,
   exchangeReview,
   points,
   view,
@@ -28,6 +29,7 @@ export function publicView(s: GameState): GameView {
   const fields = {
     trickHistory: visibleHistory(s),
     trickNumber: round?.trickNumber,
+    trickStarter: currentTrickStarter(s),
     dragonTransfer: round?.dragonTransfer,
     dogTransfer: round?.dogTransfer,
     callResults: round?.callResults || [],
@@ -50,6 +52,7 @@ export function publicView(s: GameState): GameView {
     delta: round?.delta || null,
     exchangeReady: (round?.exchanges || []).map(Boolean),
     capturedPoints: (round?.captured || []).map(points),
+    capturedCounts: s.hands.map((_, i) => round?.captured?.[i]?.length ?? 0),
   };
   return s.phase === 'lobby'
     ? { ...base, ...fields, phase: 'lobby' }
