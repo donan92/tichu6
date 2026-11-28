@@ -5,7 +5,10 @@ import type {
 } from './records.ts';
 
 const encoder = new TextEncoder();
-const eventSizes = new WeakMap<TrainingDecision, number>();
+const eventSizes = new WeakMap<
+  TrainingDecision,
+  { json: string; bytes: number }
+>();
 const jsonBytes = (value: unknown) =>
   encoder.encode(JSON.stringify(value)).byteLength;
 
@@ -18,13 +21,51 @@ function freezeSnapshot(value: unknown): void {
   Object.freeze(value);
 }
 
-function eventBytes(event: TrainingDecision): number {
+function serializedEvent(event: TrainingDecision) {
   const cached = eventSizes.get(event);
   if (cached !== undefined) return cached;
   freezeSnapshot(event);
-  const bytes = jsonBytes(event);
-  eventSizes.set(event, bytes);
-  return bytes;
+  const json = JSON.stringify(event);
+  const value = { json, bytes: encoder.encode(json).byteLength };
+  eventSizes.set(event, value);
+  return value;
+}
+
+// Retain JSON.stringify's key order, omitted undefined properties and escaping.
+// Only the owned array field uses already-serialized immutable fragments.
+function withArray(value: object, key: string, array: string): string {
+  return (
+    '{' +
+    Object.entries(value)
+      .flatMap(([name, entry]) => {
+        const json = name === key ? array : JSON.stringify(entry);
+        return json === undefined ? [] : [JSON.stringify(name) + ':' + json];
+      })
+      .join(',') +
+    '}'
+  );
+}
+
+export function serializeTrainingArchive(archive: TrainingArchive): string {
+  return withArray(
+    archive,
+    'sessions',
+    '[' +
+      archive.sessions
+        .map((session) =>
+          withArray(
+            session,
+            'events',
+            '[' +
+              session.events
+                .map((event) => serializedEvent(event).json)
+                .join(',') +
+              ']',
+          ),
+        )
+        .join(',') +
+      ']',
+  );
 }
 
 export function trainingSessionBytes(session: TrainingSession): number {
@@ -32,7 +73,10 @@ export function trainingSessionBytes(session: TrainingSession): number {
   // escaping, Unicode, timestamp widths, outcome and truncated exactly.
   return (
     jsonBytes({ ...session, events: [] }) +
-    session.events.reduce((sum, event) => sum + eventBytes(event), 0) +
+    session.events.reduce(
+      (sum, event) => sum + serializedEvent(event).bytes,
+      0,
+    ) +
     Math.max(0, session.events.length - 1)
   );
 }

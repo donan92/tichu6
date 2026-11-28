@@ -1,5 +1,9 @@
 [
   {
+    "version": "0.8.50",
+    "summary": "patches.trainingSerialization"
+  },
+  {
     "version": "0.8.49",
     "summary": "patches.trainingByteAccounting"
   },

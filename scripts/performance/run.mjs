@@ -33,8 +33,12 @@ for (const count of users) {
   try {
     let ready = false;
     for (let i = 0; i < 60; i++) {
+      if (worker.exitCode !== null || worker.signalCode !== null)
+        throw Error('Worker exited before readiness');
       try {
-        const r = await fetch(base + '/health');
+        const r = await fetch(base + '/health', {
+          signal: AbortSignal.timeout(1000),
+        });
         if (r.ok) {
           ready = true;
           break;
@@ -90,7 +94,14 @@ for (const count of users) {
     console.log(count + ' completed: ' + stdout);
   } finally {
     clearInterval(sampling);
-    process.kill(-worker.pid, 'SIGTERM');
+    try {
+      process.kill(-worker.pid, 'SIGTERM');
+    } catch (error) {
+      if (error.code !== 'ESRCH') {
+        console.error('Worker cleanup failed:', error);
+        process.exitCode = 1;
+      }
+    }
     await new Promise((r) => setTimeout(r, 2000));
     await log.close();
   }

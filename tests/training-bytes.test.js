@@ -1,6 +1,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { trainingArchiveBytes } from '../server/training/bytes.ts';
+import {
+  serializeTrainingArchive,
+  trainingArchiveBytes,
+} from '../server/training/bytes.ts';
 import { newGame, startRound, deck } from '../src/game.js';
 import {
   prepareTrainingDecision,
@@ -11,8 +14,10 @@ import {
   TRAINING_RETENTION_MS,
 } from '../server/training/records.ts';
 
-const oracle = (archive) =>
-  new TextEncoder().encode(JSON.stringify(archive)).length;
+const oracle = (archive) => {
+  assert.equal(serializeTrainingArchive(archive), JSON.stringify(archive));
+  return new TextEncoder().encode(JSON.stringify(archive)).length;
+};
 const record = () =>
   prepareTrainingDecision(
     startRound(newGame(), deck()),
