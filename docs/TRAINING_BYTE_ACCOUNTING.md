@@ -23,7 +23,7 @@ During byte-cap pruning, subtract the removed session and separator, or apply th
 changed single-session size delta. Metadata is re-encoded to cover optional
 fields, null, Unicode/escaping, numeric widths, outcome and truncated precisely.
 Session/event lengths are still summed per enforcement (bounded O(events)); this
-is not a constant-time archive index. No full JSON value is added to the cache.
+is not a constant-time archive index. The initial patch cached lengths only; the v0.8.50 follow-up also caches each event JSON fragment, with the same weak lifetime. No whole archive string is retained by this cache.
 
 ## Verified local evidence
 
@@ -78,3 +78,52 @@ Before considering V2, measure repository and actual Worker latency separately.
 Any chunk experiment must retain atomic Lounge/game/training commits, forward and
 reverse migration, global 80 KiB semantics and full accounting of metadata/deletes.
 The current result supports retaining the simpler V1 layout for now.
+
+## Post-release local Worker check (2026-11-28)
+
+After v0.8.49 deployment, sequential localhost-only 100-identity /20-room cases
+ran for at least 120 seconds, with recording enabled and five humans plus one
+bot per room. The ordinary fixture and load harness were reused; random deals
+were not seeded. All cases include twenty final simultaneous reconnects.
+The harness polls every 20ms, so measured latency is not pure server CPU.
+No production load or private export was used.
+
+The first baseline startup failed because its extracted checkout had no
+node_modules link. It was stopped and rerun after fixing the disposable fixture;
+it contributes no successful workload data. This exposed an unbounded health
+fetch in the test runner. The follow-up adds a one-second per-request timeout,
+early child-exit detection and safe cleanup of an already-exited process group.
+A deliberately missing local configuration now exits with a clear readiness
+error. Syntax and zero-warning ESLint checks passed. This tooling change is not
+part of deployed v0.8.49.
+
+### Serialization regression and correction
+
+The first implementation froze events but left repository JSON.stringify on the
+full frozen graph. A post-release benchmark including append, repository-style
+serialization and structuredClone found about 246ms baseline versus 306ms for
+v0.8.49. The Worker was rolled back to the v0.8.48 version without changing data.
+The earlier append-only speedup was real but insufficient evidence for overall
+persistence preparation performance.
+
+The correction caches each immutable event's JSON as well as its byte length.
+Repository dirty comparison uses an exact JSON fragment assembly: property order,
+omitted undefined fields and escaping still follow JSON.stringify. The value
+passed to storage remains the same object; atomic multi-key put and retry dirty
+flags remain unchanged. Oracle tests compare assembled JSON byte-for-byte after
+metadata changes, Unicode, cold load and pruning. Weakly-held fragment strings add
+memory roughly proportional to retained event JSON (within the existing bounded
+archive, plus transient/referenced events); they are not an unbounded ID cache.
+
+The reproducible benchmark now accepts `--persistence` to include comparison
+serialization and a structuredClone storage proxy. Five alternating repeats:
+median 256.200ms baseline versus 117.787ms correction (54.02% lower), identical
+final archive digest. This proxy is not an actual Cloudflare storage implementation.
+
+Instrumented local Worker runs (100 users, recording on, 120s each) all passed
+functional/reconnect checks but had variable P95: baseline 22.78 and 60.87ms;
+v0.8.49 40.42 and 61.33ms. Deals were unseeded and storage instrumentation itself
+serializes frozen graphs. These measurements do not establish a latency regression
+or improvement; they motivated the controlled full-path benchmark above. The
+corrected candidate also needs a functional run without storage-byte instrumentation.
+No billing reduction, fixed-seed Worker latency target or long-soak pass is claimed.

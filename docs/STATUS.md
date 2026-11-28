@@ -1,5 +1,11 @@
 # Project status / resume point
 
+## v0.8.50 follow-up — preparing (2026-11-28)
+
+- Post-release full-path benchmark exposed frozen-event JSON.stringify overhead in v0.8.49. Worker rolled back to v0.8.48 `f82051d7-efa7-4386-90b3-e27db90bd981`, preserving all data.
+- Correction: cache immutable event JSON fragments and use exact assembly for repository comparison, preserving object storage/atomicity. Full-path proxy median 256.200 →117.787 ms; oracle checks pass. Test runner readiness timeout/early exit also fixed.
+- Pending correction CI and local capacity run, then approved follow-up deployment. No schema migration. See TRAINING_BYTE_ACCOUNTING.md for measurement caveats.
+
 ## v0.8.49 — deployed (2026-11-28)
 
 - User authorized release and follow-up verification. PR #13 merged as `57eb157`; CI `46149769344` passed, including 301 tests and local Worker integration.

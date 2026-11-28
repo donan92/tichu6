@@ -20,6 +20,14 @@ const record = after.prepareTrainingDecision(
   'human',
 );
 record.recordId = 'fixed';
+const includePersistence = process.argv.includes('--persistence');
+const optimizedSerializer = includePersistence
+  ? (
+      await import(
+        pathToFileURL(path.resolve(afterDir, 'server/training/bytes.ts'))
+      )
+    ).serializeTrainingArchive
+  : null;
 const results = [];
 for (let repeat = 0; repeat < 5; repeat++)
   for (const [label, api] of repeat % 2
@@ -37,13 +45,19 @@ for (let repeat = 0; repeat < 5; repeat++)
     // Separate ownership: candidate freezing must not alter baseline fixtures.
     const seedRecord = structuredClone(record);
     const start = performance.now();
-    for (let i = 0; i < 2000; i++)
+    for (let i = 0; i < 2000; i++) {
       api.appendTrainingDecision(
         archive,
         'round' + Math.floor(i / 80),
         { ...seedRecord, revision: i },
         1000 + i,
       );
+      if (includePersistence) {
+        if (label === 'after') optimizedSerializer(archive);
+        else JSON.stringify(archive);
+        structuredClone(archive);
+      }
+    }
     const elapsed = performance.now() - start;
     const end = process.memoryUsage();
     const encoded = JSON.stringify(archive);
@@ -65,6 +79,7 @@ console.log(
   JSON.stringify(
     {
       results,
+      includePersistence,
       note: 'Identical 2000-decision bounded-archive workload, alternating order. Heap-used delta is affected by intervening GC; it is neither total allocation nor retained leak.',
     },
     null,

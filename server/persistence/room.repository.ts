@@ -1,3 +1,4 @@
+import { serializeTrainingArchive } from '../training/bytes.ts';
 import { Alarm } from './alarm.ts';
 import { syncDeadline } from '../../src/game-clock.ts';
 import {
@@ -48,7 +49,7 @@ export class RoomRepository {
     // Compare the complete value rather than risk an incomplete revision shortcut.
     const lounge = JSON.stringify(this.data);
     const training = this.trainingDirty
-      ? JSON.stringify(this.training)
+      ? serializeTrainingArchive(this.training)
       : this.savedTraining;
     const writes: Record<string, unknown> = {};
     if (lounge !== this.savedLounge) writes.lounge = this.data;
