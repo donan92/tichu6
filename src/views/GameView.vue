@@ -191,11 +191,6 @@ const tableNote = computed(() =>
             )
           }}
         </span>
-        <span
-          v-if="game.phase === 'play' && game.turn === index"
-          class="turn-indicator"
-          >{{ t('play.currentTurn') }}</span
-        >
       </div>
       <div class="table-center">
         <template v-if="game.top"

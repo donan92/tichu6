@@ -365,7 +365,6 @@
   "patches.phoenixPosition": "봉황을 조합에서 대신하는 숫자 위치에 정렬합니다.",
   "play.resetSort": "정렬 초기화",
   "play.dragHandHint": "드래그로 순서 변경 · 모바일은 길게 누르기 · 키보드는 Alt+←/→",
-  "play.currentTurn": "현재 차례",
   "patches.handOrderAndTurn": "손패를 드래그해 정렬하고 초기화할 수 있으며, 다크모드의 현재 차례 표시를 개선했습니다.",
   "play.dogReceived": "개를 받았습니다",
   "play.dragonReceived": "용을 받았습니다",
@@ -463,5 +462,6 @@
   "play.countUnavailable": "—",
   "play.trickStarter": "선공",
   "play.trickStarterDescription": "이번 트릭의 첫 카드를 낸 플레이어",
-  "patches.playerCardStatus": "플레이어별 손패·획득 카드 수와 현재 트릭의 선공을 표시합니다."
+  "patches.playerCardStatus": "플레이어별 손패·획득 카드 수와 현재 트릭의 선공을 표시합니다.",
+  "patches.clearerPlayerStatus": "플레이어 칸의 중복된 차례 문구를 없애 더 간결하게 표시합니다."
 }

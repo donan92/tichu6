@@ -365,7 +365,6 @@
   "patches.phoenixPosition": "Phoenix is placed at the rank it represents in a played combination.",
   "play.resetSort": "Reset order",
   "play.dragHandHint": "Drag to reorder · hold on touch screens · Alt+Left/Right with keyboard",
-  "play.currentTurn": "Current turn",
   "patches.handOrderAndTurn": "Reorder your hand by dragging, reset its order, and see the current turn more clearly in dark mode.",
   "play.dogReceived": "Received the Dog",
   "play.dragonReceived": "Received the Dragon",
@@ -463,5 +462,6 @@
   "play.countUnavailable": "—",
   "play.trickStarter": "Led",
   "play.trickStarterDescription": "Player who played the first cards of this trick",
-  "patches.playerCardStatus": "See each player’s hand and captured card totals, plus who led the current trick."
+  "patches.playerCardStatus": "See each player’s hand and captured card totals, plus who led the current trick.",
+  "patches.clearerPlayerStatus": "Player tiles are cleaner without the redundant current-turn label."
 }

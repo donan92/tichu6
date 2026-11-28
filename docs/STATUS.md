@@ -1,5 +1,13 @@
 # Project status / resume point
 
+## Active-player label cleanup — local, not deployed (2026-11-28)
+
+- Removed the visible current-turn caption from player tiles and its unused CSS
+  and locale keys. Active colors/border, aria-current and central turn guidance
+  remain intact; no game behavior changes.
+- Branch `codex/simplify-active-player`; check, 182 unit +112 UI tests, format
+  and build pass. No version bump, merge or deployment performed.
+
 ## v0.8.46 deployed (2026-11-28)
 
 - User authorized deployment of player Hand/Won totals and current-trick starter.
