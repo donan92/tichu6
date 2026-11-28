@@ -34,7 +34,11 @@ export function act(
   seat: number,
   action: GameAction,
 ): RoundState;
+/** Personalized hand plus public card totals; capturedCounts never contains card identities. */
 export function view(state: RoundState, seat: number): RoundView;
+export function currentTrickStarter(
+  state: LobbyState | RoundState,
+): number | null;
 export function botAction(state: RoundState, seat: number): GameAction;
 
 export function exchangeReview(

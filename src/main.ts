@@ -8,5 +8,6 @@ import './styles/typography.css';
 import './styles/cards.css';
 import './styles/table-room.css';
 import './styles/game-guides.css';
+import './styles/player-status.css';
 await initializeLanguage();
 createApp(App).use(createPinia()).use(I18NextVue, { i18next }).mount('#app');

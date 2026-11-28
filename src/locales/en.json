@@ -455,5 +455,12 @@
   "error.inviteRateLimit": "Wait a minute before trying another code.",
   "patches.privateInvites": "Create private rooms without spectators and join through an invite link or six-character code.",
   "patches.capacity100": "Up to 100 people can play or spectate across 20 rooms.",
-  "patches.serverEfficiency": "Bug fixes."
+  "patches.serverEfficiency": "Bug fixes.",
+  "play.handCountShort": "Hand",
+  "play.capturedCountShort": "Won",
+  "play.handCountLabel": "Cards remaining in hand",
+  "play.capturedCountLabel": "Cards captured (not points)",
+  "play.countUnavailable": "—",
+  "play.trickStarter": "Led",
+  "play.trickStarterDescription": "Player who played the first cards of this trick"
 }

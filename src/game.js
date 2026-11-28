@@ -259,6 +259,7 @@ export function startRound(s, cards = shuffle(deck())) {
   s.round++;
   s.log = [];
   s.trickNumber = 1;
+  s.trickStarter = null;
   s.trickHistory ||= [];
   s.callResults = [];
   s.dragonTarget = null;
@@ -295,6 +296,7 @@ export function startRound(s, cards = shuffle(deck())) {
   return s;
 }
 function finishRound(s) {
+  s.trickStarter = null;
   const delta = [0, 0];
   const triple =
     s.finish.length >= 3 &&
@@ -383,7 +385,25 @@ function archiveTrick(s) {
 function nextTrick(s) {
   archiveTrick(s);
   s.trickNumber = (s.trickNumber || 1) + 1;
+  s.trickStarter = null;
   s.log = [];
+}
+// Old saved rooms may lack this metadata. Recover only from this trick's public
+// first play, never from the current top combination or a previous trick.
+export function currentTrickStarter(s) {
+  if (!['play', 'trick'].includes(s.phase) || !s.top) return null;
+  if (
+    Number.isInteger(s.trickStarter) &&
+    s.trickStarter >= 0 &&
+    s.trickStarter < 6
+  )
+    return s.trickStarter;
+  if (!s.trickNumber) return null;
+  const first = s.log.find((entry) => entry?.code === 'log.play');
+  const name = first?.params?.name;
+  if (typeof name !== 'string') return null;
+  const seats = s.names.flatMap((n, i) => (n === name ? [i] : []));
+  return seats.length === 1 ? seats[0] : null;
 }
 export function visibleLog(s) {
   return s.phase === 'lobby' || s.trickNumber ? s.log : [];
@@ -421,6 +441,7 @@ export function act(state, seat, action) {
     fail('error.invalidRequest');
   const s = structuredClone(state),
     h = s.hands[seat];
+  s.trickStarter = currentTrickStarter(s);
   if (!s.trickNumber) {
     s.trickNumber = 1;
     s.log = [];
@@ -626,6 +647,7 @@ export function act(state, seat, action) {
       if (ending(s)) finishRound(s);
       else nextTrick(s);
     } else {
+      if (!s.top) s.trickStarter = seat;
       s.top = { ...p, cards };
       s.pile.push(...cards);
       s.last = seat;
@@ -749,12 +771,14 @@ export function view(s, seat) {
   return {
     ...pub,
     trickHistory: visibleHistory(s),
+    trickStarter: currentTrickStarter(s),
     log: visibleLog(s),
     seat,
     hand,
     counts: hands.map((h) => h.length),
     exchangeReady: (exchanges || []).map(Boolean),
     capturedPoints: (captured || []).map(points),
+    capturedCounts: hands.map((_, i) => captured?.[i]?.length ?? 0),
     exchangeReview: exchangeReview(s, seat),
   };
 }

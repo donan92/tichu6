@@ -116,6 +116,11 @@ try {
   await until(() => spectator.state?.phase === 'grand');
   assert.equal(owner.state.hand.length, 10);
   assert.deepEqual(spectator.state.hand, []);
+  assert.deepEqual(owner.state.capturedCounts, [0, 0, 0, 0, 0, 0]);
+  assert.equal(owner.state.trickStarter, null);
+  assert.equal(spectator.state.trickStarter, null);
+  assert.deepEqual(spectator.state.capturedCounts, owner.state.capturedCounts);
+  assert.equal('captured' in spectator.state, false);
   assert.equal(spectator.state.seat, -1);
   assert.equal('spectatorHands' in spectator.state, false);
   assert.ok(players.every((player) => !('spectatorHands' in player.state)));
