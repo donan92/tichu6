@@ -1,5 +1,12 @@
 # Project status / resume point
 
+## Training byte accounting — Phase 1 (2026-11-28)
+
+- Branch `codex/training-byte-accounting`, base `f9a2289` / v0.8.48. Original research checkout untouched. No merge, push, deployment or version bump.
+- Replaced repeated byte-cap archive encoding with weak event-size cache, exact metadata accounting and pruning deltas. Decision graphs are frozen on first accounting; archive containers stay mutable. Storage schema, writes, retention and export unchanged.
+- 3,000-step differential oracle passed; training mutation/loader serialized bytes reduced 97.07%. Five-repeat 2,000-append median 87.043 → 11.422 ms. These are local microbenchmarks, not billing or Worker latency.
+- Passed: 189 unit +112 UI tests, ESLint/types, formatting and build; real local Worker restart, idle and flow suites. Initial sandboxed Worker startup timed out; authorized localhost rerun passed. No 2h/24h soak repeated. See [TRAINING_BYTE_ACCOUNTING.md](TRAINING_BYTE_ACCOUNTING.md) for methodology, limits and rollback.
+
 ## v0.8.48 release — deployed and verified (2026-11-28)
 
 - User approved merge/deployment of PR #8. Release metadata and bilingual bug-fix note updated.
