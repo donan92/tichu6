@@ -38,6 +38,9 @@ async function setup() {
         for (const [k, v] of Object.entries(key))
           values.set(k, structuredClone(v));
     },
+    async getAlarm() {
+      return null;
+    },
     async setAlarm() {},
     async deleteAlarm() {},
   };
@@ -1277,4 +1280,102 @@ test('private room code attempts are bounded and hello cannot bypass spectator r
     ws.messages.some((m) => m.type === 'state'),
     false,
   );
+});
+
+test('unchanged broadcasts are silent; changed rooms, personal membership and restart remain synchronized', async () => {
+  const f = await setup(),
+    first = await user(f, 91),
+    second = await user(f, 92),
+    watcher = await user(f, 93);
+  await msg(f.hub, first, { type: 'create', name: 'First', privateRoom: true });
+  await msg(f.hub, second, { type: 'create', name: 'Second' });
+  const id = last(second, 'state').value.roomId;
+  await msg(f.hub, watcher, {
+    type: 'join',
+    roomId: id,
+    watch: true,
+    name: 'Watch',
+  });
+  for (const ws of [first, second, watcher]) ws.messages.length = 0;
+  f.hub.broadcast();
+  assert.ok([first, second, watcher].every((ws) => ws.messages.length === 0));
+  await msg(f.hub, second, {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  for (const ws of [first, second, watcher]) ws.messages.length = 0;
+  const room = f.hub.data.rooms[id];
+  await msg(f.hub, second, {
+    type: 'action',
+    revision: room.state.revision,
+    action: { type: 'grand', call: false },
+  });
+  assert.equal(
+    first.messages.length,
+    0,
+    'other room and unchanged directory must stay silent',
+  );
+  assert.equal(second.messages.filter((m) => m.type === 'state').length, 1);
+  assert.equal(watcher.messages.filter((m) => m.type === 'state').length, 1);
+  assert.deepEqual(last(watcher, 'state').value.hand, []);
+  assert.equal('inviteCode' in last(watcher, 'state').value, false);
+  for (const ws of [first, second, watcher]) ws.messages.length = 0;
+  // Deadline-only changes must not be hidden by unchanged game revision.
+  room.state.deadline += 1000;
+  f.hub.broadcast();
+  assert.equal(last(second, 'state').value.deadline, room.state.deadline);
+  assert.equal(first.messages.length, 0);
+  const send = second.send;
+  second.send = () => {
+    throw Error('temporary socket failure');
+  };
+  room.state.deadline += 1000;
+  second.messages.length = 0;
+  f.hub.broadcast();
+  assert.equal(second.messages.length, 0);
+  second.send = send;
+  f.hub.broadcast();
+  assert.equal(last(second, 'state').value.deadline, room.state.deadline);
+  assert.equal(
+    second.messages.length,
+    1,
+    'failed delivery must remain retryable',
+  );
+  const rebuilt = new Lounge(f.ctx);
+  await f.ready();
+  rebuilt.broadcast();
+  assert.ok(last(first, 'directory'));
+  assert.ok(last(first, 'state').value.inviteCode);
+  assert.equal(last(second, 'state').value.hand.length, 10);
+  assert.deepEqual(last(watcher, 'state').value.hand, []);
+});
+
+test('failed persistence never acknowledges a move and retains pending state for retry', async () => {
+  const f = await setup(),
+    ws = await user(f, 94);
+  await msg(f.hub, ws, { type: 'create', name: 'Tester' });
+  const put = f.ctx.storage.put;
+  let fail = true;
+  f.ctx.storage.put = async (...args) => {
+    if (fail) {
+      fail = false;
+      throw Error('storage unavailable');
+    }
+    return put(...args);
+  };
+  ws.messages.length = 0;
+  await msg(f.hub, ws, {
+    type: 'action',
+    revision: 0,
+    action: { type: 'start' },
+  });
+  assert.equal(
+    ws.messages.some((m) => m.type === 'state'),
+    false,
+  );
+  assert.ok(last(ws, 'error'));
+  await f.hub.persist();
+  const stored = await f.ctx.storage.get('lounge');
+  assert.equal(Object.values(stored.rooms)[0].state.phase, 'grand');
 });

@@ -1,3 +1,4 @@
+import { Alarm } from '../persistence/alarm.ts';
 import { act, botAction, startRound } from '../../src/game.js';
 import { errorEvent } from '../../src/messages.js';
 import type { GameAction, RoundState } from '../../src/types';
@@ -6,9 +7,13 @@ import type { GameState } from '../types.ts';
 // Internal-only binding: callers are the authenticated lounge coordinator.
 // Each room ID selects its own object; no public HTTP route exposes this class.
 export class RoomEngine {
+  private readonly expiry: Alarm;
+  private last: { key: string; value: unknown; expiresAt?: number } | undefined;
+  private loaded = false;
   readonly ctx: DurableObjectState;
   constructor(ctx: DurableObjectState) {
     this.ctx = ctx;
+    this.expiry = new Alarm(ctx.storage);
   }
   async fetch(request: Request) {
     const raw = await request.text();
@@ -22,11 +27,17 @@ export class RoomEngine {
     ).join('');
     let result: unknown;
     await this.ctx.blockConcurrencyWhile(async () => {
-      const cached = await this.ctx.storage.get<{
-        key: string;
-        value: unknown;
-      }>('last');
+      if (!this.loaded) {
+        this.last = await this.ctx.storage.get('last');
+        this.loaded = true;
+      }
+      const cached = this.last;
       if (cached?.key === key) {
+        // Repair an alarm write that failed after the idempotent result committed.
+        await this.expiry.update(
+          cached.expiresAt ?? Date.now() + 86400000,
+          true,
+        );
         result = cached.value;
         return;
       }
@@ -49,15 +60,31 @@ export class RoomEngine {
           result = { error: { code: 'error.invalidRequest' } };
           return;
         }
-        await this.ctx.storage.put('last', { key, value: result });
-        await this.ctx.storage.setAlarm(Date.now() + 86400000);
+        const entry = { key, value: result, expiresAt: Date.now() + 86400000 };
+        await this.ctx.storage.put('last', entry);
+        this.last = entry;
+        await this.expiry.update(entry.expiresAt, true);
       } catch (error) {
+        // A storage failure may have an uncertain commit outcome. Reload before
+        // retrying a randomized deal rather than trusting the warm cache.
+        this.loaded = false;
+        this.last = undefined;
         result = { error: errorEvent(error) };
       }
     });
     return Response.json(result);
   }
   async alarm() {
-    await this.ctx.storage.deleteAll();
+    await this.ctx.blockConcurrencyWhile(async () => {
+      this.expiry.fired();
+      const cached = await this.ctx.storage.get<{ expiresAt?: number }>('last');
+      if (cached?.expiresAt && cached.expiresAt > Date.now()) {
+        await this.expiry.update(cached.expiresAt);
+        return;
+      }
+      await this.ctx.storage.deleteAll();
+      this.last = undefined;
+      this.loaded = false;
+    });
   }
 }

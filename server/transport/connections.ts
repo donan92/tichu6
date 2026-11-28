@@ -30,11 +30,29 @@ export class Connections {
         users.some((a) => a.hash === m.hash && a.room === room.id && !a.watch),
     );
   }
+  presence(rooms: Room[]) {
+    const active = new Set(
+      this.users().flatMap((ws) => {
+        const a = this.attachment(ws);
+        return a.room && !a.watch ? [`${a.room}:${a.hash}`] : [];
+      }),
+    );
+    return new Map(
+      rooms.map((room) => [
+        room.id,
+        room.members.map(
+          (m) => !!m && !m.bot && active.has(`${room.id}:${m.hash}`),
+        ),
+      ]),
+    );
+  }
   send(ws: WebSocket, message: unknown) {
     try {
       ws.send(JSON.stringify(message));
+      return true;
     } catch {
       /* Disconnected sockets are cleaned up by their close event. */
+      return false;
     }
   }
 }

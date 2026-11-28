@@ -183,6 +183,7 @@ export class GameService {
       );
       if (decision) {
         r.trainingSession ??= crypto.randomUUID();
+        this.repository.markTrainingDirty();
         appendTrainingDecision(
           this.repository.training,
           r.trainingSession,
@@ -194,6 +195,7 @@ export class GameService {
     }
     if (r.trainingSession && ['roundEnd', 'matchEnd'].includes(r.state.phase)) {
       const state = r.state as RoundState;
+      this.repository.markTrainingDirty();
       finalizeTrainingSession(this.repository.training, r.trainingSession, {
         scores: state.scores,
         delta: state.delta,
