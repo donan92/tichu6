@@ -1,10 +1,14 @@
 # Project status / resume point
 
-## v0.8.48 release — authorized, preparing (2026-11-28)
+## v0.8.48 release — deployed and verified (2026-11-28)
 
 - User approved merge/deployment of PR #8. Release metadata and bilingual bug-fix note updated.
 - Python analysis dependencies now have uv manifest/lock, daily Dependabot and CI checks. Server implementation remains the tested two-hour candidate.
-- Pending: final checks, PR merge, Worker + Pages deployment and read-only live verification.
+- PR #8 squash-merged as `73b5261`; final CI run `46115907488` passed Python checks, release/lint/types/format, 186 unit +112 UI tests, retention, build, audit, local Worker integration, idle and flow checks.
+- Worker `f82051d7-efa7-4386-90b3-e27db90bd981` deployed with 100% traffic; production `/health` returned HTTP 200 and `ok: true` (version 6 is protocol version).
+- Pages production `9cd73910-ec80-4627-994f-f263a99a41c8` deployed directly after Git build remained Idle. Live `https://tichu6.pages.dev` HTML, `index-B2ccE_hn.js` and `index-BwQ0sL1W.css` match local dist byte-for-byte; JS contains v0.8.48.
+- Rollback targets: Worker `911edd78-017d-474a-bff4-05454b81d4e4`, Pages `c3264939-56ab-4dd8-98a8-47698597a56c` (v0.8.47). Durable schema and retention policy unchanged.
+- No production load tests or manual stored-data changes. Original research checkout preserved. Physical-device gameplay and multi-day production stability remain unverified.
 
 ## Long-run stability follow-up — locally validated, awaiting review (2026-11-28)
 
