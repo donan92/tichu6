@@ -34,12 +34,14 @@ for (let repeat = 0; repeat < 5; repeat++)
     global.gc?.();
     const initial = process.memoryUsage();
     const archive = api.createTrainingArchive();
+    // Separate ownership: candidate freezing must not alter baseline fixtures.
+    const seedRecord = structuredClone(record);
     const start = performance.now();
     for (let i = 0; i < 2000; i++)
       api.appendTrainingDecision(
         archive,
         'round' + Math.floor(i / 80),
-        { ...record, revision: i },
+        { ...seedRecord, revision: i },
         1000 + i,
       );
     const elapsed = performance.now() - start;

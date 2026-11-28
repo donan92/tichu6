@@ -1,3 +1,4 @@
+import { trainingArchiveBytes, trainingSessionBytes } from './bytes.ts';
 import type { Card, GameAction, RoundState } from '../../src/types.ts';
 import { deck, points } from '../../src/game.js';
 
@@ -608,24 +609,24 @@ export function appendTrainingDecision(
   return false;
 }
 
-function archiveBytes(archive: TrainingArchive) {
-  return new TextEncoder().encode(JSON.stringify(archive)).byteLength;
-}
-
 function enforceByteCap(archive: TrainingArchive) {
-  while (
-    archiveBytes(archive) > TRAINING_MAX_BYTES &&
-    archive.sessions.length
-  ) {
+  let bytes = trainingArchiveBytes(archive);
+  while (bytes > TRAINING_MAX_BYTES && archive.sessions.length) {
+    const session = archive.sessions[0];
+    const previous = trainingSessionBytes(session);
     if (archive.sessions.length > 1) {
       archive.sessions.shift();
+      bytes -= previous + 1; // Removed session and its array separator.
       continue;
     }
-    const session = archive.sessions[0];
     if (session.events.length) {
       session.events.shift();
       session.truncated = true;
-    } else archive.sessions.shift();
+      bytes += trainingSessionBytes(session) - previous;
+    } else {
+      archive.sessions.shift();
+      bytes -= previous;
+    }
   }
 }
 
