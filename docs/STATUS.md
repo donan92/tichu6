@@ -1,10 +1,12 @@
 # Project status / resume point
 
-## v0.8.50 follow-up — preparing (2026-11-28)
+## v0.8.50 follow-up — deployed and verified (2026-11-28)
 
 - Post-release full-path benchmark exposed frozen-event JSON.stringify overhead in v0.8.49. Worker rolled back to v0.8.48 `f82051d7-efa7-4386-90b3-e27db90bd981`, preserving all data.
 - Correction: cache immutable event JSON fragments and use exact assembly for repository comparison, preserving object storage/atomicity. Full-path proxy median 256.200 →117.787 ms; oracle checks pass. Test runner readiness timeout/early exit also fixed.
-- Pending correction CI and local capacity run, then approved follow-up deployment. No schema migration. See TRAINING_BYTE_ACCOUNTING.md for measurement caveats.
+- PR #14 merged as `d91e476`; CI `46151210208` passed (301 tests, lint/types/format/build, local Worker integration). Corrected 100-user/20-room recording-on local run: 840 moves, >=33 per room, final twenty simultaneous reconnects passed. Initial attempt interrupted by dev-server reload, excluded. No controlled Worker latency claim.
+- Worker `9b502b7f-3a94-41ba-b0e8-380d0c83f455` verified at 100%; Pages production `41be7f44` directly deployed. Live HTML/JS/CSS match dist, v0.8.50 and health ok verified. Preferred rollback remains v0.8.48 Worker `f82051d7-efa7-4386-90b3-e27db90bd981` / Pages `9cd73910-ec80-4627-994f-f263a99a41c8`, not the regressed v0.8.49 Worker.
+- No schema migration or production load. All local load processes completed. Follow-ups: controlled seeded Worker latency and 2h/24h soak before any V2 decision; no further storage redesign justified yet. See TRAINING_BYTE_ACCOUNTING.md and training-worker-check.json.
 
 ## v0.8.49 — deployed (2026-11-28)
 

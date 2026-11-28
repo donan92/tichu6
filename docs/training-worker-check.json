@@ -1,0 +1,157 @@
+{
+  "note": "Local unseeded 120-second functional checks; includes polling/client work. Final case disables storage-byte instrumentation. Not a controlled latency or billing comparison. Failed fixture startup and development reload runs excluded and documented.",
+  "cases": [
+    {
+      "case": "baseline-1",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 121.016092625,
+      "acceptedHumanMoves": 757,
+      "minMovesPerRoom": 32,
+      "responseMs": {
+        "p50": 21.495874999993248,
+        "p95": 22.781750000009197,
+        "p99": 61.5815419999999,
+        "max": 106.01245800000015
+      },
+      "counters": {
+        "storage.get": 42,
+        "storage.put": 1834,
+        "write.training-v1": 805,
+        "writeBytes.training-v1": 62697782,
+        "storage.getAlarm": 42,
+        "storage.setAlarm": 607,
+        "ws.incoming": 757,
+        "write.lounge": 835,
+        "writeBytes.lounge": 143966657,
+        "ws.messages": 19295,
+        "ws.bytes": 78405236,
+        "broadcast": 835,
+        "engine.requests": 1166,
+        "write.last": 999,
+        "writeBytes.last": 7270797,
+        "alarm.fired": 14,
+        "bot.compute": 167
+      }
+    },
+    {
+      "case": "baseline-2",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.652050459,
+      "acceptedHumanMoves": 765,
+      "minMovesPerRoom": 28,
+      "responseMs": {
+        "p50": 21.362915999998222,
+        "p95": 60.86554199999955,
+        "p99": 186.59916599999997,
+        "max": 310.28420899999946
+      },
+      "counters": {
+        "storage.get": 27,
+        "storage.put": 1848,
+        "write.training-v1": 809,
+        "writeBytes.training-v1": 62987912,
+        "storage.getAlarm": 27,
+        "storage.setAlarm": 627,
+        "ws.incoming": 765,
+        "write.lounge": 838,
+        "writeBytes.lounge": 144362461,
+        "ws.messages": 19545,
+        "ws.bytes": 79420147,
+        "broadcast": 838,
+        "engine.requests": 1181,
+        "write.last": 1010,
+        "writeBytes.last": 7359181,
+        "alarm.fired": 16,
+        "bot.compute": 171
+      }
+    },
+    {
+      "case": "v0.8.49-1",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.947300583,
+      "acceptedHumanMoves": 820,
+      "minMovesPerRoom": 30,
+      "responseMs": {
+        "p50": 21.463040999995428,
+        "p95": 40.423375000000306,
+        "p99": 80.26383300000089,
+        "max": 122.21283399999993
+      },
+      "counters": {
+        "storage.get": 36,
+        "storage.put": 1950,
+        "write.training-v1": 864,
+        "writeBytes.training-v1": 67431074,
+        "storage.getAlarm": 36,
+        "storage.setAlarm": 601,
+        "ws.incoming": 820,
+        "write.lounge": 887,
+        "writeBytes.lounge": 155204953,
+        "ws.messages": 19300,
+        "ws.bytes": 77744677,
+        "broadcast": 887,
+        "engine.requests": 1243,
+        "write.last": 1063,
+        "writeBytes.last": 7885718,
+        "alarm.fired": 14,
+        "bot.compute": 180
+      }
+    },
+    {
+      "case": "v0.8.49-2",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.918381583,
+      "acceptedHumanMoves": 786,
+      "minMovesPerRoom": 30,
+      "responseMs": {
+        "p50": 21.518417000001136,
+        "p95": 61.33012500000041,
+        "p99": 101.60345899999993,
+        "max": 130.98920799999905
+      },
+      "counters": {
+        "storage.get": 25,
+        "storage.put": 1896,
+        "write.training-v1": 837,
+        "writeBytes.training-v1": 65199715,
+        "storage.getAlarm": 25,
+        "storage.setAlarm": 719,
+        "ws.incoming": 786,
+        "write.lounge": 860,
+        "writeBytes.lounge": 149651249,
+        "ws.messages": 19475,
+        "ws.bytes": 78793304,
+        "broadcast": 860,
+        "engine.requests": 1216,
+        "write.last": 1036,
+        "writeBytes.last": 7630012,
+        "alarm.fired": 18,
+        "bot.compute": 180
+      }
+    },
+    {
+      "case": "v0.8.50-storage-uninstrumented",
+      "result": "PASS",
+      "identities": 100,
+      "activeRooms": 20,
+      "durationSeconds": 120.799579625,
+      "acceptedHumanMoves": 840,
+      "minMovesPerRoom": 33,
+      "responseMs": {
+        "p50": 21.516916000000492,
+        "p95": 63.19879100000253,
+        "p99": 147.3009579999998,
+        "max": 274.568874999999
+      },
+      "counters": {}
+    }
+  ]
+}

@@ -125,5 +125,8 @@ functional/reconnect checks but had variable P95: baseline 22.78 and 60.87ms;
 v0.8.49 40.42 and 61.33ms. Deals were unseeded and storage instrumentation itself
 serializes frozen graphs. These measurements do not establish a latency regression
 or improvement; they motivated the controlled full-path benchmark above. The
-corrected candidate also needs a functional run without storage-byte instrumentation.
+corrected candidate passed a 120.8-second recording-on run without storage-byte instrumentation: 840 moves, at least 33 per room, and twenty final simultaneous reconnects. P50/P95/P99 were 21.52/63.20/147.30ms; unseeded runs cannot establish a latency improvement. An earlier candidate attempt was interrupted by local development-server reload while release files changed and was excluded. Numeric results are in training-worker-check.json.
 No billing reduction, fixed-seed Worker latency target or long-soak pass is claimed.
+
+Correction shipped as v0.8.50 (PR #14); production version and assets verified.
+See STATUS.md for deployment IDs and the v0.8.48 rollback target.
