@@ -462,5 +462,6 @@
   "play.capturedCountLabel": "획득한 카드 수 (점수가 아닙니다)",
   "play.countUnavailable": "—",
   "play.trickStarter": "선공",
-  "play.trickStarterDescription": "이번 트릭의 첫 카드를 낸 플레이어"
+  "play.trickStarterDescription": "이번 트릭의 첫 카드를 낸 플레이어",
+  "patches.playerCardStatus": "플레이어별 손패·획득 카드 수와 현재 트릭의 선공을 표시합니다."
 }

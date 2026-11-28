@@ -1,5 +1,14 @@
 # Project status / resume point
 
+## v0.8.46 release preparation (2026-11-28)
+
+- User authorized deployment of player Hand/Won totals and current-trick starter.
+- Release metadata and bilingual player-facing note updated together.
+- Final release check, lint, frontend/server types, 182 unit +112 UI tests,
+  formatting and production build pass. Local Worker integration/flow and
+  four responsive viewport checks are recorded below.
+- Backend-first deployment pending; no live release claimed yet.
+
 ## Player card counts and trick starter — implemented locally, not deployed (2026-11-28)
 
 - Approved visual: name-adjacent Pass badge, side-by-side Hand/Won totals.
