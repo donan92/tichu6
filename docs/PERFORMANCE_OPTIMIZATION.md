@@ -1,5 +1,10 @@
 # Server performance and Cloudflare cost optimization
 
+Follow-up: [long-running stability investigation](LONG_RUNNING_STABILITY.md).
+The current harness removes actor-retaining measurement timers and adds heap
+profiling/churn. To reproduce the historical numbers below exactly, use the
+scripts from PR #5 (`dba72ec`), not the newer harness.
+
 Status: subsequently approved and released as **v0.8.45**; deployment IDs and
 read-only live verification are in [STATUS.md](STATUS.md). Measurements below
 preceded deployment and remain local-only, using the v0.8.44 baseline.

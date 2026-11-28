@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import { randomBytes } from 'node:crypto';
 import { performance } from 'node:perf_hooks';
+import { appendFile } from 'node:fs/promises';
 import WebSocket from 'ws';
 import { legalPlays } from '../../src/game.js';
 const base = process.env.TEST_API || 'http://localhost:8787';
@@ -18,6 +19,10 @@ let receivedMessages = 0,
   receivedBytes = 0;
 const metrics = async () => (await fetch(base + '/__metrics')).json();
 const latency = [];
+let reconnects = 0,
+  recycledRooms = 0;
+let sampleTimer;
+let pendingSample = Promise.resolve();
 const pause = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 async function until(fn, label) {
   const end = Date.now() + 30000;
@@ -63,11 +68,18 @@ async function connect(i, previous) {
       type: 'hello',
       name: c.name,
       token: c.token,
-      trainingConsent: process.env.PERF_CONSENT === 'true',
+      trainingConsent:
+        process.env.PERF_CONSENT === 'true' ||
+        (process.env.PERF_CONSENT === 'mixed' &&
+          Math.floor(i / humans) % 2 === 0),
       ...(previous ? { roomId: previous.state.roomId } : {}),
     }),
   );
   await until(() => c.welcome && (!previous || c.state), 'admission');
+  if (previous) {
+    previous.ws.terminate();
+    clients.splice(clients.indexOf(previous), 1);
+  }
   return c;
 }
 async function send(c, message, verify) {
@@ -191,15 +203,87 @@ try {
   const receivedBefore = { messages: receivedMessages, bytes: receivedBytes };
   const started = performance.now();
   const end = Date.now() + duration * 1000;
+  let lastMoves = 0,
+    lastLatency = 0,
+    lastCounters = before,
+    lastAt = Date.now();
+  async function sample() {
+    const at = Date.now(),
+      total = moves.reduce((a, b) => a + b, 0);
+    const current = await metrics();
+    const values = latency.slice(lastLatency).sort((a, b) => a - b);
+    const entry = {
+      at,
+      elapsedSeconds: (performance.now() - started) / 1000,
+      acceptedHumanMoves: total,
+      throughput: (total - lastMoves) / ((at - lastAt) / 1000),
+      reconnects,
+      recycledRooms,
+      clientMemory: process.memoryUsage(),
+      openSockets: clients.filter((c) => c.ws.readyState === WebSocket.OPEN)
+        .length,
+      responseMs: {
+        p50: values[Math.floor(values.length * 0.5)] ?? null,
+        p95: values[Math.floor(values.length * 0.95)] ?? null,
+        p99: values[Math.floor(values.length * 0.99)] ?? null,
+        max: values.at(-1) ?? null,
+      },
+      counters: Object.fromEntries(
+        Object.entries(current).map(([k, v]) => [
+          k,
+          v - (lastCounters[k] || 0),
+        ]),
+      ),
+    };
+    if (process.env.PERF_SAMPLES)
+      await appendFile(process.env.PERF_SAMPLES, JSON.stringify(entry) + '\n');
+    lastMoves = total;
+    lastLatency = latency.length;
+    lastCounters = current;
+    lastAt = at;
+  }
+  if (process.env.PERF_SAMPLES)
+    sampleTimer = setInterval(() => {
+      pendingSample = pendingSample.then(sample);
+    }, 60000);
   await Promise.all(
     groups.map(async (group, roomIndex) => {
+      let nextReconnect =
+        Date.now() + Number(process.env.PERF_RECONNECT_SECONDS || 600) * 1000;
+      let nextRecycle =
+        Date.now() + Number(process.env.PERF_RECYCLE_SECONDS || 900) * 1000;
       while (Date.now() < end) {
+        if (process.env.PERF_CHURN && Date.now() >= nextReconnect) {
+          const old = group[0];
+          const i = people.indexOf(old);
+          const restored = await connect(i, old);
+          assert.equal(restored.state.seat, old.state.seat);
+          assert.equal(restored.state.roomId, old.state.roomId);
+          group[0] = restored;
+          people[i] = restored;
+          reconnects++;
+          nextReconnect =
+            Date.now() +
+            Number(process.env.PERF_RECONNECT_SECONDS || 600) * 1000;
+        }
         const s = group[0].state;
-        if (s.phase === 'matchEnd') {
+        if (
+          s.phase === 'matchEnd' ||
+          (process.env.PERF_CHURN && Date.now() >= nextRecycle)
+        ) {
           for (const p of group)
-            await send(p, { type: 'leave' }, () =>
-              p.directory.rooms.every((r) => !r.mine),
+            await send(
+              p,
+              {
+                type: ['lobby', 'matchEnd'].includes(p.state.phase)
+                  ? 'leave'
+                  : 'forfeit',
+              },
+              () => p.directory.rooms.every((r) => !r.mine),
             );
+          recycledRooms++;
+          nextRecycle =
+            Date.now() + Number(process.env.PERF_RECYCLE_SECONDS || 900) * 1000;
           const owner = group[0];
           const oldId = owner.state.roomId;
           await send(
@@ -303,6 +387,9 @@ try {
       }
     }),
   );
+  clearInterval(sampleTimer);
+  await pendingSample;
+  await sample();
   const elapsed = (performance.now() - started) / 1000;
   const after = await metrics();
   const counters = Object.fromEntries(
@@ -330,6 +417,22 @@ try {
       assert.equal(restored.directory.count, count);
     }),
   );
+  if (process.env.PERF_CLEANUP) {
+    for (const c of [...clients])
+      await send(
+        c,
+        {
+          type: ['lobby', 'matchEnd'].includes(c.state.phase)
+            ? 'leave'
+            : 'forfeit',
+        },
+        () => c.directory.rooms.every((r) => !r.mine),
+      );
+    await until(
+      () => clients.every((c) => c.directory.rooms.length === 0),
+      'empty directory after teardown',
+    );
+  }
   latency.sort((a, b) => a - b);
   console.log(
     JSON.stringify(
@@ -340,7 +443,9 @@ try {
         durationSeconds: elapsed,
         counters,
         received,
-        consent: process.env.PERF_CONSENT === 'true',
+        consent: process.env.PERF_CONSENT || 'false',
+        reconnects,
+        recycledRooms,
         throughput: moves.reduce((a, b) => a + b, 0) / elapsed,
         acceptedHumanMoves: moves.reduce((a, b) => a + b, 0),
         minMovesPerRoom: Math.min(...moves),
@@ -357,5 +462,6 @@ try {
     ),
   );
 } finally {
+  clearInterval(sampleTimer);
   for (const c of clients) c.ws.terminate();
 }

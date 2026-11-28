@@ -3,6 +3,9 @@ import { mkdir, writeFile, open } from 'node:fs/promises';
 import path from 'node:path';
 const fixture = path.resolve(process.argv[2]);
 const output = path.resolve(process.argv[3]);
+const port = process.env.PERF_PORT || '8796';
+const inspectorPort = process.env.PERF_INSPECTOR_PORT || '9229';
+const base = `http://127.0.0.1:${port}`;
 const users = (process.env.PERF_CASES || '20,50,100').split(',').map(Number);
 await mkdir(output, { recursive: true });
 for (const count of users) {
@@ -17,7 +20,9 @@ for (const count of users) {
       '--config',
       path.join(fixture, 'wrangler.json'),
       '--port',
-      '8796',
+      port,
+      '--inspector-port',
+      inspectorPort,
       '--persist-to',
       path.join(output, prefix + '-state'),
     ],
@@ -29,7 +34,7 @@ for (const count of users) {
     let ready = false;
     for (let i = 0; i < 60; i++) {
       try {
-        const r = await fetch('http://127.0.0.1:8796/health');
+        const r = await fetch(base + '/health');
         if (r.ok) {
           ready = true;
           break;
@@ -63,7 +68,7 @@ for (const count of users) {
       env: {
         ...process.env,
         PERF_USERS: String(count),
-        TEST_API: 'http://127.0.0.1:8796',
+        TEST_API: base,
       },
       stdio: ['ignore', 'pipe', 'pipe'],
     });

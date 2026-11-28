@@ -1,5 +1,10 @@
 import { Alarm } from '../persistence/alarm.ts';
-import { act, botAction, startRound } from '../../src/game.js';
+import {
+  act,
+  botAction,
+  startRound,
+  BOT_POLICY_VERSION,
+} from '../../src/game.js';
 import { errorEvent } from '../../src/messages.js';
 import type { GameAction, RoundState } from '../../src/types';
 import type { GameState } from '../types.ts';
@@ -10,6 +15,9 @@ export class RoomEngine {
   private readonly expiry: Alarm;
   private last: { key: string; value: unknown; expiresAt?: number } | undefined;
   private loaded = false;
+  // Pure policy queries do not commit a game transition. Keep only one disposable
+  // result; durable `last` stays available for randomized deal/action retries.
+  private decision: { key: string; value: { action: GameAction } } | undefined;
   readonly ctx: DurableObjectState;
   constructor(ctx: DurableObjectState) {
     this.ctx = ctx;
@@ -27,6 +35,31 @@ export class RoomEngine {
     ).join('');
     let result: unknown;
     await this.ctx.blockConcurrencyWhile(async () => {
+      let input: {
+        operation: string;
+        state: GameState;
+        seat: number;
+        action: GameAction;
+      };
+      try {
+        input = JSON.parse(raw);
+        if (input.operation === 'bot') {
+          const decisionKey = `${BOT_POLICY_VERSION}:${key}`;
+          if (this.decision?.key !== decisionKey) {
+            this.decision = {
+              key: decisionKey,
+              value: {
+                action: botAction(input.state as RoundState, input.seat),
+              },
+            };
+          }
+          result = this.decision.value;
+          return;
+        }
+      } catch (error) {
+        result = { error: errorEvent(error) };
+        return;
+      }
       if (!this.loaded) {
         this.last = await this.ctx.storage.get('last');
         this.loaded = true;
@@ -42,16 +75,8 @@ export class RoomEngine {
         return;
       }
       try {
-        const input = JSON.parse(raw) as {
-          operation: string;
-          state: GameState;
-          seat: number;
-          action: GameAction;
-        };
         if (input.operation === 'start')
           result = { state: startRound(input.state) };
-        else if (input.operation === 'bot')
-          result = { action: botAction(input.state as RoundState, input.seat) };
         else if (input.operation === 'act')
           result = {
             state: act(input.state as RoundState, input.seat, input.action),
@@ -84,6 +109,7 @@ export class RoomEngine {
       }
       await this.ctx.storage.deleteAll();
       this.last = undefined;
+      this.decision = undefined;
       this.loaded = false;
     });
   }

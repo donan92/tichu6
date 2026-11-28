@@ -38,7 +38,7 @@ Include the visible version, browser, the action that failed, expected/actual be
 
 - Keep JavaScript and Python libraries on the latest stable releases, including major versions. Do not use prereleases or floating CDN/latest URLs in production.
 - Dependabot checks npm and GitHub Actions daily and opens update PRs. Commit manifest and lockfile updates together; require tests, syntax checks, build, and applicable Worker integration checks before merging. Failed upgrades must be repaired, not silently ignored or pinned indefinitely.
-- Python currently has no dependency manifest in this project. When adding Python dependencies, add a managed manifest/lockfile, Python CI checks, and a matching pip or uv Dependabot entry in the same change. Do not add an empty Python environment merely for the updater.
+- Python performance-analysis dependencies are managed in `scripts/performance/pyproject.toml` and `uv.lock`. Update both together; CI checks Ruff, syntax and graph generation, and Dependabot checks uv daily. Keep virtual environments and raw heaps out of Git.
 - Automated update PRs are not automatic production releases. Do not claim updates are active until the configuration is on the default branch.
 
 ## Languages

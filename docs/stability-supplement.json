@@ -1,0 +1,1476 @@
+{
+  "identityChurn": {
+    "result": "PASS",
+    "admitted": 1000,
+    "samples": [
+      {
+        "at": 1795839853139,
+        "admitted": 20,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 20,
+          "stateBytes": 1645,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839865191,
+        "admitted": 40,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 40,
+          "stateBytes": 3265,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839877243,
+        "admitted": 60,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 60,
+          "stateBytes": 4885,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839889304,
+        "admitted": 80,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 80,
+          "stateBytes": 6505,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839901357,
+        "admitted": 100,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 100,
+          "stateBytes": 8125,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839913410,
+        "admitted": 120,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 120,
+          "stateBytes": 9745,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839925458,
+        "admitted": 140,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 140,
+          "stateBytes": 11365,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839937508,
+        "admitted": 160,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 160,
+          "stateBytes": 12985,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839949565,
+        "admitted": 180,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 180,
+          "stateBytes": 14605,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839961616,
+        "admitted": 200,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 200,
+          "stateBytes": 16225,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839973679,
+        "admitted": 220,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 220,
+          "stateBytes": 17845,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839985730,
+        "admitted": 240,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 240,
+          "stateBytes": 19465,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795839997792,
+        "admitted": 260,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 260,
+          "stateBytes": 21085,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840009848,
+        "admitted": 280,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 280,
+          "stateBytes": 22705,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840021912,
+        "admitted": 300,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 300,
+          "stateBytes": 24325,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840033965,
+        "admitted": 320,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 320,
+          "stateBytes": 25945,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840046020,
+        "admitted": 340,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 340,
+          "stateBytes": 27565,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840058079,
+        "admitted": 360,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 360,
+          "stateBytes": 29185,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840070136,
+        "admitted": 380,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 380,
+          "stateBytes": 30805,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840082193,
+        "admitted": 400,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 400,
+          "stateBytes": 32425,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840094252,
+        "admitted": 420,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 420,
+          "stateBytes": 34045,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840106315,
+        "admitted": 440,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 440,
+          "stateBytes": 35665,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840118371,
+        "admitted": 460,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 460,
+          "stateBytes": 37285,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840130434,
+        "admitted": 480,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 480,
+          "stateBytes": 38905,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840142503,
+        "admitted": 500,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 500,
+          "stateBytes": 40525,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840154570,
+        "admitted": 520,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 520,
+          "stateBytes": 42145,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840166631,
+        "admitted": 540,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 540,
+          "stateBytes": 43765,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840178699,
+        "admitted": 560,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 560,
+          "stateBytes": 45385,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840190755,
+        "admitted": 580,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 580,
+          "stateBytes": 47005,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840202816,
+        "admitted": 600,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 600,
+          "stateBytes": 48625,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840214881,
+        "admitted": 620,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 620,
+          "stateBytes": 50245,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840226941,
+        "admitted": 640,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 640,
+          "stateBytes": 51865,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840239003,
+        "admitted": 660,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 660,
+          "stateBytes": 53485,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840251070,
+        "admitted": 680,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 680,
+          "stateBytes": 55105,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840263128,
+        "admitted": 700,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 700,
+          "stateBytes": 56725,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840275192,
+        "admitted": 720,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 720,
+          "stateBytes": 58345,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840287262,
+        "admitted": 740,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 740,
+          "stateBytes": 59965,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840299318,
+        "admitted": 760,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 760,
+          "stateBytes": 61585,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840311404,
+        "admitted": 780,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 780,
+          "stateBytes": 63205,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840323468,
+        "admitted": 800,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 800,
+          "stateBytes": 64825,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840335540,
+        "admitted": 820,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 820,
+          "stateBytes": 66445,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840347605,
+        "admitted": 840,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 840,
+          "stateBytes": 68065,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840359676,
+        "admitted": 860,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 860,
+          "stateBytes": 69685,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840371741,
+        "admitted": 880,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 880,
+          "stateBytes": 71305,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840383809,
+        "admitted": 900,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 900,
+          "stateBytes": 72925,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840395872,
+        "admitted": 920,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 920,
+          "stateBytes": 74545,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840407940,
+        "admitted": 940,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 940,
+          "stateBytes": 76165,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840420010,
+        "admitted": 960,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 960,
+          "stateBytes": 77785,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840432082,
+        "admitted": 980,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 980,
+          "stateBytes": 79405,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      },
+      {
+        "at": 1795840444146,
+        "admitted": 1000,
+        "diagnostic": {
+          "rooms": 0,
+          "sockets": 0,
+          "activity": 1000,
+          "stateBytes": 81025,
+          "trainingBytes": 15,
+          "trainingSessions": 0,
+          "trainingEvents": 0,
+          "logEntries": 0,
+          "historyEntries": 0
+        }
+      }
+    ],
+    "note": "Distinct disconnected identities intentionally retain anti-idle reconnect timestamps for 24h; sockets and rooms must return to zero each batch.",
+    "beforeExpiry": {
+      "memory": {
+        "usage": {
+          "usedSize": 31485928,
+          "totalSize": 36372480,
+          "embedderHeapUsedSize": 10961792,
+          "backingStorageSize": 460729
+        },
+        "afterSnapshot": {
+          "usedSize": 1651524,
+          "totalSize": 2293760,
+          "embedderHeapUsedSize": 2360,
+          "backingStorageSize": 413177
+        },
+        "external": null
+      },
+      "diagnostic": {
+        "rooms": 0,
+        "sockets": 0,
+        "activity": 1000,
+        "stateBytes": 81025,
+        "trainingBytes": 15,
+        "trainingSessions": 0,
+        "trainingEvents": 0,
+        "logEntries": 0,
+        "historyEntries": 0
+      }
+    },
+    "afterExpiry": {
+      "memory": {
+        "usage": {
+          "usedSize": 1713188,
+          "totalSize": 2555904,
+          "embedderHeapUsedSize": 179168,
+          "backingStorageSize": 413177
+        },
+        "afterSnapshot": {
+          "usedSize": 1345344,
+          "totalSize": 1769472,
+          "embedderHeapUsedSize": 1960,
+          "backingStorageSize": 413177
+        },
+        "external": null
+      },
+      "diagnostic": {
+        "rooms": 0,
+        "sockets": 0,
+        "activity": 0,
+        "stateBytes": 26,
+        "trainingBytes": 15,
+        "trainingSessions": 0,
+        "trainingEvents": 0,
+        "logEntries": 0,
+        "historyEntries": 0
+      }
+    }
+  },
+  "ownership": {
+    "result": "PASS",
+    "createdPerKind": 300,
+    "retained": {
+      "states": 0,
+      "sockets": 0,
+      "engines": 0
+    },
+    "samples": [
+      {
+        "rss": 127533056,
+        "heapTotal": 38240256,
+        "heapUsed": 10749688,
+        "external": 10195862,
+        "arrayBuffers": 35955
+      },
+      {
+        "rss": 127500288,
+        "heapTotal": 33259520,
+        "heapUsed": 10677696,
+        "external": 9895292,
+        "arrayBuffers": 35955
+      },
+      {
+        "rss": 127500288,
+        "heapTotal": 32997376,
+        "heapUsed": 10686200,
+        "external": 9895292,
+        "arrayBuffers": 35955
+      },
+      {
+        "rss": 127500288,
+        "heapTotal": 32997376,
+        "heapUsed": 10655832,
+        "external": 9895292,
+        "arrayBuffers": 35955
+      },
+      {
+        "rss": 127516672,
+        "heapTotal": 32997376,
+        "heapUsed": 10677984,
+        "external": 9895292,
+        "arrayBuffers": 35955
+      },
+      {
+        "rss": 127533056,
+        "heapTotal": 32997376,
+        "heapUsed": 10678016,
+        "external": 9895292,
+        "arrayBuffers": 35955
+      },
+      {
+        "rss": 127533056,
+        "heapTotal": 32997376,
+        "heapUsed": 10678128,
+        "external": 9895292,
+        "arrayBuffers": 35955
+      },
+      {
+        "rss": 127533056,
+        "heapTotal": 32997376,
+        "heapUsed": 10685512,
+        "external": 9895292,
+        "arrayBuffers": 35955
+      }
+    ],
+    "note": "Node ownership test, not workerd or production GC timing."
+  },
+  "trainingBenchmark": {
+    "results": [
+      {
+        "label": "before",
+        "repeat": 0,
+        "elapsedMs": 152.15675,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 2723008
+      },
+      {
+        "label": "after",
+        "repeat": 0,
+        "elapsedMs": 75.36954100000003,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 2351552
+      },
+      {
+        "label": "after",
+        "repeat": 1,
+        "elapsedMs": 74.17654099999999,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 2124688
+      },
+      {
+        "label": "before",
+        "repeat": 1,
+        "elapsedMs": 154.88120800000002,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 409024
+      },
+      {
+        "label": "before",
+        "repeat": 2,
+        "elapsedMs": 158.57220800000005,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 408080
+      },
+      {
+        "label": "after",
+        "repeat": 2,
+        "elapsedMs": 74.18891699999995,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 6726992
+      },
+      {
+        "label": "after",
+        "repeat": 3,
+        "elapsedMs": 74.75795800000003,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 2094824
+      },
+      {
+        "label": "before",
+        "repeat": 3,
+        "elapsedMs": 153.71179200000006,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 5071168
+      },
+      {
+        "label": "before",
+        "repeat": 4,
+        "elapsedMs": 150.4202919999999,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 5072400
+      },
+      {
+        "label": "after",
+        "repeat": 4,
+        "elapsedMs": 71.75658399999998,
+        "serializedBytes": 64956,
+        "digest": "36ffa00abc50e95c6638bccf27296bfd923570e837f15b24cdfd5917f369af2d",
+        "heapUsedDelta": 1841096
+      }
+    ],
+    "note": "Identical 2000-decision bounded-archive workload, alternating order. Heap-used delta is affected by intervening GC; it is neither total allocation nor retained leak."
+  },
+  "pilotRetainers": [
+    {
+      "case": "runner-pilot2",
+      "file": "heap-settled.heapsnapshot",
+      "nodeCount": 44110,
+      "edgeCount": 188181,
+      "reachableNodes": 44078,
+      "shallowBytesTotal": 2435453,
+      "groups": {
+        "workerd / WebSocket": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "workerd / TimersUtil": {
+          "count": 1,
+          "shallowBytes": 96,
+          "dominatedBytesSum": 144
+        },
+        "MeasuredRoomEngine": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "MeasuredLounge": {
+          "count": 1,
+          "shallowBytes": 124,
+          "dominatedBytesSum": 33628
+        },
+        "RoomRepository": {
+          "count": 1,
+          "shallowBytes": 80,
+          "dominatedBytesSum": 25316
+        },
+        "Snapshots": {
+          "count": 1,
+          "shallowBytes": 64,
+          "dominatedBytesSum": 628
+        },
+        "GameExecutor": {
+          "count": 1,
+          "shallowBytes": 56,
+          "dominatedBytesSum": 440
+        },
+        "WebSocket": {
+          "count": 2,
+          "shallowBytes": 52,
+          "dominatedBytesSum": 844
+        },
+        "WebSocketPair": {
+          "count": 2,
+          "shallowBytes": 52,
+          "dominatedBytesSum": 472
+        },
+        "Alarm": {
+          "count": 1,
+          "shallowBytes": 24,
+          "dominatedBytesSum": 396
+        },
+        "Timeout": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "Promise": {
+          "count": 14,
+          "shallowBytes": 328,
+          "dominatedBytesSum": 1004
+        },
+        "WeakMap": {
+          "count": 4,
+          "shallowBytes": 72,
+          "dominatedBytesSum": 840
+        },
+        "Map": {
+          "count": 4,
+          "shallowBytes": 72,
+          "dominatedBytesSum": 9540
+        },
+        "ArrayBuffer": {
+          "count": 3,
+          "shallowBytes": 172,
+          "dominatedBytesSum": 580
+        },
+        "repository.data": {
+          "count": 1,
+          "shallowBytes": 28,
+          "dominatedBytesSum": 15616
+        },
+        "repository.training": {
+          "count": 1,
+          "shallowBytes": 16,
+          "dominatedBytesSum": 208
+        },
+        "repository.savedLounge": {
+          "count": 1,
+          "shallowBytes": 8140,
+          "dominatedBytesSum": 8140
+        },
+        "repository.savedTraining": {
+          "count": 1,
+          "shallowBytes": 28,
+          "dominatedBytesSum": 28
+        },
+        "snapshotCache": {
+          "count": 1,
+          "shallowBytes": 16,
+          "dominatedBytesSum": 68
+        },
+        "botDecisionCache": {
+          "count": 1,
+          "shallowBytes": 16,
+          "dominatedBytesSum": 68
+        },
+        "engine.last": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "engine.decision": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        }
+      },
+      "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+    },
+    {
+      "case": "old-instrumentation-pilot",
+      "file": "heap-settled.heapsnapshot",
+      "nodeCount": 49130,
+      "edgeCount": 208266,
+      "reachableNodes": 48898,
+      "shallowBytesTotal": 2678629,
+      "groups": {
+        "workerd / WebSocket": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "workerd / TimersUtil": {
+          "count": 1,
+          "shallowBytes": 96,
+          "dominatedBytesSum": 144
+        },
+        "MeasuredRoomEngine": {
+          "count": 40,
+          "shallowBytes": 1440,
+          "dominatedBytesSum": 87512
+        },
+        "MeasuredLounge": {
+          "count": 1,
+          "shallowBytes": 128,
+          "dominatedBytesSum": 33292
+        },
+        "RoomRepository": {
+          "count": 1,
+          "shallowBytes": 80,
+          "dominatedBytesSum": 22352
+        },
+        "Snapshots": {
+          "count": 1,
+          "shallowBytes": 64,
+          "dominatedBytesSum": 2644
+        },
+        "GameExecutor": {
+          "count": 1,
+          "shallowBytes": 56,
+          "dominatedBytesSum": 1372
+        },
+        "WebSocket": {
+          "count": 2,
+          "shallowBytes": 52,
+          "dominatedBytesSum": 844
+        },
+        "WebSocketPair": {
+          "count": 2,
+          "shallowBytes": 52,
+          "dominatedBytesSum": 472
+        },
+        "Alarm": {
+          "count": 41,
+          "shallowBytes": 984,
+          "dominatedBytesSum": 2460
+        },
+        "Timeout": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "Promise": {
+          "count": 54,
+          "shallowBytes": 1288,
+          "dominatedBytesSum": 1964
+        },
+        "WeakMap": {
+          "count": 4,
+          "shallowBytes": 72,
+          "dominatedBytesSum": 3848
+        },
+        "Map": {
+          "count": 4,
+          "shallowBytes": 72,
+          "dominatedBytesSum": 9100
+        },
+        "ArrayBuffer": {
+          "count": 3,
+          "shallowBytes": 172,
+          "dominatedBytesSum": 580
+        },
+        "repository.data": {
+          "count": 1,
+          "shallowBytes": 20,
+          "dominatedBytesSum": 12988
+        },
+        "repository.training": {
+          "count": 1,
+          "shallowBytes": 16,
+          "dominatedBytesSum": 208
+        },
+        "repository.savedLounge": {
+          "count": 1,
+          "shallowBytes": 8140,
+          "dominatedBytesSum": 8140
+        },
+        "repository.savedTraining": {
+          "count": 1,
+          "shallowBytes": 28,
+          "dominatedBytesSum": 28
+        },
+        "snapshotCache": {
+          "count": 1,
+          "shallowBytes": 16,
+          "dominatedBytesSum": 2084
+        },
+        "botDecisionCache": {
+          "count": 1,
+          "shallowBytes": 16,
+          "dominatedBytesSum": 1060
+        },
+        "engine.last": {
+          "count": 40,
+          "shallowBytes": 960,
+          "dominatedBytesSum": 72632
+        },
+        "engine.decision": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        }
+      },
+      "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+    }
+  ],
+  "identityRetainers": [
+    {
+      "case": "tmp",
+      "file": "tichu-identity-before-expiry.heapsnapshot",
+      "nodeCount": 43046,
+      "edgeCount": 187436,
+      "reachableNodes": 43010,
+      "shallowBytesTotal": 2170817,
+      "groups": {
+        "workerd / WebSocket": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "workerd / TimersUtil": {
+          "count": 1,
+          "shallowBytes": 96,
+          "dominatedBytesSum": 144
+        },
+        "MeasuredRoomEngine": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "MeasuredLounge": {
+          "count": 1,
+          "shallowBytes": 48,
+          "dominatedBytesSum": 241264
+        },
+        "RoomRepository": {
+          "count": 1,
+          "shallowBytes": 40,
+          "dominatedBytesSum": 234952
+        },
+        "Snapshots": {
+          "count": 1,
+          "shallowBytes": 24,
+          "dominatedBytesSum": 392
+        },
+        "GameExecutor": {
+          "count": 1,
+          "shallowBytes": 20,
+          "dominatedBytesSum": 208
+        },
+        "WebSocket": {
+          "count": 2,
+          "shallowBytes": 52,
+          "dominatedBytesSum": 844
+        },
+        "WebSocketPair": {
+          "count": 2,
+          "shallowBytes": 52,
+          "dominatedBytesSum": 472
+        },
+        "Alarm": {
+          "count": 1,
+          "shallowBytes": 24,
+          "dominatedBytesSum": 336
+        },
+        "Timeout": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "Promise": {
+          "count": 14,
+          "shallowBytes": 328,
+          "dominatedBytesSum": 984
+        },
+        "WeakMap": {
+          "count": 4,
+          "shallowBytes": 72,
+          "dominatedBytesSum": 840
+        },
+        "Map": {
+          "count": 4,
+          "shallowBytes": 72,
+          "dominatedBytesSum": 9540
+        },
+        "ArrayBuffer": {
+          "count": 3,
+          "shallowBytes": 172,
+          "dominatedBytesSum": 580
+        },
+        "repository.data": {
+          "count": 1,
+          "shallowBytes": 28,
+          "dominatedBytesSum": 152740
+        },
+        "repository.training": {
+          "count": 1,
+          "shallowBytes": 16,
+          "dominatedBytesSum": 32
+        },
+        "repository.savedLounge": {
+          "count": 1,
+          "shallowBytes": 81040,
+          "dominatedBytesSum": 81040
+        },
+        "repository.savedTraining": {
+          "count": 1,
+          "shallowBytes": 28,
+          "dominatedBytesSum": 28
+        },
+        "snapshotCache": {
+          "count": 1,
+          "shallowBytes": 16,
+          "dominatedBytesSum": 68
+        },
+        "botDecisionCache": {
+          "count": 1,
+          "shallowBytes": 16,
+          "dominatedBytesSum": 68
+        },
+        "engine.last": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "engine.decision": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        }
+      },
+      "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+    },
+    {
+      "case": "tmp",
+      "file": "tichu-identity-after-expiry.heapsnapshot",
+      "nodeCount": 38288,
+      "edgeCount": 159550,
+      "reachableNodes": 38257,
+      "shallowBytesTotal": 1862965,
+      "groups": {
+        "workerd / WebSocket": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "workerd / TimersUtil": {
+          "count": 1,
+          "shallowBytes": 96,
+          "dominatedBytesSum": 144
+        },
+        "MeasuredRoomEngine": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "MeasuredLounge": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "RoomRepository": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "Snapshots": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "GameExecutor": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "WebSocket": {
+          "count": 2,
+          "shallowBytes": 52,
+          "dominatedBytesSum": 844
+        },
+        "WebSocketPair": {
+          "count": 2,
+          "shallowBytes": 52,
+          "dominatedBytesSum": 472
+        },
+        "Alarm": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "Timeout": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "Promise": {
+          "count": 13,
+          "shallowBytes": 304,
+          "dominatedBytesSum": 960
+        },
+        "WeakMap": {
+          "count": 2,
+          "shallowBytes": 40,
+          "dominatedBytesSum": 704
+        },
+        "Map": {
+          "count": 4,
+          "shallowBytes": 72,
+          "dominatedBytesSum": 9540
+        },
+        "ArrayBuffer": {
+          "count": 3,
+          "shallowBytes": 172,
+          "dominatedBytesSum": 580
+        },
+        "repository.data": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "repository.training": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "repository.savedLounge": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "repository.savedTraining": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "snapshotCache": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "botDecisionCache": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "engine.last": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        },
+        "engine.decision": {
+          "count": 0,
+          "shallowBytes": 0,
+          "dominatedBytesSum": 0
+        }
+      },
+      "method": "NetworkX immediate dominators from synthetic root; weak edges excluded. Group sums may overlap; ephemeron/native reachability is not exact Chrome DevTools retained size. Raw strings and credentials are not exported."
+    }
+  ]
+}

@@ -101,7 +101,7 @@ test('engine keeps the first cleanup alarm, extends expiry in the committed resu
     seat: 0,
   });
   assert.deepEqual(result.action, { type: 'grand', call: false });
-  assert.equal(f.writes(), 2);
+  assert.equal(f.writes(), 1);
 });
 
 test('engine reloads a possibly committed result after a storage rejection before retrying a deal', async () => {
@@ -120,4 +120,23 @@ test('engine reloads a possibly committed result after a storage rejection befor
   const committed = structuredClone(f.store.get('last').value);
   assert.deepEqual(await send(f.actor, payload), committed);
   assert.equal(f.writes(), 1);
+});
+
+test('pure bot queries neither write storage nor overwrite durable deal retries', async () => {
+  const f = engine();
+  const request = { operation: 'start', state: newGame() };
+  const first = await send(f.actor, request);
+  const saved = structuredClone(f.store.get('last'));
+  const bot = { operation: 'bot', state: first.state, seat: 0 };
+  const expected = await send(f.actor, bot);
+  assert.deepEqual(await send(f.actor, bot), expected);
+  assert.deepEqual(await send(new RoomEngine(f.ctx), bot), expected);
+  assert.deepEqual(f.store.get('last'), saved);
+  assert.equal(f.writes(), 1);
+  assert.deepEqual(await send(new RoomEngine(f.ctx), request), first);
+  assert.equal(f.writes(), 1, 'intervening policy query cannot reroll a retry');
+  const cold = engine();
+  await send(cold.actor, bot);
+  assert.equal(cold.store.size, 0);
+  assert.equal(cold.writes(), 0);
 });
