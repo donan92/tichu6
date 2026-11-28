@@ -67,7 +67,6 @@
   border-color: #182d4530;
 }
 .game .player .player-meta,
-.game .player > .turn-indicator,
 .game .player > .dragon-received {
   grid-column: 1 / -1;
   margin: 0;

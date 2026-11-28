@@ -504,13 +504,6 @@ select {
 .player.active {
   box-shadow: 0 0 0 2px #f4a340;
 }
-.turn-indicator {
-  display: block;
-  margin-top: 2px;
-  font-size: 10px;
-  font-weight: 800;
-  color: #182d45;
-}
 @media (prefers-color-scheme: dark) {
   .player.active {
     background: #f6cf87;
@@ -518,8 +511,7 @@ select {
     border-color: #ff982f;
   }
   .player.active small,
-  .player.active .you,
-  .player.active .turn-indicator {
+  .player.active .you {
     color: #10253b;
   }
 }
