@@ -464,5 +464,6 @@
   "play.trickStarterDescription": "이번 트릭의 첫 카드를 낸 플레이어",
   "patches.playerCardStatus": "플레이어별 손패·획득 카드 수와 현재 트릭의 선공을 표시합니다.",
   "patches.clearerPlayerStatus": "플레이어 칸의 중복된 차례 문구를 없애 더 간결하게 표시합니다.",
-  "patches.longRunStability": "버그 수정"
+  "patches.longRunStability": "버그 수정",
+  "patches.trainingByteAccounting": "버그 수정"
 }
