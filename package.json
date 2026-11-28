@@ -52,7 +52,7 @@
   },
   "dependencies": {
     "hono": "4.13.21",
-    "i18next": "^27.2.4",
+    "i18next": "^27.2.7",
     "i18next-browser-languagedetector": "^8.3.1",
     "i18next-vue": "^5.4.0",
     "pinia": "^4.1.0",
