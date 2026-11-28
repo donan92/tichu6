@@ -1,10 +1,14 @@
 # Server performance and Cloudflare cost optimization
 
-Status: local review candidate, **not deployed**. Release remains 0.8.44.
+Status: subsequently approved and released as **v0.8.45**; deployment IDs and
+read-only live verification are in [STATUS.md](STATUS.md). Measurements below
+preceded deployment and remain local-only, using the v0.8.44 baseline.
 Baseline: main `c4c43d5`, fetched 2026-11-28. Worktree:
 `/private/tmp/tichu6-performance`, branch `codex/server-performance`.
 The unrelated research checkout and all its uncommitted files were preserved.
-No production requests, load, data changes, configuration changes or plan upgrades.
+During optimization/benchmarking, no production requests, load, data changes,
+configuration changes or plan upgrades were performed. The later authorized
+release used only health/static-asset reads for live verification.
 
 ## Problems and changes
 
@@ -370,7 +374,8 @@ isolate heap profile and history bounds remain a P1 follow-up before larger load
 
 ## Rollback and delivery safety
 
-No schema migration or version bump. `lounge`, `training-v1`, and engine `last` keys
+No schema migration; the authorized release metadata advanced to v0.8.45.
+`lounge`, `training-v1`, and engine `last` keys
 remain compatible. An older engine ignores optional `expiresAt`; pending cleanup
 alarms still remove only its disposable transition cache. Roll back by reverting
 this commit and, **only after separate release approval**, deploying the previous
@@ -380,5 +385,7 @@ Repository automation contains only the Verify workflow, with local checks and n
 release command. The review commit uses a **`[CF-Pages-Skip]` prefix** so Pages also
 skips automatic preview builds, per
 [Cloudflare GitHub integration](https://developers.cloudflare.com/pages/configuration/git-integration/github-integration/).
-Only the topic branch and a Draft PR are submitted. Main merge, production deployment,
-release-version changes and paid-plan changes remain unapproved and unperformed.
+The initial submission was Draft PR #5 without deployment. After explicit owner
+approval, it was merged and released as v0.8.45. Automatic Cloudflare Pages remained
+Idle, so the verified dist was deployed manually; do not confuse GitHub Pages
+success with Cloudflare serving the new build. No paid-plan change was made.

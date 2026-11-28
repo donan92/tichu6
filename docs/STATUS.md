@@ -1,14 +1,29 @@
 # Project status / resume point
 
-## v0.8.45 server optimization — release authorized, preparing
+## v0.8.45 server optimization — deployed (2026-11-28)
 
-- User approved deployment of PR #5 on 2026-11-28. Original worktree remains untouched.
-- Release metadata and bilingual maintenance note updated together. No rule,
-  schema, capacity or paid-plan changes. Previous benchmark results remain local-only.
-- Next: validate release metadata, merge approved PR, deploy Worker, verify Pages
-  and Worker separately, then record deployment IDs and checks. Not yet deployed.
+- Owner approved release of PR #5; squash merged as `dba72ec`. Original research
+  checkout and unrelated changes preserved. Version/lockfile/release notes and both
+  locales updated together with the maintenance note. No rule/schema/capacity or
+  paid-plan changes; no room reset or production load test.
+- Final release check/lint/types, 178 unit +110 UI tests, format and build passed.
+  PR Verify46099274387 and merged-main Verify46099569091 passed. Earlier real
+  local Worker and capacity/soak results remain recorded below.
+- Backend deployed first: `cc232b67-fc3b-4001-8a92-d1889513ad57` at100% via
+  `npm run deploy:server`. Previous rollback version:
+  `09f0a1d0-4f13-4e5e-9550-0505f52ddf62`. Existing immediate update policy retained.
+- Cloudflare Pages production: `a0e2dc69-fe61-411c-b422-3c73445f1d57`, main source
+  `dba72ec`. The automatic entry remained Idle and the public origin still served
+  the old build, so the tested dist was deployed explicitly with Wrangler Pages.
+  GitHub Pages run46099569048 is a separate service, not Cloudflare deploy evidence.
+- Read-only live verification: tichu6.pages.dev HTML, JS and CSS match local dist
+  bytes; JS contains0.8.45. Worker health200 with ok=true/protocol6. No production
+  room creation or gameplay smoke mutations; actual-device testing not performed.
+- `docs/PERFORMANCE_OPTIMIZATION.md` retains measured savings, missed targets,
+  cost assumptions and memory/history follow-ups. Production billing/Duration
+  remain unmeasured. Do not infer a free-quota guarantee from successful deployment.
 
-## Server performance optimization — review candidate, not deployed (2026-11-28)
+## Server performance optimization — initial review evidence (2026-11-28)
 
 - Isolated worktree `/private/tmp/tichu6-performance`, branch
   `codex/server-performance`, based on latest main `c4c43d5` (rechecked before PR).
